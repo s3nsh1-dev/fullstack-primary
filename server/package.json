@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "This project follows a strict design pattern to create user based social media and entertainment platform",
+  "keywords": [
+    "server"
+  ],
+  "license": "ISC",
+  "author": "s3nsh1-dev",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
