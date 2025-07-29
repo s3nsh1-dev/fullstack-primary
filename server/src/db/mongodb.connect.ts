@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 
 const mongodbConnect = async () => {
   try {
-    const DbConnection = await mongoose.connect(
+    const dbConnection = await mongoose.connect(
       env.MONGODB_COMPASS_CONNECTION_STRING
     );
-    console.log("mongoDB connected");
+    // console.log("mongoDB connected", dbConnection);
   } catch (error) {
-    console.log("mongoDB Connection Error: ", error);
+    console.log("mongoDB CONNECTION ERROR: ", error);
     process.exit(1);
   }
 };

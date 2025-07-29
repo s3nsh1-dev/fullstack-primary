@@ -7,19 +7,35 @@ const PORT = env.PORT;
 const app = express();
 
 export default async function serverMain() {
-  app.use(cors());
-  app.use(express.json());
+  try {
+    app.use(cors());
+    app.use(express.json());
 
-  //DB connection
-  await mongodbConnect();
+    //DB connection
+    await mongodbConnect();
+    // Learned something new
+    app.on("error", () => {
+      throw new Error("ERROR WHILE CONNECTING DATABASE");
+    });
 
-  app.get("/", (req, res) => {
-    res.send("Hello from TypeScript Server!");
-  });
+    //Routes
+    app.get("/", (req, res) => {
+      res.send("Hello from TypeScript Server!");
+    });
 
-  app.listen(PORT, () =>
-    console.log(`Server running on port http://localhost:${PORT}`)
-  );
+    // Start server
+    const server = app.listen(PORT, () =>
+      console.log(`🚀 Server running on http://localhost:${PORT}`)
+    );
+
+    // Handle server errors
+    server.on("error", (err) => {
+      console.error("❌ SERVER ERROR:", err);
+    });
+  } catch (error) {
+    console.error("❌ STARTUP ERROR:", error);
+    process.exit(1); // Exit if server cannot start properly
+  }
 }
 
 serverMain();
