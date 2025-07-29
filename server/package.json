@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && ls -R dist",
     "start": "node dist/index.js",
-    "server": "nodemon --watch src --watch index.ts --ext ts --exec ts-node index.ts"
+    "server": "nodemon --watch src --watch src/index.ts --ext ts --exec ts-node src/index.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
