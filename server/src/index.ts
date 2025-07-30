@@ -8,9 +8,11 @@ const app = express();
 
 export default async function serverMain() {
   try {
+    // app.use  = used when using middleware and doing something with configurations
     app.use(cors());
     app.use(express.json());
 
+    /*
     //DB connection
     await mongodbConnect();
     // Learned something new
@@ -35,6 +37,25 @@ export default async function serverMain() {
   } catch (error) {
     console.error("❌ STARTUP ERROR:", error);
     process.exit(1); // Exit if server cannot start properly
+  }
+    */
+    await mongodbConnect()
+      .then(() => {
+        app.listen(PORT, () => {
+          console.log(`⚙️  SERVER LIVE ON: http://localhost:${PORT}`);
+        });
+        app.on("error", () => {
+          throw new Error("ERROR WHILE CONNECTING DATABASE");
+        });
+      })
+      .catch((error) => {
+        console.log("MONGODB CONNECTION ERROR: ", error);
+      })
+      .finally(() => {
+        console.log("🚀 < PERMANENTLY RUNNING CODE >");
+      });
+  } catch (error) {
+    console.log("❌  SERVER ERROR: ", error);
   }
 }
 
