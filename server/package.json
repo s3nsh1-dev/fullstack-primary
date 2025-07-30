@@ -16,6 +16,7 @@
     "server": "nodemon --watch src --watch src/index.ts --ext ts --exec ts-node src/index.ts"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.3",

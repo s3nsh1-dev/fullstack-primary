@@ -1,16 +1,14 @@
-import express from "express";
-import cors from "cors";
 import env from "./utils/dotenvHelper";
 import mongodbConnect from "./db/mongodb.connect";
+import { app } from "./app";
 
 const PORT = env.PORT;
-const app = express();
 
 export default async function serverMain() {
   try {
     // app.use  = used when using middleware and doing something with configurations
-    app.use(cors());
-    app.use(express.json());
+    // app.use(cors());
+    // app.use(express.json());
 
     /*
     //DB connection
