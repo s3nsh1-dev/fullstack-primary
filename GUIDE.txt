@@ -7,4 +7,9 @@
 VIDEO 10: Custom api response and error handling | chai aur backend
 1. JWT
 2. mongoose-aggregate-paginate-v2 + aggregate queries in mongoose
-3.
+3. JWT SECRET AND EXPIRY Types
+4. 1% mongoose Middleware
+5. Heard about mongoose aggregation
+
+VIDEO 11 : How to upload file in backend | Multer
+1. 
