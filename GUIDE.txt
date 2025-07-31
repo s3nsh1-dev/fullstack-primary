@@ -6,4 +6,5 @@
 <WHAT IS LEARNED>
 VIDEO 10: Custom api response and error handling | chai aur backend
 1. JWT
-2.  
+2. mongoose-aggregate-paginate-v2 + aggregate queries in mongoose
+3.
