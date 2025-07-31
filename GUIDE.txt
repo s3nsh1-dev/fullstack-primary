@@ -1,8 +1,9 @@
 <NOTES>
 
 
-
 ==============================================================================
 
-<TUTORIAL CHECKPOINT>
-Custom api response and error handling | chai aur backend
+<WHAT IS LEARNED>
+VIDEO 10: Custom api response and error handling | chai aur backend
+1. JWT
+2.  
