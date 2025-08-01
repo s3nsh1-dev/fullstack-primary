@@ -43,6 +43,7 @@ const schema = {
 
 const videoSchema = new Schema(schema, { timestamps: true });
 
+// plugins are reusable pieces of schema logic you add with .plugin().
 videoSchema.plugin(mongooseAggregatePaginate);
 
 export const Video = model("Video", videoSchema);
