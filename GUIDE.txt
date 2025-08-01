@@ -12,4 +12,8 @@ VIDEO 10: Custom api response and error handling | chai aur backend
 5. Heard about mongoose aggregation
 
 VIDEO 11 : How to upload file in backend | Multer
-1. 
+1. cloudinary
+2. Multer
+3. node false
+
+Video 12: HTTP crash course | http Methods | http headers
