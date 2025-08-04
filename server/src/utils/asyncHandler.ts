@@ -7,13 +7,10 @@ type IncomingFunctionType = (
   next: NextFunction
 ) => void | Promise<any>;
 
+// No return needed for passing function directly without wrapping in {}
 const asyncHandler =
   (requestHandlerFunc: IncomingFunctionType): RequestHandler =>
   (req: Request, res: Response, next: NextFunction) => {
-    /**
-     *  Converts the async handler to a promise and catches errors
-     *  Promise.resolve() converts it into a guaranteed Promise.
-     */
     Promise.resolve(requestHandlerFunc(req, res, next)).catch((error) => {
       next(error); // Passes the error to Express's error middleware using next(error).
     });
