@@ -19,7 +19,7 @@ const asyncHandler =
     });
   };
 
-export default asyncHandler;
+export { asyncHandler };
 
 /*
 THIS IS A WRAPPER WRAPPING A NORMAL FUNCTION AND GIVING SOME ENHANCEMENT TO PERFORM BETTER DURING DEVELOPMENT
