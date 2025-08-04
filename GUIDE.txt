@@ -19,4 +19,5 @@ VIDEO 11 : How to upload file in backend | Multer
 Video 12: HTTP crash course | http Methods | http headers
 
 VIDEO 13: Complete guide for router and controller with debugging
-1. 
+
+VIDEO 14: Logic Building | Register controller
