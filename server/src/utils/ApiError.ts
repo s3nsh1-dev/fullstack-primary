@@ -7,7 +7,7 @@ class ApiError extends Error {
   constructor(
     // inline field declaration and type annotation to help TS < just add "pubic">
     public statusCode: number,
-    errors: any[] | null = null,
+    errors: string | null = null,
     stack: string = "",
     message: string = "SOMETHING WENT WRONG"
   ) {

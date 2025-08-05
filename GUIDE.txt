@@ -21,3 +21,5 @@ Video 12: HTTP crash course | http Methods | http headers
 VIDEO 13: Complete guide for router and controller with debugging
 
 VIDEO 14: Logic Building | Register controller
+1. onGOing
+2. Read the Old Code if fee doubtful
