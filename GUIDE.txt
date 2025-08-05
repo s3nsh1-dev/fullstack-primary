@@ -21,5 +21,9 @@ Video 12: HTTP crash course | http Methods | http headers
 VIDEO 13: Complete guide for router and controller with debugging
 
 VIDEO 14: Logic Building | Register controller
-1. onGOing
+====== REMOVE THE BAD NUMBERS AFTER LEARNING ======
 2. Read the Old Code if fee doubtful
+3. Write Type for user model and make userControllerType proof
+4. Learning  User controller Code
+
+VIDEO 15: How to use postman for backend

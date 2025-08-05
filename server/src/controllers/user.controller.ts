@@ -2,10 +2,10 @@ import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
 import { User } from "../models/user.model";
 import { uploadOnCloudinary } from "../utils/cloudinary";
+import ApiResponse from "../utils/ApiResponse";
 
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, username, password } = req.body;
-  // console.log("email: ", email);
   if (
     [fullName, email, username, password].some((field) => field.trim() === "")
   ) {
@@ -31,6 +31,33 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(404, "CoverImage not Uploaded Correctly to multer");
   const checkCoverImageCloudinaryUpload =
     await uploadOnCloudinary(coverImagePath);
+
+  if (
+    [checkAvatarCloudinaryUpload, checkCoverImageCloudinaryUpload].some(
+      (item) => !item
+    )
+  ) {
+    throw new ApiError(404, "CoverImage or Avatar not uploaded to Cloudinary");
+  }
+
+  const userEntry = await User.create({
+    fullName,
+    avatar: checkAvatarCloudinaryUpload?.url,
+    coverImage: checkCoverImageCloudinaryUpload?.url,
+    email,
+    password,
+    username: username?.toLowerCase(),
+  });
+  const createdUser = await User.findById(userEntry?._id).select(
+    "-password -refreshToken"
+  );
+  if (!createdUser) {
+    throw new ApiError(500, "Something went wrong while registering user");
+  }
+  console.log("Created User: ", createdUser);
+  return res
+    .status(201)
+    .json(new ApiResponse(200, createdUser, "User Register Successfully"));
 });
 
 export { registerUser };
