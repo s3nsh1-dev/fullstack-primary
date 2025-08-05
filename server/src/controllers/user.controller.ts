@@ -8,8 +8,16 @@ const registerUser = asyncHandler(async (req, res) => {
   if (
     [fullName, email, username, password].some((field) => field.trim() === "")
   ) {
-    throw new ApiError(400, "fill all required field..!");
+    throw new ApiError(400, "fill all required field");
   }
+  const exitedUser = await User.findOne({
+    $or: [{ username, email }],
+  });
+  if (exitedUser)
+    throw new ApiError(409, "User with email or username already exist");
+
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+  const avatarPath = files.avatar?.[0]?.path;
 });
 
 export { registerUser };
