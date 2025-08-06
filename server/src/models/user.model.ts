@@ -95,4 +95,5 @@ userSchema.methods.isPasswordCorrect = checkPasswordViaBcrypt;
 userSchema.methods.generateAccessToken = jwtAccessToken;
 userSchema.methods.generateRefreshToken = jwtRefreshToken;
 
-export const User = mongoose.model("User", userSchema);
+// Mongoose automatically pluralizes and lowercases this name to create the collection name.
+export const User = mongoose.model("User", userSchema, "userDatabase");
