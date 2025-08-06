@@ -5,9 +5,16 @@ import { uploadOnCloudinary } from "../utils/cloudinary";
 import ApiResponse from "../utils/ApiResponse";
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, email, username, password } = req.body;
+  const { fullname, email, username, password } = req.body;
+  console.log(
+    "fullname, email, username and password = ",
+    fullname,
+    email,
+    username,
+    password
+  );
   if (
-    [fullName, email, username, password].some((field) => field.trim() === "")
+    [fullname, email, username, password].some((field) => field.trim() === "")
   ) {
     throw new ApiError(400, "fill all required field");
   }
@@ -19,6 +26,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // read about this type casting
   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+  console.log("files from request: ", files);
   const avatarLocalPath = files.avatar[0]?.path;
   const coverImagePath = files.coverImage[0]?.path;
 
@@ -41,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const userEntry = await User.create({
-    fullName,
+    fullname,
     avatar: checkAvatarCloudinaryUpload?.url,
     coverImage: checkCoverImageCloudinaryUpload?.url,
     email,
