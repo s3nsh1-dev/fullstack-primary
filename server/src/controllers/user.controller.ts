@@ -19,16 +19,22 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // read about this type casting
   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-  const avatarLocalPath = files.avatar[0]?.path;
-  const coverImagePath = files.coverImage[0]?.path;
 
+  const avatarLocalPath: string = files.avatar[0]?.path;
   if (!avatarLocalPath) {
     throw new ApiError(404, "Avatar not uploaded correctly to multer");
   }
   const checkAvatarCloudinaryUpload = await uploadOnCloudinary(avatarLocalPath);
 
-  if (!coverImagePath)
-    throw new ApiError(404, "CoverImage not Uploaded Correctly to multer");
+  let coverImagePath: string = "";
+  if (
+    req.files &&
+    Array.isArray(files.coverImage) &&
+    files.coverImage.length > 0
+  ) {
+    coverImagePath = files.coverImage[0]?.path;
+  }
+
   const checkCoverImageCloudinaryUpload =
     await uploadOnCloudinary(coverImagePath);
 
