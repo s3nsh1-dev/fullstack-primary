@@ -9,20 +9,19 @@ const registerUser = asyncHandler(async (req, res) => {
   if (
     [fullname, email, username, password].some((field) => field.trim() === "")
   ) {
-    throw new ApiError(400, "fill all required field");
+    throw new ApiError(400, "INCOMPLETE INPUT FIELDS BY USER");
   }
   const exitedUser = await User.findOne({
     $or: [{ username, email }],
   });
-  if (exitedUser)
-    throw new ApiError(409, "User with email or username already exist");
+  if (exitedUser) throw new ApiError(409, "DUPLICATE DATA: USERNAME OR EMAIL");
 
   // read about this type casting
   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
   const avatarLocalPath: string = files.avatar[0]?.path;
   if (!avatarLocalPath) {
-    throw new ApiError(404, "Avatar not uploaded correctly to multer");
+    throw new ApiError(404, "UPLOAD FAILED ON MULTER: AVATAR");
   }
   const checkAvatarCloudinaryUpload = await uploadOnCloudinary(avatarLocalPath);
 
@@ -43,7 +42,10 @@ const registerUser = asyncHandler(async (req, res) => {
       (item) => !item
     )
   ) {
-    throw new ApiError(404, "CoverImage or Avatar not uploaded to Cloudinary");
+    throw new ApiError(
+      404,
+      "UPLOAD FAILED ON CLOUDINARY: COVER_IMAGE OR AVATAR"
+    );
   }
 
   const userEntry = await User.create({
@@ -58,7 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
   if (!createdUser) {
-    throw new ApiError(500, "Something went wrong while registering user");
+    throw new ApiError(500, "SOMETHING WENT WRONG WHILE REGISTERING USER");
   }
   console.log("Created User: ", createdUser);
   return res

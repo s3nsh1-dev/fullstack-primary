@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import type { UserThisType, nextType } from "../constants/ModelTypes";
 import env from "../utils/dotenvHelper";
-import { Video } from "./video.model";
 
 const schema = {
   username: {
@@ -34,12 +33,12 @@ const schema = {
   coverImage: {
     type: String,
   },
-  watchHistory: {
-    // why ref is important ?
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Video",
-    default: Video,
-  },
+  watchHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Video",
+    },
+  ],
   password: {
     type: String,
     required: [true, "PASSWORD IN REQUIRED"],

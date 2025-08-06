@@ -9,7 +9,7 @@ class ApiError extends Error {
     public statusCode: number,
     errors: string | null = null,
     stack: string = "",
-    message: string = "SOMETHING WENT WRONG"
+    message: string = "SOMETHING WENT WRONG API VISE"
   ) {
     super(message);
     this.statusCode = statusCode;
