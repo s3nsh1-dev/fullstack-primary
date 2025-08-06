@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import type { UserThisType, nextType } from "../constants/ModelTypes";
 import env from "../utils/dotenvHelper";
+import { Video } from "./video.model";
 
 const schema = {
   username: {
@@ -37,6 +38,7 @@ const schema = {
     // why ref is important ?
     type: mongoose.Schema.Types.ObjectId,
     ref: "Video",
+    default: Video,
   },
   password: {
     type: String,
@@ -44,6 +46,7 @@ const schema = {
   },
   refreshToken: {
     type: String,
+    default: "",
   },
 };
 
@@ -95,4 +98,5 @@ userSchema.methods.isPasswordCorrect = checkPasswordViaBcrypt;
 userSchema.methods.generateAccessToken = jwtAccessToken;
 userSchema.methods.generateRefreshToken = jwtRefreshToken;
 
+// Mongoose automatically pluralizes and lowercases this name to create the collection name. if want to save in desired collection the give the name as 3rd parameter
 export const User = mongoose.model("User", userSchema);
