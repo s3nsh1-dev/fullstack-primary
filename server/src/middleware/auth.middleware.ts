@@ -1,15 +1,15 @@
-import ApiError from "../utils/ApiError.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import ApiError from "../utils/ApiError";
+import { asyncHandler } from "../utils/asyncHandler";
 import jwt from "jsonwebtoken";
-import { User } from "../models/user.model.js";
-import env from "../utils/dotenvHelper.js";
-import { Request } from "express";
+import { User } from "../models/user.model";
+import env from "../utils/dotenvHelper";
+import type { UserThisType } from "../constants/ModelTypes";
 
 // Extend Express Request interface to include 'user'
 declare global {
   namespace Express {
     interface Request {
-      user?: typeof User;
+      user?: UserThisType & Document;
     }
   }
 }
