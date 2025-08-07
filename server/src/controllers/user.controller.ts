@@ -145,6 +145,9 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
+  if (!req.user || !req.user._id) {
+    throw new ApiError(401, "User not authenticated");
+  }
   await User.findByIdAndUpdate(
     req.user._id,
     {
