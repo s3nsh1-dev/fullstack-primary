@@ -145,6 +145,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
+  // get the user from middleware and delete the accessToken
   if (!req.user || !req.user._id) {
     throw new ApiError(401, "User not authenticated");
   }
@@ -172,4 +173,4 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out"));
 });
 
-export { registerUser, loginUser };
+export { registerUser, loginUser, logoutUser };
