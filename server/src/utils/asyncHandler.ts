@@ -11,11 +11,11 @@ type IncomingFunctionType = (
 const asyncHandler =
   (requestHandlerFunc: IncomingFunctionType): RequestHandler =>
   (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(requestHandlerFunc(req, res, next)).catch((error) => {
-      next(error); // Passes the error to Express's error middleware using next(error).
-    });
+    // ensure both sync throws and async rejections are forwarded to next(error)
+    Promise.resolve()
+      .then(() => requestHandlerFunc(req, res, next))
+      .catch((error) => next(error));
   };
-
 export { asyncHandler };
 
 /*
