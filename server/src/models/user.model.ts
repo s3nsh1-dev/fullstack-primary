@@ -58,14 +58,16 @@ async function passwordMiddlewareEncryption(
 ) {
   if (!this.isModified("password")) return next();
 
+  // ❌ Stop execution and tell Mongoose something went wrong
   if (!this.password) {
-    return next(new Error("PASSWORD IS MISSING")); // ❌ Stop execution and tell Mongoose something went wrong
+    return next(new Error("PASSWORD IS MISSING"));
   }
 
   this.password = await bcrypt.hash(this.password, 10);
   next(); // ✅ Everything is fine, go to the next middleware
 }
 
+// bcrypt will automatically convert the password using the same formula
 async function checkPasswordViaBcrypt(this: UserThisType, password: string) {
   return await bcrypt.compare(password, this.password);
 }

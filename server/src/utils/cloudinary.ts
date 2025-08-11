@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import env from "./dotenvHelper";
-import fs from "fs";
+import { promises as fs } from "fs";
 
 /**
  * We can see the CLOUDINARY info like
@@ -19,14 +19,21 @@ const uploadOnCloudinary = async (localFilePath: string) => {
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
-    // console.log("FILE HAS BEEN UPLOADED TO CLOUDINARY: ", response.url);
-    fs.unlinkSync(localFilePath);
-    console.log("LEARN CLOUDINARY RESPONSE: ", response);
+    // This is fine if deletion success/failure doesn’t affect the next step.
+    // File deletion is handled in the background by the OS (non-blocking I/O),
+    // so the Node.js event loop remains free to handle other tasks.
+    fs.unlink(localFilePath).catch((error) => {
+      console.log("SUCCESS: ISSUE IN FILE DELETION", error);
+    });
+
+    // console.log("LEARN CLOUDINARY RESPONSE: ", response);
     return response;
   } catch (error) {
-    // remove the locally saved temp file as the upload operation got failed
-    fs.unlinkSync(localFilePath);
-    console.log("ERROR WHILE UPLOADING TO CLOUDINARY: ", error);
+    // await make sure to delete then proceed
+    await fs.unlink(localFilePath).catch((error) => {
+      console.log("FAILED: ISSUE IN FILE DELETION", error);
+    });
+    // console.log("ERROR WHILE UPLOADING TO CLOUDINARY: ", error);
   }
 };
 

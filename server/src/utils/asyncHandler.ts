@@ -11,7 +11,7 @@ type IncomingFunctionType = (
 const asyncHandler =
   (requestHandlerFunc: IncomingFunctionType): RequestHandler =>
   (req: Request, res: Response, next: NextFunction) => {
-    // ensure both sync throws and async rejections are forwarded to next(error)
+    // working with resolved promise will treat sync or async function in promise chain
     Promise.resolve()
       .then(() => requestHandlerFunc(req, res, next))
       .catch((error) => next(error));
