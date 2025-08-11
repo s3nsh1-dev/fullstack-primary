@@ -21,12 +21,12 @@ const uploadOnCloudinary = async (localFilePath: string) => {
     });
     // console.log("FILE HAS BEEN UPLOADED TO CLOUDINARY: ", response.url);
     fs.unlinkSync(localFilePath);
-    console.log("LEARN CLOUDINARY RESPONSE: ", response);
+    // console.log("LEARN CLOUDINARY RESPONSE: ", response);
     return response;
   } catch (error) {
     // remove the locally saved temp file as the upload operation got failed
     fs.unlinkSync(localFilePath);
-    console.log("ERROR WHILE UPLOADING TO CLOUDINARY: ", error);
+    // console.log("ERROR WHILE UPLOADING TO CLOUDINARY: ", error);
   }
 };
 
