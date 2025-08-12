@@ -73,6 +73,7 @@ async function checkPasswordViaBcrypt(this: UserThisType, password: string) {
 }
 
 async function jwtAccessToken(this: UserThisType) {
+  // never share sensitive info as JWT itself is not encrypted
   const payload = {
     _id: this._id,
     email: this.email,
