@@ -9,7 +9,7 @@ import type { UserThisType } from "../constants/ModelTypes";
 declare global {
   namespace Express {
     interface Request {
-      user?: UserThisType & Document;
+      user?: UserThisType;
     }
   }
 }

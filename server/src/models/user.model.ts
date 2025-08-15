@@ -101,4 +101,4 @@ userSchema.methods.generateAccessToken = jwtAccessToken;
 userSchema.methods.generateRefreshToken = jwtRefreshToken;
 
 // Mongoose automatically pluralizes and lowercases this name to create the collection name. if want to save in desired collection the give the name as 3rd parameter
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model<UserThisType>("User", userSchema);
