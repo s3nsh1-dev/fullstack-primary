@@ -9,6 +9,10 @@ export interface UserThisType extends Document {
   watchHistory?: mongoose.Types.ObjectId;
   password: string;
   refreshToken?: string;
+
+  isPasswordCorrect(password: string): Promise<boolean>;
+  generateAccessToken(): Promise<string>;
+  generateRefreshToken(): Promise<string>;
 }
 
 export type nextType = (err?: Error) => void;

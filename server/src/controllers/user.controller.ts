@@ -3,8 +3,7 @@ import ApiError from "../utils/ApiError";
 import { User } from "../models/user.model";
 import { uploadOnCloudinary } from "../utils/cloudinary";
 import ApiResponse from "../utils/ApiResponse";
-import jwt from "jsonwebtoken";
-import env from "../utils/dotenvHelper";
+import { Types } from "mongoose";
 
 const registerUser = asyncHandler(async (req, res) => {
   const { fullname, email, username, password } = req.body;
@@ -70,11 +69,16 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User Register Successfully"));
 });
 
-const generateAccessAndRefreshTokens = async (userId: string) => {
+const generateAccessAndRefreshTokens = async (
+  userId: string | Types.ObjectId
+) => {
   try {
     const user = await User.findById(userId);
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+    const accessToken = await user.generateAccessToken();
+    const refreshToken = await user.generateRefreshToken();
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
@@ -113,9 +117,9 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credentials");
   }
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    matchedUser._id
-  );
+  const matchedUserId: string = String(matchedUser._id);
+  const { accessToken, refreshToken } =
+    await generateAccessAndRefreshTokens(matchedUserId);
 
   const loggedInUser = await User.findById(matchedUser._id).select(
     "-password -refreshToken"
