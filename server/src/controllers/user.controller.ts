@@ -85,15 +85,15 @@ const generateAccessAndRefreshTokens = async (
     if (!user) {
       throw new ApiError(404, "User not found");
     }
-    const accessToken = await user.generateAccessToken();
-    const refreshToken = await user.generateRefreshToken();
+    const newAccessToken = await user.generateAccessToken();
+    const newRefreshToken = await user.generateRefreshToken();
 
     // Mongoose marks the refreshToken field as "modified" after change.
-    user.refreshToken = refreshToken;
+    user.refreshToken = newRefreshToken;
 
     await user.save({ validateBeforeSave: false });
 
-    return { accessToken, refreshToken };
+    return { newAccessToken, newRefreshToken };
   } catch (error) {
     throw new ApiError(
       500,
@@ -128,30 +128,31 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const matchedUserId: string = String(matchedUser._id);
-  const { accessToken, refreshToken } =
+  const { newAccessToken, newRefreshToken } =
     await generateAccessAndRefreshTokens(matchedUserId);
 
   const loggedInUser: UserStaleType = matchedUser.toObject();
   delete loggedInUser.password;
   delete loggedInUser.refreshToken;
 
-  // so that cookies are no modifiable in frontend
+  // so that cookies are not modifiable in frontend
   const options = {
     httpOnly: true,
     secure: true,
+    sameSite: "strict" as const,
   };
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", newAccessToken, options)
+    .cookie("refreshToken", newRefreshToken, options)
     .json(
       new ApiResponse(
         200,
         {
           user: loggedInUser,
-          accessToken,
-          refreshToken,
+          newAccessToken,
+          newRefreshToken,
         },
         "User logged In Successfully"
       )
