@@ -6,6 +6,13 @@ import ApiResponse from "../utils/ApiResponse";
 import { Types } from "mongoose";
 
 const registerUser = asyncHandler(async (req, res) => {
+  /**
+   * Take user input <text inputs>
+   * Check if user left any input empty
+   * Check for existing user in the database
+   * Take files from user <images in this case>
+   */
+
   const { fullname, email, username, password } = req.body;
   if (
     [fullname, email, username, password].some((field) => field.trim() === "")
