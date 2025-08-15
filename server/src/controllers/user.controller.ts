@@ -4,6 +4,7 @@ import { User } from "../models/user.model";
 import { uploadOnCloudinary } from "../utils/cloudinary";
 import ApiResponse from "../utils/ApiResponse";
 import { Types } from "mongoose";
+import { UserStaleType } from "../constants/ModelTypes";
 
 const registerUser = asyncHandler(async (req, res) => {
   /**
@@ -87,7 +88,9 @@ const generateAccessAndRefreshTokens = async (
     const accessToken = await user.generateAccessToken();
     const refreshToken = await user.generateRefreshToken();
 
+    // Mongoose marks the refreshToken field as "modified" after change.
     user.refreshToken = refreshToken;
+
     await user.save({ validateBeforeSave: false });
 
     return { accessToken, refreshToken };
@@ -128,9 +131,9 @@ const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } =
     await generateAccessAndRefreshTokens(matchedUserId);
 
-  const loggedInUser = await User.findById(matchedUser._id).select(
-    "-password -refreshToken"
-  );
+  const loggedInUser: UserStaleType = matchedUser.toObject();
+  delete loggedInUser.password;
+  delete loggedInUser.refreshToken;
 
   // so that cookies are no modifiable in frontend
   const options = {
