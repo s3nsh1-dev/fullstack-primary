@@ -23,3 +23,6 @@ userRouter.route("/login").post(loginUser);
 userRouter.route("/logout").post(verifyJWT, logoutUser);
 
 export default userRouter;
+
+// verifyJWT should also run when i request /refresh
+// but right now i do not have a /refresh so whats up with that?
