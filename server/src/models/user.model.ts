@@ -57,22 +57,19 @@ async function passwordMiddlewareEncryption(
   next: nextType
 ) {
   if (!this.isModified("password")) return next();
-
-  // ❌ Stop execution and tell Mongoose something went wrong
-  if (!this.password) {
-    return next(new Error("PASSWORD IS MISSING"));
-  }
+  if (!this.password) return next(new Error("PASSWORD IS MISSING"));
 
   this.password = await bcrypt.hash(this.password, 10);
   next(); // ✅ Everything is fine, go to the next middleware
 }
 
-// bcrypt will automatically convert the password using the same formula
+// Non encrypted VS encrypted --> bcrypt encrypt the received string with same formula and compare
 async function checkPasswordViaBcrypt(this: UserThisType, password: string) {
   return await bcrypt.compare(password, this.password);
 }
 
 async function jwtAccessToken(this: UserThisType) {
+  // never share sensitive info as JWT itself is not encrypted
   const payload = {
     _id: this._id,
     email: this.email,
@@ -92,6 +89,7 @@ async function jwtRefreshToken(this: UserThisType) {
     expiresIn: env.REFRESH_TOKEN_EXPIRY,
   });
 }
+
 // Middleware like .pre() and .post() etc. are hooks that run before or after certain Mongoose actions.
 userSchema.pre("save", passwordMiddlewareEncryption);
 // Mongoose Methods are instance methods you call them for logic related to a single document (like checking a password, generating a token, etc.) here < User Model > is a single document
@@ -100,4 +98,4 @@ userSchema.methods.generateAccessToken = jwtAccessToken;
 userSchema.methods.generateRefreshToken = jwtRefreshToken;
 
 // Mongoose automatically pluralizes and lowercases this name to create the collection name. if want to save in desired collection the give the name as 3rd parameter
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model<UserThisType>("User", userSchema);

@@ -3,10 +3,17 @@ import ApiError from "../utils/ApiError";
 import { User } from "../models/user.model";
 import { uploadOnCloudinary } from "../utils/cloudinary";
 import ApiResponse from "../utils/ApiResponse";
-import jwt from "jsonwebtoken";
-import env from "../utils/dotenvHelper";
+import { Types } from "mongoose";
+import { UserStaleType } from "../constants/ModelTypes";
 
 const registerUser = asyncHandler(async (req, res) => {
+  /**
+   * Take user input <text inputs>
+   * Check if user left any input empty
+   * Check for existing user in the database
+   * Take files from user <images in this case>
+   */
+
   const { fullname, email, username, password } = req.body;
   if (
     [fullname, email, username, password].some((field) => field.trim() === "")
@@ -70,16 +77,23 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User Register Successfully"));
 });
 
-const generateAccessAndRefreshTokens = async (userId: string) => {
+const generateAccessAndRefreshTokens = async (
+  userId: string | Types.ObjectId
+) => {
   try {
     const user = await User.findById(userId);
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+    const newAccessToken = await user.generateAccessToken();
+    const newRefreshToken = await user.generateRefreshToken();
 
-    user.refreshToken = refreshToken;
+    // Mongoose marks the refreshToken field as "modified" after change.
+    user.refreshToken = newRefreshToken;
+
     await user.save({ validateBeforeSave: false });
 
-    return { accessToken, refreshToken };
+    return { newAccessToken, newRefreshToken };
   } catch (error) {
     throw new ApiError(
       500,
@@ -113,31 +127,32 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credentials");
   }
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    matchedUser._id
-  );
+  const matchedUserId: string = String(matchedUser._id);
+  const { newAccessToken, newRefreshToken } =
+    await generateAccessAndRefreshTokens(matchedUserId);
 
-  const loggedInUser = await User.findById(matchedUser._id).select(
-    "-password -refreshToken"
-  );
+  const loggedInUser: UserStaleType = matchedUser.toObject();
+  delete loggedInUser.password;
+  delete loggedInUser.refreshToken;
 
-  // so that cookies are no modifiable in frontend
+  // so that cookies are not modifiable in frontend
   const options = {
     httpOnly: true,
     secure: true,
+    sameSite: "strict" as const,
   };
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", newAccessToken, options)
+    .cookie("refreshToken", newRefreshToken, options)
     .json(
       new ApiResponse(
         200,
         {
           user: loggedInUser,
-          accessToken,
-          refreshToken,
+          newAccessToken,
+          newRefreshToken,
         },
         "User logged In Successfully"
       )
