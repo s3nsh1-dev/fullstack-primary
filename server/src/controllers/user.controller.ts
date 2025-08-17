@@ -160,7 +160,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  // get the user from middleware and delete the accessToken
+  // get the user from middleware and delete the refreshToken
   if (!req.user || !req.user._id) {
     throw new ApiError(401, "User not authenticated");
   }
