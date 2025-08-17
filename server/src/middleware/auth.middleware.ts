@@ -6,6 +6,7 @@ import env from "../utils/dotenvHelper";
 import type { UserThisType } from "../constants/ModelTypes";
 
 // Extend Express Request interface to include 'user'
+
 declare global {
   namespace Express {
     interface Request {
@@ -14,6 +15,7 @@ declare global {
   }
 }
 
+// the client sends the accessToken every time. The refreshToken is a fallback mechanism.
 const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const token =
