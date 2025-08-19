@@ -5,6 +5,9 @@ import { uploadOnCloudinary } from "../utils/cloudinary";
 import ApiResponse from "../utils/ApiResponse";
 import { Types } from "mongoose";
 import { UserStaleType } from "../constants/ModelTypes";
+import jwt from "jsonwebtoken";
+import env from "../utils/dotenvHelper";
+import { httpOptions as options } from "../constants";
 
 const registerUser = asyncHandler(async (req, res) => {
   /**
@@ -135,13 +138,6 @@ const loginUser = asyncHandler(async (req, res) => {
   delete loggedInUser.password;
   delete loggedInUser.refreshToken;
 
-  // so that cookies are not modifiable in frontend
-  const options = {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict" as const,
-  };
-
   return res
     .status(200)
     .cookie("accessToken", newAccessToken, options)
@@ -176,11 +172,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     }
   );
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-
   return res
     .status(200)
     .clearCookie("accessToken", options)
@@ -188,4 +179,35 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out"));
 });
 
-export { registerUser, loginUser, logoutUser };
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  try {
+    const incomingRefreshToken =
+      req.cookies?.refreshToken || req.body?.refreshToken;
+
+    if (!incomingRefreshToken) {
+      throw new ApiError(401, "No Refresh Token founds");
+    }
+    const decodedRefreshToken = jwt.verify(
+      incomingRefreshToken,
+      env.REFRESH_TOKEN_SECRET
+    );
+    let user = null;
+    if (
+      typeof decodedRefreshToken === "object" &&
+      "_id" in decodedRefreshToken
+    ) {
+      user = await User.findById(
+        (decodedRefreshToken as jwt.JwtPayload)?._id
+      ).select("--password");
+    } else {
+      throw new ApiError(401, "INVALID REFRESH TOKEN");
+    }
+    if (incomingRefreshToken !== user?.refreshToken) {
+      throw new ApiError(401, "REFRESH TOKEN IS EXPIRED OR USED");
+    }
+    const { newAccessToken, newRefreshToken } =
+      await generateAccessAndRefreshTokens(String(user?._id));
+  } catch (error) {}
+});
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken };
