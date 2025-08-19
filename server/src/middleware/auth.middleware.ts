@@ -18,6 +18,7 @@ declare global {
 // the client sends the accessToken every time. The refreshToken is a fallback mechanism.
 const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
+    // there needs to be cookie in postman to make this work
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");

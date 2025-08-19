@@ -71,7 +71,6 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!createdUser) {
     throw new ApiError(500, "SOMETHING WENT WRONG WHILE REGISTERING USER");
   }
-  console.log("Created User: ", createdUser);
   return res
     .status(201)
     .json(new ApiResponse(200, createdUser, "User Register Successfully"));
@@ -132,6 +131,7 @@ const loginUser = asyncHandler(async (req, res) => {
     await generateAccessAndRefreshTokens(matchedUserId);
 
   const loggedInUser: UserStaleType = matchedUser.toObject();
+  // removing password and refreshToken field from the User data
   delete loggedInUser.password;
   delete loggedInUser.refreshToken;
 
@@ -151,8 +151,8 @@ const loginUser = asyncHandler(async (req, res) => {
         200,
         {
           user: loggedInUser,
-          newAccessToken,
-          newRefreshToken,
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
         },
         "User logged In Successfully"
       )
