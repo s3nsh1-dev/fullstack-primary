@@ -209,7 +209,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     const { newAccessToken, newRefreshToken } =
       await generateAccessAndRefreshTokens(String(user?._id));
 
-    // intentionally not sharing token via JSON
+    // intentionally not sharing token explicitly as JSON body
     return res
       .status(200)
       .cookie("accessToken", newAccessToken, options)
