@@ -4,4 +4,5 @@ export const DB_NAME = "videotube_database";
 export const httpOptions = {
   httpOnly: true,
   secure: true,
+  sameSite: "strict" as const,
 };
