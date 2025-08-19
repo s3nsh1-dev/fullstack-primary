@@ -7,7 +7,7 @@ import { Types } from "mongoose";
 import { UserStaleType } from "../constants/ModelTypes";
 import jwt from "jsonwebtoken";
 import env from "../utils/dotenvHelper";
-import { httpOptions as options } from "../constants";
+import { httpOptions, httpOptions as options } from "../constants";
 
 const registerUser = asyncHandler(async (req, res) => {
   /**
@@ -96,10 +96,11 @@ const generateAccessAndRefreshTokens = async (
     await user.save({ validateBeforeSave: false });
 
     return { newAccessToken, newRefreshToken };
-  } catch (error) {
+  } catch (error: any) {
     throw new ApiError(
       500,
-      "Something went wrong while generating refresh and access token"
+      error?.message ||
+        "Something went wrong while generating refresh and access token"
     );
   }
 };
@@ -207,7 +208,22 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     }
     const { newAccessToken, newRefreshToken } =
       await generateAccessAndRefreshTokens(String(user?._id));
-  } catch (error) {}
+
+    // intentionally not sharing token via JSON
+    return res
+      .status(200)
+      .cookie("accessToken", newAccessToken, options)
+      .cookie("refreshToken", newRefreshToken, options)
+      .json(new ApiResponse(200, { user }, "TOKENS CREDENTIAL REFRESHED"));
+  } catch (error: unknown) {
+    // unknown + narrowing → best practice.
+
+    if (error instanceof Error) {
+      throw new ApiError(401, error.message);
+    } else {
+      throw new ApiError(401, `FAILED TO GENERATE REFRESH TOKEN`);
+    }
+  }
 });
 
 export { registerUser, loginUser, logoutUser, refreshAccessToken };
