@@ -293,6 +293,82 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     );
 });
 
+const updateUserAvatar = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(400, "AVATAR FILE IS REQUIRED");
+  }
+  const avatarLocalPath: string = req.file.path;
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+  if (!avatar || !avatar.url) {
+    throw new ApiError(404, "UPLOAD FAILED ON CLOUDINARY: AVATAR");
+  }
+
+  if (!req.user || !req.user._id) {
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
+  }
+  const updatedUser = await User.findById(req.user._id).select(
+    "-password -refreshToken"
+  );
+  if (!updatedUser) throw new ApiError(404, "USER NOT FOUND");
+
+  updatedUser.avatar = avatar.url;
+  const userWithNewAvatar = await updatedUser.save();
+  if (!userWithNewAvatar) {
+    throw new ApiError(404, "USER IS NOT UPDATED WITH AVATAR");
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { user: userWithNewAvatar },
+        "AVATAR UPDATED SUCCESSFULLY"
+      )
+    );
+});
+
+const updateUserCoverImage = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(400, "COVER FILE IS REQUIRED");
+  }
+  const coverImageLocalPath: string = req.file.path;
+
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+  if (!coverImage || !coverImage.url) {
+    throw new ApiError(400, "UPLOAD FAILED ON CLOUDINARY: COVER IMAGE");
+  }
+
+  if (!req?.user || !req.user?._id) {
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        coverImage: coverImage.url,
+      },
+    },
+    { new: true }
+  ).select("-password -refreshToken");
+
+  if (!updatedUser) {
+    throw new ApiError(404, "USER IS NOT UPDATED WITH COVER IMAGE");
+  }
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { user: updatedUser },
+        "COVER IMAGE UPDATED SUCCESSFULLY"
+      )
+    );
+});
+
 export {
   registerUser,
   loginUser,
@@ -301,4 +377,6 @@ export {
   changeCurrentPassword,
   getCurrentUser,
   updateAccountDetails,
+  updateUserAvatar,
+  updateUserCoverImage,
 };
