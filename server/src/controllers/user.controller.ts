@@ -8,6 +8,7 @@ import { UserStaleType } from "../constants/ModelTypes";
 import jwt from "jsonwebtoken";
 import env from "../utils/dotenvHelper";
 import { httpOptions, httpOptions as options } from "../constants";
+import deleteLocalFile from "../utils/deleteLocalFile";
 
 const registerUser = asyncHandler(async (req, res) => {
   /**
@@ -301,6 +302,9 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
+  // cleanup local file after upload (success or fail)
+  deleteLocalFile(avatarLocalPath);
+
   if (!avatar || !avatar.url) {
     throw new ApiError(404, "UPLOAD FAILED ON CLOUDINARY: AVATAR");
   }
@@ -337,6 +341,10 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   const coverImageLocalPath: string = req.file.path;
 
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+
+  // cleanup local file after upload (success or fail)
+  deleteLocalFile(coverImageLocalPath);
+
   if (!coverImage || !coverImage.url) {
     throw new ApiError(400, "UPLOAD FAILED ON CLOUDINARY: COVER IMAGE");
   }
