@@ -226,4 +226,79 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    throw new ApiError(400, " CURRENT PASSWORD AND NEW PASSWORD ARE REQUIRED");
+  }
+
+  if (!req.user || !req.user._id) {
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
+  }
+
+  const user = await User.findById(req?.user._id);
+  if (!user) {
+    throw new ApiError(404, "USER NOT FOUND");
+  }
+
+  const isPasswordValid = await user.isPasswordCorrect(currentPassword);
+  if (!isPasswordValid) {
+    throw new ApiError(401, " INVALID CURRENT PASSWORD");
+  }
+
+  user.password = newPassword;
+  await user.save({ validateModifiedOnly: true });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "PASSWORD CHANGED SUCCESSFULLY"));
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+  if (!req.user) {
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user: req.user }, "CURRENT USER RETRIEVED"));
+});
+
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { email, fullname } = req.body;
+
+  if (!email && !fullname) {
+    throw new ApiError(400, "EMAIL OR NAME IS REQUIRED");
+  }
+
+  if (!req.user || !req.user._id) {
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req?.user._id,
+    {
+      $set: { fullname, email },
+    },
+    { new: true }
+  ).select("-password ");
+  if (!user) {
+    throw new ApiError(404, "USER NOT FOUND");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { user }, "ACCOUNT DETAILS UPDATED SUCCESSFULLY")
+    );
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails,
+};
