@@ -1,4 +1,3 @@
-import { channel } from "diagnostics_channel";
 import mongoose from "mongoose";
 
 const schema = {
@@ -14,6 +13,4 @@ const schema = {
 
 const subscriptionSchema = new mongoose.Schema(schema, { timestamps: true });
 
-const Subscription = mongoose.model("Subscription", subscriptionSchema);
-
-export default Subscription;
+export const Subscription = mongoose.model("Subscription", subscriptionSchema);
