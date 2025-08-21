@@ -1,14 +1,14 @@
-import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
-import { User } from "../models/user.model";
-import { uploadOnCloudinary } from "../utils/cloudinary";
 import ApiResponse from "../utils/ApiResponse";
-import { Types } from "mongoose";
-import { UserStaleType } from "../constants/ModelTypes";
 import jwt from "jsonwebtoken";
 import env from "../utils/dotenvHelper";
-import { httpOptions, httpOptions as options } from "../constants";
 import deleteLocalFile from "../utils/deleteLocalFile";
+import { asyncHandler } from "../utils/asyncHandler";
+import { User } from "../models/user.model";
+import { uploadOnCloudinary } from "../utils/cloudinary";
+import mongoose, { Types } from "mongoose";
+import { UserStaleType } from "../constants/ModelTypes";
+import { httpOptions as options } from "../constants";
 
 const registerUser = asyncHandler(async (req, res) => {
   /**
@@ -160,7 +160,7 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
   // get the user from middleware and delete the refreshToken
   if (!req.user || !req.user._id) {
-    throw new ApiError(401, "User not authenticated");
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
   }
   await User.findByIdAndUpdate(
     req.user._id,
@@ -200,7 +200,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     ) {
       user = await User.findById(
         (decodedRefreshToken as jwt.JwtPayload)?._id
-      ).select("--password");
+      ).select("-password");
     } else {
       throw new ApiError(401, "INVALID REFRESH TOKEN");
     }
@@ -301,13 +301,11 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   const avatarLocalPath: string = req.file.path;
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
-
-  // cleanup local file after upload (success or fail)
-  deleteLocalFile(avatarLocalPath);
-
   if (!avatar || !avatar.url) {
     throw new ApiError(404, "UPLOAD FAILED ON CLOUDINARY: AVATAR");
   }
+
+  deleteLocalFile(avatarLocalPath);
 
   if (!req.user || !req.user._id) {
     throw new ApiError(401, "USER NOT AUTHENTICATED");
@@ -341,13 +339,12 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   const coverImageLocalPath: string = req.file.path;
 
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
-
-  // cleanup local file after upload (success or fail)
-  deleteLocalFile(coverImageLocalPath);
-
   if (!coverImage || !coverImage.url) {
     throw new ApiError(400, "UPLOAD FAILED ON CLOUDINARY: COVER IMAGE");
   }
+
+  // cleanup local file after upload (success or fail)
+  deleteLocalFile(coverImageLocalPath);
 
   if (!req?.user || !req.user?._id) {
     throw new ApiError(401, "USER NOT AUTHENTICATED");
@@ -377,6 +374,140 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     );
 });
 
+const getUserChannelProfile = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+  if (!username || !username?.trim()) {
+    throw new ApiError(400, "USERNAME NOT FOUND");
+  }
+
+  const channel = await User.aggregate([
+    {
+      $match: { username: username?.toLowerCase() },
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "channel",
+        as: "subscribers",
+      },
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "subscriber",
+        as: "subscribedTo",
+      },
+    },
+    {
+      $addFields: {
+        subscriberCount: {
+          $size: "$subscribers",
+        },
+        channelSubscribedToCount: {
+          $size: "$subscribedTo",
+        },
+        isSubscribed: {
+          $cond: {
+            if: {
+              $in: [req?.user?._id, "$subscribers.subscriber"],
+            },
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        fullname: 1,
+        username: 1,
+        subscriberCount: 1,
+        channelSubscribedToCount: 1,
+        isSubscribed: 1,
+        avatar: 1,
+        coverImage: 1,
+        email: 1,
+      },
+    },
+  ]);
+
+  if (!channel || !channel?.length) {
+    throw new ApiError(400, "CHANNEL DOES NOT EXIST");
+  }
+  console.log("What is aggregate returning:", channel);
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { data: channel[0] },
+        "USER CHANNEL FETCHED SUCCESSFULLY"
+      )
+    );
+});
+
+const getWatchHistory = asyncHandler(async (req, res) => {
+  if (!req.user || !req.user._id) {
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
+  }
+
+  const user = await User.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(req.user._id.toString()),
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "watchHistory",
+        foreignField: "_id",
+        as: "watchHistory",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    fullname: 1,
+                    username: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $addFields: {
+              owner: {
+                $first: "$owner",
+              },
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  if (!user) throw new ApiError(404, "USER NOT FOUND");
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { watchHistory: user[0].watchHistory },
+        "USER WATCH_HISTORY FETCHED SUCCESSFULLY"
+      )
+    );
+});
+
 export {
   registerUser,
   loginUser,
@@ -387,4 +518,6 @@ export {
   updateAccountDetails,
   updateUserAvatar,
   updateUserCoverImage,
+  getUserChannelProfile,
+  getWatchHistory,
 };
