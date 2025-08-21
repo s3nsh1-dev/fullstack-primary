@@ -200,7 +200,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     ) {
       user = await User.findById(
         (decodedRefreshToken as jwt.JwtPayload)?._id
-      ).select("--password");
+      ).select("-password");
     } else {
       throw new ApiError(401, "INVALID REFRESH TOKEN");
     }
