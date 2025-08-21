@@ -1,2 +1,3 @@
 <NOTES>
-Create a utility function to delete the newly updated avatar/cover image file after uploading to cloudinary
+* Sample user does not have refreshToken
+* 
