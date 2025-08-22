@@ -1,3 +1,5 @@
 <NOTES>
 * Sample user does not have refreshToken
-* 
+* Create local files for all the assignments
+* Read about the deleteLocalFile util + learn mongoDB aggregation in details
+* Code the assignments
