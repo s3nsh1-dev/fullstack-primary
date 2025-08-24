@@ -10,8 +10,75 @@ import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 import { isOwner } from "../utils/checkIsOwner.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  //TODO: get all videos based on query, sort, pagination
+  // Extract and cast query params safely
+  const {
+    page = "1",
+    limit = "10",
+    query,
+    sortBy,
+    sortType,
+    userId,
+  } = req.query as {
+    page?: string;
+    limit?: string;
+    query?: string;
+    sortBy?: string;
+    sortType?: string;
+    userId?: string;
+  };
+
+  const matchStage: Record<string, any> = { isPublished: true };
+
+  if (query) {
+    matchStage.$or = [
+      { title: { $regex: query, $options: "i" } },
+      { description: { $regex: query, $options: "i" } },
+    ];
+  }
+
+  if (userId) {
+    matchStage.owner = new mongoose.Types.ObjectId(userId);
+  }
+
+  // Sorting
+  const sortStage: Record<string, 1 | -1> = {};
+  const sortField = sortBy && sortBy.length > 0 ? sortBy : "createdAt";
+  sortStage[sortField] = sortType === "asc" ? 1 : -1;
+
+  // Pagination
+  const pageNum = parseInt(page, 10);
+  const limitNum = parseInt(limit, 10);
+
+  const videos = await Video.aggregate([
+    { $match: matchStage },
+    { $sort: sortStage },
+    { $skip: (pageNum - 1) * limitNum },
+    { $limit: limitNum },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "ownerDetails",
+      },
+    },
+    {
+      $project: {
+        title: 1,
+        description: 1,
+        videoFile: 1,
+        thumbnail: 1,
+        duration: 1,
+        createdAt: 1,
+        "ownerDetails.username": 1,
+        "ownerDetails.avatar": 1,
+      },
+    },
+  ]);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { videos }, "VIDEOS FETCHED SUCCESSFULLY"));
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
@@ -175,6 +242,69 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     );
 });
 
+const getAllVideoOfUser = asyncHandler(async (req, res) => {
+  // TODO: might need some changes based on frontend
+  const { userId } = req.params;
+  if (!userId) throw new ApiError(400, "USER_ID IS REQUIRED");
+
+  const videos = await Video.find({ owner: userId as string }).sort({
+    createdAt: -1,
+  });
+  if (!videos) {
+    return res.status(404).json(new ApiResponse(404, null, "NO VIDEOS FOUND"));
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { videos }, "VIDEOS FETCHED SUCCESSFULLY"));
+});
+
+const getVideosForFeed = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+  const pageNum = Number(page);
+  const limitNum = Number(limit);
+
+  const videos = await Video.aggregate([
+    // 1️⃣ Only published
+    { $match: { isPublished: true } },
+
+    // 2️⃣ Sort newest first
+    { $sort: { createdAt: -1 } },
+
+    // 3️⃣ Pagination
+    { $skip: (pageNum - 1) * limitNum },
+    { $limit: limitNum },
+
+    // 4️⃣ Join with users collection to get owner details
+    {
+      $lookup: {
+        from: "users", // Mongo auto pluralizes your model
+        localField: "owner",
+        foreignField: "_id",
+        as: "ownerDetails",
+      },
+    },
+
+    // 5️⃣ Only send required fields
+    {
+      $project: {
+        title: 1,
+        description: 1,
+        videoFile: 1,
+        thumbnail: 1,
+        duration: 1,
+        createdAt: 1,
+        "ownerDetails.username": 1,
+        "ownerDetails.avatar": 1,
+      },
+    },
+  ]);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { videos }, "VIDEOS FETCHED SUCCESSFULLY"));
+});
+
 export {
   getAllVideos,
   publishAVideo,
@@ -182,6 +312,8 @@ export {
   updateVideo,
   deleteVideo,
   togglePublishStatus,
+  getAllVideoOfUser,
+  getVideosForFeed,
 };
 
 /*
