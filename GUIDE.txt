@@ -1,3 +1,8 @@
+Resources
+github code: https://github.com/hiteshchoudhary/chai-backend/tree/main
+backend model: https://app.eraser.io/workspace/W4Rxe9Jw5uVnzxMuIl7J
+frontend UI: https://devuiv2.vercel.app/templates/youtube
+
 <NOTES>
 * Sample user does not have refreshToken
 * Create local files for all the assignments
