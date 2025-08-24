@@ -5,10 +5,73 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import { toObjectId } from "../utils/convertToObjectId.js";
+import { isOwner } from "../utils/checkIsOwner.js";
+
+// const getAllVideos = asyncHandler(async (req, res) => {
+//   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
+//   //TODO: get all videos based on query, sort, pagination
+// });
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  //TODO: get all videos based on query, sort, pagination
+  const {
+    page = "1",
+    limit = "10",
+    query,
+    sortBy = "createdAt",
+    sortType = "desc",
+    userId,
+  } = req.query as Record<string, string>;
+
+  const pipeline: any[] = [];
+
+  // filter by owner (optional)
+  if (userId) pipeline.push({ $match: { owner: toObjectId(userId) } });
+
+  // text-ish search on title/description (simple regex)
+  if (query && query.trim()) {
+    const rx = new RegExp(query.trim(), "i");
+    pipeline.push({
+      $match: { $or: [{ title: rx }, { description: rx }] },
+    });
+  }
+
+  // only published for public listing
+  pipeline.push({ $match: { isPublished: true } });
+
+  // enrich with owner (display info)
+  pipeline.push(
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [{ $project: { username: 1, avatar: 1 } }],
+      },
+    },
+    { $unwind: "$owner" }
+  );
+
+  const sortDir = sortType === "asc" ? 1 : -1;
+  pipeline.push({ $sort: { [sortBy]: sortDir } });
+
+  const options = {
+    page: Number(page),
+    limit: Number(limit),
+    customLabels: {
+      totalDocs: "total",
+      docs: "videos",
+    },
+  };
+
+  // @ts-ignore (plugin typing is loose)
+  const result = await (Video as any).aggregatePaginate(
+    Video.aggregate(pipeline),
+    options
+  );
+
+  return res.status(200).json(new ApiResponse(200, result, "VIDEOS LISTED"));
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
@@ -16,39 +79,30 @@ const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
   if (!title || !description)
     throw new ApiError(400, "TITLE AND DESCRIPTION ARE REQUIRED");
-  if (!req.file) throw new ApiError(400, "VIDEO FILE IS REQUIRED");
-  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
 
-  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "USER_ID IS REQUIRED");
+
+  const files = req.files as { [k: string]: Express.Multer.File[] };
+  if (!files?.videoFile?.[0]) throw new ApiError(400, "VIDEO FILE IS REQUIRED");
+  if (!files?.thumbnail?.[0])
+    throw new ApiError(400, "THUMBNAIL FILE IS REQUIRED");
 
   const videoLocalPath: string = files.videoFile[0].path;
-  const checkVideoCloudinaryUpload = await uploadOnCloudinary(videoLocalPath);
-  if (!checkVideoCloudinaryUpload)
-    throw new ApiError(400, "VIDEO UPLOAD FAILED");
+  const uploadedVideo = await uploadOnCloudinary(videoLocalPath);
+  if (!uploadedVideo) throw new ApiError(400, "VIDEO UPLOAD FAILED");
 
   let thumbnailLocalPath: string = "";
   if (Array.isArray(files.thumbnail) && files.thumbnail.length > 0) {
     thumbnailLocalPath = files.thumbnail[0].path;
   }
-  const checkThumbnailCloudinaryUpload =
-    await uploadOnCloudinary(thumbnailLocalPath);
-  if (!checkThumbnailCloudinaryUpload)
-    throw new ApiError(400, "THUMBNAIL UPLOAD FAILED");
-
-  /*
-    const video = new Video({
-      title,
-      description,
-      user: req.user.id,
-    });
-    video.videoUrl = uploadedVideo.secure_url;
-    await video.save();
-  */
+  const uploadedThumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+  if (!uploadedThumbnail) throw new ApiError(400, "THUMBNAIL UPLOAD FAILED");
 
   const video = await Video.create({
-    videoFile: checkVideoCloudinaryUpload.url,
-    thumbnail: checkThumbnailCloudinaryUpload.url,
-    owner: new mongoose.Types.ObjectId(String(req.user.id)),
+    videoFile: uploadedVideo.url,
+    thumbnail: uploadedThumbnail.url,
+    owner: toObjectId(req.user.id),
     title,
     description,
     duration: 0,
@@ -83,9 +137,40 @@ const getVideoById = asyncHandler(async (req, res) => {
     );
 });
 
+// const updateVideo = asyncHandler(async (req, res) => {
+//   const { videoId } = req.params;
+//   //TODO: update video details like title, description, thumbnail
+// });
+
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  //TODO: update video details like title, description, thumbnail
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID VIDEO ID");
+
+  const video = await Video.findById(videoId);
+  if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "USER_ID IS REQUIRED");
+
+  if (!isOwner(video.owner, req.user._id)) throw new ApiError(403, "FORBIDDEN");
+
+  const { title, description } = req.body;
+
+  if (req.file) {
+    const upThumb = await uploadOnCloudinary(req.file.path);
+    if (!upThumb) throw new ApiError(400, "THUMBNAIL UPLOAD FAILED");
+    // await deleteFromCloudinary(video.thumbPublicId); // if you store it
+    video.thumbnail = upThumb.url;
+    // video.thumbPublicId = upThumb.public_id;
+  }
+
+  if (title) video.title = title;
+  if (description) video.description = description;
+
+  const updated = await video.save({ validateModifiedOnly: true });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { video: updated }, "VIDEO UPDATED"));
 });
 
 const deleteVideo = asyncHandler(async (req, res) => {
