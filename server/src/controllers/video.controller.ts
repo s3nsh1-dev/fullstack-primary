@@ -7,6 +7,7 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { toObjectId } from "../utils/convertToObjectId.js";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
+import { isOwner } from "../utils/checkIsOwner.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
@@ -77,17 +78,101 @@ const getVideoById = asyncHandler(async (req, res) => {
 });
 
 const updateVideo = asyncHandler(async (req, res) => {
+  //TODO: update video details like title, description and thumbnail
   const { videoId } = req.params;
-  //TODO: update video details like title, description, thumbnail
+  const { title, description } = req.body;
+  const video = await Video.findById(videoId);
+  if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
+
+  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
+  if (!isOwner(video.owner, req.user.id)) {
+    throw new ApiError(403, "NOT AUTHORIZED TO UPDATE THIS VIDEO");
+  }
+
+  video.title = title || video.title;
+  video.description = description || video.description;
+
+  const files = req.files as { [k: string]: Express.Multer.File[] };
+  if (files.thumbnail?.[0]) {
+    const newThumbnailLocalPath = files.thumbnail[0].path;
+    const uploadedThumbnail = await uploadOnCloudinary(newThumbnailLocalPath);
+    if (!uploadedThumbnail) throw new ApiError(400, "THUMBNAIL UPLOAD FAILED");
+
+    await deleteFromCloudinary(video.thumbPublicId);
+    video.thumbnail = uploadedThumbnail.url;
+    video.thumbPublicId = uploadedThumbnail.public_id;
+  }
+  const updatedVideo = await video.save({ validateModifiedOnly: true });
+  if (!updatedVideo) throw new ApiError(400, "VIDEO UPDATE FAILED");
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { video: updatedVideo },
+        "VIDEO DETAILS UPDATED SUCCESSFULLY"
+      )
+    );
 });
 
 const deleteVideo = asyncHandler(async (req, res) => {
-  const { videoId } = req.params;
   //TODO: delete video
+  const { videoId } = req.params;
+  const video = await Video.findById(videoId);
+  if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
+
+  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
+  if (!isOwner(video.owner, req.user.id)) {
+    throw new ApiError(403, "NOT AUTHORIZED TO DELETE THIS VIDEO");
+  }
+
+  const deletedCloudinaryVideoFile = await deleteFromCloudinary(
+    video.videoPublicId
+  );
+  const deletedCloudinaryThumbnailFile = await deleteFromCloudinary(
+    video.thumbPublicId
+  );
+  if (!deletedCloudinaryVideoFile || !deletedCloudinaryThumbnailFile)
+    throw new ApiError(400, "CLOUDINARY FILE DELETION FAILED");
+
+  const deletedVideoFile = await video.deleteOne({ _id: videoId });
+  if (!deletedVideoFile) throw new ApiError(400, "VIDEO DELETION FAILED");
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { result: deletedVideoFile },
+        "VIDEO DELETED SUCCESSFULLY"
+      )
+    );
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
+  const video = await Video.findById(videoId);
+
+  if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
+  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
+  if (!isOwner(video.owner, req.user.id))
+    throw new ApiError(403, "NOT AUTHORIZED TO TOGGLE THIS VIDEO");
+
+  video.isPublished = !video.isPublished;
+  const updatedVideo = await video.save({ validateModifiedOnly: true });
+  if (!updatedVideo)
+    throw new ApiError(400, "VIDEO PUBLISHED STATUS UNCHANGED");
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { video: updatedVideo },
+        "VIDEO PUBLISH STATUS TOGGLED SUCCESSFULLY"
+      )
+    );
 });
 
 export {
