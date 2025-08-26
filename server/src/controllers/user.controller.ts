@@ -77,7 +77,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User Register Successfully"));
+    .json(new ApiResponse(200, createdUser, "USER REGISTERED SUCCESSFULLY"));
 });
 
 const generateAccessAndRefreshTokens = async (
@@ -116,19 +116,20 @@ const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username && !email) {
-    throw new ApiError(400, "username or email is required");
+    throw new ApiError(400, "USERNAME OR EMAIL IS REQUIRED");
   }
 
   const matchedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
   if (!matchedUser) {
-    throw new ApiError(404, "User does not exist");
+    throw new ApiError(404, "USER DOES NOT EXIST");
   }
 
   const isPasswordValid = await matchedUser.isPasswordCorrect(password);
+  console.log("isPasswordValid", isPasswordValid);
   if (!isPasswordValid) {
-    throw new ApiError(401, "Invalid user credentials");
+    throw new ApiError(401, "USER PASSWORD IS INCORRECT");
   }
 
   const matchedUserId: string = String(matchedUser._id);
@@ -152,7 +153,7 @@ const loginUser = asyncHandler(async (req, res) => {
           accessToken: newAccessToken,
           refreshToken: newRefreshToken,
         },
-        "User logged In Successfully"
+        "USER LOGGED IN SUCCESSFULLY"
       )
     );
 });
