@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   getChannelStats,
   getChannelVideos,
-} from "../controllers/dashboard.controller.js";
+} from "../controllers/dashboard.controller";
 import verifyJWT from "../middleware/auth.middleware.js";
 
 const dashboardRouter = Router();

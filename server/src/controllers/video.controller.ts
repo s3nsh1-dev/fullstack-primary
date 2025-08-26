@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-import { Video } from "../models/video.model.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import ApiError from "../utils/ApiError.js";
-import ApiResponse from "../utils/ApiResponse.js";
-import { toObjectId } from "../utils/convertToObjectId.js";
-import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
-import { isOwner } from "../utils/checkIsOwner.js";
+import { Video } from "../models/video.model";
+import { asyncHandler } from "../utils/asyncHandler";
+import { uploadOnCloudinary } from "../utils/cloudinary";
+import ApiError from "../utils/ApiError";
+import ApiResponse from "../utils/ApiResponse";
+import { toObjectId } from "../utils/convertToObjectId";
+import { deleteFromCloudinary } from "../utils/deleteFromCloudinary";
+import { isOwner } from "../utils/checkIsOwner";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   // TODO: Extract and cast query params safely
