@@ -7,9 +7,17 @@ import ApiResponse from "../utils/ApiResponse";
 import { toObjectId } from "../utils/convertToObjectId";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary";
 import { isOwner } from "../utils/checkIsOwner";
+import { User } from "../models/user.model";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   // TODO: Extract and cast query params safely
+
+  // if (!req.user || !req.user._id)
+  //   throw new ApiError(401, "USER_NOT_AUTHENTICATED");
+  // const user = await User.findById(req.user._id as string);
+  // if (!user) throw new ApiError(404, "USER NOT FOUND");
+  // console.log("User: ", user.fullname);
+
   const {
     page = "1",
     limit = "10",
@@ -47,6 +55,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
   // Pagination
   const pageNum = parseInt(page, 10);
   const limitNum = parseInt(limit, 10);
+
   // Count total matching docs (without pagination)
   const totalCount = await Video.countDocuments(matchStage);
 
@@ -98,7 +107,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
-  // TODO: get video, upload to cloudinary, create video
+  // TODO: get video, upload to cloudinary, create video = works
   const { title, description } = req.body;
   const files = req.files as { [k: string]: Express.Multer.File[] };
 
