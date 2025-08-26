@@ -1,4 +1,4 @@
-import mongoose, { isValidObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { Video } from "../models/video.model.js";
 import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -10,7 +10,7 @@ import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js";
 import { isOwner } from "../utils/checkIsOwner.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  // Extract and cast query params safely
+  // TODO: Extract and cast query params safely
   const {
     page = "1",
     limit = "10",
@@ -243,7 +243,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 });
 
 const getAllVideoOfUser = asyncHandler(async (req, res) => {
-  // TODO: might need some changes based on frontend
+  // TODO: ADMIN PANEL AS NON PUBLISHED VIDEO WILL ALSO BE SHOWN
   const { userId } = req.params;
   if (!userId) throw new ApiError(400, "USER_ID IS REQUIRED");
 
