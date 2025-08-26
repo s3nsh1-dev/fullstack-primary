@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import env from "./utils/dotenvHelper";
 //routes import
 import userRouter from "./routes/user.routes";
-
+import videoRouter from "./routes/video.route";
 const app = express();
 /**
  * ABOUT CORS
@@ -39,5 +39,6 @@ app.use(cookieParser());
 
 //routes declaration
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/videos", videoRouter);
 
 export { app };
