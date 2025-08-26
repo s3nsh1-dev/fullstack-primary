@@ -184,13 +184,14 @@ const updateVideo = asyncHandler(async (req, res) => {
   video.title = title || video.title;
   video.description = description || video.description;
 
-  const files = req.files as { [k: string]: Express.Multer.File[] };
-  if (files.thumbnail?.[0]) {
-    const newThumbnailLocalPath = files.thumbnail[0].path;
-    const uploadedThumbnail = await uploadOnCloudinary(newThumbnailLocalPath);
+  const files = req.file as Express.Multer.File;
+  const thumbnailLocalPath = files.path;
+  if (thumbnailLocalPath) {
+    const uploadedThumbnail = await uploadOnCloudinary(thumbnailLocalPath);
     if (!uploadedThumbnail) throw new ApiError(400, "THUMBNAIL UPLOAD FAILED");
 
-    await deleteFromCloudinary(video.thumbPublicId);
+    const foo = await deleteFromCloudinary(video.thumbPublicId);
+    console.log("Deleted old thumbnail: ", foo);
     video.thumbnail = uploadedThumbnail.url;
     video.thumbPublicId = uploadedThumbnail.public_id;
   }
@@ -267,69 +268,6 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     );
 });
 
-const getAllVideoOfUser = asyncHandler(async (req, res) => {
-  // TODO: ADMIN PANEL AS NON PUBLISHED VIDEO WILL ALSO BE SHOWN
-  const { userId } = req.params;
-  if (!userId) throw new ApiError(400, "USER_ID IS REQUIRED");
-
-  const videos = await Video.find({ owner: userId as string }).sort({
-    createdAt: -1,
-  });
-  if (!videos) {
-    return res.status(404).json(new ApiResponse(404, null, "NO VIDEOS FOUND"));
-  }
-
-  res
-    .status(200)
-    .json(new ApiResponse(200, { videos }, "VIDEOS FETCHED SUCCESSFULLY"));
-});
-
-const getVideosForFeed = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  const pageNum = Number(page);
-  const limitNum = Number(limit);
-
-  const videos = await Video.aggregate([
-    // 1️⃣ Only published
-    { $match: { isPublished: true } },
-
-    // 2️⃣ Sort newest first
-    { $sort: { createdAt: -1 } },
-
-    // 3️⃣ Pagination
-    { $skip: (pageNum - 1) * limitNum },
-    { $limit: limitNum },
-
-    // 4️⃣ Join with users collection to get owner details
-    {
-      $lookup: {
-        from: "users", // Mongo auto pluralizes your model
-        localField: "owner",
-        foreignField: "_id",
-        as: "ownerDetails",
-      },
-    },
-
-    // 5️⃣ Only send required fields
-    {
-      $project: {
-        title: 1,
-        description: 1,
-        videoFile: 1,
-        thumbnail: 1,
-        duration: 1,
-        createdAt: 1,
-        "ownerDetails.username": 1,
-        "ownerDetails.avatar": 1,
-      },
-    },
-  ]);
-
-  res
-    .status(200)
-    .json(new ApiResponse(200, { videos }, "VIDEOS FETCHED SUCCESSFULLY"));
-});
-
 export {
   getAllVideos,
   publishAVideo,
@@ -337,6 +275,4 @@ export {
   updateVideo,
   deleteVideo,
   togglePublishStatus,
-  getAllVideoOfUser,
-  getVideosForFeed,
 };
