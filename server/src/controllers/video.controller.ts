@@ -48,6 +48,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
   // Pagination
   const pageNum = parseInt(page, 10);
   const limitNum = parseInt(limit, 10);
+  // Count total matching docs (without pagination)
+  const totalCount = await Video.countDocuments(matchStage);
+
+  // Calculate pagination metadata
+  const totalPages = Math.ceil(totalCount / limitNum);
 
   const videos = await Video.aggregate([
     { $match: matchStage },
@@ -76,9 +81,21 @@ const getAllVideos = asyncHandler(async (req, res) => {
     },
   ]);
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, { videos }, "VIDEOS FETCHED SUCCESSFULLY"));
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        videos,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          totalCount,
+          totalPages,
+        },
+      },
+      "VIDEOS FETCHED SUCCESSFULLY"
+    )
+  );
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
