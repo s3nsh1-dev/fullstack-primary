@@ -7,9 +7,9 @@ class ApiError extends Error {
   constructor(
     // inline field declaration and type annotation to help TS < just add "pubic">
     public statusCode: number,
+    message: string = "SOMETHING WENT WRONG API VISE",
     errors: string | null = null,
-    stack: string = "",
-    message: string = "SOMETHING WENT WRONG API VISE"
+    stack: string = ""
   ) {
     super(message);
     this.statusCode = statusCode;
