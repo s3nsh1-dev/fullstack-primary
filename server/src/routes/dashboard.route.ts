@@ -3,7 +3,7 @@ import {
   getChannelStats,
   getChannelVideos,
 } from "../controllers/dashboard.controller";
-import verifyJWT from "../middleware/auth.middleware.js";
+import verifyJWT from "../middleware/auth.middleware";
 
 const dashboardRouter = Router();
 
