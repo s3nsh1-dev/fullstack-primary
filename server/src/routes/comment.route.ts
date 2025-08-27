@@ -4,7 +4,7 @@ import {
   deleteComment,
   getVideoComments,
   updateComment,
-} from "../controllers/comment.controller.js";
+} from "../controllers/comment.controller";
 import verifyJWT from "../middleware/auth.middleware.js";
 
 const commentRouter = Router();
