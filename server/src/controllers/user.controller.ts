@@ -9,6 +9,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary";
 import mongoose, { Types } from "mongoose";
 import { UserStaleType } from "../constants/ModelTypes";
 import { httpOptions as options } from "../constants";
+import { isValidObjectId } from "mongoose";
 
 const registerUser = asyncHandler(async (req, res) => {
   /**
@@ -508,6 +509,22 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     );
 });
 
+const fetchUserById = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(400, "INVALID USER ID");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "USER NOT FOUND");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "USER FETCHED SUCCESSFULLY"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -520,4 +537,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  fetchUserById,
 };
