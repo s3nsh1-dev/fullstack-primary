@@ -1,6 +1,5 @@
-import mongoose, { isValidObjectId } from "mongoose";
+import { isValidObjectId } from "mongoose";
 import { Tweet } from "../models/tweet.model";
-import { User } from "../models/user.model";
 import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
@@ -47,14 +46,37 @@ const updateTweet = asyncHandler(async (req, res) => {
     throw new ApiError(400, "INVALID TWEET ID");
   }
 
-  const tweet = await Tweet.findByIdAndUpdate(
-    tweetId,
+  const tweet = await Tweet.aggregate([
+    { $match: { _id: toObjectId(tweetId) } },
     { $set: { content } },
-    { new: true }
-  );
-  if (!tweet) {
-    throw new ApiError(404, "TWEET NOT FOUND");
-  }
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "ownerDetails",
+        pipeline: [
+          {
+            $project: {
+              id: 1,
+              username: 1,
+              fullname: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        content: 1,
+        ownerDetails: { $first: "$ownerDetails" },
+      },
+    },
+  ]);
+  if (!tweet) throw new ApiError(404, "TWEET NOT FOUND");
+
   res
     .status(200)
     .json(new ApiResponse(200, { tweet }, "TWEET UPDATED SUCCESSFULLY"));

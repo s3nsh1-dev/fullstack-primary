@@ -10,4 +10,3 @@ frontend UI: https://devuiv2.vercel.app/templates/youtube
 * Code the assignments
 
 <ISSUES>
-Issues while fetching tweets with owner id
