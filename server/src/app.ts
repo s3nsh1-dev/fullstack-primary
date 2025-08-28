@@ -5,6 +5,9 @@ import env from "./utils/dotenvHelper";
 //routes import
 import userRouter from "./routes/user.routes";
 import videoRouter from "./routes/video.route";
+import healthCheckRouter from "./routes/healthCheck.route";
+import tweetRouter from "./routes/tweet.route";
+
 const app = express();
 /**
  * ABOUT CORS
@@ -40,5 +43,7 @@ app.use(cookieParser());
 //routes declaration
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
+app.use("/api/v1/health", healthCheckRouter);
+app.use("/api/v1/tweets", tweetRouter);
 
 export { app };

@@ -5,7 +5,7 @@ import {
   getVideoComments,
   updateComment,
 } from "../controllers/comment.controller";
-import verifyJWT from "../middleware/auth.middleware.js";
+import verifyJWT from "../middleware/auth.middleware";
 
 const commentRouter = Router();
 
