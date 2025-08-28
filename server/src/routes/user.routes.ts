@@ -11,6 +11,7 @@ import {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  fetchUserById,
 } from "../controllers/user.controller";
 import { multerUpload } from "../middleware/multer.middleware";
 import verifyJWT from "../middleware/auth.middleware";
@@ -25,6 +26,7 @@ userRouter.route("/register").post(
   registerUser
 );
 userRouter.route("/login").post(loginUser);
+userRouter.get("/user/:userId", fetchUserById);
 
 //secured routes
 userRouter.route("/logout").post(verifyJWT, logoutUser);
