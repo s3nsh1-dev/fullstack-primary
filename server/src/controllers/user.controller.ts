@@ -437,7 +437,6 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
   if (!channel || !channel?.length) {
     throw new ApiError(400, "CHANNEL DOES NOT EXIST");
   }
-  console.log("What is aggregate returning:", channel);
 
   res
     .status(200)
