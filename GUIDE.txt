@@ -8,3 +8,6 @@ frontend UI: https://devuiv2.vercel.app/templates/youtube
 * Create local files for all the assignments
 * Read about the deleteLocalFile util + learn mongoDB aggregation in details
 * Code the assignments
+
+<ISSUES>
+Issues while fetching tweets with owner id

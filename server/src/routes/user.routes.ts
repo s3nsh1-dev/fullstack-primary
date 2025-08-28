@@ -26,7 +26,7 @@ userRouter.route("/register").post(
   registerUser
 );
 userRouter.route("/login").post(loginUser);
-userRouter.get("/user/:userId", fetchUserById);
+userRouter.get("/:userId", fetchUserById);
 
 //secured routes
 userRouter.route("/logout").post(verifyJWT, logoutUser);
