@@ -8,6 +8,7 @@ const schema = {
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
 };
 const tweetSchema = new mongoose.Schema(schema, { timestamps: true });

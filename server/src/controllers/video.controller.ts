@@ -212,6 +212,8 @@ const updateVideo = asyncHandler(async (req, res) => {
 const deleteVideo = asyncHandler(async (req, res) => {
   //TODO: delete video
   const { videoId } = req.params;
+
+  // first finding ID because we need the VIDEO document to delete the cloudinary files
   const video = await Video.findById(videoId);
   if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
 
