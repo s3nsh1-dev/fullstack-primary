@@ -70,6 +70,7 @@ const getUserChannelSubscribersCount = asyncHandler(async (req, res) => {
             $project: {
               _id: 1,
               fullname: 1,
+              avatar: 1,
             },
           },
         ],
@@ -86,6 +87,7 @@ const getUserChannelSubscribersCount = asyncHandler(async (req, res) => {
             $project: {
               _id: 1,
               fullname: 1,
+              avatar: 1,
             },
           },
         ],
@@ -120,11 +122,12 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
 
   const { subscriberId } = req.params;
   if (!isValidObjectId(subscriberId)) {
-    console.log("Invalid subscriberId:", subscriberId);
     throw new ApiError(400, "INVALID SUBSCRIBER_ID");
   }
 
-  const channels = await Subscription.find({ subscriber: subscriberId });
+  const channels = await Subscription.find({ subscriber: subscriberId })
+    .populate("channel", "_id fullname avatar")
+    .exec();
   if (!channels) throw new ApiError(404, "NO CHANNELS FOUND");
 
   res
