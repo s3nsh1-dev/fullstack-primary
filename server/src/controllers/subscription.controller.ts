@@ -45,7 +45,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     );
 });
 
-const getUserChannelSubscribers = asyncHandler(async (req, res) => {
+const getUserChannelSubscribersCount = asyncHandler(async (req, res) => {
   // TODO: controller to return subscriber list of a channel
 
   const { channelId } = req.params;
@@ -53,12 +53,44 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     throw new ApiError(400, "INVALID CHANNEL_ID");
 
   const subscribers = await Subscription.find({ channel: channelId });
+  if (!subscribers) throw new ApiError(404, "NO SUBSCRIBERS FOUND");
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { subscribers, length: subscribers.length },
+        "CHANNEL SUBSCRIBERS RETRIEVED SUCCESSFULLY"
+      )
+    );
 });
 
 const getSubscribedChannels = asyncHandler(async (req, res) => {
   // TODO: controller to return channel list to which user has subscribed
 
   const { subscriberId } = req.params;
+  if (!isValidObjectId(subscriberId)) {
+    console.log("Invalid subscriberId:", subscriberId);
+    throw new ApiError(400, "INVALID SUBSCRIBER_ID");
+  }
+
+  const channels = await Subscription.find({ subscriber: subscriberId });
+  if (!channels) throw new ApiError(404, "NO CHANNELS FOUND");
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { channels },
+        "SUBSCRIBED CHANNELS RETRIEVED SUCCESSFULLY"
+      )
+    );
 });
 
-export { toggleSubscription, getUserChannelSubscribers, getSubscribedChannels };
+export {
+  toggleSubscription,
+  getUserChannelSubscribersCount,
+  getSubscribedChannels,
+};
