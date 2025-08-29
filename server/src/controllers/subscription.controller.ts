@@ -132,7 +132,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { channels },
+        { channels, length: channels.length },
         "SUBSCRIBED CHANNELS RETRIEVED SUCCESSFULLY"
       )
     );
