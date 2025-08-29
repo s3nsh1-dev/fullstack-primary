@@ -7,6 +7,7 @@ import userRouter from "./routes/user.routes";
 import videoRouter from "./routes/video.route";
 import healthCheckRouter from "./routes/healthCheck.route";
 import tweetRouter from "./routes/tweet.route";
+import subscriptionRouter from "./routes/subscription.route";
 
 const app = express();
 /**
@@ -45,5 +46,6 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
 app.use("/api/v1/health", healthCheckRouter);
 app.use("/api/v1/tweets", tweetRouter);
+app.use("/api/v1/subscriptions", subscriptionRouter);
 
 export { app };
