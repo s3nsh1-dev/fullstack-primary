@@ -4,6 +4,7 @@ import { Subscription } from "../models/subscription.model";
 import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
+import { toObjectId } from "../utils/convertToObjectId";
 
 const toggleSubscription = asyncHandler(async (req, res) => {
   // TODO: toggle subscription
@@ -52,7 +53,55 @@ const getUserChannelSubscribersCount = asyncHandler(async (req, res) => {
   if (!isValidObjectId(channelId))
     throw new ApiError(400, "INVALID CHANNEL_ID");
 
-  const subscribers = await Subscription.find({ channel: channelId });
+  const subscribers = await Subscription.aggregate([
+    {
+      $match: {
+        channel: toObjectId(channelId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "subscriber",
+        foreignField: "_id",
+        as: "subscriberInfo",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              fullname: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "channel",
+        foreignField: "_id",
+        as: "channelInfo",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              fullname: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        subscriberInfo: {
+          $first: "$subscriberInfo",
+        },
+        channelInfo: {
+          $arrayElemAt: ["$channelInfo", 0],
+        },
+      },
+    },
+  ]);
   if (!subscribers) throw new ApiError(404, "NO SUBSCRIBERS FOUND");
 
   res
