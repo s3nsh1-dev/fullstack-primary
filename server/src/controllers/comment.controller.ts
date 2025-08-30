@@ -3,6 +3,7 @@ import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import { Comment } from "../models/comment.model";
 import { asyncHandler } from "../utils/asyncHandler";
+import { isOwner } from "../utils/checkIsOwner";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
@@ -96,6 +97,16 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   const { comment_ID } = req.params;
   if (!comment_ID) throw new ApiError(400, "COMMENT NOT FOUND");
+  if (!req.user || !req.user._id) {
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
+  }
+
+  const comment = await Comment.findById(comment_ID);
+  if (!comment) throw new ApiError(404, "COMMENT NOT FOUND");
+
+  if (isOwner(comment.owner, req.user._id.toString())) {
+    throw new ApiError(403, "USER NOT AUTHORIZED TO MAKE CHANGES");
+  }
 
   const deleteComment = await Comment.findByIdAndDelete(comment_ID)
     .populate("owner", "_id fullname")
@@ -229,33 +240,6 @@ const updateComment = asyncHandler(async (req: CustomRequest, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, updatedComment, "Comment updated successfully"));
-});
-
-const deleteComment = asyncHandler(async (req: CustomRequest, res) => {
-  const { commentId } = req.params;
-
-  if (!commentId) {
-    throw new ApiError(400, "Comment ID is required");
-  }
-
-  const comment = await Comment.findById(commentId);
-
-  if (!comment) {
-    throw new ApiError(404, "Comment not found");
-  }
-  if (!req.user || !req.user._id) {
-    throw new ApiError(401, "Unauthorized");
-  }
-
-  if (comment.owner.toString() !== req.user?._id.toString()) {
-    throw new ApiError(403, "Unauthorized to delete this comment");
-  }
-
-  await Comment.findByIdAndDelete(commentId);
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, {}, "Comment deleted successfully"));
 });
 
 export { getVideoComments, addComment, updateComment, deleteComment };
