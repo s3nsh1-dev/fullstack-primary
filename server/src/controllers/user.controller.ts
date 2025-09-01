@@ -322,7 +322,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(404, "USER IS NOT UPDATED WITH AVATAR");
   }
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -364,7 +364,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   if (!updatedUser) {
     throw new ApiError(404, "USER IS NOT UPDATED WITH COVER IMAGE");
   }
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -438,7 +438,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     throw new ApiError(400, "CHANNEL DOES NOT EXIST");
   }
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -497,7 +497,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
   ]);
   if (!user) throw new ApiError(404, "USER NOT FOUND");
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -519,7 +519,7 @@ const fetchUserById = asyncHandler(async (req, res) => {
     throw new ApiError(404, "USER NOT FOUND");
   }
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, { user }, "USER FETCHED SUCCESSFULLY"));
 });
