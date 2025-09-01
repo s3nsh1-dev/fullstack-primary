@@ -5,18 +5,21 @@ import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import { toObjectId } from "../utils/convertToObjectId";
+import { isOwner } from "../utils/checkIsOwner";
 
 const toggleSubscription = asyncHandler(async (req, res) => {
   // TODO: toggle subscription
 
   const { channelId } = req.params;
+  let responseMessage = "";
+  let resultFindings;
+
   if (!req.user || !req.user._id) throw new ApiError(401, "UNAUTHORIZED USER");
   const subscriberId = req.user._id;
   if (!isValidObjectId(channelId) || !isValidObjectId(subscriberId)) {
     throw new ApiError(400, "INVALID CHANNEL_ID OR SUBSCRIBER_ID");
   }
-  let responseMessage = "";
-  let resultFindings;
+
   const findChannelByID = await Subscription.findOne({
     channel: channelId,
     subscriber: subscriberId,
@@ -31,6 +34,9 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     resultFindings = createSubDocument;
     responseMessage = "SUBSCRIPTION CREATED";
   } else {
+    if (!isOwner(findChannelByID.subscriber, req.user._id.toString())) {
+      throw new ApiError(400, " USER NOT AUTHORIZED TO MAKE CHANGES");
+    }
     resultFindings = await Subscription.findByIdAndDelete(findChannelByID._id);
     responseMessage = "SUBSCRIPTION REMOVED";
   }
