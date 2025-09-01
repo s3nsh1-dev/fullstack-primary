@@ -10,4 +10,4 @@ frontend UI: https://devuiv2.vercel.app/templates/youtube
 * Code the assignments
 
 <ISSUES>
-Compare your Subscription CODE to chatGPT
+add routes to postman

@@ -1,63 +1,80 @@
-import mongoose from "mongoose";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import { Comment } from "../models/comment.model";
 import { asyncHandler } from "../utils/asyncHandler";
 import { isOwner } from "../utils/checkIsOwner";
+import { toObjectId } from "../utils/convertToObjectId";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
 
-  const { videoId } = req.params;
+  const { video_ID } = req.params;
   const { page = 1, limit = 10 } = req.query;
 
-  const videoComments = await Comment.aggregate([
-    { $match: { video: videoId } },
-    {
-      $lookup: {
-        from: "user",
-        as: "ownerDetails",
-        foreignField: "_id",
-        localField: "owner",
-        pipeline: [
-          {
-            $project: {
-              _id: 1,
-              fullname: 1,
-              avatar: 1,
+  const comments = await Comment.aggregatePaginate(
+    Comment.aggregate([
+      { $match: { video: toObjectId(video_ID) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "ownerDetails",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                fullname: 1,
+                avatar: 1,
+              },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
-    { $skip: Number((+page - 1) * +limit) },
-  ]);
-  if (!videoComments) {
-    throw new ApiError(400, "COMMENTS NOT FOUND");
-  }
+      {
+        $addFields: {
+          ownerDetails: { $first: "$ownerDetails" },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          content: 1,
+          video: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          ownerDetails: 1,
+        },
+      },
+    ]),
+    { page: Number(page), limit: Number(limit) }
+  );
+  if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
 
   res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { comments: videoComments },
-        "COMMENTS FETCHED SUCCESSFULLY"
-      )
-    );
+    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
 });
 
-const addComment = asyncHandler(async (req, res) => {
+const addVideoComment = asyncHandler(async (req, res) => {
   // TODO: add a comment to a video, how its using populate in create ?
 
   const { video_ID } = req.params;
   const { content } = req.body;
-  if (!req.user || !req.user._id) throw new ApiError(400, "UNAUTHORIZED USER");
+
+  if (!content || content.length < 1)
+    throw new ApiError(404, "CONTENT NOT FOUND");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED USER");
+
+  console.log("Video_id =", video_ID);
+  console.log("Owner_id =", req.user._id);
 
   const comment = await Comment.create({
     content,
-    video: new mongoose.Schema.Types.ObjectId(video_ID),
-    owner: new mongoose.Schema.Types.ObjectId(String(req.user._id)),
+    video: toObjectId(video_ID),
+    owner: toObjectId(String(req.user._id)),
   });
   if (!comment) throw new ApiError(400, "COMMENT NOT REGISTERED");
 
@@ -69,8 +86,22 @@ const addComment = asyncHandler(async (req, res) => {
 const updateComment = asyncHandler(async (req, res) => {
   // TODO: update a comment
 
+  if (!req.user || !req.user._id) throw new ApiError(401, "Unauthorized");
+
   const { comment_ID } = req.params;
+  if (!comment_ID) throw new ApiError(404, "COMMENT ID NOT FOUND");
+
   const { content } = req.body;
+  if (!content || content.length < 1)
+    throw new ApiError(404, "CONTENT NOT FOUND");
+
+  const comment = await Comment.findById(comment_ID);
+  if (!comment) throw new ApiError(404, "COMMENT NOT FOUND");
+
+  // check owner
+  if (!isOwner(comment.owner, req.user._id.toString())) {
+    throw new ApiError(400, "NOT AUTHORIZED TO MAKE CHANGES");
+  }
 
   const updateComment = await Comment.findByIdAndUpdate(
     comment_ID,
@@ -98,150 +129,113 @@ const deleteComment = asyncHandler(async (req, res) => {
   const { comment_ID } = req.params;
   if (!comment_ID) throw new ApiError(400, "COMMENT NOT FOUND");
   if (!req.user || !req.user._id) {
-    throw new ApiError(401, "USER NOT AUTHENTICATED");
+    throw new ApiError(400, "USER NOT AUTHENTICATED");
   }
 
   const comment = await Comment.findById(comment_ID);
   if (!comment) throw new ApiError(404, "COMMENT NOT FOUND");
 
-  if (isOwner(comment.owner, req.user._id.toString())) {
-    throw new ApiError(403, "USER NOT AUTHORIZED TO MAKE CHANGES");
+  if (!isOwner(comment.owner, req.user._id.toString())) {
+    throw new ApiError(403, "NOT AUTHORIZED TO MAKE CHANGES");
   }
 
-  const deleteComment = await Comment.findByIdAndDelete(comment_ID)
-    .populate("owner", "_id fullname")
-    .populate("video", "_id title");
-  if (!deleteComment) throw new ApiError(404, "COMMENT NOT FOUND");
+  const deletedComment = await Comment.deleteOne();
+  if (!deletedComment) throw new ApiError(404, "COMMENT NOT FOUND");
 
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        { result: deleteComment },
+        { result: deletedComment },
         "Comment deleted successfully"
       )
     );
 });
 
-export { getVideoComments, addComment, updateComment, deleteComment };
+const getTweetComments = asyncHandler(async (req, res) => {
+  //TODO: get all comments for a video
 
-/*
-
-import mongoose from "mongoose";
-import ApiError from "../utils/ApiError";
-import ApiResponse from "../utils/ApiResponse";
-import { Comment } from "../models/comment.model";
-import { asyncHandler } from "../utils/asyncHandler";
-import { UserThisType } from "../constants/ModelTypes";
-import { Request } from "express";
-
-interface CustomRequest extends Request {
-  user?: UserThisType;
-}
-
-const getVideoComments = asyncHandler(async (req: CustomRequest, res) => {
-  const { videoId } = req.params;
+  const { tweet_ID } = req.params;
   const { page = 1, limit = 10 } = req.query;
 
-  if (!videoId) {
-    throw new ApiError(400, "Video ID is required");
-  }
-
-  const commentsAggregate = Comment.aggregate([
-    {
-      $match: {
-        video: new mongoose.Types.ObjectId(videoId),
+  const comments = await Comment.aggregatePaginate(
+    Comment.aggregate([
+      { $match: { tweet: toObjectId(tweet_ID) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "ownerDetails",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                fullname: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "owner",
+      {
+        $addFields: {
+          ownerDetails: { $first: "$ownerDetails" },
+        },
       },
-    },
-    {
-      $addFields: {
-        owner: { $first: "$owner" },
+      {
+        $project: {
+          _id: 1,
+          content: 1,
+          tweet: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          ownerDetails: 1,
+        },
       },
-    },
-  ]);
+    ]),
+    { page: Number(page), limit: Number(limit) }
+  );
+  if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
 
-  const options = {
-    page: Number(page),
-    limit: Number(limit),
-  };
-
-  const comments = await Comment.aggregatePaginate(commentsAggregate, options);
-
-  return res
+  res
     .status(200)
-    .json(new ApiResponse(200, comments, "Comments fetched successfully"));
+    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
 });
 
-const addComment = asyncHandler(async (req: CustomRequest, res) => {
-  const { videoId } = req.params;
+const addTweetComment = asyncHandler(async (req, res) => {
+  // TODO: add a comment to a video, how its using populate in create ?
+
+  const { tweet_ID } = req.params;
   const { content } = req.body;
 
-  if (!content || !videoId) {
-    throw new ApiError(400, "Content and Video ID are required");
-  }
+  if (!content || content.length < 1)
+    throw new ApiError(404, "CONTENT NOT FOUND");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED USER");
+
+  console.log("Owner_id =", req.user._id);
+  console.log("Tweet_id =", tweet_ID);
 
   const comment = await Comment.create({
     content,
-    video: videoId,
-    owner: req.user?._id,
+    tweet: toObjectId(tweet_ID),
+    owner: toObjectId(String(req.user._id)),
   });
+  if (!comment) throw new ApiError(400, "COMMENT NOT REGISTERED");
 
-  const createdComment = await Comment.findById(comment._id).populate("owner");
-
-  if (!createdComment) {
-    throw new ApiError(500, "Something went wrong while creating comment");
-  }
-
-  return res
-    .status(201)
-    .json(new ApiResponse(201, createdComment, "Comment added successfully"));
-});
-
-const updateComment = asyncHandler(async (req: CustomRequest, res) => {
-  const { commentId } = req.params;
-  const { content } = req.body;
-
-  if (!content || !commentId) {
-    throw new ApiError(400, "Content and Comment ID are required");
-  }
-
-  const comment = await Comment.findById(commentId);
-
-  if (!comment) {
-    throw new ApiError(404, "Comment not found");
-  }
-  if (!req.user || !req.user._id) {
-    throw new ApiError(401, "Unauthorized");
-  }
-
-  if (comment.owner.toString() !== req.user?._id.toString()) {
-    throw new ApiError(403, "Unauthorized to update this comment");
-  }
-
-  const updatedComment = await Comment.findByIdAndUpdate(
-    commentId,
-    {
-      $set: {
-        content,
-      },
-    },
-    { new: true }
-  ).populate("owner");
-
-  return res
+  res
     .status(200)
-    .json(new ApiResponse(200, updatedComment, "Comment updated successfully"));
+    .json(new ApiResponse(200, { comment }, "COMMENT REGISTER SUCCESSFULLY"));
 });
 
-export { getVideoComments, addComment, updateComment, deleteComment };
-
- */
+export {
+  getVideoComments,
+  addVideoComment,
+  updateComment,
+  deleteComment,
+  getTweetComments,
+  addTweetComment,
+};
