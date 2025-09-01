@@ -9,12 +9,14 @@ const schema = {
   video: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Video",
-    required: true,
+  },
+  tweet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tweet",
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
   },
 };
 
