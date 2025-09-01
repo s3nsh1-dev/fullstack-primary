@@ -8,12 +8,12 @@ import { toObjectId } from "../utils/convertToObjectId";
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
 
-  const { videoId } = req.params;
+  const { video_ID } = req.params;
   const { page = 1, limit = 10 } = req.query;
 
   const comments = await Comment.aggregatePaginate(
     Comment.aggregate([
-      { $match: { video: toObjectId(videoId) } },
+      { $match: { video: toObjectId(video_ID) } },
       {
         $lookup: {
           from: "users",
@@ -34,6 +34,16 @@ const getVideoComments = asyncHandler(async (req, res) => {
       {
         $addFields: {
           ownerDetails: { $first: "$ownerDetails" },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          content: 1,
+          video: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          ownerDetails: 1,
         },
       },
     ]),
@@ -57,6 +67,9 @@ const addComment = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED USER");
+
+  console.log("Video_id", video_ID);
+  console.log("Owner_id", req.user._id);
 
   const comment = await Comment.create({
     content,
