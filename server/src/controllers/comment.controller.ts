@@ -56,7 +56,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
 });
 
-const addComment = asyncHandler(async (req, res) => {
+const addVideoComment = asyncHandler(async (req, res) => {
   // TODO: add a comment to a video, how its using populate in create ?
 
   const { video_ID } = req.params;
@@ -68,8 +68,8 @@ const addComment = asyncHandler(async (req, res) => {
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED USER");
 
-  console.log("Video_id", video_ID);
-  console.log("Owner_id", req.user._id);
+  console.log("Video_id =", video_ID);
+  console.log("Owner_id =", req.user._id);
 
   const comment = await Comment.create({
     content,
@@ -153,4 +153,89 @@ const deleteComment = asyncHandler(async (req, res) => {
     );
 });
 
-export { getVideoComments, addComment, updateComment, deleteComment };
+const getTweetComments = asyncHandler(async (req, res) => {
+  //TODO: get all comments for a video
+
+  const { tweet_ID } = req.params;
+  const { page = 1, limit = 10 } = req.query;
+
+  const comments = await Comment.aggregatePaginate(
+    Comment.aggregate([
+      { $match: { tweet: toObjectId(tweet_ID) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "ownerDetails",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                fullname: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          ownerDetails: { $first: "$ownerDetails" },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          content: 1,
+          tweet: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          ownerDetails: 1,
+        },
+      },
+    ]),
+    { page: Number(page), limit: Number(limit) }
+  );
+  if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
+});
+
+const addTweetComment = asyncHandler(async (req, res) => {
+  // TODO: add a comment to a video, how its using populate in create ?
+
+  const { tweet_ID } = req.params;
+  const { content } = req.body;
+
+  if (!content || content.length < 1)
+    throw new ApiError(404, "CONTENT NOT FOUND");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED USER");
+
+  console.log("Owner_id =", req.user._id);
+  console.log("Tweet_id =", tweet_ID);
+
+  const comment = await Comment.create({
+    content,
+    tweet: toObjectId(tweet_ID),
+    owner: toObjectId(String(req.user._id)),
+  });
+  if (!comment) throw new ApiError(400, "COMMENT NOT REGISTERED");
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { comment }, "COMMENT REGISTER SUCCESSFULLY"));
+});
+
+export {
+  getVideoComments,
+  addVideoComment,
+  updateComment,
+  deleteComment,
+  getTweetComments,
+  addTweetComment,
+};
