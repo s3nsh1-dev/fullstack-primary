@@ -146,7 +146,6 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHORIZED REQUEST");
-  const userId = req.user._id as string;
 
   const likedVideos = await Like.aggregate([
     {
@@ -209,94 +208,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
       $project: {
         _id: 1,
         video: 1,
-        videoDetails: 1,
-        videoOwner: 1,
-        createdAt: 1,
-      },
-    },
-  ]);
-
-  if (!likedVideos) throw new ApiError(404, "LIKES NOT FOUND");
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { likes: likedVideos, length: likedVideos.length },
-        "USER LIKED VIDEOS FETCHED SUCCESSFULLY"
-      )
-    );
-});
-
-const getLikedComments = asyncHandler(async (req, res) => {
-  //TODO: get all liked videos
-
-  if (!req.user || !req.user._id)
-    throw new ApiError(400, "UNAUTHORIZED REQUEST");
-  const userId = req.user._id as string;
-
-  const likedVideos = await Like.aggregate([
-    {
-      $match: {
-        likedBy: new mongoose.Types.ObjectId(req.user._id.toString()),
-        video: { $exists: true },
-      },
-    },
-    {
-      $lookup: {
-        from: "videos",
-        localField: "video",
-        foreignField: "_id",
-        as: "videoDetails",
-        pipeline: [
-          {
-            $project: {
-              _id: 1,
-              title: 1,
-              description: 1,
-              thumbnail: 1,
-              duration: 1,
-              views: 1,
-              owner: 1,
-            },
-          },
-        ],
-      },
-    },
-    {
-      $unwind: "$videoDetails",
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "videoDetails.owner",
-        foreignField: "_id",
-        as: "videoOwner",
-        pipeline: [
-          {
-            $project: {
-              _id: 1,
-              username: 1,
-              fullname: 1,
-              avatar: 1,
-            },
-          },
-        ],
-      },
-    },
-    // {
-    //   $addFields: {
-    //     videoOwner: { $first: "$videoOwner" },
-    //   },
-    // },
-    {
-      $unwind: "$videoOwner",
-    },
-    {
-      $project: {
-        _id: 1,
-        video: 1,
+        likedBy: 1,
         videoDetails: 1,
         videoOwner: 1,
         createdAt: 1,
@@ -322,45 +234,40 @@ const getLikedTweets = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHORIZED REQUEST");
-  const userId = req.user._id as string;
 
-  const likedVideos = await Like.aggregate([
+  const likedTweets = await Like.aggregate([
     {
       $match: {
         likedBy: new mongoose.Types.ObjectId(req.user._id.toString()),
-        video: { $exists: true },
+        tweet: { $exists: true },
       },
     },
     {
       $lookup: {
-        from: "videos",
-        localField: "video",
+        from: "tweets",
+        localField: "tweet",
         foreignField: "_id",
-        as: "videoDetails",
+        as: "tweetDetails",
         pipeline: [
           {
             $project: {
               _id: 1,
-              title: 1,
-              description: 1,
-              thumbnail: 1,
-              duration: 1,
-              views: 1,
               owner: 1,
+              content: 1,
             },
           },
         ],
       },
     },
     {
-      $unwind: "$videoDetails",
+      $unwind: "$tweetDetails",
     },
     {
       $lookup: {
         from: "users",
-        localField: "videoDetails.owner",
+        localField: "tweetDetails.owner",
         foreignField: "_id",
-        as: "videoOwner",
+        as: "tweetOwner",
         pipeline: [
           {
             $project: {
@@ -373,33 +280,102 @@ const getLikedTweets = asyncHandler(async (req, res) => {
         ],
       },
     },
-    // {
-    //   $addFields: {
-    //     videoOwner: { $first: "$videoOwner" },
-    //   },
-    // },
     {
-      $unwind: "$videoOwner",
+      $addFields: {
+        tweetOwner: { $first: "$tweetOwner" },
+      },
     },
     {
       $project: {
         _id: 1,
-        video: 1,
-        videoDetails: 1,
-        videoOwner: 1,
+        tweet: 1,
+        likedBy: 1,
+        tweetDetails: 1,
+        tweetOwner: 1,
         createdAt: 1,
       },
     },
   ]);
 
-  if (!likedVideos) throw new ApiError(404, "LIKES NOT FOUND");
+  if (!likedTweets) throw new ApiError(404, "LIKES NOT FOUND");
 
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        { likes: likedVideos, length: likedVideos.length },
+        { likes: likedTweets, length: likedTweets.length },
+        "USER LIKED TWEETS FETCHED SUCCESSFULLY"
+      )
+    );
+});
+
+const getLikedComments = asyncHandler(async (req, res) => {
+  //TODO: get all liked videos
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHORIZED REQUEST");
+  const userId = req.user._id as string;
+
+  const likedComments = await Like.aggregate([
+    {
+      $match: {
+        likedBy: new mongoose.Types.ObjectId(userId),
+        comment: { $exists: true },
+      },
+    },
+    {
+      $lookup: {
+        from: "comments",
+        localField: "comment",
+        foreignField: "_id",
+        as: "commentDetails",
+      },
+    },
+    {
+      $unwind: "$commentDetails",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "commentDetails.owner",
+        foreignField: "_id",
+        as: "commentOwner",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              username: 1,
+              fullname: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$commentOwner",
+    },
+    {
+      $project: {
+        _id: 1,
+        comment: 1,
+        likedBy: 1,
+        commentDetails: 1,
+        commentOwner: 1,
+        createdAt: 1,
+      },
+    },
+  ]);
+
+  if (!likedComments) throw new ApiError(404, "LIKES NOT FOUND");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { likes: likedComments, length: likedComments.length },
         "USER LIKED VIDEOS FETCHED SUCCESSFULLY"
       )
     );
