@@ -4,6 +4,8 @@ import {
   toggleCommentLike,
   toggleVideoLike,
   toggleTweetLike,
+  getLikedComments,
+  getLikedTweets,
 } from "../controllers/like.controller";
 import verifyJWT from "../middleware/auth.middleware";
 
@@ -14,5 +16,7 @@ likeRouter.route("/toggle/v/:videoId").post(toggleVideoLike);
 likeRouter.route("/toggle/c/:commentId").post(toggleCommentLike);
 likeRouter.route("/toggle/t/:tweetId").post(toggleTweetLike);
 likeRouter.route("/videos").get(getLikedVideos);
+likeRouter.route("/comments").get(getLikedComments);
+likeRouter.route("/tweets").get(getLikedTweets);
 
 export default likeRouter;
