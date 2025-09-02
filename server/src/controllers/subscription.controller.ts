@@ -41,7 +41,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     responseMessage = "SUBSCRIPTION REMOVED";
   }
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -112,7 +112,7 @@ const getUserChannelSubscribersCount = asyncHandler(async (req, res) => {
   ]);
   if (!subscribers) throw new ApiError(404, "NO SUBSCRIBERS FOUND");
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -136,7 +136,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     .exec();
   if (!channels) throw new ApiError(404, "NO CHANNELS FOUND");
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(

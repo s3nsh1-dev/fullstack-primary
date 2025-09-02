@@ -7,7 +7,6 @@ import ApiResponse from "../utils/ApiResponse";
 import { toObjectId } from "../utils/convertToObjectId";
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary";
 import { isOwner } from "../utils/checkIsOwner";
-import { User } from "../models/user.model";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   // TODO: Extract and cast query params safely
@@ -89,7 +88,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     },
   ]);
 
-  res.status(200).json(
+  return res.status(200).json(
     new ApiResponse(
       200,
       {
@@ -141,7 +140,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
   });
   if (!video) throw new ApiError(400, "VIDEO CREATION FAILED");
 
-  res
+  return res
     .status(201)
     .json(new ApiResponse(201, { video }, "VIDEO PUBLISHED SUCCESSFULLY"));
 });
@@ -158,7 +157,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     throw new ApiError(404, "VIDEO NOT FOUND");
   }
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -198,7 +197,7 @@ const updateVideo = asyncHandler(async (req, res) => {
   const updatedVideo = await video.save({ validateModifiedOnly: true });
   if (!updatedVideo) throw new ApiError(400, "VIDEO UPDATE FAILED");
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -234,7 +233,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
   const deletedVideoFile = await video.deleteOne({ _id: videoId });
   if (!deletedVideoFile) throw new ApiError(400, "VIDEO DELETION FAILED");
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -259,7 +258,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
   if (!updatedVideo)
     throw new ApiError(400, "VIDEO PUBLISHED STATUS UNCHANGED");
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(

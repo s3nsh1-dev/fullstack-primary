@@ -5,7 +5,7 @@ import ApiResponse from "../utils/ApiResponse";
 const healthCheck = asyncHandler(async (req, res) => {
   //TODO: build a healthCheck response that simply returns the OK status as json with a message
   const response = new ApiResponse(200, {}, "SERVICE IS HEALTHY");
-  res.status(200).json(response);
+  return res.status(200).json(response);
 });
 
 const checkUserAuthDetails = asyncHandler(async (req, res) => {
@@ -14,7 +14,7 @@ const checkUserAuthDetails = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(401, "UNAUTHORIZED");
   }
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, { user }, "LOGGED IN USER'S AUTH DETAILS"));
 });

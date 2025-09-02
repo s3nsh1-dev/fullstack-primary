@@ -51,7 +51,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
   );
   if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
 });
@@ -78,7 +78,7 @@ const addVideoComment = asyncHandler(async (req, res) => {
   });
   if (!comment) throw new ApiError(400, "COMMENT NOT REGISTERED");
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, { comment }, "COMMENT REGISTER SUCCESSFULLY"));
 });
@@ -112,7 +112,7 @@ const updateComment = asyncHandler(async (req, res) => {
     .populate("video", "_id title");
   if (!updateComment) throw new ApiError(400, "COMMENT NOT UPDATED");
 
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -199,7 +199,7 @@ const getTweetComments = asyncHandler(async (req, res) => {
   );
   if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
 });
@@ -226,7 +226,7 @@ const addTweetComment = asyncHandler(async (req, res) => {
   });
   if (!comment) throw new ApiError(400, "COMMENT NOT REGISTERED");
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, { comment }, "COMMENT REGISTER SUCCESSFULLY"));
 });
