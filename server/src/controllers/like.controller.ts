@@ -197,11 +197,13 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         ],
       },
     },
+    // {
+    //   $addFields: {
+    //     videoOwner: { $first: "$videoOwner" },
+    //   },
+    // },
     {
-      $addFields: {
-        videoDetails: { $first: "$videoDetails" },
-        videoOwner: { $first: "$videoOwnerDetails" },
-      },
+      $unwind: "$videoOwner",
     },
     {
       $project: {
@@ -214,8 +216,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     },
   ]);
 
-  if (!likedVideos || likedVideos.length < 1)
-    throw new ApiError(404, "LIKES NOT FOUND");
+  if (!likedVideos) throw new ApiError(404, "LIKES NOT FOUND");
 
   return res
     .status(200)
@@ -228,4 +229,187 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     );
 });
 
-export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos };
+const getLikedComments = asyncHandler(async (req, res) => {
+  //TODO: get all liked videos
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHORIZED REQUEST");
+  const userId = req.user._id as string;
+
+  const likedVideos = await Like.aggregate([
+    {
+      $match: {
+        likedBy: new mongoose.Types.ObjectId(req.user._id.toString()),
+        video: { $exists: true },
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "video",
+        foreignField: "_id",
+        as: "videoDetails",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              description: 1,
+              thumbnail: 1,
+              duration: 1,
+              views: 1,
+              owner: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$videoDetails",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "videoDetails.owner",
+        foreignField: "_id",
+        as: "videoOwner",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              username: 1,
+              fullname: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    // {
+    //   $addFields: {
+    //     videoOwner: { $first: "$videoOwner" },
+    //   },
+    // },
+    {
+      $unwind: "$videoOwner",
+    },
+    {
+      $project: {
+        _id: 1,
+        video: 1,
+        videoDetails: 1,
+        videoOwner: 1,
+        createdAt: 1,
+      },
+    },
+  ]);
+
+  if (!likedVideos) throw new ApiError(404, "LIKES NOT FOUND");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { likes: likedVideos, length: likedVideos.length },
+        "USER LIKED VIDEOS FETCHED SUCCESSFULLY"
+      )
+    );
+});
+
+const getLikedTweets = asyncHandler(async (req, res) => {
+  //TODO: get all liked videos
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHORIZED REQUEST");
+  const userId = req.user._id as string;
+
+  const likedVideos = await Like.aggregate([
+    {
+      $match: {
+        likedBy: new mongoose.Types.ObjectId(req.user._id.toString()),
+        video: { $exists: true },
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "video",
+        foreignField: "_id",
+        as: "videoDetails",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              description: 1,
+              thumbnail: 1,
+              duration: 1,
+              views: 1,
+              owner: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$videoDetails",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "videoDetails.owner",
+        foreignField: "_id",
+        as: "videoOwner",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              username: 1,
+              fullname: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    // {
+    //   $addFields: {
+    //     videoOwner: { $first: "$videoOwner" },
+    //   },
+    // },
+    {
+      $unwind: "$videoOwner",
+    },
+    {
+      $project: {
+        _id: 1,
+        video: 1,
+        videoDetails: 1,
+        videoOwner: 1,
+        createdAt: 1,
+      },
+    },
+  ]);
+
+  if (!likedVideos) throw new ApiError(404, "LIKES NOT FOUND");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { likes: likedVideos, length: likedVideos.length },
+        "USER LIKED VIDEOS FETCHED SUCCESSFULLY"
+      )
+    );
+});
+
+export {
+  toggleCommentLike,
+  toggleTweetLike,
+  toggleVideoLike,
+  getLikedVideos,
+  getLikedComments,
+  getLikedTweets,
+};
