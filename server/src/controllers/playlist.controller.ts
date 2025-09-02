@@ -7,6 +7,9 @@ import { asyncHandler } from "../utils/asyncHandler";
 const createPlaylist = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
 
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { name, description }, "Create playlist"));
   //TODO: create playlist
 });
 

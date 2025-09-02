@@ -10,4 +10,5 @@ frontend UI: https://devuiv2.vercel.app/templates/youtube
 * Code the assignments
 
 <ISSUES>
-test likes api routes in postman
+Playlist model
+Dashboard model
