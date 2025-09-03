@@ -152,11 +152,41 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 });
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
-  // TODO: remove video from playlist check owner + check owner
+  // TODO: remove video from playlist + check owner
 
   const { playlistId, videoId } = req.params;
   if (!isValidObjectId(playlistId) || !isValidObjectId(videoId))
     throw new ApiError(400, "INVALID PLAYLIST_ID OR VIDEO_ID");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const playlist = await Playlist.findById(playlistId);
+  if (!playlist) throw new ApiError(404, "NO PLAYLIST FOUND");
+
+  if (!isOwner(playlist.owner, req.user._id.toString()))
+    throw new ApiError(400, "USER NOT AUTHORIZED TO MAKE CHANGES");
+
+  const checkVideo = playlist.videos.includes(videoId);
+  if (!checkVideo)
+    throw new ApiError(400, "VIDEO DOES NOT EXIST INSIDE PLAYLIST");
+
+  const updatedPlaylist = await Playlist.findByIdAndUpdate(
+    playlistId,
+    { $pull: { videos: videoId } }, // remove videoId from array
+    { new: true, runValidators: true }
+  ).populate("owner", "_id fullname avatar");
+  if (!updatedPlaylist) throw new ApiError(400, "PLAYLIST NOT UPDATED");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { playlist: updatedPlaylist },
+        "VIDEO REMOVED FROM PLAYLIST"
+      )
+    );
 });
 
 const deletePlaylist = asyncHandler(async (req, res) => {
