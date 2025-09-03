@@ -195,6 +195,25 @@ const deletePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   if (!isValidObjectId(playlistId))
     throw new ApiError(400, "INVALID PLAYLIST_ID");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const deletedPlaylist = await Playlist.findOneAndDelete({
+    _id: playlistId,
+    owner: req.user._id,
+  });
+  if (!deletedPlaylist) throw new ApiError(400, "PLAYLIST NOT DELETED");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { result: deletedPlaylist },
+        "PLAYLIST DELETED SUCCESSFULLY"
+      )
+    );
 });
 
 const updatePlaylist = asyncHandler(async (req, res) => {
@@ -206,6 +225,22 @@ const updatePlaylist = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
   if (!name || !description || name.length < 1 || description.length < 1)
     throw new ApiError(404, "INPUT FIELD MISSING");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const playlist = await Playlist.findOneAndUpdate(
+    { _id: playlistId, owner: req.user._id },
+    {
+      $set: { name, description },
+    },
+    { new: true, runValidators: true }
+  ).populate("owner", "_id fullname avatar");
+
+  if (!playlist) throw new ApiError(400, "PLAYLIST NOT UPDATED");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { playlist }, "PLAYLIST UPDATED SUCCESSFULLY"));
 });
 
 export {
