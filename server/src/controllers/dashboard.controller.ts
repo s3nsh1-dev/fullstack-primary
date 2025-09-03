@@ -12,6 +12,13 @@ const getChannelStats = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const totalVideos = await Video.find({ owner: req.user._id });
+  if (!totalVideos) throw new ApiError(400, "ERROR WHILE FETCHING THE VIDEOS");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { result: totalVideos }, "HERE IS YOUR RESULT"));
 });
 
 const getChannelVideos = asyncHandler(async (req, res) => {
