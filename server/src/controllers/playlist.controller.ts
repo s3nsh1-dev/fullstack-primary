@@ -1,9 +1,10 @@
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 import { Playlist } from "../models/playlist.model";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { toObjectId } from "../utils/convertToObjectId";
+import { isOwner } from "../utils/checkIsOwner";
 
 const createPlaylist = asyncHandler(async (req, res) => {
   //TODO: create playlist
@@ -99,15 +100,55 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { playlist }, "PLAYLIST FETCHED SUCCESSFULLY"));
+    .json(
+      new ApiResponse(
+        200,
+        { playlist: playlist[0] },
+        "PLAYLIST FETCHED SUCCESSFULLY"
+      )
+    );
 });
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
-  // TODO: add video to playlist + check owner
+  // TODO: add video to playlist + check owner + same video can not be added twice
 
   const { playlistId, videoId } = req.params;
   if (!isValidObjectId(playlistId) || !isValidObjectId(videoId))
     throw new ApiError(400, "INVALID PLAYLIST_ID OR VIDEO_ID");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const playlist = await Playlist.findOne({ _id: playlistId });
+  if (!playlist) throw new ApiError(400, "PLAYLIST NOT FOUND");
+
+  if (!isOwner(playlist.owner, req.user._id.toString())) {
+    throw new ApiError(400, "USER NOT AUTHORIZED TO MAKE CHANGES");
+  }
+
+  const checkVideo = playlist.videos.includes(videoId);
+  if (checkVideo) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "VIDEO ALREADY EXIST"));
+  }
+
+  playlist.videos.push(videoId);
+  const updatedPlaylist = await playlist.save({ validateModifiedOnly: true });
+  const populatedPlaylist = await updatedPlaylist.populate(
+    "owner",
+    "_id fullname avatar"
+  );
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { playlist: populatedPlaylist },
+        "VIDEO ADDED TO PLAYLIST"
+      )
+    );
 });
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
