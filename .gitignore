@@ -1,3 +1,11 @@
-*.vscode
+# VS Code settings
+.vscode/
+
+# Text files
 *.txt
+
+# LibreOffice documents
 *.odt
+
+# Project Related Files
+project_related_files/
