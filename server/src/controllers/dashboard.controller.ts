@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { isValidObjectId } from "mongoose";
 import { Video } from "../models/video.model";
 import { Tweet } from "../models/tweet.model";
 import { Subscription } from "../models/subscription.model";
@@ -7,31 +7,28 @@ import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import { toObjectId } from "../utils/convertToObjectId";
-
-type Stats = {
-  [key: string]: number;
-  // Record<string, number>
-};
+import type { Stats } from "../constants/ModelTypes";
 
 const getChannelStats = asyncHandler(async (req, res) => {
   // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc.
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+  if (!isValidObjectId(req.user._id))
+    throw new ApiError(400, "INVALID USER_ID");
 
   const user_ID = req.user._id;
   const stats: Stats = {};
   let totalViews = 0;
 
-  const totalVideos = await Video.find({ owner: user_ID });
-  if (!totalVideos) throw new ApiError(400, "ERROR WHILE FETCHING THE VIDEOS");
-  totalVideos.forEach((item) => {
-    console.log(item.title);
-    totalViews += item.views;
-  });
+  const videos = await Video.find({ owner: user_ID }).select("_id title views");
+  if (!videos) throw new ApiError(400, "NO PUBLISHED VIDEO FOUND");
+  videos.forEach((item) => (totalViews += item.views));
 
-  const subscribers = await Subscription.find({ channel: user_ID });
-  if (!subscribers) throw new ApiError(400, "CHANNEL NOT FOUND");
+  const subscribers = await Subscription.find({ channel: user_ID }).select(
+    "_id subscriber"
+  );
+  if (!subscribers) throw new ApiError(400, "NO SUBSCRIBERS FOUND");
 
   const likes = await Like.aggregate([
     // with this we find out which content is liked <tweet || videos>
@@ -88,16 +85,22 @@ const getChannelStats = asyncHandler(async (req, res) => {
       },
     },
   ]);
+  if (!likes) throw new ApiError(404, "NO LIKED PER CONTENT");
+
+  const tweets = await Tweet.find({ owner: user_ID }).select("_id content");
+  if (!tweets) throw new ApiError(404, "NO PUBLISHED TWEETS FOUND");
 
   stats["totalViews"] = totalViews;
   stats["totalSubscribers"] = subscribers.length;
-  stats["uploadedVideoCount"] = totalVideos.length;
-  stats["totalNumberOfLikesOnContentPublished"] = likes.length;
-  console.log(stats);
+  stats["totalVideoPublished"] = videos.length;
+  stats["totalLikesPerPublishedContent"] = likes.length;
+  stats["totalTweetsPublished"] = tweets.length;
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { stats }, "HERE IS YOUR RESULT"));
+    .json(
+      new ApiResponse(200, { stats }, "CHANNEL STATUS FETCHED SUCCESSFULLY")
+    );
 });
 
 const getChannelVideos = asyncHandler(async (req, res) => {
@@ -105,6 +108,8 @@ const getChannelVideos = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+  if (!isValidObjectId(req.user._id))
+    throw new ApiError(400, "INVALID USER_ID");
 
   const videos = await Video.aggregate([
     { $match: { owner: toObjectId(req.user._id.toString()) } },
