@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/user.model";
 import env from "../utils/dotenvHelper";
 import type { UserThisType } from "../constants/ModelTypes";
+import isUserAccessTokenPayloadType from "../utils/checkPayloadType";
 
 // Extend Express Request interface to include 'user'
-
 declare global {
   namespace Express {
     interface Request {
@@ -26,8 +26,8 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
     if (!token) throw new ApiError(401, "UNAUTHENTICATED REQUEST");
 
     const decodedToken = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
-    console.log("Decoded Token = ", decodedToken);
-    if (!decodedToken) throw new ApiError(400, "INVALID TOKEN");
+    if (!isUserAccessTokenPayloadType(decodedToken))
+      throw new ApiError(400, "INVALID TOKEN");
 
     let user = null;
     if (typeof decodedToken === "object" && "_id" in decodedToken) {

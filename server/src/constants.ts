@@ -7,9 +7,11 @@ export const httpOptions = {
   sameSite: "strict" as const,
 };
 
-export type UserPayloadType = {
-  _id: unknown;
+export type UserAccessTokenPayloadType = {
+  _id: string; // should not be unknown, it's a string in your token
   email: string;
   username: string;
   fullname: string;
+  iat?: number;
+  exp?: number;
 };
