@@ -29,3 +29,8 @@ export type UserStaleType = {
   password?: string;
   refreshToken?: string;
 };
+
+export type Stats = {
+  [key: string]: number;
+  // Record<string, number>
+};
