@@ -11,6 +11,7 @@ import subscriptionRouter from "./routes/subscription.route";
 import commentRouter from "./routes/comment.route";
 import likeRouter from "./routes/like.route";
 import playlistRouter from "./routes/playlist.route";
+import dashboardRouter from "./routes/dashboard.route";
 
 const app = express();
 /**
@@ -53,5 +54,6 @@ app.use("/api/v1/subscriptions", subscriptionRouter);
 app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/playlists", playlistRouter);
+app.use("/api/v1/dashboard", dashboardRouter);
 
 export { app };
