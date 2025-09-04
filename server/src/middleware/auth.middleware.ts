@@ -29,7 +29,7 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
 
     let user = null;
     if (
-      !isAccessPayloadCorrect(decodedToken) &&
+      isAccessPayloadCorrect(decodedToken) &&
       typeof decodedToken === "object" &&
       "_id" in decodedToken
     ) {
