@@ -8,7 +8,7 @@ export const httpOptions = {
 };
 
 export type UserAccessTokenPayloadType = {
-  _id: string; // should not be unknown, it's a string in your token
+  _id: string;
   email: string;
   username: string;
   fullname: string;

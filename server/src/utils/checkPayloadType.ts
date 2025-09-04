@@ -1,8 +1,6 @@
 import type { UserAccessTokenPayloadType } from "../constants";
 
-function isUserAccessTokenPayloadType(
-  obj: any
-): obj is UserAccessTokenPayloadType {
+function isAccessPayloadCorrect(obj: any): obj is UserAccessTokenPayloadType {
   return (
     typeof obj === "object" &&
     obj !== null &&
@@ -15,4 +13,4 @@ function isUserAccessTokenPayloadType(
   );
 }
 
-export default isUserAccessTokenPayloadType;
+export default isAccessPayloadCorrect;
