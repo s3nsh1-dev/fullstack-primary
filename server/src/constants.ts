@@ -6,3 +6,10 @@ export const httpOptions = {
   secure: true,
   sameSite: "strict" as const,
 };
+
+export type UserPayloadType = {
+  _id: unknown;
+  email: string;
+  username: string;
+  fullname: string;
+};

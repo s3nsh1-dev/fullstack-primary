@@ -15,6 +15,8 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+  if (!isValidObjectId(req.user._id))
+    throw new ApiError(400, "INVALID USER_ID");
 
   const createPlaylist = await Playlist.create({
     name,
