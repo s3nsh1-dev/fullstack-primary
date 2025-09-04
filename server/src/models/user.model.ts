@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import type { UserThisType, nextType } from "../constants/ModelTypes";
 import env from "../utils/dotenvHelper";
+import { UserPayloadType } from "../constants";
 
 const schema = {
   username: {
@@ -70,7 +71,7 @@ async function checkPasswordViaBcrypt(this: UserThisType, password: string) {
 
 async function jwtAccessToken(this: UserThisType) {
   // never share sensitive info as JWT itself is not encrypted
-  const payload = {
+  const payload: UserPayloadType = {
     _id: this._id,
     email: this.email,
     username: this.username,

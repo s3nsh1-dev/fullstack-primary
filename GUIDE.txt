@@ -10,5 +10,10 @@ frontend UI: https://devuiv2.vercel.app/templates/youtube
 * Code the assignments
 
 <ISSUES>
-Playlist model
 Dashboard model
+STATS: 
+Total Videos view on the channel = done
+Total subscribers = done
+Uploaded Video count = done
+Total Likes as owner of the content <total views>
+read the $pull on chatGPT

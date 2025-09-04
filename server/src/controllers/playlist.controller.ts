@@ -1,4 +1,4 @@
-import mongoose, { isValidObjectId } from "mongoose";
+import { isValidObjectId } from "mongoose";
 import { Playlist } from "../models/playlist.model";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
@@ -15,6 +15,8 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+  if (!isValidObjectId(req.user._id))
+    throw new ApiError(400, "INVALID USER_ID");
 
   const createPlaylist = await Playlist.create({
     name,
@@ -152,11 +154,41 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 });
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
-  // TODO: remove video from playlist check owner + check owner
+  // TODO: remove video from playlist + check owner
 
   const { playlistId, videoId } = req.params;
   if (!isValidObjectId(playlistId) || !isValidObjectId(videoId))
     throw new ApiError(400, "INVALID PLAYLIST_ID OR VIDEO_ID");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const playlist = await Playlist.findById(playlistId);
+  if (!playlist) throw new ApiError(404, "NO PLAYLIST FOUND");
+
+  if (!isOwner(playlist.owner, req.user._id.toString()))
+    throw new ApiError(400, "USER NOT AUTHORIZED TO MAKE CHANGES");
+
+  const checkVideo = playlist.videos.includes(videoId);
+  if (!checkVideo)
+    throw new ApiError(400, "VIDEO DOES NOT EXIST INSIDE PLAYLIST");
+
+  const updatedPlaylist = await Playlist.findByIdAndUpdate(
+    playlistId,
+    { $pull: { videos: videoId } }, // remove videoId from array
+    { new: true, runValidators: true }
+  ).populate("owner", "_id fullname avatar");
+  if (!updatedPlaylist) throw new ApiError(400, "PLAYLIST NOT UPDATED");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { playlist: updatedPlaylist },
+        "VIDEO REMOVED FROM PLAYLIST"
+      )
+    );
 });
 
 const deletePlaylist = asyncHandler(async (req, res) => {
@@ -165,6 +197,25 @@ const deletePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   if (!isValidObjectId(playlistId))
     throw new ApiError(400, "INVALID PLAYLIST_ID");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const deletedPlaylist = await Playlist.findOneAndDelete({
+    _id: playlistId,
+    owner: req.user._id,
+  });
+  if (!deletedPlaylist) throw new ApiError(400, "PLAYLIST NOT DELETED");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { result: deletedPlaylist },
+        "PLAYLIST DELETED SUCCESSFULLY"
+      )
+    );
 });
 
 const updatePlaylist = asyncHandler(async (req, res) => {
@@ -176,6 +227,22 @@ const updatePlaylist = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
   if (!name || !description || name.length < 1 || description.length < 1)
     throw new ApiError(404, "INPUT FIELD MISSING");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const playlist = await Playlist.findOneAndUpdate(
+    { _id: playlistId, owner: req.user._id },
+    {
+      $set: { name, description },
+    },
+    { new: true, runValidators: true }
+  ).populate("owner", "_id fullname avatar");
+
+  if (!playlist) throw new ApiError(400, "PLAYLIST NOT UPDATED");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { playlist }, "PLAYLIST UPDATED SUCCESSFULLY"));
 });
 
 export {
