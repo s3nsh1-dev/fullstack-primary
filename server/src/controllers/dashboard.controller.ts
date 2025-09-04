@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Video } from "../models/video.model";
+import { Tweet } from "../models/tweet.model";
 import { Subscription } from "../models/subscription.model";
 import { Like } from "../models/like.model";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -8,7 +9,7 @@ import ApiResponse from "../utils/ApiResponse";
 import { toObjectId } from "../utils/convertToObjectId";
 
 type Stats = {
-  [key: string]: string;
+  [key: string]: number;
   // Record<string, number>
 };
 
@@ -33,6 +34,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
   if (!subscribers) throw new ApiError(400, "CHANNEL NOT FOUND");
 
   const likes = await Like.aggregate([
+    // with this we find out which content is liked <tweet || videos>
     {
       $lookup: {
         from: "videos",
@@ -43,8 +45,8 @@ const getChannelStats = asyncHandler(async (req, res) => {
           {
             $project: {
               _id: 1,
-              title: 1,
               owner: 1,
+              title: 1,
             },
           },
         ],
@@ -60,8 +62,8 @@ const getChannelStats = asyncHandler(async (req, res) => {
           {
             $project: {
               _id: 1,
-              content: 1,
               owner: 1,
+              content: 1,
             },
           },
         ],
@@ -77,24 +79,25 @@ const getChannelStats = asyncHandler(async (req, res) => {
         ],
       },
     },
-    // {
-    //   $project: {
-    //     _id: 1,
-    //     likedBy: 1,
-    //     videoDetails: 1,
-    //     tweetDetails: 1,
-    //   },
-    // },
+    {
+      $project: {
+        _id: 1,
+        likedBy: 1,
+        videoDetails: 1,
+        tweetDetails: 1,
+      },
+    },
   ]);
 
-  stats["totalViews"] = totalViews.toString();
-  stats["totalSubscribers"] = subscribers.length.toString();
-  stats["uploadedVideoCount"] = totalVideos.length.toString();
-
+  stats["totalViews"] = totalViews;
+  stats["totalSubscribers"] = subscribers.length;
+  stats["uploadedVideoCount"] = totalVideos.length;
+  stats["totalNumberOfLikesOnContentPublished"] = likes.length;
   console.log(stats);
+
   return res
     .status(200)
-    .json(new ApiResponse(200, { result: likes }, "HERE IS YOUR RESULT"));
+    .json(new ApiResponse(200, { stats }, "HERE IS YOUR RESULT"));
 });
 
 const getChannelVideos = asyncHandler(async (req, res) => {
