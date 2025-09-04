@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 import { Video } from "../models/video.model";
 import { asyncHandler } from "../utils/asyncHandler";
 import { uploadOnCloudinary } from "../utils/cloudinary";
@@ -33,6 +33,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     userId?: string;
   };
 
+  if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
   const matchStage: Record<string, any> = { isPublished: true };
 
   if (query) {
@@ -148,9 +149,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
   //TODO: get video by id
   const { videoId } = req.params;
-  if (!videoId || !videoId.toString()) {
-    throw new ApiError(400, "VIDEO_ID NOT FOUND");
-  }
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
 
   const fetchedVideo = await Video.findById(videoId);
   if (!fetchedVideo) {
@@ -170,12 +169,15 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
   //TODO: update video details like title, description and thumbnail
-  const { videoId } = req.params;
+
   const { title, description } = req.body;
+  const { videoId } = req.params;
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
+  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
+
   const video = await Video.findById(videoId);
   if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
 
-  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
   if (!isOwner(video.owner, req.user.id)) {
     throw new ApiError(403, "NOT AUTHORIZED TO UPDATE THIS VIDEO");
   }
@@ -211,12 +213,13 @@ const updateVideo = asyncHandler(async (req, res) => {
 const deleteVideo = asyncHandler(async (req, res) => {
   //TODO: delete video
   const { videoId } = req.params;
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
+  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
 
   // first finding ID because we need the VIDEO document to delete the cloudinary files
   const video = await Video.findById(videoId);
   if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
 
-  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
   if (!isOwner(video.owner, req.user.id)) {
     throw new ApiError(403, "NOT AUTHORIZED TO DELETE THIS VIDEO");
   }
@@ -246,10 +249,12 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  const video = await Video.findById(videoId);
-
-  if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
   if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
+
+  const video = await Video.findById(videoId);
+  if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
+
   if (!isOwner(video.owner, req.user.id))
     throw new ApiError(403, "NOT AUTHORIZED TO TOGGLE THIS VIDEO");
 
