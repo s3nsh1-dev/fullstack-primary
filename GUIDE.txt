@@ -12,8 +12,8 @@ frontend UI: https://devuiv2.vercel.app/templates/youtube
 <ISSUES>
 Dashboard model
 STATS: 
-Total Videos view on the channel
-Total subscribers
-Uploaded Video count
+Total Videos view on the channel = done
+Total subscribers = done
+Uploaded Video count = done
 Total Likes as owner of the content <total views>
 read the $pull on chatGPT
