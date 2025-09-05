@@ -1,9 +1,16 @@
-import { Box } from "@mui/material";
+import Dashboard from "./pages/Dashboard";
+import Navbar from "./pages/Navbar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <>
-      <Box>This i meTube Streaming Web App</Box>;
+      <Navbar />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
