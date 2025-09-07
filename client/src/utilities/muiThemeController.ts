@@ -3,7 +3,7 @@ import type { ModeType } from "../constants/genericConstants";
 import type { PaletteMode } from "@mui/material/styles";
 
 const buttonColor = {
-  default: "#9112BC",
+  default: "#b744ddff",
   hover: "#9655c7ff",
 };
 
@@ -14,7 +14,7 @@ const backgroundColor = {
 
 const textColor = {
   light: "#f5f5f5",
-  dark: "#23272b",
+  dark: "#000000ff",
 };
 
 export const getTheme = (mode: ModeType) => {
@@ -50,13 +50,16 @@ export const getTheme = (mode: ModeType) => {
           variant: "contained",
         },
         styleOverrides: {
-          contained: {
+          containedPrimary: {
             textTransform: "none",
             borderRadius: 0,
             fontWeight: 600,
             fontSize: "1rem",
+            boxShadow: mode
+              ? "6px 6px 1px rgba(0, 0, 0, 0.3)"
+              : "6px 6px 1px rgba(220, 220, 200)",
             backgroundColor: buttonColor.default,
-            color: textColor.light,
+            color: mode ? textColor.dark : textColor.light,
             "&:hover": {
               backgroundColor: buttonColor.hover,
             },
