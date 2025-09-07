@@ -9,6 +9,7 @@ const Navbar = () => {
   return (
     <AppBar position="static">
       <Toolbar>
+        <IconButton></IconButton>
         <IconButton>
           <img src={mode ? darkModeLogo : lightModeLogo} height={50} />
         </IconButton>
