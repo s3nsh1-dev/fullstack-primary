@@ -1,16 +1,7 @@
 import { createTheme } from "@mui/material/styles";
-import type { ModeType } from "../constants/genericConstants";
+import type { ModeType } from "../constants/genericTypes";
 import type { PaletteMode } from "@mui/material/styles";
-
-const backgroundColor = {
-  light: "#f5f5f5",
-  dark: "#23272b",
-};
-
-const textColor = {
-  light: "#f5f5f5",
-  dark: "#000000ff",
-};
+import { backgroundColor, textColor } from "../constants/uiConstants";
 
 export const getTheme = (mode: ModeType) => {
   const themeMode: PaletteMode = mode === true ? "light" : "dark";
