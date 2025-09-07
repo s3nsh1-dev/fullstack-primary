@@ -2,6 +2,21 @@ import { createTheme } from "@mui/material/styles";
 import type { ModeType } from "../constants/genericConstants";
 import type { PaletteMode } from "@mui/material/styles";
 
+const buttonColor = {
+  default: "#9112BC",
+  hover: "#9655c7ff",
+};
+
+const backgroundColor = {
+  light: "#f5f5f5",
+  dark: "#23272b",
+};
+
+const textColor = {
+  light: "#f5f5f5",
+  dark: "#23272b",
+};
+
 export const getTheme = (mode: ModeType) => {
   const themeMode: PaletteMode = mode === true ? "light" : "dark";
 
@@ -11,12 +26,12 @@ export const getTheme = (mode: ModeType) => {
     },
     palette: {
       mode: themeMode,
-      primary: { main: mode ? "#f5f5f5" : "#23272b" },
+      primary: { main: mode ? backgroundColor.light : backgroundColor.dark },
       background: {
-        default: mode ? "#f5f5f5" : "#23272b",
+        default: mode ? backgroundColor.light : backgroundColor.dark,
       },
       text: {
-        primary: mode ? "#23272b" : "#f5f5f5",
+        primary: mode ? textColor.dark : textColor.light,
       },
     },
     components: {
@@ -31,9 +46,33 @@ export const getTheme = (mode: ModeType) => {
         },
       },
       MuiButton: {
+        defaultProps: {
+          variant: "contained",
+        },
         styleOverrides: {
-          contained: {},
-          outlined: {},
+          contained: {
+            textTransform: "none",
+            borderRadius: 0,
+            fontWeight: 600,
+            fontSize: "1rem",
+            backgroundColor: buttonColor.default,
+            color: textColor.light,
+            "&:hover": {
+              backgroundColor: buttonColor.hover,
+            },
+          },
+          outlinedPrimary: {
+            textTransform: "none",
+            borderRadius: 0,
+            fontWeight: 600,
+            fontSize: "1rem",
+            backgroundColor: "transparent",
+            color: mode ? textColor.dark : textColor.light,
+            border: `2px solid ${mode ? textColor.light : textColor.dark}`,
+            ":hover": {
+              backgroundColor: buttonColor.default,
+            },
+          },
         },
       },
     },
