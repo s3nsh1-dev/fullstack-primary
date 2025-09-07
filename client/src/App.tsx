@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { getTheme } from "./utilities/muiThemeController";
 import useMode from "./hooks/useMode";
+import Test from "./pages/Test";
 
 function App() {
   const { mode } = useMode();
@@ -15,6 +16,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
