@@ -12,7 +12,7 @@ const ModeContextProvider: FC<ModeContextProviderType> = ({ children }) => {
 
   const handleModeType = () => {
     setMode((prevMode) => !prevMode);
-    localStorage.setItem("mode", String(mode));
+    localStorage.setItem("mode", String(!mode));
   };
 
   const modeContextValue = { mode, changeMode: handleModeType };
