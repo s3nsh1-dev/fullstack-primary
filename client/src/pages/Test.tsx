@@ -111,23 +111,26 @@ const Test: React.FC<Props> = ({ navTitle, children }) => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ marginRight: 5 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <IconButton>
-            <img src={mode ? darkModeLogo : lightModeLogo} height={50} />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {navTitle}
-          </Typography>
-          <Button onClick={changeMode}>{buttonText}</Button>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+            >
+              <MenuIcon />
+            </IconButton>
+            <IconButton>
+              <img src={mode ? darkModeLogo : lightModeLogo} height={50} />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              {navTitle}
+            </Typography>
+          </Box>
+          <Box>
+            <Button onClick={changeMode}>{buttonText}</Button>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

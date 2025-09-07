@@ -6,13 +6,19 @@ type ModeContextProviderType = {
   children: React.ReactNode;
 };
 
+const getStoredMode = (): ModeType => {
+  return localStorage.getItem("mode") === "true";
+};
+
 const ModeContextProvider: FC<ModeContextProviderType> = ({ children }) => {
-  const localStorageModeValue = Boolean(localStorage.getItem("mode"));
-  const [mode, setMode] = useState<ModeType>(localStorageModeValue || true);
+  const [mode, setMode] = useState<ModeType>(getStoredMode);
 
   const handleModeType = () => {
-    setMode((prevMode) => !prevMode);
-    localStorage.setItem("mode", String(!mode));
+    setMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem("mode", String(newMode));
+      return newMode;
+    });
   };
 
   const modeContextValue = { mode, changeMode: handleModeType };
