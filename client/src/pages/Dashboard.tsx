@@ -1,16 +1,7 @@
-import { Box, Button } from "@mui/material";
-import useMode from "../hooks/useMode";
+import { Box } from "@mui/material";
 
 const Dashboard = () => {
-  const { changeMode } = useMode();
-  return (
-    <Box>
-      This is Dashboard
-      <Button color="secondary" onClick={changeMode} variant="outlined">
-        change Mode
-      </Button>
-    </Box>
-  );
+  return <Box>This is Dashboard</Box>;
 };
 
 export default Dashboard;
