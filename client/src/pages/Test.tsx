@@ -7,7 +7,6 @@ import MuiAppBar, {
 } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -19,9 +18,9 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import useMode from "../hooks/useMode";
-import lightModeLogo from "../assets/site_logo_white_croppedVersion.png";
-import darkModeLogo from "../assets/site_logo_black_croppedVersion.png";
 import Button from "@mui/material/Button";
+import type { TestProps } from "../constants/componentPropTypes";
+import SiteLogo from "../components/ui-components/SiteLogo";
 
 const drawerWidth = 240;
 
@@ -94,12 +93,10 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-type Props = {
-  navTitle?: string;
-  children?: React.ReactNode;
-};
+const sideBarList = ["Inbox", "Starred", "Send email", "Drafts"];
+const sideBarSecondaryList = ["All mail", "Trash", "Spam"];
 
-const Test: React.FC<Props> = ({ navTitle, children }) => {
+const Test: React.FC<TestProps> = ({ navTitle, children }) => {
   const [open, setOpen] = React.useState(false);
   const { mode, changeMode } = useMode();
   const handleDrawerOpen = () => {
@@ -109,7 +106,6 @@ const Test: React.FC<Props> = ({ navTitle, children }) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box>
@@ -121,14 +117,12 @@ const Test: React.FC<Props> = ({ navTitle, children }) => {
             >
               <MenuIcon />
             </IconButton>
-            <IconButton>
-              <img src={mode ? darkModeLogo : lightModeLogo} height={50} />
-            </IconButton>
+            <SiteLogo />
             <Typography variant="h6" noWrap component="div">
               {navTitle}
             </Typography>
           </Box>
-          <Box>
+          <Box className="whatever-app-wants">
             <Button onClick={changeMode}>{buttonText}</Button>
           </Box>
         </Toolbar>
@@ -137,7 +131,7 @@ const Test: React.FC<Props> = ({ navTitle, children }) => {
         <DrawerHeader></DrawerHeader>
         <Divider />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          {sideBarList.map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={[
@@ -189,7 +183,7 @@ const Test: React.FC<Props> = ({ navTitle, children }) => {
         </List>
         <Divider />
         <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
+          {sideBarSecondaryList.map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={[

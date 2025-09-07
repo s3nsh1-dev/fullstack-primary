@@ -1,6 +1,6 @@
 import { useState, type FC } from "react";
 import ModeContext from "./modeContext";
-import type { ModeType } from "../constants/genericConstants";
+import type { ModeType } from "../constants/genericTypes";
 
 type ModeContextProviderType = {
   children: React.ReactNode;
