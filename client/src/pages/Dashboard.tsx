@@ -4,7 +4,7 @@ import Test from "./Test";
 const Dashboard = () => {
   return (
     <Box>
-      <Test navTitle="meTube">
+      <Test navTitle="">
         <Typography sx={{ marginBottom: 2 }}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus

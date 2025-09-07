@@ -19,8 +19,8 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import useMode from "../hooks/useMode";
-import darkModeLogo from "../assets/lm-site-logo.png";
-import lightModeLogo from "../assets/dm-site-logo.png";
+import lightModeLogo from "../assets/site_logo_white_croppedVersion.png";
+import darkModeLogo from "../assets/site_logo_black_croppedVersion.png";
 import Button from "@mui/material/Button";
 
 const drawerWidth = 240;
