@@ -26,9 +26,25 @@ export const getTheme = (mode: ModeType) => {
           root: {},
         },
       },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundColor: mode
+              ? backgroundColor.light
+              : backgroundColor.dark,
+          },
+        },
+      },
       MuiToolbar: {
         styleOverrides: {
-          root: {},
+          root: {
+            borderBottom: `1px solid ${
+              mode ? backgroundColor.dark : backgroundColor.light
+            }`,
+            backgroundColor: mode
+              ? backgroundColor.light
+              : backgroundColor.dark,
+          },
         },
       },
       MuiButton: {
@@ -42,6 +58,7 @@ export const getTheme = (mode: ModeType) => {
             borderRadius: 0,
             fontWeight: 600,
             color: mode ? textColor.dark : textColor.light,
+            backgroundColor: mode ? "#f5f5f5" : "#23272b",
           },
         },
       },
