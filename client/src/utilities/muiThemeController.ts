@@ -1,21 +1,7 @@
 import { createTheme } from "@mui/material/styles";
-import type { ModeType } from "../constants/genericConstants";
+import type { ModeType } from "../constants/genericTypes";
 import type { PaletteMode } from "@mui/material/styles";
-
-const buttonColor = {
-  default: "#b744ddff",
-  hover: "#9655c7ff",
-};
-
-const backgroundColor = {
-  light: "#f5f5f5",
-  dark: "#23272b",
-};
-
-const textColor = {
-  light: "#f5f5f5",
-  dark: "#000000ff",
-};
+import { backgroundColor, textColor } from "../constants/uiConstants";
 
 export const getTheme = (mode: ModeType) => {
   const themeMode: PaletteMode = mode === true ? "light" : "dark";
@@ -40,9 +26,25 @@ export const getTheme = (mode: ModeType) => {
           root: {},
         },
       },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundColor: mode
+              ? backgroundColor.light
+              : backgroundColor.dark,
+          },
+        },
+      },
       MuiToolbar: {
         styleOverrides: {
-          root: {},
+          root: {
+            borderBottom: `1px solid ${
+              mode ? backgroundColor.dark : backgroundColor.light
+            }`,
+            backgroundColor: mode
+              ? backgroundColor.light
+              : backgroundColor.dark,
+          },
         },
       },
       MuiButton: {
@@ -50,31 +52,13 @@ export const getTheme = (mode: ModeType) => {
           variant: "contained",
         },
         styleOverrides: {
-          containedPrimary: {
+          root: {
             textTransform: "none",
+            fontSize: "1rem",
             borderRadius: 0,
             fontWeight: 600,
-            fontSize: "1rem",
-            boxShadow: mode
-              ? "6px 6px 1px rgba(0, 0, 0, 0.3)"
-              : "6px 6px 1px rgba(220, 220, 200)",
-            backgroundColor: buttonColor.default,
             color: mode ? textColor.dark : textColor.light,
-            "&:hover": {
-              backgroundColor: buttonColor.hover,
-            },
-          },
-          outlinedPrimary: {
-            textTransform: "none",
-            borderRadius: 0,
-            fontWeight: 600,
-            fontSize: "1rem",
-            backgroundColor: "transparent",
-            color: mode ? textColor.dark : textColor.light,
-            border: `2px solid ${mode ? textColor.light : textColor.dark}`,
-            ":hover": {
-              backgroundColor: buttonColor.default,
-            },
+            backgroundColor: mode ? "#f5f5f5" : "#23272b",
           },
         },
       },
