@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  styled,
-  useTheme,
-  type Theme,
-  type CSSObject,
-} from "@mui/material/styles";
+import { styled, type Theme, type CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, {
@@ -12,19 +7,32 @@ import MuiAppBar, {
 } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import useMode from "../hooks/useMode";
+import Button from "@mui/material/Button";
+import type { TestProps } from "../constants/componentPropTypes";
+import SiteLogo from "../components/ui-components/SiteLogo";
+import HomeIcon from "@mui/icons-material/Home";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import HistoryIcon from "@mui/icons-material/History";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  buttonColor,
+  textColor,
+  backgroundColor,
+} from "../constants/uiConstants";
+// import { Outlet } from "react-router-dom";
+// import { Main } from "../components/ui-components/StyledComponents";
 
 const drawerWidth = 240;
 
@@ -70,19 +78,6 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(["width", "margin"], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      },
-    },
-  ],
 }));
 
 const Drawer = styled(MuiDrawer, {
@@ -110,189 +105,189 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-export default function CustomDrawer() {
-  const theme = useTheme();
+const sideBarList = [
+  "Home",
+  "Liked Videos",
+  "History",
+  "My Content",
+  "Collections",
+  "Subscribers",
+];
+const sideBarIconList = [
+  <HomeIcon />,
+  <ThumbUpIcon />,
+  <HistoryIcon />,
+  <VideocamIcon />,
+  <FolderOpenIcon />,
+  <PeopleOutlineIcon />,
+];
+const sideBarSecondaryList = ["Support", "Setting"];
+const secondaryIconList = [<HelpOutlineIcon />, <SettingsIcon />];
+
+const Navbar: React.FC<TestProps> = ({ navTitle, children }) => {
   const [open, setOpen] = React.useState(false);
-
+  const { mode, changeMode } = useMode();
   const handleDrawerOpen = () => {
-    setOpen(true);
+    setOpen((prev) => !prev);
   };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const buttonText = mode ? "Light Mode" : "Dark Mode";
+  const style = [
+    {
+      margin: 1,
+      minHeight: 48,
+      px: 2.5,
+      backgroundColor: "transparent",
+      border: `1px solid ${mode ? textColor.dark : textColor.light}`,
+      color: mode ? textColor.dark : textColor.light, // default color
+      "& .MuiListItemText-primary": {
+        fontWeight: "bold",
+      },
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: mode ? textColor.dark : textColor.light, // match default
+      },
+      "&:hover": {
+        backgroundColor: buttonColor.default,
+        color: mode ? textColor.light : textColor.dark, // change button text
+        "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+          color: mode ? textColor.light : textColor.dark, // change icon + text
+        },
+      },
+    },
+    open
+      ? {
+          justifyContent: "initial",
+        }
+      : {
+          justifyContent: "center",
+        },
+  ];
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="static" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: "none" },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
+    <>
+      <Box sx={{ display: "flex", backgroundColor: "red" }}>
+        <AppBar position="fixed" open={open} elevation={1}>
+          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+              >
+                <MenuIcon />
+              </IconButton>
+              <SiteLogo />
+              <Typography variant="h6" noWrap component="div">
+                {navTitle}
+              </Typography>
+            </Box>
+            <Box className="whatever-app-wants">
+              <Button onClick={changeMode}>{buttonText}</Button>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          open={open}
+          sx={{
+            "& .MuiDrawer-paper": {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              borderRight: `1px solid ${
+                mode ? backgroundColor.dark : backgroundColor.light
+              }`,
+            },
+          }}
+        >
+          <Box>
+            <DrawerHeader></DrawerHeader>
+            <List>
+              {sideBarList.map((text, index) => (
+                <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton sx={style}>
+                    <ListItemIcon
+                      sx={[
+                        {
+                          minWidth: 0,
+                          justifyContent: "center",
+                        },
+                        open
+                          ? {
+                              mr: 3,
+                            }
+                          : {
+                              mr: "auto",
+                            },
+                      ]}
+                    >
+                      {sideBarIconList[index]}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      sx={[
+                        open
+                          ? {
+                              opacity: 1,
+                            }
+                          : {
+                              opacity: 0,
+                            },
+                      ]}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+          <List>
+            {sideBarSecondaryList.map((text, index) => (
+              <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                <ListItemButton sx={style}>
+                  <ListItemIcon
+                    sx={[
+                      {
+                        minWidth: 0,
                         justifyContent: "center",
                       },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: "center",
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: "auto",
-                        },
-                  ]}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
-                        justifyContent: "center",
-                      },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: "center",
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: "auto",
-                        },
-                  ]}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        <Typography sx={{ marginBottom: 2 }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography>
-        <Typography sx={{ marginBottom: 2 }}>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-          ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-          elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-          sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-          mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-          risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-          purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-          morbi tristique senectus et. Adipiscing elit duis tristique
-          sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+                      open
+                        ? {
+                            mr: 3,
+                          }
+                        : {
+                            mr: "auto",
+                          },
+                    ]}
+                  >
+                    {secondaryIconList[index]}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text}
+                    sx={[
+                      open
+                        ? {
+                            opacity: 1,
+                          }
+                        : {
+                            opacity: 0,
+                          },
+                    ]}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        <Box>
+          <DrawerHeader />
+          {children}
+        </Box>
       </Box>
-    </Box>
+      {/* <Main open={open}>
+        <Outlet />
+      </Main> */}
+    </>
   );
-}
+};
+
+export default Navbar;
