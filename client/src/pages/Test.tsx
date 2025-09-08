@@ -8,15 +8,12 @@ import MuiAppBar, {
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import useMode from "../hooks/useMode";
 import Button from "@mui/material/Button";
 import type { TestProps } from "../constants/componentPropTypes";
@@ -27,6 +24,9 @@ import HistoryIcon from "@mui/icons-material/History";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { buttonColor, textColor } from "../constants/uiConstants";
 
 const drawerWidth = 240;
 
@@ -115,7 +115,8 @@ const sideBarIconList = [
   <FolderOpenIcon />,
   <PeopleOutlineIcon />,
 ];
-const sideBarSecondaryList = ["All mail", "Trash", "Spam"];
+const sideBarSecondaryList = ["Support", "Setting"];
+const secondaryIconList = [<HelpOutlineIcon />, <SettingsIcon />];
 
 const Test: React.FC<TestProps> = ({ navTitle, children }) => {
   const [open, setOpen] = React.useState(false);
@@ -124,6 +125,15 @@ const Test: React.FC<TestProps> = ({ navTitle, children }) => {
     setOpen((prev) => !prev);
   };
   const buttonText = mode ? "Light Mode" : "Dark Mode";
+  const style = {
+    margin: "5px",
+    backgroundColor: "transparent",
+    border: `2px solid ${mode ? textColor.dark : textColor.light}`,
+    ":hover": {
+      backgroundColor: buttonColor.default,
+      color: mode ? textColor.light : textColor.dark,
+    },
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -148,66 +158,78 @@ const Test: React.FC<TestProps> = ({ navTitle, children }) => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader></DrawerHeader>
-        <Divider />
-        <List>
-          {sideBarList.map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
-                        justifyContent: "center",
-                      },
-                ]}
-              >
-                <ListItemIcon
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{
+          "& .MuiDrawer-paper": {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          },
+        }}
+      >
+        <Box>
+          <DrawerHeader></DrawerHeader>
+          <List>
+            {sideBarList.map((text, index) => (
+              <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                <ListItemButton
                   sx={[
+                    style,
                     {
-                      minWidth: 0,
-                      justifyContent: "center",
+                      minHeight: 48,
+                      px: 2.5,
                     },
                     open
                       ? {
-                          mr: 3,
+                          justifyContent: "initial",
                         }
                       : {
-                          mr: "auto",
+                          justifyContent: "center",
                         },
                   ]}
                 >
-                  {sideBarIconList[index]}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
+                  <ListItemIcon
+                    sx={[
+                      {
+                        minWidth: 0,
+                        justifyContent: "center",
+                      },
+                      open
+                        ? {
+                            mr: 3,
+                          }
+                        : {
+                            mr: "auto",
+                          },
+                    ]}
+                  >
+                    {sideBarIconList[index]}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text}
+                    sx={[
+                      open
+                        ? {
+                            opacity: 1,
+                          }
+                        : {
+                            opacity: 0,
+                          },
+                    ]}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
         <List>
           {sideBarSecondaryList.map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={[
+                  style,
                   {
                     minHeight: 48,
                     px: 2.5,
@@ -236,7 +258,7 @@ const Test: React.FC<TestProps> = ({ navTitle, children }) => {
                         },
                   ]}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {secondaryIconList[index]}
                 </ListItemIcon>
                 <ListItemText
                   primary={text}
