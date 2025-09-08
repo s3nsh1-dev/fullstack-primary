@@ -10,7 +10,7 @@ export const textColor = {
 
 export const backgroundColor = {
   light: "#f5f5f5",
-  dark: "#23272b",
+  dark: "#000000ff",
 };
 
 export const navBarHeight = 64;

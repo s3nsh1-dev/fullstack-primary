@@ -1,12 +1,5 @@
-import { Box } from "@mui/material";
-import Test from "./Test";
-
 const Dashboard = () => {
-  return (
-    <Box>
-      <Test navTitle=""></Test>
-    </Box>
-  );
+  return <>This is my Dashboard</>;
 };
 
 export default Dashboard;
