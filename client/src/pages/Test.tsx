@@ -125,15 +125,36 @@ const Test: React.FC<TestProps> = ({ navTitle, children }) => {
     setOpen((prev) => !prev);
   };
   const buttonText = mode ? "Light Mode" : "Dark Mode";
-  const style = {
-    margin: "5px",
-    backgroundColor: "transparent",
-    border: `2px solid ${mode ? textColor.dark : textColor.light}`,
-    ":hover": {
-      backgroundColor: buttonColor.default,
-      color: mode ? textColor.light : textColor.dark,
+  const style = [
+    {
+      margin: 1,
+      minHeight: 48,
+      px: 2.5,
+      backgroundColor: "transparent",
+      border: `2px solid ${mode ? textColor.dark : textColor.light}`,
+      color: mode ? textColor.dark : textColor.light, // default color
+      "& .MuiListItemText-primary": {
+        fontWeight: "bold",
+      },
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: mode ? textColor.dark : textColor.light, // match default
+      },
+      "&:hover": {
+        backgroundColor: buttonColor.default,
+        color: mode ? textColor.light : textColor.dark, // change button text
+        "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+          color: mode ? textColor.light : textColor.dark, // change icon + text
+        },
+      },
     },
-  };
+    open
+      ? {
+          justifyContent: "initial",
+        }
+      : {
+          justifyContent: "center",
+        },
+  ];
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -174,22 +195,7 @@ const Test: React.FC<TestProps> = ({ navTitle, children }) => {
           <List>
             {sideBarList.map((text, index) => (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                <ListItemButton
-                  sx={[
-                    style,
-                    {
-                      minHeight: 48,
-                      px: 2.5,
-                    },
-                    open
-                      ? {
-                          justifyContent: "initial",
-                        }
-                      : {
-                          justifyContent: "center",
-                        },
-                  ]}
-                >
+                <ListItemButton sx={style}>
                   <ListItemIcon
                     sx={[
                       {
@@ -227,22 +233,7 @@ const Test: React.FC<TestProps> = ({ navTitle, children }) => {
         <List>
           {sideBarSecondaryList.map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={[
-                  style,
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
-                        justifyContent: "center",
-                      },
-                ]}
-              >
+              <ListItemButton sx={style}>
                 <ListItemIcon
                   sx={[
                     {
