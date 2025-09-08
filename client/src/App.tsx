@@ -12,14 +12,16 @@ function App() {
   return (
     <ThemeProvider theme={getTheme(mode)}>
       <CssBaseline />
-      <Navbar navTitle="">
-        <BrowserRouter>
-          <Routes>
+      <BrowserRouter>
+        <Routes>
+          {/* routes with Navbar */}
+          <Route element={<Navbar navTitle="" />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/test" element={<Test />} />
-          </Routes>
-        </BrowserRouter>
-      </Navbar>
+          </Route>
+          {/* routes without Navbar */}
+          <Route path="/test" element={<Test />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

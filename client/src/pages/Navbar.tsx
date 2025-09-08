@@ -31,6 +31,8 @@ import {
   textColor,
   backgroundColor,
 } from "../constants/uiConstants";
+import { Outlet } from "react-router-dom";
+import { Main } from "../components/ui-components/StyledComponents";
 
 const drawerWidth = 240;
 
@@ -161,46 +163,85 @@ const Navbar: React.FC<TestProps> = ({ navTitle, children }) => {
   ];
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar position="fixed" open={open} elevation={1}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+    <>
+      <Box sx={{ display: "flex", backgroundColor: "red" }}>
+        <AppBar position="fixed" open={open} elevation={1}>
+          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+              >
+                <MenuIcon />
+              </IconButton>
+              <SiteLogo />
+              <Typography variant="h6" noWrap component="div">
+                {navTitle}
+              </Typography>
+            </Box>
+            <Box className="whatever-app-wants">
+              <Button onClick={changeMode}>{buttonText}</Button>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          open={open}
+          sx={{
+            "& .MuiDrawer-paper": {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              borderRight: `1px solid ${
+                mode ? backgroundColor.dark : backgroundColor.light
+              }`,
+            },
+          }}
+        >
           <Box>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-            >
-              <MenuIcon />
-            </IconButton>
-            <SiteLogo />
-            <Typography variant="h6" noWrap component="div">
-              {navTitle}
-            </Typography>
+            <DrawerHeader></DrawerHeader>
+            <List>
+              {sideBarList.map((text, index) => (
+                <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton sx={style}>
+                    <ListItemIcon
+                      sx={[
+                        {
+                          minWidth: 0,
+                          justifyContent: "center",
+                        },
+                        open
+                          ? {
+                              mr: 3,
+                            }
+                          : {
+                              mr: "auto",
+                            },
+                      ]}
+                    >
+                      {sideBarIconList[index]}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      sx={[
+                        open
+                          ? {
+                              opacity: 1,
+                            }
+                          : {
+                              opacity: 0,
+                            },
+                      ]}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
           </Box>
-          <Box className="whatever-app-wants">
-            <Button onClick={changeMode}>{buttonText}</Button>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        open={open}
-        sx={{
-          "& .MuiDrawer-paper": {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            borderRight: `1px solid ${
-              mode ? backgroundColor.dark : backgroundColor.light
-            }`,
-          },
-        }}
-      >
-        <Box>
-          <DrawerHeader></DrawerHeader>
           <List>
-            {sideBarList.map((text, index) => (
+            {sideBarSecondaryList.map((text, index) => (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
                 <ListItemButton sx={style}>
                   <ListItemIcon
@@ -218,7 +259,7 @@ const Navbar: React.FC<TestProps> = ({ navTitle, children }) => {
                           },
                     ]}
                   >
-                    {sideBarIconList[index]}
+                    {secondaryIconList[index]}
                   </ListItemIcon>
                   <ListItemText
                     primary={text}
@@ -236,50 +277,16 @@ const Navbar: React.FC<TestProps> = ({ navTitle, children }) => {
               </ListItem>
             ))}
           </List>
+        </Drawer>
+        <Box>
+          <DrawerHeader />
+          {children}
         </Box>
-        <List>
-          {sideBarSecondaryList.map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton sx={style}>
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: "center",
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: "auto",
-                        },
-                  ]}
-                >
-                  {secondaryIconList[index]}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        {children}
       </Box>
-    </Box>
+      <Main open={open}>
+        <Outlet />
+      </Main>
+    </>
   );
 };
 
