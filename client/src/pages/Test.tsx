@@ -21,6 +21,12 @@ import useMode from "../hooks/useMode";
 import Button from "@mui/material/Button";
 import type { TestProps } from "../constants/componentPropTypes";
 import SiteLogo from "../components/ui-components/SiteLogo";
+import HomeIcon from "@mui/icons-material/Home";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import HistoryIcon from "@mui/icons-material/History";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 
 const drawerWidth = 240;
 
@@ -93,7 +99,22 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-const sideBarList = ["Inbox", "Starred", "Send email", "Drafts"];
+const sideBarList = [
+  "Home",
+  "Liked Videos",
+  "History",
+  "My Content",
+  "Collections",
+  "Subscribers",
+];
+const sideBarIconList = [
+  <HomeIcon />,
+  <ThumbUpIcon />,
+  <HistoryIcon />,
+  <VideocamIcon />,
+  <FolderOpenIcon />,
+  <PeopleOutlineIcon />,
+];
 const sideBarSecondaryList = ["All mail", "Trash", "Spam"];
 
 const Test: React.FC<TestProps> = ({ navTitle, children }) => {
@@ -163,7 +184,7 @@ const Test: React.FC<TestProps> = ({ navTitle, children }) => {
                         },
                   ]}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {sideBarIconList[index]}
                 </ListItemIcon>
                 <ListItemText
                   primary={text}
