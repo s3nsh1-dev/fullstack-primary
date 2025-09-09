@@ -10,3 +10,7 @@ export type TestProps = {
   navTitle?: string;
   children?: React.ReactNode;
 };
+
+export type ResponsiveDrawerProps = {
+  open: boolean;
+};

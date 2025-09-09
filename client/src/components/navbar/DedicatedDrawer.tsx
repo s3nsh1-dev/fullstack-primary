@@ -8,47 +8,79 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import useMode from "../../hooks/useMode";
+import { DrawerHeader } from "../ui-components/NavbarStyledComponents";
+import { sideBarList, sideBarSecondaryList } from "../../constants/constants";
+import HomeIcon from "@mui/icons-material/Home";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import HistoryIcon from "@mui/icons-material/History";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  textColor,
+  buttonColor,
+  backgroundColor,
+} from "../../constants/uiConstants";
 
-type Anchor = "top" | "left" | "bottom" | "right";
+const sideBarIconList = [
+  <HomeIcon />,
+  <ThumbUpIcon />,
+  <HistoryIcon />,
+  <VideocamIcon />,
+  <FolderOpenIcon />,
+  <PeopleOutlineIcon />,
+];
+const secondaryIconList = [<HelpOutlineIcon />, <SettingsIcon />];
 
-const DedicatedDrawer = () => {
-  const [state, setState] = React.useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  });
+export default function TemporaryDrawer() {
+  const { mode } = useMode();
+  const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
+  const style = [
+    {
+      margin: 1,
+      minHeight: 48,
+      px: 2.5,
+      backgroundColor: "transparent",
+      border: `1px solid ${mode ? textColor.dark : textColor.light}`,
+      color: mode ? textColor.dark : textColor.light, // default color
+      "& .MuiListItemText-primary": {
+        fontWeight: "bold",
+      },
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: mode ? textColor.dark : textColor.light, // match default
+      },
+      "&:hover": {
+        backgroundColor: buttonColor.default,
+        color: mode ? textColor.light : textColor.dark, // change button text
+        "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+          color: mode ? textColor.light : textColor.dark, // change icon + text
+        },
+      },
+    },
+    open
+      ? {
+          justifyContent: "initial",
+        }
+      : {
+          justifyContent: "center",
+        },
+  ];
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpen(newOpen);
+  };
 
-      setState({ ...state, [anchor]: open });
-    };
-
-  const list = (anchor: Anchor) => (
-    <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
+  const DrawerList = (
+    <Box sx={{ width: 240 }} role="presentation" onClick={toggleDrawer(false)}>
+      <DrawerHeader />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+        {sideBarList.map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
+            <ListItemButton sx={style}>
+              <ListItemIcon>{sideBarIconList[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -56,12 +88,10 @@ const DedicatedDrawer = () => {
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
+        {sideBarSecondaryList.map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
+            <ListItemButton sx={style}>
+              <ListItemIcon>{secondaryIconList[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -72,20 +102,10 @@ const DedicatedDrawer = () => {
 
   return (
     <div>
-      {(["left", "right", "top", "bottom"] as const).map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
-          <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
-            {list(anchor)}
-          </Drawer>
-        </React.Fragment>
-      ))}
+      <Button onClick={toggleDrawer(true)}>Open drawer</Button>
+      <Drawer open={open} onClose={toggleDrawer(false)}>
+        {DrawerList}
+      </Drawer>
     </div>
   );
-};
-
-export default DedicatedDrawer;
+}
