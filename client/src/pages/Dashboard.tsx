@@ -1,12 +1,5 @@
-import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
-
 const Dashboard = () => {
-  return (
-    <div style={{ backgroundColor: "green" }}>
-      This is my Dashboard
-      <DedicatedDrawer />
-    </div>
-  );
+  return <div style={{ backgroundColor: "green" }}>This is my Dashboard</div>;
 };
 
 export default Dashboard;

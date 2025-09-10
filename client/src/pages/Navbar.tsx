@@ -15,15 +15,10 @@ import SiteLogo from "../components/ui-components/SiteLogo";
 import { Outlet } from "react-router-dom";
 import { Main } from "../components/ui-components/NavbarStyledComponents";
 import ResponsiveDrawer from "../components/navbar/ResponsiveDrawer";
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
+import { DrawerHeader } from "../components/ui-components/NavbarStyledComponents";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -42,21 +37,27 @@ const AppBar = styled(MuiAppBar, {
 const Navbar: React.FC<TestProps> = ({ navTitle }) => {
   const [open, setOpen] = React.useState(false);
   const { mode, changeMode } = useMode();
-  const handleDrawerOpen = () => {
+  const toggleDrawer = () => {
     setOpen((prev) => !prev);
   };
   const buttonText = mode ? "Light Mode" : "Dark Mode";
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down(792));
+  const notMobileButCollapsed = useMediaQuery(theme.breakpoints.down(1313));
 
   return (
     <>
       <Box sx={{ display: "flex" }}>
         <AppBar position="fixed" open={open} elevation={1}>
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Toolbar
+            variant="dense"
+            sx={{ display: "flex", justifyContent: "space-between" }}
+          >
             <Box>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
-                onClick={handleDrawerOpen}
+                onClick={toggleDrawer}
                 edge="start"
               >
                 <MenuIcon />
@@ -71,7 +72,17 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
             </Box>
           </Toolbar>
         </AppBar>
-        <ResponsiveDrawer open={open} />
+        {/* <ResponsiveDrawer open={open} /> */}
+        {isMobile ? (
+          <DedicatedDrawer open={open} toggleDrawer={toggleDrawer} />
+        ) : notMobileButCollapsed ? (
+          <>
+            <ResponsiveDrawer open={false} />
+            <DedicatedDrawer open={open} toggleDrawer={toggleDrawer} />
+          </>
+        ) : (
+          <ResponsiveDrawer open={open} />
+        )}
         <DrawerHeader />
       </Box>
       <Main open={open}>

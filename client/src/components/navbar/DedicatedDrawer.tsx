@@ -1,111 +1,48 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import useMode from "../../hooks/useMode";
-import { DrawerHeader } from "../ui-components/NavbarStyledComponents";
-import { sideBarList, sideBarSecondaryList } from "../../constants/constants";
-import HomeIcon from "@mui/icons-material/Home";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import HistoryIcon from "@mui/icons-material/History";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import FolderOpenIcon from "@mui/icons-material/FolderOpen";
-import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import SettingsIcon from "@mui/icons-material/Settings";
-import {
-  textColor,
-  buttonColor,
-  backgroundColor,
-} from "../../constants/uiConstants";
+import { backgroundColor } from "../../constants/uiConstants";
+import DrawerContents from "./DrawerContents";
 
-const sideBarIconList = [
-  <HomeIcon />,
-  <ThumbUpIcon />,
-  <HistoryIcon />,
-  <VideocamIcon />,
-  <FolderOpenIcon />,
-  <PeopleOutlineIcon />,
-];
-const secondaryIconList = [<HelpOutlineIcon />, <SettingsIcon />];
+type DedicatedDrawerProps = {
+  open: boolean;
+  toggleDrawer: () => void;
+};
 
-export default function TemporaryDrawer() {
+const DedicatedDrawer: React.FC<DedicatedDrawerProps> = ({
+  open,
+  toggleDrawer,
+}) => {
   const { mode } = useMode();
-  const [open, setOpen] = React.useState(false);
-
-  const style = [
-    {
-      margin: 1,
-      minHeight: 48,
-      px: 2.5,
-      backgroundColor: "transparent",
-      border: `1px solid ${mode ? textColor.dark : textColor.light}`,
-      color: mode ? textColor.dark : textColor.light, // default color
-      "& .MuiListItemText-primary": {
-        fontWeight: "bold",
-      },
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: mode ? textColor.dark : textColor.light, // match default
-      },
-      "&:hover": {
-        backgroundColor: buttonColor.default,
-        color: mode ? textColor.light : textColor.dark, // change button text
-        "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-          color: mode ? textColor.light : textColor.dark, // change icon + text
-        },
-      },
-    },
-    open
-      ? {
-          justifyContent: "initial",
-        }
-      : {
-          justifyContent: "center",
-        },
-  ];
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
-  const DrawerList = (
-    <Box sx={{ width: 240 }} role="presentation" onClick={toggleDrawer(false)}>
-      <DrawerHeader />
-      <List>
-        {sideBarList.map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton sx={style}>
-              <ListItemIcon>{sideBarIconList[index]}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {sideBarSecondaryList.map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton sx={style}>
-              <ListItemIcon>{secondaryIconList[index]}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
+  // const [open, setOpen] = React.useState(false);
+  // const toggleDrawer = (newOpen: boolean) => () => {
+  //   setOpen(newOpen);
+  // };
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)}>Open drawer</Button>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        {DrawerList}
+      <Button onClick={toggleDrawer}>Open drawer</Button>
+      <Drawer
+        open={open}
+        onClose={toggleDrawer}
+        role="presentation"
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: 240,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            borderRight: `1px solid ${
+              mode ? backgroundColor.dark : backgroundColor.light
+            }`,
+          },
+        }}
+      >
+        <DrawerContents open={open} />
       </Drawer>
     </div>
   );
-}
+};
+
+export default DedicatedDrawer;

@@ -62,14 +62,19 @@ export const Main = styled("main", {
 })<{
   open?: boolean;
 }>(({ theme, open }) => ({
+  // padding: theme.spacing(1),
+  // marginTop: theme.mixins.toolbar.minHeight,
   flexGrow: 1,
-  //   padding: theme.spacing(1),
+  marginLeft: `calc(${theme.spacing(7)} + 8px)`,
+  [theme.breakpoints.down(792)]: {
+    marginLeft: 0,
+  },
+
   transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  //   marginTop: theme.mixins.toolbar.minHeight, // ensures offset below AppBar
-  marginLeft: `calc(${theme.spacing(7)} + 8px)`, // collapsed drawer width
+
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
