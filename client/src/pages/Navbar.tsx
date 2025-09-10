@@ -1,41 +1,30 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import MuiAppBar, {
-  type AppBarProps as MuiAppBarProps,
-} from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
 import useMode from "../hooks/useMode";
 import type { TestProps } from "../constants/componentPropTypes";
 import SiteLogo from "../components/ui-components/SiteLogo";
-import { Outlet } from "react-router-dom";
-import { Main } from "../components/ui-components/NavbarStyledComponents";
 import ResponsiveDrawer from "../components/navbar/ResponsiveDrawer";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
+import { Outlet } from "react-router-dom";
+import {
+  Main,
+  SearchIconWrapper,
+  StyledInputBase,
+  Search,
+  AppBar,
+} from "../components/ui-components/NavbarStyledComponents";
 import {
   StyledButton,
   OutlinedButton,
   ContainedButton,
 } from "../components/ui-components/StyledComponents";
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-}));
 
 const Navbar: React.FC<TestProps> = ({ navTitle }) => {
   const [open, setOpen] = React.useState(false);
@@ -74,6 +63,15 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
                 {navTitle}
               </Typography>
             </Box>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
             <Box
               className="whatever-app-wants"
               sx={{ display: "flex", flexDirection: "row", gap: 2 }}
