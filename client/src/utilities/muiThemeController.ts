@@ -12,7 +12,6 @@ export const getTheme = (mode: ModeType) => {
     },
     palette: {
       mode: themeMode,
-      primary: { main: mode ? backgroundColor.light : backgroundColor.dark },
       background: {
         default: mode ? backgroundColor.light : backgroundColor.dark,
       },
@@ -48,9 +47,6 @@ export const getTheme = (mode: ModeType) => {
         },
       },
       MuiButton: {
-        defaultProps: {
-          variant: "contained",
-        },
         styleOverrides: {
           root: {
             textTransform: "none",
@@ -58,7 +54,18 @@ export const getTheme = (mode: ModeType) => {
             borderRadius: 0,
             fontWeight: 600,
             color: mode ? textColor.dark : textColor.light,
-            backgroundColor: mode ? "#f5f5f5" : "#23272b",
+            ":hover": {
+              borderBottom: `2px solid ${
+                mode ? backgroundColor.dark : backgroundColor.light
+              }`,
+            },
+          },
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            color: mode ? textColor.dark : textColor.light,
           },
         },
       },

@@ -1,10 +1,8 @@
-export type ButtonOneProps = {
-  text?: string;
-};
+import type { ButtonProps } from "@mui/material";
 
-export type ButtonTwoProps = {
+export interface CustomButtonProps extends ButtonProps {
   text?: string;
-};
+}
 
 export type TestProps = {
   navTitle?: string;
