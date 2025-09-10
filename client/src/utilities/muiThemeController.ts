@@ -26,9 +26,9 @@ export const getTheme = (mode: ModeType) => {
           root: {},
         },
       },
-      MuiPaper: {
+      MuiDrawer: {
         styleOverrides: {
-          root: {
+          paper: {
             backgroundColor: mode
               ? backgroundColor.light
               : backgroundColor.dark,
