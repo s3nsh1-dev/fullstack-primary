@@ -18,7 +18,7 @@ import ResponsiveDrawer from "../components/navbar/ResponsiveDrawer";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
-import { DrawerHeader } from "../components/ui-components/NavbarStyledComponents";
+// import { DrawerHeader } from "../components/ui-components/NavbarStyledComponents";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -44,6 +44,10 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down(792));
   const notMobileButCollapsed = useMediaQuery(theme.breakpoints.down(1313));
+
+  React.useEffect(() => {
+    setOpen(false);
+  }, [isMobile, notMobileButCollapsed]);
 
   return (
     <>
@@ -83,7 +87,7 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
         ) : (
           <ResponsiveDrawer open={open} />
         )}
-        <DrawerHeader />
+        {/* <DrawerHeader /> */}
       </Box>
       <Main open={open}>
         <Outlet />
