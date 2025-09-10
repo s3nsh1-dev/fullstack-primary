@@ -63,7 +63,6 @@ export const Main = styled("main", {
   open?: boolean;
 }>(({ theme, open }) => ({
   // padding: theme.spacing(1),
-  // marginTop: theme.mixins.toolbar.minHeight,
   flexGrow: 1,
   marginLeft: `calc(${theme.spacing(7)} + 8px)`,
   [theme.breakpoints.down(792)]: {
