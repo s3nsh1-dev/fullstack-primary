@@ -15,7 +15,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { buttonColor, textColor } from "../../constants/uiConstants";
 import useMode from "../../hooks/useMode";
-import { DrawerHeader } from "../ui-components/NavbarStyledComponents";
+// import { DrawerHeader } from "../ui-components/NavbarStyledComponents";
 import { sideBarList, sideBarSecondaryList } from "../../constants/constants";
 
 const sideBarIconList = [
@@ -68,7 +68,7 @@ const DrawerContents: React.FC<DrawerContentsProps> = ({ open }) => {
   return (
     <>
       <Box>
-        <DrawerHeader />
+        {/* <DrawerHeader /> */}
         <List>
           {sideBarList.map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
