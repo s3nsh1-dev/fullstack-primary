@@ -108,8 +108,9 @@ export const Main = styled("main", {
 
 export const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: 0,
   border: `1px solid ${theme.palette.mode === "light" ? "black" : "white"}`,
+
   backgroundColor:
     theme.palette.mode === "dark"
       ? alpha(theme.palette.common.white, 0.08)
