@@ -1,6 +1,29 @@
 import MuiDrawer from "@mui/material/Drawer";
-import { styled, type Theme, type CSSObject } from "@mui/material/styles";
+import {
+  styled,
+  type Theme,
+  type CSSObject,
+  alpha,
+} from "@mui/material/styles";
 import { drawerWidth } from "../../constants/uiConstants";
+import InputBase from "@mui/material/InputBase";
+import MuiAppBar, {
+  type AppBarProps as MuiAppBarProps,
+} from "@mui/material/AppBar";
+
+interface AppBarProps extends MuiAppBarProps {
+  open?: boolean;
+}
+
+export const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})<AppBarProps>(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+}));
 
 export const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -81,4 +104,53 @@ export const Main = styled("main", {
     }),
     marginLeft: drawerWidth, // expanded drawer width
   }),
+}));
+
+export const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  border: `1px solid ${theme.palette.mode === "light" ? "black" : "white"}`,
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? alpha(theme.palette.common.white, 0.08)
+      : alpha(theme.palette.common.black, 0.18),
+  "&:hover": {
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? alpha(theme.palette.common.white, 0.25)
+        : alpha(theme.palette.common.black, 0.1),
+  },
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(1),
+    width: "auto",
+  },
+}));
+
+export const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: theme.palette.text.secondary,
+}));
+
+export const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  width: 500,
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
 }));
