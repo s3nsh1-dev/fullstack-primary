@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import type {
   UserLoginResponseType,
   UserLoginType,
@@ -10,18 +10,18 @@ type UseLoginType = {
   email?: string;
 };
 
-const useLogin = ({ username, password }: UseLoginType) => {
-  return useQuery({
-    queryKey: ["login", username],
-    queryFn: async () => {
+const useLogin = () => {
+  return useMutation({
+    mutationFn: async (credentials: UseLoginType) => {
       const response = await fetch("http://localhost:8000/api/v1/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify(credentials),
       });
-      if (!response.ok) return "ERROR WHILE FETCHING USER LOGIN DETAILS";
+      if (!response.ok)
+        throw new Error("ERROR WHILE FETCHING USER LOGIN DETAILS");
       const data: UserLoginResponseType = await response.json();
       const user: UserLoginType = data.data.user;
       return user;

@@ -1,20 +1,41 @@
 import useLogin from "../hooks/data-fetching/useLogin";
-
-const userCredentials = {
-  username: "sampleuser0123",
-  password: "sampleuser0123",
-};
+import { ContainedButton } from "../components/ui-components/StyledComponents";
+import useLogout from "../hooks/data-fetching/useLogout";
+import { sampleuserCredentials as userCredentials } from "../constants/constants";
 
 const Dashboard = () => {
-  const { data, isLoading, isError } = useLogin(userCredentials);
-  if (!data) return null;
-  if (isLoading) return <div>....Loading</div>;
-  if (isError)
-    return (
-      <div>We have encounter some error. Please retry after some time</div>
-    );
-  console.log("Dashboard Data", data);
-  return <div style={{ backgroundColor: "green" }}>This is my Dashboard</div>;
+  const loginMutate = useLogin();
+  const logoutMutate = useLogout();
+
+  const handleLogin = () => {
+    loginMutate.mutate(userCredentials);
+  };
+  const handleLogout = () => {
+    logoutMutate.mutate();
+  };
+  return (
+    <div
+      style={{
+        backgroundColor: "green",
+        padding: "10px",
+        gap: 10,
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <ContainedButton onClick={handleLogin} disabled={loginMutate.isPending}>
+        {loginMutate.isPending ? "Logging in...." : "Login"}
+      </ContainedButton>
+      <ContainedButton onClick={handleLogout}>
+        {logoutMutate.isPending ? "Logging out...." : "Logout"}
+      </ContainedButton>
+      {loginMutate.isPending && <div>....Loading User</div>}
+      {loginMutate.isError && (
+        <div>Encountered error: Please try after some time</div>
+      )}
+      {loginMutate.isSuccess && <p>This is my Dashboard</p>}
+    </div>
+  );
 };
 
 export default Dashboard;
