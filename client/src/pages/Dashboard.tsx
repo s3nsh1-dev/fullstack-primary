@@ -11,8 +11,14 @@ const Dashboard = () => {
     loginMutate.mutate(userCredentials);
   };
   const handleLogout = () => {
-    logoutMutate.mutate();
+    logoutMutate.mutate(
+      loginMutate.data?.accessToken || "INVALID ACCESS TOKEN"
+    );
   };
+
+  console.log("Login", loginMutate?.data?.loggedIn);
+  console.log("Logout", logoutMutate?.data?.loggedIn);
+
   return (
     <div
       style={{
@@ -33,7 +39,7 @@ const Dashboard = () => {
       {loginMutate.isError && (
         <div>Encountered error: Please try after some time</div>
       )}
-      {loginMutate.isSuccess && <p>This is my Dashboard</p>}
+      {loginMutate.isSuccess && <p>{JSON.stringify(loginMutate.data)}</p>}
     </div>
   );
 };

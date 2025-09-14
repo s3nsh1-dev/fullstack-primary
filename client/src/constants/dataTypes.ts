@@ -15,6 +15,7 @@ export interface UserLoginAuthDataType {
   user: UserLoginType;
   accessToken: string;
   refreshToken: string;
+  loggedIn: boolean;
 }
 
 export interface UserLoginResponseType {

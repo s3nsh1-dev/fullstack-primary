@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import type {
+  UserLoginAuthDataType,
   UserLoginResponseType,
-  UserLoginType,
 } from "../../constants/dataTypes";
 
 type UseLoginType = {
@@ -15,6 +15,7 @@ const useLogin = () => {
     mutationFn: async (credentials: UseLoginType) => {
       const response = await fetch("http://localhost:8000/api/v1/users/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -23,7 +24,7 @@ const useLogin = () => {
       if (!response.ok)
         throw new Error("ERROR WHILE FETCHING USER LOGIN DETAILS");
       const data: UserLoginResponseType = await response.json();
-      const user: UserLoginType = data.data.user;
+      const user: UserLoginAuthDataType = data.data;
       return user;
     },
   });

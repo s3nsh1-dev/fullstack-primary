@@ -14,6 +14,7 @@ import playlistRouter from "./routes/playlist.route";
 import dashboardRouter from "./routes/dashboard.route";
 
 const app = express();
+
 /**
  * ABOUT CORS
  * What: Browser rule to control which sites can access your API.
@@ -25,11 +26,12 @@ const app = express();
  */
 app.use(
   cors({
-    origin: env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173", // Vite's default port
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
 // TAKE DATA FROM JSON BODY
 app.use(
   express.json({
