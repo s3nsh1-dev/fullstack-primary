@@ -1,17 +1,15 @@
-import { Box, IconButton } from "@mui/material";
+import Box from "@mui/material/Box";
 import BtnContainer from "../others/BtnContainer";
 import {
   OutlinedButton,
   ContainedButton,
 } from "../ui-components/StyledComponents";
-import LoginIcon from "@mui/icons-material/Login";
-import LogoutIcon from "@mui/icons-material/Logout";
 import useMode from "../../hooks/useMode";
-import useAuth from "../../hooks/useAuth";
+import LoginLogout from "./LoginLogout";
 
 const NavbarActionButtons = () => {
   const { mode, changeMode } = useMode();
-  const { user } = useAuth();
+
   const buttonText = mode ? "Light Mode" : "Dark Mode";
 
   return (
@@ -25,15 +23,7 @@ const NavbarActionButtons = () => {
         </OutlinedButton>
       </BtnContainer>
       <BtnContainer>
-        {!user ? (
-          <IconButton>
-            <LoginIcon fontSize="large" />
-          </IconButton>
-        ) : (
-          <IconButton>
-            <LogoutIcon fontSize="large" />
-          </IconButton>
-        )}
+        <LoginLogout />
       </BtnContainer>
       <BtnContainer>
         <ContainedButton mode={mode}>Sign Up</ContainedButton>
