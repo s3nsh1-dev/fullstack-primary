@@ -6,11 +6,16 @@ import {
   OutlinedButton,
   ContainedButton,
 } from "./ui-components/StyledComponents";
-import useMode from "../hooks/useMode";
+import type { UserLoginType } from "../constants/dataTypes";
 import { backgroundColor, textColor } from "../constants/uiConstants";
+import useUserRegister from "../hooks/data-fetching/useUserRegister";
+import useMode from "../hooks/useMode";
+import useAuth from "../hooks/useAuth";
 
 const RegisterForm = () => {
   const { mode } = useMode();
+  const registerMutate = useUserRegister();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     fullname: "",
     username: "",
@@ -31,13 +36,12 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formBody = new FormData();
-    formBody.append("fullname", formData.fullname);
-    formBody.append("username", formData.username);
-    formBody.append("email", formData.email);
-    formBody.append("password", formData.password);
-    if (formData.avatar) formBody.append("avatar", formData.avatar);
-    if (formData.coverImage) formBody.append("coverImage", formData.coverImage);
+    registerMutate.mutate(formData, {
+      onSuccess: (data: UserLoginType) => {
+        console.log("What data we are sending", data);
+        login(data);
+      },
+    });
   };
 
   return (
@@ -71,8 +75,10 @@ const RegisterForm = () => {
           sx={{
             width: "20rem",
             "& input:-webkit-autofill": {
-              WebkitBoxShadow: "0 0 0 100px transparent inset",
-              WebkitTextFillColor: `${mode ? textColor.dark : textColor.light}`,
+              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
+              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
+              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
+              transition: "background-color 5000s ease-in-out 0s",
             },
           }}
         />
@@ -87,7 +93,15 @@ const RegisterForm = () => {
           onChange={handleChange}
           required
           variant="standard"
-          sx={{ width: "20rem" }}
+          sx={{
+            width: "20rem",
+            "& input:-webkit-autofill": {
+              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
+              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
+              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
+              transition: "background-color 5000s ease-in-out 0s",
+            },
+          }}
         />
       </FormControlThemed>
 
@@ -116,7 +130,15 @@ const RegisterForm = () => {
           onChange={handleChange}
           required
           variant="standard"
-          sx={{ width: "20rem" }}
+          sx={{
+            width: "20rem",
+            "& input:-webkit-autofill": {
+              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
+              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
+              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
+              transition: "background-color 5000s ease-in-out 0s",
+            },
+          }}
         />
       </FormControlThemed>
       <FormControlThemed htmlFor="password" label="Password">
@@ -130,7 +152,15 @@ const RegisterForm = () => {
           onChange={handleChange}
           required
           variant="standard"
-          sx={{ width: "20rem" }}
+          sx={{
+            width: "20rem",
+            "& input:-webkit-autofill": {
+              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
+              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
+              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
+              transition: "background-color 5000s ease-in-out 0s",
+            },
+          }}
         />
       </FormControlThemed>
 
