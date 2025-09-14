@@ -24,3 +24,12 @@ export interface UserLoginResponseType {
   message: string;
   success: boolean;
 }
+
+export interface RegistrationFormType {
+  fullname: string;
+  username: string;
+  email: string;
+  password: string;
+  avatar?: File | null;
+  coverImage?: File | null;
+}

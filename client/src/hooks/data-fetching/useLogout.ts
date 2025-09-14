@@ -1,19 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
 
+const URL = import.meta.env.VITE_SERVER_URL;
+
 const useLogout = () => {
   return useMutation({
     mutationFn: async (authToken: string) => {
-      const response = await fetch(
-        "http://localhost:8000/api/v1/users/logout",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`, // Add the Authorization header
-          },
-        }
-      );
+      const response = await fetch(`${URL}/users/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, // Add the Authorization header
+        },
+      });
       if (!response.ok) throw new Error("USER LOG OUT FAILED");
       const result = await response.json();
       return result.data;

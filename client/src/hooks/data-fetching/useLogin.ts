@@ -9,11 +9,12 @@ type UseLoginType = {
   password: string;
   email?: string;
 };
+const URL = import.meta.env.VITE_SERVER_URL;
 
 const useLogin = () => {
   return useMutation({
     mutationFn: async (credentials: UseLoginType) => {
-      const response = await fetch("http://localhost:8000/api/v1/users/login", {
+      const response = await fetch(`${URL}/users/login`, {
         method: "POST",
         credentials: "include",
         headers: {
