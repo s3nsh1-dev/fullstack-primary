@@ -33,3 +33,8 @@ export interface RegistrationFormType {
   avatar?: File | null;
   coverImage?: File | null;
 }
+
+export interface LoginCredentialType {
+  username: string;
+  password: string;
+}
