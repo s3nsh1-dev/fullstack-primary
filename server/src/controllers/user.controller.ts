@@ -114,6 +114,7 @@ const loginUser = asyncHandler(async (req, res) => {
   // password check
   // access and refresh token
   // send cookie
+
   const { username, email, password } = req.body;
 
   if (!username && !email) {
@@ -152,6 +153,7 @@ const loginUser = asyncHandler(async (req, res) => {
           user: loggedInUser,
           accessToken: newAccessToken,
           refreshToken: newRefreshToken,
+          loggedIn: true,
         },
         "USER LOGGED IN SUCCESSFULLY"
       )
@@ -179,7 +181,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(new ApiResponse(200, {}, "User logged Out"));
+    .json(new ApiResponse(200, { loggedIn: false }, "User logged Out"));
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
