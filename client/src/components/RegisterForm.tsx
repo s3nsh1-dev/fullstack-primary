@@ -6,7 +6,10 @@ import {
   OutlinedButton,
   ContainedButton,
 } from "./ui-components/StyledComponents";
-import type { UserLoginType } from "../constants/dataTypes";
+import type {
+  UserLoginType,
+  RegistrationFormType,
+} from "../constants/dataTypes";
 import { backgroundColor, textColor } from "../constants/uiConstants";
 import useUserRegister from "../hooks/data-fetching/useUserRegister";
 import useMode from "../hooks/useMode";
@@ -16,14 +19,15 @@ const RegisterForm = () => {
   const { mode } = useMode();
   const registerMutate = useUserRegister();
   const { login } = useAuth();
-  const [formData, setFormData] = useState({
+  const resetForm: RegistrationFormType = {
     fullname: "",
     username: "",
     email: "",
     password: "",
     avatar: null as File | null,
     coverImage: null as File | null,
-  });
+  };
+  const [formData, setFormData] = useState(resetForm);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
@@ -42,6 +46,7 @@ const RegisterForm = () => {
         login(data);
       },
     });
+    setFormData(resetForm);
   };
 
   return (

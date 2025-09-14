@@ -1,6 +1,7 @@
 import useLogin from "../hooks/data-fetching/useLogin";
 // import useAuth from "../hooks/useAuth";
 import RegisterForm from "../components/RegisterForm";
+import Login from "./Login";
 
 const Dashboard = () => {
   const loginMutate = useLogin();
@@ -23,6 +24,7 @@ const Dashboard = () => {
       )}
       {/* {user && <p>{JSON.stringify(user)}</p>} */}
       <RegisterForm />
+      <Login />
     </div>
   );
 };
