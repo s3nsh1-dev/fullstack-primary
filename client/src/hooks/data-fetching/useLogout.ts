@@ -16,7 +16,6 @@ const useLogout = () => {
       );
       if (!response.ok) throw new Error("USER LOG OUT FAILED");
       const result = await response.json();
-      //   console.log(result);
       return result.data;
     },
   });

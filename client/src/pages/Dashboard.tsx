@@ -2,22 +2,31 @@ import useLogin from "../hooks/data-fetching/useLogin";
 import { ContainedButton } from "../components/ui-components/StyledComponents";
 import useLogout from "../hooks/data-fetching/useLogout";
 import { sampleuserCredentials as userCredentials } from "../constants/constants";
+import useAuth from "../hooks/useAuth";
 
 const Dashboard = () => {
   const loginMutate = useLogin();
   const logoutMutate = useLogout();
+  const { user, login, logout } = useAuth();
 
   const handleLogin = () => {
-    loginMutate.mutate(userCredentials);
-  };
-  const handleLogout = () => {
-    logoutMutate.mutate(
-      loginMutate.data?.accessToken || "INVALID ACCESS TOKEN"
-    );
+    loginMutate.mutate(userCredentials, {
+      onSuccess: (data) => {
+        login(data.user);
+      },
+    });
   };
 
-  console.log("Login", loginMutate?.data?.loggedIn);
-  console.log("Logout", logoutMutate?.data?.loggedIn);
+  const handleLogout = () => {
+    logoutMutate.mutate(
+      loginMutate.data?.accessToken || "INVALID ACCESS TOKEN",
+      {
+        onSuccess: () => {
+          logout();
+        },
+      }
+    );
+  };
 
   return (
     <div
@@ -39,7 +48,9 @@ const Dashboard = () => {
       {loginMutate.isError && (
         <div>Encountered error: Please try after some time</div>
       )}
-      {loginMutate.isSuccess && <p>{JSON.stringify(loginMutate.data)}</p>}
+      {user && (
+        <p style={{ textWrap: "wrap" }}>{JSON.stringify(loginMutate.data)}</p>
+      )}
     </div>
   );
 };
