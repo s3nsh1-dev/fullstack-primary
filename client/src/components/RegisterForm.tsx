@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, IconButton, Typography } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FormControlThemed from "./others/FormControlThemed";
+import FormTitle from "./ui-components/FormTitle";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   OutlinedButton,
   ContainedButton,
+  TripleBorderFrame,
 } from "./ui-components/StyledComponents";
 import type {
-  UserLoginType,
+  UserLoginAuthDataType,
   RegistrationFormType,
 } from "../constants/dataTypes";
-import { backgroundColor, textColor } from "../constants/uiConstants";
+import { textColor } from "../constants/uiConstants";
 import useUserRegister from "../hooks/data-fetching/useUserRegister";
 import useMode from "../hooks/useMode";
 import useAuth from "../hooks/useAuth";
@@ -41,7 +44,7 @@ const RegisterForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     registerMutate.mutate(formData, {
-      onSuccess: (data: UserLoginType) => {
+      onSuccess: (data: UserLoginAuthDataType) => {
         console.log("What data we are sending", data);
         login(data);
       },
@@ -50,22 +53,19 @@ const RegisterForm = () => {
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        padding: 3,
-        border: `1px solid ${
-          mode ? backgroundColor.dark : backgroundColor.light
-        }`,
-        boxShadow: `0 0 0 2px #b744dd, 0 0 0 3px ${
-          mode ? backgroundColor.dark : backgroundColor.light
-        }`,
-      }}
-    >
+    <TripleBorderFrame mode={mode} component="form" onSubmit={handleSubmit}>
+      <Box
+        sx={{
+          backgroundColor: "transparent",
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
+        <IconButton>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+      <FormTitle text="Sign Up" />
       <FormControlThemed htmlFor="email" label="Email">
         <TextField
           type="email"
@@ -187,7 +187,23 @@ const RegisterForm = () => {
       <ContainedButton mode={mode} type="submit" sx={{ mt: 2 }}>
         Register
       </ContainedButton>
-    </Box>
+      <Box>
+        <Typography sx={{ textAlign: "center" }}>
+          Already have an account?{" "}
+          <Typography
+            component="a"
+            href="https://www.google.com"
+            sx={{
+              color: mode ? "purple" : "magenta",
+              fontWeight: "bold",
+              fontStyle: "italic",
+            }}
+          >
+            Log In
+          </Typography>
+        </Typography>
+      </Box>
+    </TripleBorderFrame>
   );
 };
 
