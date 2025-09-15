@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth";
 // import RegisterForm from "../components/RegisterForm";
 // import Logout from "./Logout";
 // import Login from "./Login";
+import Test from "../pages/Test";
 
 const Dashboard = () => {
   const loginMutate = useLogin();
@@ -32,6 +33,7 @@ const Dashboard = () => {
           User is logged IN : <div>{JSON.stringify(user)}</div>
         </div>
       )}
+      <Test />
     </div>
   );
 };
