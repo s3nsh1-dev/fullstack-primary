@@ -21,15 +21,15 @@ const FormControlThemed: React.FC<FormControlThemedType> = ({
       sx={{
         display: "flex",
         flexDirection: "row",
-        justifyContent: "end",
-        alignItems: "end",
+        justifyContent: "center",
+        alignItems: "center",
         gap: 3,
       }}
     >
       <FormLabel
         htmlFor={htmlFor}
         sx={{
-          width: "95px",
+          width: "9rem",
           textAlign: "center",
           backgroundColor: buttonColor.default,
           padding: 1,
