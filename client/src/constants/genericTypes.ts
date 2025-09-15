@@ -1,4 +1,4 @@
-import type { UserLoginType } from "./dataTypes";
+import type { UserLoginAuthDataType } from "./dataTypes";
 
 export type ModeType = boolean;
 
@@ -8,8 +8,8 @@ export type ModeContextType = {
 };
 
 export type AuthContextType = {
-  user: UserLoginType | null;
-  login: (userData: UserLoginType) => void;
+  user: UserLoginAuthDataType | null;
+  login: (userData: UserLoginAuthDataType) => void;
   logout: () => void;
 };
 export type AuthContextProviderType = {

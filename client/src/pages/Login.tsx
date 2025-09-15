@@ -1,13 +1,18 @@
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Typography, IconButton } from "@mui/material";
 import FormControlThemed from "../components/others/FormControlThemed";
 import useMode from "../hooks/useMode";
 import { textColor } from "../constants/uiConstants";
 import { useState } from "react";
 import type { LoginCredentialType } from "../constants/dataTypes";
-import { ContainedButton } from "../components/ui-components/StyledComponents";
+import {
+  ContainedButton,
+  TripleBorderFrame,
+} from "../components/ui-components/StyledComponents";
 import useLogin from "../hooks/data-fetching/useLogin";
 import type { UserLoginAuthDataType } from "../constants/dataTypes";
 import useAuth from "../hooks/useAuth";
+import CloseIcon from "@mui/icons-material/Close";
+import FormTitle from "../components/ui-components/FormTitle";
 
 const Login = () => {
   const { mode } = useMode();
@@ -19,14 +24,16 @@ const Login = () => {
   };
   const [userCred, setUserCred] =
     useState<LoginCredentialType>(resetCredentials);
+
   const handleSubmit = () => {
     loginMutate.mutate(userCred, {
       onSuccess: (data: UserLoginAuthDataType) => {
-        login(data.user);
+        login(data);
       },
     });
     setUserCred(resetCredentials);
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserCred((prev) => {
@@ -35,7 +42,19 @@ const Login = () => {
   };
 
   return (
-    <Box component="form">
+    <TripleBorderFrame mode={mode} component="form" onSubmit={handleSubmit}>
+      <Box
+        sx={{
+          backgroundColor: "transparent",
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
+        <IconButton>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+      <FormTitle text="Log In" />
       <FormControlThemed htmlFor="username" label="Username">
         <TextField
           autoComplete="username"
@@ -81,7 +100,23 @@ const Login = () => {
       <ContainedButton mode={mode} type="submit" onClick={handleSubmit}>
         Submit
       </ContainedButton>
-    </Box>
+      <Box>
+        <Typography sx={{ textAlign: "center" }}>
+          Don't have an account?{" "}
+          <Typography
+            component="a"
+            href="https://www.google.com"
+            sx={{
+              color: mode ? "purple" : "magenta",
+              fontWeight: "bold",
+              fontStyle: "italic",
+            }}
+          >
+            create one
+          </Typography>
+        </Typography>
+      </Box>
+    </TripleBorderFrame>
   );
 };
 
