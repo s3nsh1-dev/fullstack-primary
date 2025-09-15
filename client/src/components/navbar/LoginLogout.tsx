@@ -14,7 +14,7 @@ const LoginLogout = () => {
   const handleLogin = () => {
     loginMutate.mutate(userCredentials, {
       onSuccess: (data) => {
-        login(data.user);
+        login(data);
       },
     });
   };
