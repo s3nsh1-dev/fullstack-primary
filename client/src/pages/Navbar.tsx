@@ -40,12 +40,7 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
             sx={{ display: "flex", justifyContent: "space-between" }}
           >
             <Box>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={toggleDrawer}
-                edge="start"
-              >
+              <IconButton color="inherit" onClick={toggleDrawer} edge="start">
                 <MenuIcon />
               </IconButton>
               <SiteLogo />
@@ -57,7 +52,6 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
             <NavbarActionButtons />
           </Toolbar>
         </AppBar>
-        {/* <ResponsiveDrawer open={open} /> */}
         {isMobile ? (
           <DedicatedDrawer open={open} toggleDrawer={toggleDrawer} />
         ) : notMobileButCollapsed ? (
@@ -68,7 +62,6 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
         ) : (
           <ResponsiveDrawer open={open} />
         )}
-        {/* <DrawerHeader /> */}
       </Box>
       <Main open={open}>
         <Outlet />

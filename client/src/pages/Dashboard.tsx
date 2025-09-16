@@ -12,8 +12,6 @@ const Dashboard = () => {
   return (
     <div
       style={{
-        // backgroundColor: "green",
-        padding: "10px",
         gap: 10,
         display: "flex",
         flexDirection: "column",

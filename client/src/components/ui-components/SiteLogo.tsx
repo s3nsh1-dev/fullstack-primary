@@ -8,7 +8,7 @@ const SiteLogo = () => {
 
   return (
     <IconButton>
-      <img src={mode ? darkModeLogo : lightModeLogo} height={50} />
+      <img src={mode ? darkModeLogo : lightModeLogo} height={40} />
     </IconButton>
   );
 };
