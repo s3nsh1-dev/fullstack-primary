@@ -6,6 +6,7 @@ import { useState } from "react";
 import FormModal from "../others/FormModal";
 import Login from "../../pages/Login";
 import Logout from "../../pages/Logout";
+import BtnContainer from "../others/BtnContainer";
 
 const LoginLogout = () => {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ const LoginLogout = () => {
   };
 
   return (
-    <>
+    <BtnContainer>
       {!user ? (
         <IconButton onClick={toggleInOut}>
           <LoginIcon fontSize="large" />
@@ -34,7 +35,7 @@ const LoginLogout = () => {
           )}
         </FormModal>
       )}
-    </>
+    </BtnContainer>
   );
 };
 
