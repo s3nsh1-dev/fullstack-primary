@@ -1,5 +1,5 @@
 const Test = () => {
-  return <div>This is test</div>;
+  return <div style={{ backgroundColor: "green" }}>This is test</div>;
 };
 
 export default Test;

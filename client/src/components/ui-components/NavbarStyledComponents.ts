@@ -55,10 +55,10 @@ export const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
-export const Drawer = styled(MuiDrawer, {
+export const RespDrawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme }) => ({
-  width: drawerWidth,
+  // width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",

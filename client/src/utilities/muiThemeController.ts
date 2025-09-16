@@ -1,7 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 import type { ModeType } from "../constants/genericTypes";
 import type { PaletteMode } from "@mui/material/styles";
-import { backgroundColor, textColor } from "../constants/uiConstants";
+import {
+  backgroundColor,
+  drawerWidth,
+  textColor,
+} from "../constants/uiConstants";
 
 export const getTheme = (mode: ModeType) => {
   const themeMode: PaletteMode = mode === true ? "light" : "dark";
@@ -28,6 +32,14 @@ export const getTheme = (mode: ModeType) => {
       MuiDrawer: {
         styleOverrides: {
           paper: {
+            width: drawerWidth,
+            paddingTop: "57px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            borderRight: `1px solid ${
+              mode ? backgroundColor.dark : backgroundColor.light
+            }`,
             backgroundColor: mode
               ? backgroundColor.light
               : backgroundColor.dark,
