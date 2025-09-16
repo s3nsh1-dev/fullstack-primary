@@ -9,7 +9,7 @@ import ResponsiveDrawer from "../components/navbar/ResponsiveDrawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
 import NavbarActionButtons from "../components/navbar/NavbarActionButtons";
-import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
+// import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
 import type { TestProps } from "../constants/componentPropTypes";
 import { useTheme } from "@mui/material/styles";
 import { Outlet } from "react-router-dom";
@@ -40,12 +40,7 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
             sx={{ display: "flex", justifyContent: "space-between" }}
           >
             <Box>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={toggleDrawer}
-                edge="start"
-              >
+              <IconButton color="inherit" onClick={toggleDrawer} edge="start">
                 <MenuIcon />
               </IconButton>
               <SiteLogo />
@@ -53,11 +48,10 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
                 {navTitle}
               </Typography>
             </Box>
-            <NavbarSearchArea />
+            {/* <NavbarSearchArea /> */}
             <NavbarActionButtons />
           </Toolbar>
         </AppBar>
-        {/* <ResponsiveDrawer open={open} /> */}
         {isMobile ? (
           <DedicatedDrawer open={open} toggleDrawer={toggleDrawer} />
         ) : notMobileButCollapsed ? (
@@ -68,7 +62,6 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
         ) : (
           <ResponsiveDrawer open={open} />
         )}
-        {/* <DrawerHeader /> */}
       </Box>
       <Main open={open}>
         <Outlet />

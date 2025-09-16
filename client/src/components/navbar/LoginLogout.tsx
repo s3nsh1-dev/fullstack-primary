@@ -2,46 +2,40 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { IconButton } from "@mui/material";
 import useAuth from "../../hooks/useAuth";
-import useLogin from "../../hooks/data-fetching/useLogin";
-import useLogout from "../../hooks/data-fetching/useLogout";
-import { sampleuserCredentials as userCredentials } from "../../constants/constants";
+import { useState } from "react";
+import FormModal from "../others/FormModal";
+import Login from "../../pages/Login";
+import Logout from "../../pages/Logout";
+import BtnContainer from "../others/BtnContainer";
 
 const LoginLogout = () => {
-  const loginMutate = useLogin();
-  const logoutMutate = useLogout();
-  const { user, login, logout } = useAuth();
-
-  const handleLogin = () => {
-    loginMutate.mutate(userCredentials, {
-      onSuccess: (data) => {
-        login(data);
-      },
-    });
-  };
-
-  const handleLogout = () => {
-    logoutMutate.mutate(
-      loginMutate.data?.accessToken || "INVALID ACCESS TOKEN",
-      {
-        onSuccess: () => {
-          logout();
-        },
-      }
-    );
+  const { user } = useAuth();
+  const [open, setOpen] = useState(false);
+  const toggleInOut = () => {
+    setOpen((prev) => !prev);
   };
 
   return (
-    <>
+    <BtnContainer>
       {!user ? (
-        <IconButton onClick={handleLogin}>
+        <IconButton onClick={toggleInOut}>
           <LoginIcon fontSize="large" />
         </IconButton>
       ) : (
-        <IconButton onClick={handleLogout}>
+        <IconButton onClick={toggleInOut}>
           <LogoutIcon fontSize="large" />
         </IconButton>
       )}
-    </>
+      {open && (
+        <FormModal open={open} toggleModal={toggleInOut}>
+          {user ? (
+            <Logout toggleOpen={toggleInOut} />
+          ) : (
+            <Login toggleOpen={toggleInOut} />
+          )}
+        </FormModal>
+      )}
+    </BtnContainer>
   );
 };
 

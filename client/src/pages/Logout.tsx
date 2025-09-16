@@ -7,8 +7,13 @@ import { Typography, Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import useLogout from "../hooks/data-fetching/useLogout";
 import useAuth from "../hooks/useAuth";
+import type { FC } from "react";
 
-const Logout = () => {
+type LogoutProps = {
+  toggleOpen: () => void;
+};
+
+const Logout: FC<LogoutProps> = ({ toggleOpen }) => {
   const { mode } = useMode();
   const { user, logout } = useAuth();
   const logoutMutate = useLogout();
@@ -16,6 +21,7 @@ const Logout = () => {
     logoutMutate.mutate(user?.accessToken || "INVALID ACCESS TOKEN", {
       onSuccess: () => {
         logout();
+        toggleOpen();
       },
     });
   };
@@ -28,11 +34,11 @@ const Logout = () => {
           justifyContent: "end",
         }}
       >
-        <IconButton>
+        <IconButton onClick={toggleOpen}>
           <CloseIcon />
         </IconButton>
       </Box>
-      <Box sx={{ textAlign: "center", p: 2 }}>
+      <Box sx={{ textAlign: "center" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>
           Are you sure?
         </Typography>
@@ -42,7 +48,7 @@ const Logout = () => {
         </Typography>
       </Box>
 
-      <ContainedButton mode={mode} type="submit">
+      <ContainedButton mode={mode} type="submit" sx={{ my: 1 }}>
         Logout
       </ContainedButton>
     </TripleBorderFrame>

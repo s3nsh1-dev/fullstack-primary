@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { Box, TextField, IconButton, Typography } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FormControlThemed from "./others/FormControlThemed";
@@ -18,7 +18,11 @@ import useUserRegister from "../hooks/data-fetching/useUserRegister";
 import useMode from "../hooks/useMode";
 import useAuth from "../hooks/useAuth";
 
-const RegisterForm = () => {
+type RegisterFormProps = {
+  toggleOpen: () => void;
+};
+
+const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
   const { mode } = useMode();
   const registerMutate = useUserRegister();
   const { login } = useAuth();
@@ -61,7 +65,7 @@ const RegisterForm = () => {
           justifyContent: "end",
         }}
       >
-        <IconButton>
+        <IconButton onClick={toggleOpen}>
           <CloseIcon />
         </IconButton>
       </Box>

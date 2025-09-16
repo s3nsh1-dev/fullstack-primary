@@ -13,8 +13,12 @@ import type { UserLoginAuthDataType } from "../constants/dataTypes";
 import useAuth from "../hooks/useAuth";
 import CloseIcon from "@mui/icons-material/Close";
 import FormTitle from "../components/ui-components/FormTitle";
+import type { FC } from "react";
 
-const Login = () => {
+type LogInProps = {
+  toggleOpen: () => void;
+};
+const Login: FC<LogInProps> = ({ toggleOpen }) => {
   const { mode } = useMode();
   const loginMutate = useLogin();
   const { login } = useAuth();
@@ -29,6 +33,7 @@ const Login = () => {
     loginMutate.mutate(userCred, {
       onSuccess: (data: UserLoginAuthDataType) => {
         login(data);
+        toggleOpen();
       },
     });
     setUserCred(resetCredentials);
@@ -50,7 +55,7 @@ const Login = () => {
           justifyContent: "end",
         }}
       >
-        <IconButton>
+        <IconButton onClick={toggleOpen}>
           <CloseIcon />
         </IconButton>
       </Box>

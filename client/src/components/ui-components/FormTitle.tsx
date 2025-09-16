@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 const FormTitle = ({ text }: { text: string }) => {
   return (
     <Typography
-      variant="h3"
+      variant="h4"
       sx={{ textAlign: "center", fontWeight: "bold" }}
       gutterBottom
     >
