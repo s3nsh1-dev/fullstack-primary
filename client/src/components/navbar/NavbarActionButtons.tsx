@@ -1,11 +1,9 @@
 import Box from "@mui/material/Box";
 import BtnContainer from "../others/BtnContainer";
-import {
-  OutlinedButton,
-  ContainedButton,
-} from "../ui-components/StyledComponents";
+import { OutlinedButton } from "../ui-components/StyledComponents";
 import useMode from "../../hooks/useMode";
 import LoginLogout from "./LoginLogout";
+import SignUpButton from "../../pages/SignUpButton";
 
 const NavbarActionButtons = () => {
   const { mode, changeMode } = useMode();
@@ -22,12 +20,8 @@ const NavbarActionButtons = () => {
           {buttonText}
         </OutlinedButton>
       </BtnContainer>
-      <BtnContainer>
-        <LoginLogout />
-      </BtnContainer>
-      <BtnContainer>
-        <ContainedButton mode={mode}>Sign Up</ContainedButton>
-      </BtnContainer>
+      <LoginLogout />
+      <SignUpButton />
     </Box>
   );
 };
