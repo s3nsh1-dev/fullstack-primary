@@ -9,7 +9,7 @@ import ResponsiveDrawer from "../components/navbar/ResponsiveDrawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
 import NavbarActionButtons from "../components/navbar/NavbarActionButtons";
-import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
+// import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
 import type { TestProps } from "../constants/componentPropTypes";
 import { useTheme } from "@mui/material/styles";
 import { Outlet } from "react-router-dom";
@@ -53,7 +53,7 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
                 {navTitle}
               </Typography>
             </Box>
-            <NavbarSearchArea />
+            {/* <NavbarSearchArea /> */}
             <NavbarActionButtons />
           </Toolbar>
         </AppBar>
