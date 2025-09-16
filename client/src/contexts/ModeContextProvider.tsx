@@ -1,16 +1,13 @@
 import { useState, type FC } from "react";
 import ModeContext from "./modeContext";
 import type { ModeType } from "../constants/genericTypes";
-
-type ModeContextProviderType = {
-  children: React.ReactNode;
-};
+import type { ChildrenProps } from "../constants/genericTypes";
 
 const getStoredMode = (): ModeType => {
   return localStorage.getItem("mode") === "true";
 };
 
-const ModeContextProvider: FC<ModeContextProviderType> = ({ children }) => {
+const ModeContextProvider: FC<ChildrenProps> = ({ children }) => {
   const [mode, setMode] = useState<ModeType>(getStoredMode);
 
   const handleModeType = () => {
