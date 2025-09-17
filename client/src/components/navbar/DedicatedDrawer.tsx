@@ -5,12 +5,17 @@ import DrawerContents from "./DrawerContents";
 type DedicatedDrawerProps = {
   open: boolean;
   toggleDrawer: () => void;
+  closeDrawer: () => void;
 };
 
-const DedicatedDrawer: FC<DedicatedDrawerProps> = ({ open, toggleDrawer }) => {
+const DedicatedDrawer: FC<DedicatedDrawerProps> = ({
+  open,
+  toggleDrawer,
+  closeDrawer,
+}) => {
   return (
     <Drawer open={open} onClose={toggleDrawer} role="presentation">
-      <DrawerContents open={open} />
+      <DrawerContents open={open} closeDrawer={closeDrawer} />
     </Drawer>
   );
 };

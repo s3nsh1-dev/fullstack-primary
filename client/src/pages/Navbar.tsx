@@ -23,9 +23,14 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
   const toggleDrawer = () => {
     setOpen((prev) => !prev);
   };
+  const closeDrawer = () => {
+    setOpen(false);
+  };
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down(792));
   const notMobileButCollapsed = useMediaQuery(theme.breakpoints.down(1313));
+
+  const doNothing = () => {};
 
   React.useEffect(() => {
     setOpen(false);
@@ -63,14 +68,28 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
           </Toolbar>
         </AppBar>
         {isMobile ? (
-          <DedicatedDrawer open={open} toggleDrawer={toggleDrawer} />
+          <DedicatedDrawer
+            open={open}
+            toggleDrawer={toggleDrawer}
+            closeDrawer={closeDrawer}
+          />
         ) : notMobileButCollapsed ? (
           <>
-            <ResponsiveDrawer open={false} />
-            <DedicatedDrawer open={open} toggleDrawer={toggleDrawer} />
+            <ResponsiveDrawer
+              open={false}
+              closeDrawer={notMobileButCollapsed ? closeDrawer : doNothing}
+            />
+            <DedicatedDrawer
+              open={open}
+              toggleDrawer={toggleDrawer}
+              closeDrawer={closeDrawer}
+            />
           </>
         ) : (
-          <ResponsiveDrawer open={open} />
+          <ResponsiveDrawer
+            open={open}
+            closeDrawer={notMobileButCollapsed ? closeDrawer : doNothing}
+          />
         )}
       </>
       <Main open={open}>

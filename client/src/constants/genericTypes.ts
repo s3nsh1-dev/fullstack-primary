@@ -20,3 +20,9 @@ export type IsViewerType = {
   isViewer: boolean;
   toggleViewer: () => void;
 };
+
+export type SidebarOptionType = {
+  id: number;
+  path: string;
+  name: string;
+};

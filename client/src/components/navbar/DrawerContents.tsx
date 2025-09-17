@@ -1,4 +1,3 @@
-import React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -8,30 +7,34 @@ import HomeIcon from "@mui/icons-material/Home";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import HistoryIcon from "@mui/icons-material/History";
 import VideocamIcon from "@mui/icons-material/Videocam";
-import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { buttonColor, textColor } from "../../constants/uiConstants";
 import useMode from "../../hooks/useMode";
-// import { DrawerHeader } from "../ui-components/NavbarStyledComponents";
+import { Link } from "react-router-dom";
 import { sideBarList, sideBarSecondaryList } from "../../constants/constants";
+import type { SidebarOptionType } from "../../constants/genericTypes";
+import { Box } from "@mui/material";
 
 const sideBarIconList = [
   <HomeIcon />,
   <ThumbUpIcon />,
   <HistoryIcon />,
   <VideocamIcon />,
-  <FolderOpenIcon />,
+  <TwitterIcon />,
   <PeopleOutlineIcon />,
 ];
 const secondaryIconList = [<HelpOutlineIcon />, <SettingsIcon />];
 
-type DrawerContentsProps = {
+const DrawerContents = ({
+  open,
+  closeDrawer,
+}: {
   open: boolean;
-};
-
-const DrawerContents: React.FC<DrawerContentsProps> = ({ open }) => {
+  closeDrawer: () => void;
+}) => {
   const { mode } = useMode();
 
   const style = [
@@ -68,77 +71,89 @@ const DrawerContents: React.FC<DrawerContentsProps> = ({ open }) => {
     <>
       {/* <DrawerHeader /> */}
       <List>
-        {sideBarList.map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: "block" }}>
-            <ListItemButton sx={style}>
-              <ListItemIcon
-                sx={[
-                  {
-                    minWidth: 0,
-                    justifyContent: "center",
-                  },
-                  open
-                    ? {
-                        mr: 3,
-                      }
-                    : {
-                        mr: "auto",
-                      },
-                ]}
-              >
-                {sideBarIconList[index]}
-              </ListItemIcon>
-              <ListItemText
-                primary={text}
-                sx={[
-                  open
-                    ? {
-                        opacity: 1,
-                      }
-                    : {
-                        opacity: 0,
-                      },
-                ]}
-              />
-            </ListItemButton>
+        {sideBarList.map((text: SidebarOptionType, index) => (
+          <ListItem key={text.id} disablePadding sx={{ display: "block" }}>
+            <Box
+              component={Link}
+              to={text.path}
+              sx={{ textDecoration: "none" }}
+            >
+              <ListItemButton sx={style} onClick={closeDrawer}>
+                <ListItemIcon
+                  sx={[
+                    {
+                      minWidth: 0,
+                      justifyContent: "center",
+                    },
+                    open
+                      ? {
+                          mr: 3,
+                        }
+                      : {
+                          mr: "auto",
+                        },
+                  ]}
+                >
+                  {sideBarIconList[index]}
+                </ListItemIcon>
+                <ListItemText
+                  primary={text.name}
+                  sx={[
+                    open
+                      ? {
+                          opacity: 1,
+                        }
+                      : {
+                          opacity: 0,
+                        },
+                  ]}
+                />
+              </ListItemButton>
+            </Box>
           </ListItem>
         ))}
       </List>
 
       <List>
         {sideBarSecondaryList.map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: "block" }}>
-            <ListItemButton sx={style}>
-              <ListItemIcon
-                sx={[
-                  {
-                    minWidth: 0,
-                    justifyContent: "center",
-                  },
-                  open
-                    ? {
-                        mr: 3,
-                      }
-                    : {
-                        mr: "auto",
-                      },
-                ]}
-              >
-                {secondaryIconList[index]}
-              </ListItemIcon>
-              <ListItemText
-                primary={text}
-                sx={[
-                  open
-                    ? {
-                        opacity: 1,
-                      }
-                    : {
-                        opacity: 0,
-                      },
-                ]}
-              />
-            </ListItemButton>
+          <ListItem key={text.id} disablePadding sx={{ display: "block" }}>
+            <Box
+              component={Link}
+              to={text.path}
+              sx={{ textDecoration: "none" }}
+            >
+              <ListItemButton sx={style} onClick={closeDrawer}>
+                <ListItemIcon
+                  sx={[
+                    {
+                      minWidth: 0,
+                      justifyContent: "center",
+                    },
+                    open
+                      ? {
+                          mr: 3,
+                        }
+                      : {
+                          mr: "auto",
+                        },
+                  ]}
+                >
+                  {secondaryIconList[index]}
+                </ListItemIcon>
+                <ListItemText
+                  primary={text.name}
+                  sx={[
+                    open
+                      ? {
+                          opacity: 1,
+                        }
+                      : {
+                          opacity: 0,
+                        },
+                  ]}
+                />
+              </ListItemButton>
+            </Box>
           </ListItem>
         ))}
       </List>
