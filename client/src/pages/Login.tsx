@@ -65,9 +65,10 @@ const Login: FC<LogInProps> = ({ toggleOpen }) => {
           id="username"
           name="username"
           placeholder="Enter Username"
-          required
+          variant="standard"
           value={userCred.username}
           onChange={handleChange}
+          required
         />
       </FormControlThemed>
       <FormControlThemed htmlFor="password" label="Password">
@@ -76,9 +77,10 @@ const Login: FC<LogInProps> = ({ toggleOpen }) => {
           id="password"
           name="password"
           placeholder="Enter Password"
-          required
+          variant="standard"
           value={userCred.password}
           onChange={handleChange}
+          required
         />
       </FormControlThemed>
       <ContainedButton mode={mode} type="submit" onClick={handleSubmit}>
