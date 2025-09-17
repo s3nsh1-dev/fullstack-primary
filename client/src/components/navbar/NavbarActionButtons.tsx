@@ -7,7 +7,7 @@ const NavbarActionButtons = () => {
   return (
     <Box
       className="whatever-app-wants"
-      sx={{ display: "flex", flexDirection: "row", gap: 1 }}
+      sx={{ display: "flex", flexDirection: "row" }}
     >
       <ToggleMode />
       <LoginLogout />

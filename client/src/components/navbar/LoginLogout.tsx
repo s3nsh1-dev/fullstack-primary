@@ -6,7 +6,7 @@ import { useState } from "react";
 import FormModal from "../others/FormModal";
 import Login from "../../pages/Login";
 import Logout from "../../pages/Logout";
-import BtnContainer from "../others/BtnContainer";
+import { BoxCenter } from "../ui-components/StyledComponents";
 
 const LoginLogout = () => {
   const { user } = useAuth();
@@ -16,16 +16,18 @@ const LoginLogout = () => {
   };
 
   return (
-    <BtnContainer>
-      {!user ? (
-        <IconButton onClick={toggleInOut}>
-          <LoginIcon fontSize="large" />
-        </IconButton>
-      ) : (
-        <IconButton onClick={toggleInOut}>
-          <LogoutIcon fontSize="large" />
-        </IconButton>
-      )}
+    <>
+      <BoxCenter>
+        {!user ? (
+          <IconButton onClick={toggleInOut}>
+            <LoginIcon fontSize="large" />
+          </IconButton>
+        ) : (
+          <IconButton onClick={toggleInOut}>
+            <LogoutIcon fontSize="large" />
+          </IconButton>
+        )}
+      </BoxCenter>
       {open && (
         <FormModal open={open} toggleModal={toggleInOut}>
           {user ? (
@@ -35,7 +37,7 @@ const LoginLogout = () => {
           )}
         </FormModal>
       )}
-    </BtnContainer>
+    </>
   );
 };
 

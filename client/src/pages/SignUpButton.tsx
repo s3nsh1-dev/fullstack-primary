@@ -1,9 +1,9 @@
 import { useState } from "react";
-import BtnContainer from "../components/others/BtnContainer";
 import { ContainedButton } from "../components/ui-components/StyledComponents";
 import FormModal from "../components/others/FormModal";
 import RegisterForm from "../components/RegisterForm";
 import useMode from "../hooks/useMode";
+import { BoxCenter } from "../components/ui-components/StyledComponents";
 
 const SignUpButton = () => {
   const [open, setOpen] = useState(false);
@@ -13,11 +13,11 @@ const SignUpButton = () => {
   };
   return (
     <>
-      <BtnContainer>
+      <BoxCenter sx={{ marginLeft: "10px" }}>
         <ContainedButton mode={mode} onClick={toggleOpen}>
           Sign Up
         </ContainedButton>
-      </BtnContainer>
+      </BoxCenter>
       {open && (
         <FormModal open={open} toggleModal={toggleOpen}>
           <RegisterForm toggleOpen={toggleOpen} />
