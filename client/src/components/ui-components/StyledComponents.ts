@@ -57,3 +57,9 @@ export const TripleBorderFrame = styled(Box, {
     mode ? backgroundColor.dark : backgroundColor.light
   }`,
 }));
+
+export const BoxCenter = styled(Box)({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+});
