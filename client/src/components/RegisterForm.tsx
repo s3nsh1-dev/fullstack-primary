@@ -1,20 +1,19 @@
 import { useState, type FC } from "react";
-import { Box, TextField, IconButton, Typography } from "@mui/material";
+import useUserRegister from "../hooks/data-fetching/useUserRegister";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FormControlThemed from "./others/FormControlThemed";
 import FormTitle from "./ui-components/FormTitle";
-import CloseIcon from "@mui/icons-material/Close";
+import CloseToggleIcon from "./ui-components/CloseToggleIcon";
 import {
   OutlinedButton,
   ContainedButton,
-  TripleBorderFrame,
+  FormBox,
+  FormInput,
 } from "./ui-components/StyledComponents";
 import type {
   UserLoginAuthDataType,
   RegistrationFormType,
 } from "../constants/dataTypes";
-import { textColor } from "../constants/uiConstants";
-import useUserRegister from "../hooks/data-fetching/useUserRegister";
 import useMode from "../hooks/useMode";
 import useAuth from "../hooks/useAuth";
 
@@ -57,21 +56,11 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
   };
 
   return (
-    <TripleBorderFrame mode={mode} component="form" onSubmit={handleSubmit}>
-      <Box
-        sx={{
-          backgroundColor: "transparent",
-          display: "flex",
-          justifyContent: "end",
-        }}
-      >
-        <IconButton onClick={toggleOpen}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
+    <FormBox component="form" onSubmit={handleSubmit}>
+      <CloseToggleIcon toggleOpen={toggleOpen} />
       <FormTitle text="Sign Up" />
       <FormControlThemed htmlFor="email" label="Email">
-        <TextField
+        <FormInput
           type="email"
           id="email"
           autoComplete="email"
@@ -80,20 +69,10 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
           value={formData.email}
           onChange={handleChange}
           required
-          variant="standard"
-          sx={{
-            width: "20rem",
-            "& input:-webkit-autofill": {
-              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
-              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
-              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
-              transition: "background-color 5000s ease-in-out 0s",
-            },
-          }}
         />
       </FormControlThemed>
       <FormControlThemed htmlFor="fullname" label="Full Name">
-        <TextField
+        <FormInput
           id="fullname"
           autoComplete="name"
           name="fullname"
@@ -101,16 +80,6 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
           value={formData.fullname}
           onChange={handleChange}
           required
-          variant="standard"
-          sx={{
-            width: "20rem",
-            "& input:-webkit-autofill": {
-              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
-              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
-              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
-              transition: "background-color 5000s ease-in-out 0s",
-            },
-          }}
         />
       </FormControlThemed>
 
@@ -130,7 +99,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
       </OutlinedButton>
 
       <FormControlThemed htmlFor="username" label="Username">
-        <TextField
+        <FormInput
           id="username"
           autoComplete="username"
           name="username"
@@ -138,20 +107,10 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
           value={formData.username}
           onChange={handleChange}
           required
-          variant="standard"
-          sx={{
-            width: "20rem",
-            "& input:-webkit-autofill": {
-              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
-              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
-              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
-              transition: "background-color 5000s ease-in-out 0s",
-            },
-          }}
         />
       </FormControlThemed>
       <FormControlThemed htmlFor="password" label="Password">
-        <TextField
+        <FormInput
           type="password"
           id="password"
           name="password"
@@ -160,16 +119,6 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
           value={formData.password}
           onChange={handleChange}
           required
-          variant="standard"
-          sx={{
-            width: "20rem",
-            "& input:-webkit-autofill": {
-              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
-              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
-              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
-              transition: "background-color 5000s ease-in-out 0s",
-            },
-          }}
         />
       </FormControlThemed>
 
@@ -191,23 +140,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
       <ContainedButton mode={mode} type="submit" sx={{ mt: 2 }}>
         Register
       </ContainedButton>
-      <Box>
-        <Typography sx={{ textAlign: "center" }}>
-          Already have an account?{" "}
-          <Typography
-            component="a"
-            href="https://www.google.com"
-            sx={{
-              color: mode ? "purple" : "magenta",
-              fontWeight: "bold",
-              fontStyle: "italic",
-            }}
-          >
-            Log In
-          </Typography>
-        </Typography>
-      </Box>
-    </TripleBorderFrame>
+    </FormBox>
   );
 };
 

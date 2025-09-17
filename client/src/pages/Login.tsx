@@ -1,19 +1,19 @@
-import { Box, TextField, Typography, IconButton } from "@mui/material";
+import { useState, type FC } from "react";
+import Box from "@mui/material/Box";
+import useLogin from "../hooks/data-fetching/useLogin";
+import FormTitle from "../components/ui-components/FormTitle";
 import FormControlThemed from "../components/others/FormControlThemed";
-import useMode from "../hooks/useMode";
-import { textColor } from "../constants/uiConstants";
-import { useState } from "react";
-import type { LoginCredentialType } from "../constants/dataTypes";
+import CloseToggleIcon from "../components/ui-components/CloseToggleIcon";
+import type {
+  LoginCredentialType,
+  UserLoginAuthDataType,
+} from "../constants/dataTypes";
 import {
   ContainedButton,
-  TripleBorderFrame,
+  FormInput,
 } from "../components/ui-components/StyledComponents";
-import useLogin from "../hooks/data-fetching/useLogin";
-import type { UserLoginAuthDataType } from "../constants/dataTypes";
 import useAuth from "../hooks/useAuth";
-import CloseIcon from "@mui/icons-material/Close";
-import FormTitle from "../components/ui-components/FormTitle";
-import type { FC } from "react";
+import useMode from "../hooks/useMode";
 
 type LogInProps = {
   toggleOpen: () => void;
@@ -47,81 +47,44 @@ const Login: FC<LogInProps> = ({ toggleOpen }) => {
   };
 
   return (
-    <TripleBorderFrame mode={mode} component="form" onSubmit={handleSubmit}>
-      <Box
-        sx={{
-          backgroundColor: "transparent",
-          display: "flex",
-          justifyContent: "end",
-        }}
-      >
-        <IconButton onClick={toggleOpen}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "15px !important",
+        padding: "3% 3% 3% 3%",
+      }}
+    >
+      <CloseToggleIcon toggleOpen={toggleOpen} />
       <FormTitle text="Log In" />
       <FormControlThemed htmlFor="username" label="Username">
-        <TextField
+        <FormInput
           autoComplete="username"
           id="username"
           name="username"
           placeholder="Enter Username"
           required
-          variant="standard"
           value={userCred.username}
           onChange={handleChange}
-          sx={{
-            width: "20rem",
-            "& input:-webkit-autofill": {
-              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
-              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
-              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
-              transition: "background-color 5000s ease-in-out 0s",
-            },
-          }}
         />
       </FormControlThemed>
       <FormControlThemed htmlFor="password" label="Password">
-        <TextField
+        <FormInput
           type="password"
           id="password"
           name="password"
           placeholder="Enter Password"
           required
-          variant="standard"
           value={userCred.password}
           onChange={handleChange}
-          sx={{
-            width: "20rem",
-            "& input:-webkit-autofill": {
-              WebkitBoxShadow: "0 0 0 100px transparent inset !important",
-              WebkitTextFillColor: mode ? textColor.dark : textColor.light,
-              caretColor: mode ? textColor.dark : textColor.light, // keeps caret visible
-              transition: "background-color 5000s ease-in-out 0s",
-            },
-          }}
         />
       </FormControlThemed>
       <ContainedButton mode={mode} type="submit" onClick={handleSubmit}>
         Submit
       </ContainedButton>
-      <Box>
-        <Typography sx={{ textAlign: "center" }}>
-          Don't have an account?{" "}
-          <Typography
-            component="a"
-            href="https://www.google.com"
-            sx={{
-              color: mode ? "purple" : "magenta",
-              fontWeight: "bold",
-              fontStyle: "italic",
-            }}
-          >
-            create one
-          </Typography>
-        </Typography>
-      </Box>
-    </TripleBorderFrame>
+    </Box>
   );
 };
 
