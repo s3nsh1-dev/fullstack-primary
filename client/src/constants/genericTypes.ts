@@ -15,3 +15,8 @@ export type AuthContextType = {
 export interface ChildrenProps {
   children: React.ReactNode;
 }
+
+export type IsViewerType = {
+  isViewer: boolean;
+  toggleViewer: () => void;
+};
