@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import type { ButtonProps } from "@mui/material";
+import { Typography, type ButtonProps } from "@mui/material";
 import {
   textColor,
   buttonColor,
@@ -33,6 +33,8 @@ export const OutlinedButton = styled(Button, {
 export const ContainedButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== "mode",
 })<StyledButtonProps>(({ mode }) => ({
+  whiteSpace: "nowrap",
+  fontSize: "clamp(0.85rem, 2vw, 1rem)",
   variant: "contained",
   height: "38px",
   boxShadow: mode
@@ -62,4 +64,11 @@ export const BoxCenter = styled(Box)({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+});
+
+export const RespText = styled(Typography)({
+  whiteSpace: "nowrap", // prevent wrapping
+  overflow: "hidden", // hide overflow
+  textOverflow: "ellipsis", // show "..." if text too long
+  fontSize: "clamp(0.85rem, 2vw, 1rem)", // responsive font
 });

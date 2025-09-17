@@ -9,7 +9,7 @@ import ResponsiveDrawer from "../components/navbar/ResponsiveDrawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
 import NavbarActionButtons from "../components/navbar/NavbarActionButtons";
-// import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
+import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
 import type { TestProps } from "../constants/componentPropTypes";
 import { useTheme } from "@mui/material/styles";
 import { Outlet } from "react-router-dom";
@@ -33,13 +33,16 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
 
   return (
     <>
-      <Box sx={{ display: "flex" }}>
-        <AppBar position="fixed" open={open} elevation={1}>
+      <>
+        <AppBar position="fixed" open={open} elevation={1} sx={{}}>
           <Toolbar
             variant="dense"
-            sx={{ display: "flex", justifyContent: "space-between" }}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
           >
-            <Box>
+            <Box sx={{ display: "flex", flexWrap: "nowrap" }}>
               <IconButton color="inherit" onClick={toggleDrawer} edge="start">
                 <MenuIcon />
               </IconButton>
@@ -48,8 +51,15 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
                 {navTitle}
               </Typography>
             </Box>
-            {/* <NavbarSearchArea /> */}
-            <NavbarActionButtons />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <NavbarSearchArea />
+              <NavbarActionButtons />
+            </Box>
           </Toolbar>
         </AppBar>
         {isMobile ? (
@@ -62,7 +72,7 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
         ) : (
           <ResponsiveDrawer open={open} />
         )}
-      </Box>
+      </>
       <Main open={open}>
         <Outlet />
       </Main>
