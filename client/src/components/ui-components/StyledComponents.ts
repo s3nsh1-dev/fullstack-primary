@@ -85,9 +85,8 @@ export const FormBox = styled(Box)<BoxProps>({
 });
 
 export const FormInput = styled(TextField, {
-  shouldForwardProp: (prop) => prop !== "mode", // ✅ fixed
+  shouldForwardProp: (prop) => prop !== "mode",
 })<StyledTextFieldProps>(({ mode }) => ({
-  variants: "standard",
   width: "20rem",
   "& input:-webkit-autofill": {
     WebkitBoxShadow: "0 0 0 100px transparent inset !important",

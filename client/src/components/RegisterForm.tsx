@@ -66,6 +66,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
           autoComplete="email"
           name="email"
           placeholder="e.g. johndoe@email.com"
+          variant="standard"
           value={formData.email}
           onChange={handleChange}
           required
@@ -77,6 +78,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
           autoComplete="name"
           name="fullname"
           placeholder="e.g. John Doe"
+          variant="standard"
           value={formData.fullname}
           onChange={handleChange}
           required
@@ -104,6 +106,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
           autoComplete="username"
           name="username"
           placeholder="e.g. john0123"
+          variant="standard"
           value={formData.username}
           onChange={handleChange}
           required
@@ -116,6 +119,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
           name="password"
           autoComplete="new-password"
           placeholder="Enter a secure password"
+          variant="standard"
           value={formData.password}
           onChange={handleChange}
           required
