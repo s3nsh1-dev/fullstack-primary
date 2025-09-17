@@ -8,9 +8,13 @@ const ToggleMode = () => {
   const { mode, changeMode } = useMode();
 
   return (
-    <BoxCenter>
+    <BoxCenter sx={{ marginLeft: "10px" }}>
       <IconButton onClick={changeMode}>
-        {mode ? <LightModeIcon /> : <NightsStayIcon />}
+        {mode ? (
+          <LightModeIcon fontSize="small" />
+        ) : (
+          <NightsStayIcon fontSize="small" />
+        )}
       </IconButton>
     </BoxCenter>
   );
