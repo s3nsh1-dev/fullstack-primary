@@ -1,7 +1,8 @@
 import { styled } from "@mui/material/styles";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import { Typography, type ButtonProps } from "@mui/material";
+import Button, { type ButtonProps } from "@mui/material/Button";
+import Box, { type BoxProps } from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField, { type TextFieldProps } from "@mui/material/TextField";
 import {
   textColor,
   buttonColor,
@@ -11,6 +12,9 @@ import {
 interface StyledButtonProps extends ButtonProps {
   mode?: boolean;
 }
+type StyledTextFieldProps = TextFieldProps & {
+  mode?: boolean;
+};
 
 export const StyledButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== "mode",
@@ -72,3 +76,23 @@ export const RespText = styled(Typography)({
   textOverflow: "ellipsis", // show "..." if text too long
   fontSize: "clamp(0.85rem, 2vw, 1rem)", // responsive font
 });
+
+export const FormBox = styled(Box)<BoxProps>({
+  display: "flex",
+  flexDirection: "column",
+  gap: "15px !important",
+  padding: "3% 3% 3% 3%",
+});
+
+export const FormInput = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== "mode", // ✅ fixed
+})<StyledTextFieldProps>(({ mode }) => ({
+  variants: "standard",
+  width: "20rem",
+  "& input:-webkit-autofill": {
+    WebkitBoxShadow: "0 0 0 100px transparent inset !important",
+    WebkitTextFillColor: mode ? textColor.dark : textColor.light,
+    caretColor: mode ? textColor.dark : textColor.light,
+    transition: "background-color 5000s ease-in-out 0s",
+  },
+}));
