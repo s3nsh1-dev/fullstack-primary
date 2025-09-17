@@ -5,7 +5,7 @@ const FormTitle = ({ text }: { text: string }) => {
     <Typography
       variant="h4"
       sx={{ textAlign: "center", fontWeight: "bold" }}
-      gutterBottom
+      // gutterBottom
     >
       {text}
     </Typography>

@@ -15,3 +15,14 @@ export type AuthContextType = {
 export interface ChildrenProps {
   children: React.ReactNode;
 }
+
+export type IsViewerType = {
+  isViewer: boolean;
+  toggleViewer: () => void;
+};
+
+export type SidebarOptionType = {
+  id: number;
+  path: string;
+  name: string;
+};

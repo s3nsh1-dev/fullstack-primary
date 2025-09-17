@@ -3,7 +3,8 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { useTheme } from "@mui/material";
 import type { ChildrenProps } from "../../constants/genericTypes";
-
+import useMode from "../../hooks/useMode";
+import { backgroundColor } from "../../constants/uiConstants";
 interface UpdatedProps extends ChildrenProps {
   open: boolean;
   toggleModal: () => void;
@@ -11,6 +12,8 @@ interface UpdatedProps extends ChildrenProps {
 
 const FormModal: FC<UpdatedProps> = ({ children, open, toggleModal }) => {
   const theme = useTheme();
+  const { mode } = useMode();
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -18,8 +21,10 @@ const FormModal: FC<UpdatedProps> = ({ children, open, toggleModal }) => {
     width: 500,
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
+    border: `1px solid ${mode ? backgroundColor.dark : backgroundColor.light}`,
+    boxShadow: `0 0 0 2px #b744dd, 0 0 0 3px ${
+      mode ? backgroundColor.dark : backgroundColor.light
+    }`,
     [theme.breakpoints.down("sm")]: {
       width: "91vw",
     },

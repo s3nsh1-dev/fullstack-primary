@@ -9,7 +9,7 @@ import ResponsiveDrawer from "../components/navbar/ResponsiveDrawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
 import NavbarActionButtons from "../components/navbar/NavbarActionButtons";
-// import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
+import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
 import type { TestProps } from "../constants/componentPropTypes";
 import { useTheme } from "@mui/material/styles";
 import { Outlet } from "react-router-dom";
@@ -23,9 +23,14 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
   const toggleDrawer = () => {
     setOpen((prev) => !prev);
   };
+  const closeDrawer = () => {
+    setOpen(false);
+  };
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down(792));
   const notMobileButCollapsed = useMediaQuery(theme.breakpoints.down(1313));
+
+  const doNothing = () => {};
 
   React.useEffect(() => {
     setOpen(false);
@@ -33,13 +38,16 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
 
   return (
     <>
-      <Box sx={{ display: "flex" }}>
-        <AppBar position="fixed" open={open} elevation={1}>
+      <>
+        <AppBar position="fixed" open={open} elevation={1} sx={{}}>
           <Toolbar
             variant="dense"
-            sx={{ display: "flex", justifyContent: "space-between" }}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
           >
-            <Box>
+            <Box sx={{ display: "flex", flexWrap: "nowrap" }}>
               <IconButton color="inherit" onClick={toggleDrawer} edge="start">
                 <MenuIcon />
               </IconButton>
@@ -48,21 +56,42 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
                 {navTitle}
               </Typography>
             </Box>
-            {/* <NavbarSearchArea /> */}
-            <NavbarActionButtons />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <NavbarSearchArea />
+              <NavbarActionButtons />
+            </Box>
           </Toolbar>
         </AppBar>
         {isMobile ? (
-          <DedicatedDrawer open={open} toggleDrawer={toggleDrawer} />
+          <DedicatedDrawer
+            open={open}
+            toggleDrawer={toggleDrawer}
+            closeDrawer={closeDrawer}
+          />
         ) : notMobileButCollapsed ? (
           <>
-            <ResponsiveDrawer open={false} />
-            <DedicatedDrawer open={open} toggleDrawer={toggleDrawer} />
+            <ResponsiveDrawer
+              open={false}
+              closeDrawer={notMobileButCollapsed ? closeDrawer : doNothing}
+            />
+            <DedicatedDrawer
+              open={open}
+              toggleDrawer={toggleDrawer}
+              closeDrawer={closeDrawer}
+            />
           </>
         ) : (
-          <ResponsiveDrawer open={open} />
+          <ResponsiveDrawer
+            open={open}
+            closeDrawer={notMobileButCollapsed ? closeDrawer : doNothing}
+          />
         )}
-      </Box>
+      </>
       <Main open={open}>
         <Outlet />
       </Main>

@@ -11,4 +11,5 @@ export type TestProps = {
 
 export type ResponsiveDrawerProps = {
   open: boolean;
+  closeDrawer: () => void;
 };

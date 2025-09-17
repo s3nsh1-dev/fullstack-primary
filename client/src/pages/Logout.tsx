@@ -1,13 +1,13 @@
 import {
-  TripleBorderFrame,
   ContainedButton,
+  FormBox,
 } from "../components/ui-components/StyledComponents";
 import useMode from "../hooks/useMode";
-import { Typography, Box, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Typography, Box } from "@mui/material";
 import useLogout from "../hooks/data-fetching/useLogout";
 import useAuth from "../hooks/useAuth";
 import type { FC } from "react";
+import CloseToggleIcon from "../components/ui-components/CloseToggleIcon";
 
 type LogoutProps = {
   toggleOpen: () => void;
@@ -26,18 +26,8 @@ const Logout: FC<LogoutProps> = ({ toggleOpen }) => {
     });
   };
   return (
-    <TripleBorderFrame mode={mode} component="form" onSubmit={handleSubmit}>
-      <Box
-        sx={{
-          backgroundColor: "transparent",
-          display: "flex",
-          justifyContent: "end",
-        }}
-      >
-        <IconButton onClick={toggleOpen}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
+    <FormBox component="form" onSubmit={handleSubmit}>
+      <CloseToggleIcon toggleOpen={toggleOpen} />
       <Box sx={{ textAlign: "center" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>
           Are you sure?
@@ -47,11 +37,10 @@ const Logout: FC<LogoutProps> = ({ toggleOpen }) => {
           interact with the contents or access unless re-login.
         </Typography>
       </Box>
-
       <ContainedButton mode={mode} type="submit" sx={{ my: 1 }}>
         Logout
       </ContainedButton>
-    </TripleBorderFrame>
+    </FormBox>
   );
 };
 
