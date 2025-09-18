@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button, ButtonGroup } from "@mui/material";
 
 const emptyPageText: {
   id: number;
@@ -10,7 +10,7 @@ const emptyPageText: {
   {
     id: 0,
     logo: "",
-    title: "",
+    title: "Videos",
     heading: "No videos uploaded",
     description:
       "This page has yet to upload a video. Search another page in order to find more videos.",
@@ -18,21 +18,21 @@ const emptyPageText: {
   {
     id: 1,
     logo: "",
-    title: "",
+    title: "Playlists",
     heading: "No playlist created",
     description: "There are no playlist created on this channel.",
   },
   {
     id: 2,
     logo: "",
-    title: "",
+    title: "Tweets",
     heading: "No Tweets",
     description: "This channel has yet to make a Tweet.",
   },
   {
     id: 3,
     logo: "",
-    title: "",
+    title: "Subscribed",
     heading: "No people subscribers",
     description: "This channel has yet to subscribe a new channel.",
   },
@@ -47,7 +47,19 @@ const Homepage = () => {
         <Box className="Avatar"></Box>
       </Box>
       <Box className="dynamic-content">
-        <Box className="select-button"></Box>
+        <Box className="select-button">
+          <ButtonGroup
+            variant="contained"
+            aria-label="Basic button group"
+            sx={{ width: "100%" }}
+          >
+            {emptyPageText.map((button) => (
+              <Button key={button.id} sx={{ width: "100%" }}>
+                {button.title}
+              </Button>
+            ))}
+          </ButtonGroup>
+        </Box>
         <Box className="select-content"></Box>
       </Box>
     </Box>
