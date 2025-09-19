@@ -1,45 +1,33 @@
-import { Box, Button, ButtonGroup } from "@mui/material";
+import { useState } from "react";
+import { Box, ButtonGroup } from "@mui/material";
+import { ContainedButton } from "../components/ui-components/StyledComponents";
+import { emptyPageText } from "../constants/constants";
 
-const emptyPageText: {
-  id: number;
-  logo: string;
-  title: string;
-  heading: string;
-  description: string;
-}[] = [
-  {
-    id: 0,
-    logo: "",
-    title: "Videos",
-    heading: "No videos uploaded",
-    description:
-      "This page has yet to upload a video. Search another page in order to find more videos.",
-  },
-  {
-    id: 1,
-    logo: "",
-    title: "Playlists",
-    heading: "No playlist created",
-    description: "There are no playlist created on this channel.",
-  },
-  {
-    id: 2,
-    logo: "",
-    title: "Tweets",
-    heading: "No Tweets",
-    description: "This channel has yet to make a Tweet.",
-  },
-  {
-    id: 3,
-    logo: "",
-    title: "Subscribed",
-    heading: "No people subscribers",
-    description: "This channel has yet to subscribe a new channel.",
-  },
-];
+type OpenStateType = {
+  videos: boolean;
+  playlists: boolean;
+  tweets: boolean;
+  subscribed: boolean;
+};
 
 const Homepage = () => {
-  console.log(emptyPageText);
+  const [open, setOpen] = useState<OpenStateType>({
+    videos: true,
+    playlists: false,
+    tweets: false,
+    subscribed: false,
+  });
+
+  const handleOpen = (value: keyof OpenStateType) => {
+    setOpen({
+      videos: false,
+      playlists: false,
+      tweets: false,
+      subscribed: false,
+      [value]: true,
+    });
+  };
+
   return (
     <Box>
       <Box className="hero-section">
@@ -54,13 +42,22 @@ const Homepage = () => {
             sx={{ width: "100%" }}
           >
             {emptyPageText.map((button) => (
-              <Button key={button.id} sx={{ width: "100%" }}>
+              <ContainedButton
+                key={button.id}
+                sx={{ width: "100%" }}
+                onClick={() => handleOpen(button.id as keyof OpenStateType)}
+              >
                 {button.title}
-              </Button>
+              </ContainedButton>
             ))}
           </ButtonGroup>
         </Box>
-        <Box className="select-content"></Box>
+        <Box className="select-content">
+          {open.videos && <Box>Showing user videos</Box>}
+          {open.playlists && <Box>Showing user playlists</Box>}
+          {open.tweets && <Box>Showing user tweets</Box>}
+          {open.subscribed && <Box>Showing user subscribed</Box>}
+        </Box>
       </Box>
     </Box>
   );
