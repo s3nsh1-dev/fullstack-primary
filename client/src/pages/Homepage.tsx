@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, ButtonGroup, Typography } from "@mui/material";
+import { Box, ButtonGroup, Typography, Divider } from "@mui/material";
 import { emptyPageText } from "../constants/constants";
 import ShowPlaylists from "../components/homepage/ShowPlaylists";
 import ShowVideos from "../components/homepage/ShowVideos";
@@ -43,11 +43,36 @@ const Homepage = () => {
   return (
     <Box>
       <HomeProfilePictures />
-      <Box sx={{ margin: "63px 5px 5px 5px" }}>
-        <Typography>{activeUser.fullname}</Typography>
-        <Typography>{activeUser.email}</Typography>
-        <Typography>{convertISOIntoLocalTime(activeUser.createdAt)}</Typography>
-        <Typography>{activeUser.username}</Typography>
+      <Box
+        sx={{
+          margin: "63px 5px 5px 5px",
+          display: "flex",
+          flexDirection: "row",
+          gap: 6,
+        }}
+      >
+        <Box sx={{}}>
+          <Typography>
+            Name: {activeUser.fullname}{" "}
+            <Typography
+              component={"span"}
+              variant="caption"
+              color="text.secondary"
+            >
+              @{activeUser.username}
+            </Typography>
+          </Typography>
+          <Typography>Email: {activeUser.email}</Typography>
+          <Typography>
+            Created in: {convertISOIntoLocalTime(activeUser.createdAt)}
+          </Typography>
+        </Box>
+        <Divider orientation="vertical" flexItem />
+        <Box>
+          <Typography>Subscribers:</Typography>
+          <Typography>Videos: </Typography>
+          <Typography>Tweets: </Typography>
+        </Box>
       </Box>
       <Box className="dynamic-content">
         <Box className="select-button">
