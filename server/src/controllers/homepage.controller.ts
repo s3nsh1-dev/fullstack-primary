@@ -19,7 +19,7 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
   //           { $match: { $expr: { $eq: ["$channel", "$$userId"] } } },
   //           { $project: { _id: 1, subscriber: 1 } },
   //         ],
-  //         as: "subscriptions_info",
+  //         as: "subscribers_info",
   //       },
   //     },
   //     {
@@ -31,7 +31,7 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
   //         avatar: 1,
   //         coverImage: 1,
   //         createdAt: 1,
-  //         subscriptions_info: 1,
+  //         subscribers_info: 1,
   //       },
   //     },
   //   ]);
@@ -49,26 +49,36 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
               from: "users",
               let: { subscriberId: "$subscriber" },
               pipeline: [
-                // Now find user based on subscriber
                 { $match: { $expr: { $eq: ["$_id", "$$subscriberId"] } } },
-                { $project: { avatar: 1, fullname: 1, username: 1 } },
+                { $project: { _id: 1, avatar: 1, fullname: 1, username: 1 } },
               ],
               as: "subscriber_info",
             },
           },
           { $unwind: "$subscriber_info" },
           {
-            $project: {
-              _id: 1,
-              subscriber: 1,
-              "subscriber_info._id": 1,
-              "subscriber_info.avatar": 1,
-              "subscriber_info.fullname": 1,
-              "subscriber_info.username": 1,
+            $addFields: {
+              subscriber: "$subscriber_info._id",
+              avatar: "$subscriber_info.avatar",
+              fullname: "$subscriber_info.fullname",
+              username: "$subscriber_info.username",
             },
           },
+          { $project: { id: 1, avatar: 1, fullname: 1, username: 1 } },
         ],
-        as: "subscriptions_info",
+        as: "subscribers_info",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        username: 1,
+        email: 1,
+        fullname: 1,
+        avatar: 1,
+        coverImage: 1,
+        createdAt: 1,
+        subscribers_info: 1,
       },
     },
   ]);
