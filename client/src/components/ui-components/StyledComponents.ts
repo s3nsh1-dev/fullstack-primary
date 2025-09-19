@@ -20,7 +20,9 @@ export const StyledButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== "mode",
 })<StyledButtonProps>(({ mode }) => ({
   variants: "text",
+  height: "40px",
   color: mode ? textColor.dark : textColor.light,
+  backgroundColor: "transparent",
 }));
 
 export const OutlinedButton = styled(Button, {
@@ -37,6 +39,7 @@ export const OutlinedButton = styled(Button, {
 export const ContainedButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== "mode",
 })<StyledButtonProps>(({ mode }) => ({
+  variants: "contained",
   whiteSpace: "nowrap",
   fontSize: "clamp(0.85rem, 2vw, 1rem)",
   variant: "contained",

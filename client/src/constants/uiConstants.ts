@@ -1,6 +1,6 @@
 export const buttonColor = {
-  default: "#b744ddff",
-  hover: "#9655c7ff",
+  default: "#c544f0ff",
+  hover: "#b668f1ff",
 };
 
 export const textColor = {
