@@ -11,8 +11,6 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({ children }) => {
   const login = (userData: UserLoginAuthDataType) => setUser(userData);
   const logout = () => setUser(null);
 
-  console.log(user);
-
   return (
     <authContext.Provider value={{ user, login, logout }}>
       {children}

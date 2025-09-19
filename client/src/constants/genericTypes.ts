@@ -26,3 +26,11 @@ export type SidebarOptionType = {
   path: string;
   name: string;
 };
+
+export type EmptyPageTextType = {
+  id: string;
+  logo: string;
+  title: string;
+  heading: string;
+  description: string;
+};
