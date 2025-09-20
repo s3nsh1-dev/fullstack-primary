@@ -38,3 +38,52 @@ export interface LoginCredentialType {
   username: string;
   password: string;
 }
+
+export type SubscriberType = {
+  _id: string;
+  subscriber_id: string;
+  avatar: string;
+  fullname: string;
+  username: string;
+  subscribedAt: string; // ISO date string
+};
+
+export type VideoType = {
+  _id: string;
+  videoFile: string;
+  thumbnail: string;
+  title: string;
+  description: string;
+  duration: number;
+  views: number;
+  isPublished: boolean;
+  createdAt: string; // ISO date string
+};
+
+export type TweetType = {
+  _id: string;
+  content: string;
+  createdAt: string; // ISO date string
+};
+
+export type PlaylistType = {
+  _id: string;
+  name: string;
+  description: string;
+  videos: VideoType[]; // already populated with objects
+  createdAt: string; // ISO date string
+};
+
+export type HomePageFormatType = {
+  _id: string;
+  username: string;
+  email: string;
+  fullname: string;
+  avatar: string;
+  coverImage: string;
+  createdAt: string; // ISO date string
+  subscribers: SubscriberType[];
+  videos: VideoType[];
+  tweets: TweetType[];
+  playlists: PlaylistType[];
+};
