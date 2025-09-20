@@ -94,7 +94,42 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
         let: { userId: "$_id" },
         pipeline: [
           { $match: { $expr: { $eq: ["$owner", "$$userId"] } } },
-          { $project: { name: 1, description: 1, videos: 1, createdAt: 1 } },
+          {
+            $lookup: {
+              from: "videos",
+              localField: "videos",
+              /*
+              # foreignField: "_id" => MongoDB looks into the videos collection and checks if any document’s _id matches any element in the playlist’s videos array.
+
+              # Array Matching Behavior => If localField is an array, $lookup automatically matches each element of the array against foreignField. You don’t have to loop manually; MongoDB internally does:
+              */
+
+              foreignField: "_id",
+              as: "videos",
+              pipeline: [
+                {
+                  $project: {
+                    title: 1,
+                    description: 1,
+                    thumbnail: 1,
+                    videoFile: 1,
+                    duration: 1,
+                    views: 1,
+                    isPublished: 1,
+                    createdAt: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $project: {
+              name: 1,
+              description: 1,
+              videos: 1, // now videos are full objects, not just IDs
+              createdAt: 1,
+            },
+          },
         ],
       },
     },
