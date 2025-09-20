@@ -9,8 +9,9 @@ import useMode from "../hooks/useMode";
 import { StyledButton } from "../components/ui-components/StyledComponents";
 import { buttonColor } from "../constants/uiConstants";
 import HomeProfilePictures from "../components/homepage/HomeProfilePictures";
-import useAuth from "../hooks/useAuth";
 import convertISOIntoLocalTime from "../utilities/convertISOIntoLocalTime";
+import useFetchHomepageDetails from "../hooks/data-fetching/useFetchHomepageDetails";
+import useAuth from "../hooks/useAuth";
 
 type OpenStateType = {
   videos: boolean;
@@ -21,15 +22,19 @@ type OpenStateType = {
 
 const Homepage = () => {
   const { mode } = useMode();
+  const { user } = useAuth();
   const [open, setOpen] = useState<OpenStateType>({
     videos: true,
     playlists: false,
     tweets: false,
     subscribed: false,
   });
-  const { user } = useAuth();
-  const activeUser = user?.user;
-  if (!activeUser) return <div>You are not logged in</div>;
+  const { data, isLoading, isError } = useFetchHomepageDetails(
+    user?.user._id || ""
+  );
+  if (!data) return null;
+  if (isLoading) return <div>...Loading Homepage</div>;
+  if (isError) return <div>...Encountered Error</div>;
 
   const handleOpen = (value: keyof OpenStateType) => {
     setOpen({
@@ -53,25 +58,25 @@ const Homepage = () => {
       >
         <Box sx={{}}>
           <Typography>
-            Name: {activeUser.fullname}{" "}
+            Name: {data.fullname}{" "}
             <Typography
               component={"span"}
               variant="caption"
               color="text.secondary"
             >
-              @{activeUser.username}
+              @{data.username}
             </Typography>
           </Typography>
-          <Typography>Email: {activeUser.email}</Typography>
+          <Typography>Email: {data.email}</Typography>
           <Typography>
-            Created in: {convertISOIntoLocalTime(activeUser.createdAt)}
+            Created in: {convertISOIntoLocalTime(data.createdAt)}
           </Typography>
         </Box>
         <Divider orientation="vertical" flexItem />
         <Box>
-          <Typography>Subscribers:</Typography>
-          <Typography>Videos: </Typography>
-          <Typography>Tweets: </Typography>
+          <Typography>Subscribers: {data.subscribers.length}</Typography>
+          <Typography>Videos: {data.videos.length}</Typography>
+          <Typography>Tweets: {data.tweets.length}</Typography>
         </Box>
       </Box>
       <Box className="dynamic-content">
