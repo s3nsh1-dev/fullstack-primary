@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import type { HomePageFormatType } from "../../constants/dataTypes";
 
 const useFetchHomepageDetails = (user_ID: string) => {
-  if (!user_ID) throw new Error("user_ID is required");
   return useQuery({
     queryKey: ["homepage"],
     queryFn: async () => {
@@ -19,6 +18,8 @@ const useFetchHomepageDetails = (user_ID: string) => {
       const result: HomePageFormatType = data.data.user[0];
       return result;
     },
+    enabled: !!user_ID, // only fetch if user._id exists
+    staleTime: 10 * 60 * 1000, // 10min
   });
 };
 export default useFetchHomepageDetails;
