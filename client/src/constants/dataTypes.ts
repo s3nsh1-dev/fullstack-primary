@@ -39,7 +39,7 @@ export interface LoginCredentialType {
   password: string;
 }
 
-export type Subscriber = {
+export type SubscriberType = {
   _id: string;
   subscriber_id: string;
   avatar: string;
@@ -48,7 +48,7 @@ export type Subscriber = {
   subscribedAt: string; // ISO date string
 };
 
-export type Video = {
+export type VideoType = {
   _id: string;
   videoFile: string;
   thumbnail: string;
@@ -60,17 +60,17 @@ export type Video = {
   createdAt: string; // ISO date string
 };
 
-export type Tweet = {
+export type TweetType = {
   _id: string;
   content: string;
   createdAt: string; // ISO date string
 };
 
-export type Playlist = {
+export type PlaylistType = {
   _id: string;
   name: string;
   description: string;
-  videos: Video[]; // already populated with objects
+  videos: VideoType[]; // already populated with objects
   createdAt: string; // ISO date string
 };
 
@@ -82,8 +82,8 @@ export type HomePageFormatType = {
   avatar: string;
   coverImage: string;
   createdAt: string; // ISO date string
-  subscribers: Subscriber[];
-  videos: Video[];
-  tweets: Tweet[];
-  playlists: Playlist[];
+  subscribers: SubscriberType[];
+  videos: VideoType[];
+  tweets: TweetType[];
+  playlists: PlaylistType[];
 };
