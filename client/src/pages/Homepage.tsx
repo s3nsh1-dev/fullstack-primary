@@ -109,10 +109,10 @@ const Homepage = () => {
           </ButtonGroup>
         </Box>
         <Box className="select-content">
-          {open.videos && <ShowVideos />}
-          {open.playlists && <ShowPlaylists />}
-          {open.tweets && <ShowTweets />}
-          {open.subscribed && <ShowSubscribed />}
+          {open.videos && <ShowVideos videos={data.videos} />}
+          {open.playlists && <ShowPlaylists playlists={data.playlists} />}
+          {open.tweets && <ShowTweets tweets={data.tweets} />}
+          {open.subscribed && <ShowSubscribed subscribed={data.subscribed} />}
         </Box>
       </Box>
     </Box>
