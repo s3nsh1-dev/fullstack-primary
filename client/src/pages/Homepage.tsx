@@ -112,7 +112,7 @@ const Homepage = () => {
           {open.videos && <ShowVideos videos={data.videos} />}
           {open.playlists && <ShowPlaylists playlists={data.playlists} />}
           {open.tweets && <ShowTweets tweets={data.tweets} />}
-          {open.subscribed && <ShowSubscribed subscribed={data.subscribed} />}
+          {open.subscribed && <ShowSubscribed subscribed={data.subscribers} />}
         </Box>
       </Box>
     </Box>
