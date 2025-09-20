@@ -15,9 +15,13 @@ const ShowPlaylists = ({ playlists }: { playlists: PlaylistType[] }) => {
   }
 
   return (
-    <Stack spacing={1} m={1}>
+    <Stack spacing={1}>
       {playlists.map((playlist) => (
-        <Card key={playlist._id} variant="outlined">
+        <Card
+          key={playlist._id}
+          variant="outlined"
+          sx={{ borderRadius: "10px" }}
+        >
           <CardContent sx={{ p: 2 }}>
             {/* Playlist Info */}
             <Typography variant="h6" color="textPrimary" gutterBottom>

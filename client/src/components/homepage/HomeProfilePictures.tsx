@@ -17,6 +17,7 @@ const HomeProfilePictures = () => {
         width: "100%",
         height: 250,
         bgcolor: "red",
+        mb: 8,
       }}
     >
       {/* Cover Image */}
