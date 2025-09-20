@@ -9,7 +9,7 @@ const ShowTweets = ({ tweets }: { tweets: TweetType[] }) => {
   }
 
   return (
-    <Stack spacing={1} m={1}>
+    <Stack spacing={1}>
       {tweets.map((tweet) => (
         <Card key={tweet._id} variant="outlined" sx={{ borderRadius: "10px" }}>
           <CardContent

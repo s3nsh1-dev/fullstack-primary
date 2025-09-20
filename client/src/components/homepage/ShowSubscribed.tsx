@@ -14,9 +14,6 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
         borderRadius: 2, // rounded corners
         boxShadow: 1, // subtle shadow
         backgroundColor: "background.paper", // card background
-        "&:hover": {
-          boxShadow: 3, // hover effect
-        },
       }}
     >
       <Box
@@ -44,7 +41,7 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
     </Box>
   ));
 
-  return <Box sx={{ m: 1 }}>{renderSubscriberList}</Box>;
+  return <Box>{renderSubscriberList}</Box>;
 };
 
 export default ShowSubscribed;
