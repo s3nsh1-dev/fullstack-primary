@@ -87,3 +87,72 @@ export type HomePageFormatType = {
   tweets: TweetType[];
   playlists: PlaylistType[];
 };
+
+export interface LikedContentResponseType {
+  statusCode: number;
+  data: {
+    likes: LikedType[];
+  };
+  message: string;
+  success: boolean;
+}
+
+export type LikedType = VideoLike | CommentLike | TweetLike;
+
+export interface BaseLike {
+  _id: string;
+  likedBy: string;
+  updatedAt: string; // ISO date string
+}
+
+// ================= VIDEO LIKE =================
+export interface VideoLike extends BaseLike {
+  video: {
+    _id: string;
+    owner: User;
+    videoFile: string;
+    thumbnail: string;
+    title: string;
+    description: string;
+    duration: number;
+    views: number;
+  };
+  comment?: never;
+  tweet?: never;
+}
+
+// ================= COMMENT LIKE =================
+export interface CommentLike extends BaseLike {
+  comment: {
+    _id: string;
+    content: string;
+    video: {
+      _id: string;
+      owner: User;
+      thumbnail: string;
+      title: string;
+      duration: number;
+    };
+    owner: User;
+  };
+  video?: never;
+  tweet?: never;
+}
+
+// ================= TWEET LIKE =================
+export interface TweetLike extends BaseLike {
+  tweet: {
+    _id: string;
+    content: string;
+    owner: User;
+  };
+  video?: never;
+  comment?: never;
+}
+
+// ================= USER =================
+export interface User {
+  _id: string;
+  fullname: string;
+  avatar: string;
+}
