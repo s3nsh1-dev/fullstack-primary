@@ -1,19 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import type {
-  UserLoginAuthDataType,
-  UserLoginResponseType,
-} from "../../constants/dataTypes";
+import type { UserLoginResponseType } from "../../constants/responseTypes";
 
-type UseLoginType = {
-  username: string;
-  password: string;
-  email?: string;
-};
 const URL = import.meta.env.VITE_SERVER_URL;
 
 const useLogin = () => {
   return useMutation({
-    mutationFn: async (credentials: UseLoginType) => {
+    mutationFn: async (credentials: UserLoginType) => {
       const response = await fetch(`${URL}/users/login`, {
         method: "POST",
         credentials: "include",
@@ -25,9 +17,15 @@ const useLogin = () => {
       if (!response.ok)
         throw new Error("ERROR WHILE FETCHING USER LOGIN DETAILS");
       const data: UserLoginResponseType = await response.json();
-      const user: UserLoginAuthDataType = data.data;
+      const user = data.data;
       return user;
     },
   });
 };
 export default useLogin;
+
+type UserLoginType = {
+  username: string;
+  password: string;
+  email?: string;
+};
