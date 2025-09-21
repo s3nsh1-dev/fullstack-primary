@@ -18,6 +18,7 @@ const Dashboard = () => {
         overflowWrap: "anywhere",
       }}
     >
+      {!user && <div>....Loading Dashboard</div>}
       {loginMutate.isPending && <div>....Loading User</div>}
       {loginMutate.isError && (
         <div>Encountered error: Please try after some time</div>

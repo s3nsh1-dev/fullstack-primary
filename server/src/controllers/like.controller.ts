@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import { isOwner } from "../utils/checkIsOwner";
+import { toObjectId } from "../utils/convertToObjectId";
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
   //TODO: toggle like on video
@@ -37,8 +38,6 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     });
     responseMessage = "LIKE REMOVED FROM VIDEO";
   }
-
-  console.log("did we found LIKEd ?", searchVideoLike);
 
   return res
     .status(200)
@@ -381,6 +380,208 @@ const getLikedComments = asyncHandler(async (req, res) => {
     );
 });
 
+const getEveryLikedContent = asyncHandler(async (req, res) => {
+  // TODO: get all liked videos/comments/tweets
+
+  const { userId } = req.params;
+  if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
+  //   { $match: { likedBy: toObjectId(userId) } },
+  //   {
+  //     $lookup: {
+  //       from: "videos",
+  //       as: "video",
+  //       localField: "video",
+  //       foreignField: "_id",
+  //       pipeline: [
+  //         {
+  //           $project: {
+  //             title: 1,
+  //             description: 1,
+  //             videoFile: 1,
+  //             thumbnail: 1,
+  //             owner: 1,
+  //             views: 1,
+  //             duration: 1,
+  //           },
+  //         },
+  //         {
+  //           $lookup: {
+  //             from: "users",
+  //             as: "owner",
+  //             localField: "owner",
+  //             foreignField: "_id",
+  //             pipeline: [{ $project: { fullname: 1, avatar: 1 } }],
+  //           },
+  //         },
+  //         { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+  //       ],
+  //     },
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: "tweets",
+  //       as: "tweet",
+  //       localField: "tweet",
+  //       foreignField: "_id",
+  //       pipeline: [
+  //         { $project: { content: 1, owner: 1 } },
+  //         {
+  //           $lookup: {
+  //             from: "users",
+  //             as: "owner",
+  //             localField: "owner",
+  //             foreignField: "_id",
+  //             pipeline: [{ $project: { fullname: 1, avatar: 1 } }],
+  //           },
+  //         },
+  //         {
+  //           $unwind: { path: "$owner", preserveNullAndEmptyArrays: true },
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: "comments",
+  //       as: "comment",
+  //       localField: "comment",
+  //       foreignField: "_id",
+  //       pipeline: [
+  //         {
+  //           $project: {
+  //             content: 1,
+  //             video: 1,
+  //             tweet: 1,
+  //             owner: 1,
+  //           },
+  //         },
+  //         {
+  //           $lookup: {
+  //             from: "videos",
+  //             as: "video",
+  //             localField: "video",
+  //             foreignField: "_id",
+  //             pipeline: [
+  //               { $project: { thumbnail: 1, title: 1, duration: 1, owner: 1 } },
+  //               {
+  //                 $lookup: {
+  //                   from: "users",
+  //                   as: "owner",
+  //                   localField: "owner",
+  //                   foreignField: "_id",
+  //                   pipeline: [{ $project: { fullname: 1, avatar: 1 } }],
+  //                 },
+  //               },
+  //               {
+  //                 $unwind: { path: "$owner", preserveNullAndEmptyArrays: true },
+  //               },
+  //             ],
+  //           },
+  //         },
+  //         {
+  //           $lookup: {
+  //             from: "tweets",
+  //             as: "tweet",
+  //             localField: "tweet",
+  //             foreignField: "_id",
+  //             pipeline: [
+  //               { $project: { content: 1, owner: 1 } },
+  //               {
+  //                 $lookup: {
+  //                   from: "users",
+  //                   as: "owner",
+  //                   localField: "owner",
+  //                   foreignField: "_id",
+  //                   pipeline: [{ $project: { fullname: 1, avatar: 1 } }],
+  //                 },
+  //               },
+  //               {
+  //                 $unwind: { path: "$owner", preserveNullAndEmptyArrays: true },
+  //               },
+  //             ],
+  //           },
+  //         },
+  //         {
+  //           $lookup: {
+  //             from: "users",
+  //             as: "owner",
+  //             localField: "owner",
+  //             foreignField: "_id",
+  //             pipeline: [{ $project: { fullname: 1, avatar: 1 } }],
+  //           },
+  //         },
+  //         { $unwind: { path: "$video", preserveNullAndEmptyArrays: true } },
+  //         { $unwind: { path: "$tweet", preserveNullAndEmptyArrays: true } },
+  //         { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+  //       ],
+  //     },
+  //   },
+
+  //   // {
+  //   // this add an empty array to all the LIKE document who lacks field like video, tweet and comment
+  //   //   $addFields: {
+  //   //     videoDetails: { $first: "$videoDetails" },
+  //   //     comment: { $first: "$comment" },
+  //   //     tweet: { $first: "$tweet" },
+  //   //   },
+  //   // },
+  //   { $unwind: { path: "$video", preserveNullAndEmptyArrays: true } },
+  //   { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+  //   { $unwind: { path: "$tweet", preserveNullAndEmptyArrays: true } },
+  //   {
+  //     $project: {
+  //       likedBy: 1,
+  //       comment: 1,
+  //       video: 1,
+  //       tweet: 1,
+  //       updatedAt: 1,
+  //     },
+  //   },
+  // ]);
+
+  const likedContent = await Like.find({ likedBy: userId })
+    .select("video tweet comment likedBy updatedAt")
+    .populate({
+      path: "video",
+      select: "title description thumbnail videoFile owner views duration",
+      populate: { path: "owner", select: "fullname avatar" },
+    })
+    .populate({
+      path: "tweet",
+      select: "content owner",
+      populate: { path: "owner", select: "fullname avatar" },
+    })
+    .populate({
+      path: "comment",
+      select: "content video tweet owner",
+      populate: [
+        { path: "owner", select: "fullname avatar" },
+        {
+          path: "video",
+          select: "title thumbnail duration owner",
+          populate: { path: "owner", select: "fullname avatar" },
+        },
+        {
+          path: "tweet",
+          select: "content owner",
+          populate: { path: "owner", select: "fullname avatar" },
+        },
+      ],
+    });
+
+  if (!likedContent) throw new ApiError(404, "LIKES NOT FOUND");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { likes: likedContent },
+        "USER LIKED CONTENT FETCHED SUCCESSFULLY"
+      )
+    );
+});
+
 export {
   toggleCommentLike,
   toggleTweetLike,
@@ -388,4 +589,5 @@ export {
   getLikedVideos,
   getLikedComments,
   getLikedTweets,
+  getEveryLikedContent,
 };

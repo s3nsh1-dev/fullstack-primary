@@ -1,0 +1,28 @@
+import { useQuery } from "@tanstack/react-query";
+import type {
+  LikedContentResponseType,
+  LikedType,
+} from "../../constants/dataTypes";
+
+const useFetchLikedContent = (user_ID: string) => {
+  return useQuery({
+    queryKey: ["likedContent", user_ID],
+    queryFn: async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/likes/content/${user_ID}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+      if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
+      const data: LikedContentResponseType = await response.json();
+      const result: LikedType[] = data.data.likes;
+      return result;
+    },
+    enabled: !!user_ID, // only fetch if user._id exists
+    staleTime: 10 * 60 * 1000, // 10min
+  });
+};
+
+export default useFetchLikedContent;

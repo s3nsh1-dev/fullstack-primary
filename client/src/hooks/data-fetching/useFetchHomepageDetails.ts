@@ -3,7 +3,7 @@ import type { HomePageFormatType } from "../../constants/dataTypes";
 
 const useFetchHomepageDetails = (user_ID: string) => {
   return useQuery({
-    queryKey: ["homepage"],
+    queryKey: ["homepage", user_ID],
     queryFn: async () => {
       const response = await fetch(
         `${import.meta.env.VITE_SERVER_URL}/homepage/${user_ID}`,
