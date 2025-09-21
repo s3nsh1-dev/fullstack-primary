@@ -11,7 +11,13 @@ const ShowVideos = ({ videos }: { videos: VideoType[] }) => {
   }
 
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 1,
+      }}
+    >
       {videos.map((video) => (
         <Box
           key={video._id}

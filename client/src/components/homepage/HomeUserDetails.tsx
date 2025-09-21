@@ -4,7 +4,6 @@ import HomeProfilePictures from "./HomeProfilePictures";
 import type { HomePageFormatType } from "../../constants/dataTypes";
 
 const HomeUserDetails = ({ data }: { data: HomePageFormatType }) => {
-  console.log();
   return (
     <Box
       mb={1}

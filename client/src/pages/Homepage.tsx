@@ -29,10 +29,9 @@ const Homepage = () => {
     subscribed: false,
   });
   const { data, isLoading, isError } = useFetchHomepageDetails(
-    user?.user._id || ""
+    user?.user._id || "INVALID USER_ID"
   );
-  if (!data) return null;
-  if (isLoading) return <div>...Loading Homepage</div>;
+  if (isLoading || !data) return <div>...Loading Homepage</div>;
   if (isError) return <div>...Encountered Error</div>;
 
   const handleOpen = (value: keyof OpenStateType) => {
