@@ -13,7 +13,7 @@ const Tweets = () => {
   if (isLoading || !data) return <div>...Loading Liked Content</div>;
   if (isError) return <div>...Encountered Error</div>;
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <Box m={1}>

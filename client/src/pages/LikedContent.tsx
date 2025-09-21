@@ -13,6 +13,7 @@ const LikedContent = () => {
   if (isError) return <div>...Encountered Error</div>;
 
   // console.log(data);
+
   return (
     <div>
       <HomeTabTitles

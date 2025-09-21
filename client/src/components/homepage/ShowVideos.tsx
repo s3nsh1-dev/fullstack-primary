@@ -113,7 +113,7 @@ const ShowVideos = ({ videos }: { videos: VideoType[] }) => {
             >
               {video.duration.toFixed(2)} min | {video.views} views |{" "}
               {video.isPublished ? "Published" : "Draft"} | Created{" "}
-              {convertISOIntoLocalTime(video.createdAt).toLocaleString()}
+              {convertISOIntoLocalTime(video.createdAt || "").toLocaleString()}
             </Typography>
           </Box>
         </Box>

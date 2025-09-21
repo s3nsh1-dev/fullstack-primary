@@ -34,7 +34,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
   };
 
   if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
-  const matchStage: Record<string, any> = { isPublished: true };
+  // const matchStage: Record<string, any> = { isPublished: true };
+  const matchStage: Record<string, any> = {};
 
   if (query) {
     matchStage.$or = [
@@ -83,6 +84,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
         thumbnail: 1,
         duration: 1,
         createdAt: 1,
+        "ownerDetails._id": 1,
+        "ownerDetails.fullname": 1,
         "ownerDetails.username": 1,
         "ownerDetails.avatar": 1,
       },
