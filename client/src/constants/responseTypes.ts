@@ -4,6 +4,7 @@ import type {
   LikedType,
   VideoType,
   VideoPaginationType,
+  UserSubscriberListType,
 } from "./dataTypes";
 
 export interface UserTweetsAPIResponse {
@@ -35,6 +36,16 @@ export interface UserVideosAPIResponse {
   data: {
     videos: VideoType[];
     pagination: VideoPaginationType;
+  };
+  message: string;
+  success: boolean;
+}
+
+export interface UserSubscribersAPIResponse {
+  statusCode: number;
+  data: {
+    subscribers: UserSubscriberListType[];
+    length: number;
   };
   message: string;
   success: boolean;
