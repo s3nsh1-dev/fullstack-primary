@@ -28,18 +28,6 @@ export type SubscriberType = {
   subscribedAt: string; // ISO date string
 };
 
-export type VideoType = {
-  _id: string;
-  videoFile: string;
-  thumbnail: string;
-  title: string;
-  description: string;
-  duration: number;
-  views: number;
-  isPublished: boolean;
-  createdAt: string; // ISO date string
-};
-
 export interface UserLoginType {
   _id: string;
   username: string;
@@ -99,7 +87,6 @@ export interface VideoLike extends BaseLike {
   tweet?: never;
 }
 
-// ================= COMMENT LIKE =================
 export interface CommentLike extends BaseLike {
   comment: {
     _id: string;
@@ -116,8 +103,6 @@ export interface CommentLike extends BaseLike {
   video?: never;
   tweet?: never;
 }
-
-// ================= TWEET LIKE =================
 export interface TweetLike extends BaseLike {
   tweet: {
     _id: string;
@@ -127,11 +112,10 @@ export interface TweetLike extends BaseLike {
   video?: never;
   comment?: never;
 }
-
-// ================= MinimalUserType  =================
 export interface MinimalUserType {
   _id: string;
-  fullname: string;
+  fullname?: string;
+  username?: string;
   avatar: string;
 }
 export interface TweetType {
@@ -141,4 +125,36 @@ export interface TweetType {
   createdAt: string;
   updatedAt: string;
   __v: number;
+}
+
+// export interface VideoWithOwnerDetailsType {
+//   _id: string;
+//   videoFile: string;
+//   thumbnail: string;
+//   title: string;
+//   description: string;
+//   duration: number;
+//   createdAt: string; // ISO Date string
+//   ownerDetails: MinimalUserType[];
+// }
+export type VideoType = {
+  _id: string;
+  videoFile: string;
+  thumbnail: string;
+  title: string;
+  description: string;
+  duration: number;
+  isPublished?: boolean;
+  views?: number;
+  createdAt?: string; // ISO date string
+  updatedAt?: string; // ISO date string
+  __v?: number;
+  owner?: string;
+  ownerDetails?: MinimalUserType[];
+};
+export interface VideoPaginationType {
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
 }

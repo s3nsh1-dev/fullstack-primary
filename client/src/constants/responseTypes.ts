@@ -1,4 +1,10 @@
-import type { TweetType, UserLoginAuthDataType, LikedType } from "./dataTypes";
+import type {
+  TweetType,
+  UserLoginAuthDataType,
+  LikedType,
+  VideoType,
+  VideoPaginationType,
+} from "./dataTypes";
 
 export interface UserTweetsAPIResponse {
   statusCode: number;
@@ -19,6 +25,16 @@ export interface LikedContentResponseType {
   statusCode: number;
   data: {
     likes: LikedType[];
+  };
+  message: string;
+  success: boolean;
+}
+
+export interface UserVideosAPIResponse {
+  statusCode: number;
+  data: {
+    videos: VideoType[];
+    pagination: VideoPaginationType;
   };
   message: string;
   success: boolean;

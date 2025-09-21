@@ -1,11 +1,28 @@
-// import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import HomeTabTitles from "../components/ui-components/HomeTabTitles";
+import ShowVideos from "../components/homepage/ShowVideos";
+import useFetchUserVideos from "../hooks/data-fetching/useFetchUserVideos";
+import useAuth from "../hooks/useAuth";
+import { Box } from "@mui/material";
 
 const MyVideos = () => {
+  const { user } = useAuth();
+  const { data, isLoading, isError } = useFetchUserVideos(
+    user?.user?._id || ""
+  );
+  if (isLoading || !data) return <div>...Loading Liked Content</div>;
+  if (isError) return <div>...Encountered Error</div>;
+
   return (
-    <div>
-      Here will be the list of published/non-published videos by user with
-      option of make changes per video
-    </div>
+    <Box m={1}>
+      <HomeTabTitles
+        text="My Videos"
+        icon={
+          <PlayCircleOutlineIcon sx={{ fontSize: 28, color: "primary.main" }} />
+        }
+      />
+      <ShowVideos videos={data.videos} />
+    </Box>
   );
 };
 
