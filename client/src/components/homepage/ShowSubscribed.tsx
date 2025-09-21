@@ -41,7 +41,7 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
     </Box>
   ));
 
-  return <Box>{renderSubscriberList}</Box>;
+  return <Box width="100%">{renderSubscriberList}</Box>;
 };
 
 export default ShowSubscribed;
