@@ -11,6 +11,8 @@ import { buttonColor } from "../constants/uiConstants";
 import useFetchHomepageDetails from "../hooks/data-fetching/useFetchHomepageDetails";
 import useAuth from "../hooks/useAuth";
 import HomeUserDetails from "../components/homepage/HomeUserDetails";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 
 type OpenStateType = {
   videos: boolean;
@@ -45,6 +47,10 @@ const Homepage = () => {
   };
   return (
     <Box>
+      <HomeTabTitles
+        text="Home"
+        icon={<HomeOutlinedIcon sx={{ fontSize: 28, color: "primary.main" }} />}
+      />
       <HomeUserDetails data={data} />
       <Box className="dynamic-content">
         <ButtonGroup
