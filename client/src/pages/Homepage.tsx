@@ -29,7 +29,7 @@ const Homepage = () => {
     subscribed: false,
   });
   const { data, isLoading, isError } = useFetchHomepageDetails(
-    user?.user._id || "INVALID USER_ID"
+    user?.user._id || ""
   );
   if (isLoading || !data) return <div>...Loading Homepage</div>;
   if (isError) return <div>...Encountered Error</div>;
