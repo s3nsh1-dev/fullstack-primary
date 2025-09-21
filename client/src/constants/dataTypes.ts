@@ -1,28 +1,8 @@
-export interface UserLoginType {
-  _id: string;
-  username: string;
-  email: string;
-  fullname: string;
-  avatar: string;
-  coverImage: string;
-  watchHistory: string[]; // can refine if you know the type of items in history
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  __v?: number;
-}
-
 export interface UserLoginAuthDataType {
   user: UserLoginType;
   accessToken: string;
   refreshToken: string;
   loggedIn: boolean;
-}
-
-export interface UserLoginResponseType {
-  statusCode: number;
-  data: UserLoginAuthDataType;
-  message: string;
-  success: boolean;
 }
 
 export interface RegistrationFormType {
@@ -60,11 +40,18 @@ export type VideoType = {
   createdAt: string; // ISO date string
 };
 
-export type TweetType = {
+export interface UserLoginType {
   _id: string;
-  content: string;
+  username: string;
+  email: string;
+  fullname: string;
+  avatar: string;
+  coverImage: string;
+  watchHistory: string[]; // can refine if you know the type of items in history
   createdAt: string; // ISO date string
-};
+  updatedAt: string; // ISO date string
+  __v?: number;
+}
 
 export type PlaylistType = {
   _id: string;
@@ -88,15 +75,6 @@ export type HomePageFormatType = {
   playlists: PlaylistType[];
 };
 
-export interface LikedContentResponseType {
-  statusCode: number;
-  data: {
-    likes: LikedType[];
-  };
-  message: string;
-  success: boolean;
-}
-
 export type LikedType = VideoLike | CommentLike | TweetLike;
 
 export interface BaseLike {
@@ -109,7 +87,7 @@ export interface BaseLike {
 export interface VideoLike extends BaseLike {
   video: {
     _id: string;
-    owner: User;
+    owner: MinimalUserType;
     videoFile: string;
     thumbnail: string;
     title: string;
@@ -128,12 +106,12 @@ export interface CommentLike extends BaseLike {
     content: string;
     video: {
       _id: string;
-      owner: User;
+      owner: MinimalUserType;
       thumbnail: string;
       title: string;
       duration: number;
     };
-    owner: User;
+    owner: MinimalUserType;
   };
   video?: never;
   tweet?: never;
@@ -144,15 +122,23 @@ export interface TweetLike extends BaseLike {
   tweet: {
     _id: string;
     content: string;
-    owner: User;
+    owner: MinimalUserType;
   };
   video?: never;
   comment?: never;
 }
 
-// ================= USER =================
-export interface User {
+// ================= MinimalUserType  =================
+export interface MinimalUserType {
   _id: string;
   fullname: string;
   avatar: string;
+}
+export interface TweetType {
+  _id: string;
+  content: string;
+  owner: string; // MinimalUserType Id reference
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
