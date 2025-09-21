@@ -19,15 +19,6 @@ export interface LoginCredentialType {
   password: string;
 }
 
-export type SubscriberType = {
-  _id: string;
-  subscriber_id: string;
-  avatar: string;
-  fullname: string;
-  username: string;
-  subscribedAt: string; // ISO date string
-};
-
 export interface UserLoginType {
   _id: string;
   username: string;
@@ -126,17 +117,6 @@ export interface TweetType {
   updatedAt: string;
   __v: number;
 }
-
-// export interface VideoWithOwnerDetailsType {
-//   _id: string;
-//   videoFile: string;
-//   thumbnail: string;
-//   title: string;
-//   description: string;
-//   duration: number;
-//   createdAt: string; // ISO Date string
-//   ownerDetails: MinimalUserType[];
-// }
 export type VideoType = {
   _id: string;
   videoFile: string;
@@ -158,3 +138,22 @@ export interface VideoPaginationType {
   totalCount: number;
   totalPages: number;
 }
+
+export interface UserSubscriberListType {
+  _id: string;
+  subscriber: string; // userId
+  channel: string; // channelId
+  createdAt: string; // ISO date
+  updatedAt: string; // ISO date
+  __v: number;
+  subscriberInfo: MinimalUserType;
+  channelInfo: MinimalUserType;
+}
+export type SubscriberType = {
+  _id: string;
+  subscriber_id: string;
+  avatar: string;
+  fullname: string;
+  username: string;
+  subscribedAt: string; // ISO date string
+};
