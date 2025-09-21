@@ -1,8 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type {
-  UserLoginAuthDataType,
-  UserLoginResponseType,
-} from "../../constants/dataTypes";
+import type { UserLoginResponseType } from "../../constants/responseTypes";
 
 const useRefreshUser = () => {
   return useQuery({
@@ -18,7 +15,7 @@ const useRefreshUser = () => {
       if (!response.ok)
         throw new Error("ERROR WHILE FETCHING USER LOGIN DETAILS");
       const data: UserLoginResponseType = await response.json();
-      const user: UserLoginAuthDataType = data.data;
+      const user = data.data;
       return user;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes

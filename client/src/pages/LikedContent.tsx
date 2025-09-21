@@ -1,6 +1,8 @@
 import useFetchLikedContent from "../hooks/data-fetching/useFetchLikedContent";
 import useAuth from "../hooks/useAuth";
 import LikesList from "../components/homepage/LikesList";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 
 const LikedContent = () => {
   const { user } = useAuth();
@@ -10,35 +12,18 @@ const LikedContent = () => {
   if (isLoading || !data) return <div>...Loading Liked Content</div>;
   if (isError) return <div>...Encountered Error</div>;
 
-  console.log(data);
-  // const show = data.map((item) => {
-  //   if (Object.keys(item).includes("video")) {
-  //     return (
-  //       <Box key={item._id}>
-  //         <Box>VIDEOS</Box>
-  //         <Box>{JSON.stringify(item)}</Box>
-  //       </Box>
-  //     );
-  //   }
-  //   if (Object.keys(item).includes("comment")) {
-  //     return (
-  //       <Box key={item._id}>
-  //         <Box>COMMENTS</Box>
-  //         <Box>{JSON.stringify(item)}</Box>
-  //       </Box>
-  //     );
-  //   }
-  //   if (Object.keys(item).includes("tweet")) {
-  //     return (
-  //       <Box key={item._id}>
-  //         <Box>TWEETS</Box>
-  //         <Box>{JSON.stringify(item)}</Box>
-  //       </Box>
-  //     );
-  //   }
-  // });
+  // console.log(data);
+
   return (
     <div>
+      <HomeTabTitles
+        text="Liked Content"
+        icon={
+          <FavoriteBorderOutlinedIcon
+            sx={{ fontSize: 28, color: "primary.main" }}
+          />
+        }
+      />
       <LikesList data={data} />
     </div>
   );

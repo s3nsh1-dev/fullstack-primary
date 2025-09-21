@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { UserLoginResponseType } from "../../constants/dataTypes";
+import type { UserLoginResponseType } from "../../constants/responseTypes";
 
 const useFetchSubscribers = (userId: string) => {
   return useQuery({

@@ -1,8 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type {
-  LikedContentResponseType,
-  LikedType,
-} from "../../constants/dataTypes";
+import type { LikedContentResponseType } from "../../constants/responseTypes";
 
 const useFetchLikedContent = (user_ID: string) => {
   return useQuery({
@@ -17,7 +14,7 @@ const useFetchLikedContent = (user_ID: string) => {
       );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
       const data: LikedContentResponseType = await response.json();
-      const result: LikedType[] = data.data.likes;
+      const result = data.data.likes;
       return result;
     },
     enabled: !!user_ID, // only fetch if user._id exists
