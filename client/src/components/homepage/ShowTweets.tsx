@@ -6,6 +6,7 @@ import {
   Stack,
   IconButton,
   CardActions,
+  CardActionArea,
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -37,76 +38,81 @@ const ShowTweets = ({
   return (
     <Stack spacing={1}>
       {tweets.map((tweet) => (
-        <Card
-          key={tweet._id}
-          variant="outlined"
-          sx={{ borderRadius: "10px", padding: "10px" }}
-        >
-          <CardContent
-            sx={{
-              p: 0, // shorthand for padding: 0
-              "&:last-child": {
-                pb: 0, // remove bottom padding
-              },
-            }}
-          >
-            <Typography variant="body1" color="textPrimary" sx={{ mt: "5px" }}>
-              {tweet.content}
-            </Typography>
-            <Stack direction="row" spacing={1}>
-              <TwitterIcon color="primary" fontSize="small" />
+        <Card key={tweet._id} variant="outlined">
+          <CardActionArea sx={{ padding: "10px" }}>
+            <CardContent
+              sx={{
+                p: 0, // shorthand for padding: 0
+                "&:last-child": {
+                  pb: 0, // remove bottom padding
+                },
+              }}
+            >
               <Typography
-                variant="caption"
-                color="textSecondary"
-                sx={{ position: "relative", top: "2px" }}
+                variant="body1"
+                color="textPrimary"
+                sx={{ mt: "5px" }}
               >
-                {convertISOIntoLocalTime(tweet.createdAt)}
+                {tweet.content}
               </Typography>
-            </Stack>
-            {interaction && (
-              <>
-                <CardActions sx={{ mt: 2, p: 0 }}>
-                  <IconButton
-                    sx={{
-                      borderRadius: "5px",
-                      padding: "2px 5px",
-                    }}
+              <Stack direction="row" spacing={1}>
+                <TwitterIcon color="primary" fontSize="small" />
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  sx={{ position: "relative", top: "2px" }}
+                >
+                  {convertISOIntoLocalTime(tweet.createdAt)}
+                </Typography>
+              </Stack>
+            </CardContent>
+          </CardActionArea>
+          {interaction && (
+            <>
+              <CardActions sx={{ mt: 0, p: 0, padding: "10px" }}>
+                <IconButton
+                  disabled={false}
+                  sx={{
+                    borderRadius: "5px",
+                    padding: "2px 5px",
+                  }}
+                >
+                  <ThumbUpOffAltIcon fontSize="small" color="primary" />
+                  <Typography
+                    variant="caption"
+                    // color="textSecondary"
+                    color="primary"
+                    sx={{ position: "relative", top: "2px" }}
                   >
-                    <ThumbUpOffAltIcon fontSize="small" color="primary" />
-                    <Typography
-                      variant="caption"
-                      // color="textSecondary"
-                      color="primary"
-                      sx={{ position: "relative", top: "2px" }}
-                    >
-                      &nbsp;Like
-                    </Typography>
-                  </IconButton>
-                  <IconButton
-                    sx={{
-                      borderRadius: "5px",
-                      padding: "2px 5px",
-                    }}
-                    onClick={handleShowComments}
+                    &nbsp;Like
+                  </Typography>
+                </IconButton>
+                <IconButton
+                  disabled={false}
+                  sx={{
+                    borderRadius: "5px",
+                    padding: "2px 5px",
+                  }}
+                  onClick={handleShowComments}
+                >
+                  <CommentIcon fontSize="small" />
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    sx={{ position: "relative", top: "1px" }}
                   >
-                    <CommentIcon fontSize="small" />
-                    <Typography
-                      variant="caption"
-                      color="textSecondary"
-                      sx={{ position: "relative", top: "1px" }}
-                    >
-                      &nbsp;comments
-                    </Typography>
-                  </IconButton>
-                </CardActions>
-                {showComments && (
-                  <Card
-                    sx={{
-                      m: "0.5%",
-                      padding: "10px",
-                      backgroundColor: mode ? "#f7f6f6ff" : "transparent",
-                    }}
-                  >
+                    &nbsp;comments
+                  </Typography>
+                </IconButton>
+              </CardActions>
+              {showComments && (
+                <Card
+                  sx={{
+                    m: "1%",
+                    backgroundColor: mode ? "#f7f6f6ff" : "transparent",
+                  }}
+                >
+                  <CardActionArea sx={{ padding: "10px" }}>
                     <CardContent
                       sx={{
                         p: 0, // shorthand for padding: 0
@@ -123,50 +129,53 @@ const ShowTweets = ({
                         Distinctio, delectus.
                       </Typography>
                     </CardContent>
-                    <CardActions sx={{ mt: 2, p: 0 }}>
-                      <IconButton
-                        sx={{
-                          borderRadius: "5px",
-                          padding: "2px 5px",
-                        }}
+                  </CardActionArea>
+                  <CardActions sx={{ mt: 0, p: 0, padding: "10px" }}>
+                    <IconButton
+                      disabled={false}
+                      sx={{
+                        borderRadius: "5px",
+                        padding: "2px 5px",
+                      }}
+                    >
+                      <ThumbUpOffAltIcon fontSize="small" color="primary" />
+                      <Typography
+                        variant="caption"
+                        // color="textSecondary"
+                        color="primary"
+                        sx={{ position: "relative", top: "2px" }}
                       >
-                        <ThumbUpOffAltIcon fontSize="small" color="primary" />
-                        <Typography
-                          variant="caption"
-                          // color="textSecondary"
-                          color="primary"
-                          sx={{ position: "relative", top: "2px" }}
-                        >
-                          &nbsp;Like
-                        </Typography>
-                      </IconButton>
-                      <IconButton
-                        sx={{
-                          borderRadius: "5px",
-                          padding: "2px 5px",
-                        }}
-                        onClick={handleShowReply}
+                        &nbsp;Like
+                      </Typography>
+                    </IconButton>
+                    <IconButton
+                      disabled={false}
+                      sx={{
+                        borderRadius: "5px",
+                        padding: "2px 5px",
+                      }}
+                      onClick={handleShowReply}
+                    >
+                      <CommentIcon fontSize="small" />
+                      <Typography
+                        variant="caption"
+                        color="textSecondary"
+                        sx={{ position: "relative", top: "1px" }}
                       >
-                        <CommentIcon fontSize="small" />
-                        <Typography
-                          variant="caption"
-                          color="textSecondary"
-                          sx={{ position: "relative", top: "1px" }}
-                        >
-                          &nbsp;reply
-                        </Typography>
-                      </IconButton>
-                    </CardActions>
-                    {showReply && (
-                      <Card
-                        sx={{
-                          padding: "10px",
-                          m: "0.5% 1% 1% 1%",
-                          backgroundColor: mode
-                            ? "rgb(255,255,255)"
-                            : "rgb(0,0,0,0.7)",
-                        }}
-                      >
+                        &nbsp;reply
+                      </Typography>
+                    </IconButton>
+                  </CardActions>
+                  {showReply && (
+                    <Card
+                      sx={{
+                        m: "0.5% 1% 1% 1%",
+                        backgroundColor: mode
+                          ? "rgb(255,255,255)"
+                          : "rgb(0,0,0,0.7)",
+                      }}
+                    >
+                      <CardActionArea sx={{ padding: "10px" }}>
                         <CardContent
                           sx={{
                             p: 0, // shorthand for padding: 0
@@ -183,50 +192,49 @@ const ShowTweets = ({
                             doloremque dolorem suscipit perferendis veniam?
                           </Typography>
                         </CardContent>
-                        <CardActions sx={{ mt: 2, p: 0 }}>
-                          <IconButton
-                            sx={{
-                              borderRadius: "5px",
-                              padding: "2px 5px",
-                            }}
+                      </CardActionArea>
+                      <CardActions sx={{ mt: 0, p: 0, padding: "10px" }}>
+                        <IconButton
+                          disabled={false}
+                          sx={{
+                            borderRadius: "5px",
+                            padding: "2px 5px",
+                          }}
+                        >
+                          <ThumbUpOffAltIcon fontSize="small" color="primary" />
+                          <Typography
+                            variant="caption"
+                            // color="textSecondary"
+                            color="primary"
+                            sx={{ position: "relative", top: "2px" }}
                           >
-                            <ThumbUpOffAltIcon
-                              fontSize="small"
-                              color="primary"
-                            />
-                            <Typography
-                              variant="caption"
-                              // color="textSecondary"
-                              color="primary"
-                              sx={{ position: "relative", top: "2px" }}
-                            >
-                              &nbsp;Like
-                            </Typography>
-                          </IconButton>
-                          <IconButton
-                            sx={{
-                              borderRadius: "5px",
-                              padding: "2px 5px",
-                            }}
-                            onClick={handleShowReply}
+                            &nbsp;Like
+                          </Typography>
+                        </IconButton>
+                        <IconButton
+                          disabled={false}
+                          sx={{
+                            borderRadius: "5px",
+                            padding: "2px 5px",
+                          }}
+                          onClick={handleShowReply}
+                        >
+                          <CommentIcon fontSize="small" />
+                          <Typography
+                            variant="caption"
+                            color="textSecondary"
+                            sx={{ position: "relative", top: "1px" }}
                           >
-                            <CommentIcon fontSize="small" />
-                            <Typography
-                              variant="caption"
-                              color="textSecondary"
-                              sx={{ position: "relative", top: "1px" }}
-                            >
-                              &nbsp;reply
-                            </Typography>
-                          </IconButton>
-                        </CardActions>
-                      </Card>
-                    )}
-                  </Card>
-                )}
-              </>
-            )}
-          </CardContent>
+                            &nbsp;reply
+                          </Typography>
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  )}
+                </Card>
+              )}
+            </>
+          )}
         </Card>
       ))}
     </Stack>
