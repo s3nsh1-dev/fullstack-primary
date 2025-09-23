@@ -19,12 +19,13 @@ const getVideoComments = asyncHandler(async (req, res) => {
           from: "users",
           localField: "owner",
           foreignField: "_id",
-          as: "ownerDetails",
+          as: "owner",
           pipeline: [
             {
               $project: {
                 _id: 1,
                 fullname: 1,
+                username: 1,
                 avatar: 1,
               },
             },
@@ -33,7 +34,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
       },
       {
         $addFields: {
-          ownerDetails: { $first: "$ownerDetails" },
+          owner: { $first: "$owner" },
         },
       },
       {
@@ -43,7 +44,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
           video: 1,
           createdAt: 1,
           updatedAt: 1,
-          ownerDetails: 1,
+          owner: 1,
         },
       },
     ]),
@@ -167,12 +168,13 @@ const getTweetComments = asyncHandler(async (req, res) => {
           from: "users",
           localField: "owner",
           foreignField: "_id",
-          as: "ownerDetails",
+          as: "owner",
           pipeline: [
             {
               $project: {
                 _id: 1,
                 fullname: 1,
+                username: 1,
                 avatar: 1,
               },
             },
@@ -181,7 +183,7 @@ const getTweetComments = asyncHandler(async (req, res) => {
       },
       {
         $addFields: {
-          ownerDetails: { $first: "$ownerDetails" },
+          owner: { $first: "$owner" },
         },
       },
       {
@@ -191,7 +193,7 @@ const getTweetComments = asyncHandler(async (req, res) => {
           tweet: 1,
           createdAt: 1,
           updatedAt: 1,
-          ownerDetails: 1,
+          owner: 1,
         },
       },
     ]),
@@ -261,6 +263,57 @@ const addCommentToComment = asyncHandler(async (req, res) => {
     );
 });
 
+const getCommentsComment = asyncHandler(async (req, res) => {
+  // TODO: get all comments for a comment
+  const { comment_ID } = req.params;
+  const { page = 1, limit = 10 } = req.query;
+
+  const comments = await Comment.aggregatePaginate(
+    Comment.aggregate([
+      { $match: { comment: toObjectId(comment_ID) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                fullname: 1,
+                username: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          owner: { $first: "$owner" },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          content: 1,
+          comment: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          owner: 1,
+        },
+      },
+    ]),
+    { page: Number(page), limit: Number(limit) }
+  );
+  if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
+});
+
 export {
   getVideoComments,
   addVideoComment,
@@ -269,4 +322,5 @@ export {
   getTweetComments,
   addTweetComment,
   addCommentToComment,
+  getCommentsComment,
 };

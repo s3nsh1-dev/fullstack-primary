@@ -7,6 +7,7 @@ import {
   updateComment,
   getTweetComments,
   addCommentToComment,
+  getCommentsComment,
 } from "../controllers/comment.controller";
 import verifyJWT from "../middleware/auth.middleware";
 
@@ -20,6 +21,9 @@ commentRouter
   .route("/c/:comment_ID")
   .delete(deleteComment)
   .patch(updateComment);
-commentRouter.route("/c/:comment_ID").post(addCommentToComment);
+commentRouter
+  .route("/c/:comment_ID")
+  .post(addCommentToComment)
+  .get(getCommentsComment);
 
 export default commentRouter;
