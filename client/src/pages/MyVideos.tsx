@@ -10,7 +10,7 @@ const MyVideos = () => {
   const { data, isLoading, isError } = useFetchUserVideos(
     user?.user?._id || ""
   );
-  if (isLoading || !data) return <div>...Loading Liked Content</div>;
+  if (isLoading || !data) return <div>...Loading My Videos</div>;
   if (isError) return <div>...Encountered Error</div>;
 
   return (

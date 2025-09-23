@@ -82,7 +82,9 @@ const Homepage = () => {
         <Box className="select-content" m={1}>
           {open.videos && <ShowVideos videos={data.videos} />}
           {open.playlists && <ShowPlaylists playlists={data.playlists} />}
-          {open.tweets && <ShowTweets tweets={data.tweets} />}
+          {open.tweets && (
+            <ShowTweets tweets={data.tweets} interaction={false} />
+          )}
           {open.subscribed && <ShowSubscribed subscribed={data.subscribers} />}
         </Box>
       </Box>

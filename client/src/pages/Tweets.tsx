@@ -10,7 +10,7 @@ const Tweets = () => {
   const { data, isLoading, isError } = useFetchUserTweets(
     user?.user?._id || ""
   );
-  if (isLoading || !data) return <div>...Loading Liked Content</div>;
+  if (isLoading || !data) return <div>...Loading Tweets</div>;
   if (isError) return <div>...Encountered Error</div>;
 
   // console.log(data);
@@ -23,7 +23,7 @@ const Tweets = () => {
           <ChatBubbleOutlineIcon sx={{ fontSize: 28, color: "primary.main" }} />
         }
       />
-      <ShowTweets tweets={data} />
+      <ShowTweets tweets={data} interaction={true} />
     </Box>
   );
 };
