@@ -14,6 +14,10 @@ const schema = {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tweet",
   },
+  comment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Comment",
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

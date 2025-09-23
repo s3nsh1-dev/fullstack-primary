@@ -6,6 +6,7 @@ import {
   getVideoComments,
   updateComment,
   getTweetComments,
+  addCommentToComment,
 } from "../controllers/comment.controller";
 import verifyJWT from "../middleware/auth.middleware";
 
@@ -19,5 +20,6 @@ commentRouter
   .route("/c/:comment_ID")
   .delete(deleteComment)
   .patch(updateComment);
+commentRouter.route("/c/:comment_ID").post(addCommentToComment);
 
 export default commentRouter;
