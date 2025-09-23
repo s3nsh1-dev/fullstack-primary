@@ -7,6 +7,7 @@ import {
   IconButton,
   CardActions,
   CardActionArea,
+  Avatar,
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -40,32 +41,60 @@ const ShowTweets = ({
       {tweets.map((tweet) => (
         <Card key={tweet._id} variant="outlined">
           <CardActionArea sx={{ padding: "10px" }}>
-            <CardContent
-              sx={{
-                p: 0, // shorthand for padding: 0
-                "&:last-child": {
-                  pb: 0, // remove bottom padding
-                },
-              }}
-            >
-              <Typography
-                variant="body1"
-                color="textPrimary"
-                sx={{ mt: "5px" }}
-              >
-                {tweet.content}
-              </Typography>
+            <Stack direction="column" spacing={1} alignItems="start">
               <Stack direction="row" spacing={1}>
-                <TwitterIcon color="primary" fontSize="small" />
-                <Typography
-                  variant="caption"
-                  color="textSecondary"
-                  sx={{ position: "relative", top: "2px" }}
-                >
-                  {convertISOIntoLocalTime(tweet.createdAt)}
-                </Typography>
+                <Avatar
+                  alt="Remy Sharp"
+                  src=""
+                  sx={{ width: 56, height: 56 }}
+                />
+                <Stack justifyContent="center">
+                  <Stack direction="row" spacing={0.5} alignItems="center">
+                    <Typography
+                      variant="body1"
+                      fontSize="clamp(1rem, 2vw, 1.2rem)"
+                      color="textPrimary"
+                      fontWeight="bold"
+                    >
+                      Full Name
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      color="textSecondary"
+                      fontStyle="italic"
+                    >
+                      @username
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    <TwitterIcon color="primary" fontSize="small" />
+                    <Typography
+                      variant="caption"
+                      color="textSecondary"
+                      sx={{ position: "relative", top: "2px" }}
+                    >
+                      {convertISOIntoLocalTime(tweet.createdAt)}
+                    </Typography>
+                  </Stack>
+                </Stack>
               </Stack>
-            </CardContent>
+              <CardContent
+                sx={{
+                  p: 0, // shorthand for padding: 0
+                  "&:last-child": {
+                    pb: 0, // remove bottom padding
+                  },
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  color="textPrimary"
+                  sx={{ mt: "5px" }}
+                >
+                  {tweet.content}
+                </Typography>
+              </CardContent>
+            </Stack>
           </CardActionArea>
           {interaction && (
             <>
