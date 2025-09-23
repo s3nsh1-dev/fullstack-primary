@@ -4,12 +4,12 @@ export const buttonColor = {
 };
 
 export const textColor = {
-  light: "#f5f5f5",
+  light: "#ffffffff",
   dark: "#000000ff",
 };
 
 export const backgroundColor = {
-  light: "#f5f5f5",
+  light: "#ffffffff",
   dark: "#000000ff",
 };
 
