@@ -231,6 +231,36 @@ const addTweetComment = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { comment }, "COMMENT REGISTER SUCCESSFULLY"));
 });
 
+const addCommentToComment = asyncHandler(async (req, res) => {
+  // TODO: add a comment to a comment
+
+  const { comment_ID } = req.params;
+  const { content } = req.body;
+
+  if (!content || content.length < 1)
+    throw new ApiError(404, "CONTENT NOT FOUND");
+
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED USER");
+
+  const newComment = await Comment.create({
+    content,
+    comment: comment_ID,
+    owner: toObjectId(String(req.user._id)),
+  });
+  if (!newComment) throw new ApiError(400, "COMMENT NOT REGISTERED");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { comment: newComment },
+        "COMMENT REGISTERED SUCCESSFULLY"
+      )
+    );
+});
+
 export {
   getVideoComments,
   addVideoComment,
@@ -238,4 +268,5 @@ export {
   deleteComment,
   getTweetComments,
   addTweetComment,
+  addCommentToComment,
 };
