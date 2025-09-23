@@ -23,7 +23,7 @@ const Tweets = () => {
           <ChatBubbleOutlineIcon sx={{ fontSize: 28, color: "primary.main" }} />
         }
       />
-      <ShowTweets tweets={data} />
+      <ShowTweets tweets={data} interaction={true} />
     </Box>
   );
 };
