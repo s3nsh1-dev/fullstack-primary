@@ -7,6 +7,7 @@ const NotLoggedIn = () => {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
+      height={"93vh"}
     >
       <Typography variant="h3">Please Login to view this page</Typography>
     </Box>
