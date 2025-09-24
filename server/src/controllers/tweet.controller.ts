@@ -30,7 +30,10 @@ const getUserTweets = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
 
-  const tweets = await Tweet.find({ owner: toObjectId(userId) });
+  const tweets = await Tweet.find({ owner: toObjectId(userId) }).populate({
+    path: "owner",
+    select: "username fullname avatar",
+  });
   if (!tweets) {
     throw new ApiError(404, "TWEETS NOT FOUND");
   }
