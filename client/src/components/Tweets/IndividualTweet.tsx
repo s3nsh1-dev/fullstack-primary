@@ -20,9 +20,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
   const handleShowComments = () => {
     setShowComments(!showComments);
     fetchCommentMutate.mutate(tweet._id, {
-      onSuccess: () => {
-        // alert("Comments Fetched");
-      },
+      onSuccess: () => {},
     });
   };
   const handleShowReply = () => {
@@ -40,21 +38,23 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
   };
 
   // TODO: Need to Render reply button inside the second Card
+  console.log("DATAAAAAAAA:", fetchCommentMutate.data?.comments?.docs);
+  if (fetchCommentMutate.isPending) return <div>...Loading</div>;
 
   return (
     <Card key={tweet._id} variant="outlined">
       <Sample1 tweet={tweet} />
       {interaction && (
         <>
-          <Sample2 handleShowComments={handleShowComments} />
+          <Sample2 handleShowComments={handleShowComments} disabled={true} />
           {showComments && (
             <Card sx={styleMode1}>
               <Sample1 tweet={tweet} />
-              <Sample2 handleShowComments={handleShowReply} />
+              <Sample2 handleShowComments={handleShowReply} disabled={true} />
               {showReply && (
                 <Card sx={styleMode2}>
                   <Sample1 tweet={tweet} />
-                  <Sample2 handleShowComments={handleShowComments} />
+                  <Sample2 disabled={false} />
                 </Card>
               )}
             </Card>

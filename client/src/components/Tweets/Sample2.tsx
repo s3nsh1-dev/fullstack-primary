@@ -12,8 +12,10 @@ const style9 = { position: "relative", top: "1px" };
 
 const Sample2 = ({
   handleShowComments,
+  disabled,
 }: {
-  handleShowComments: () => void;
+  handleShowComments?: () => void;
+  disabled: boolean;
 }) => {
   return (
     <CardActions sx={style7}>
@@ -28,12 +30,14 @@ const Sample2 = ({
           &nbsp;Like
         </Typography>
       </IconButton>
-      <IconButton disabled={false} sx={style8} onClick={handleShowComments}>
-        <CommentIcon fontSize="small" />
-        <Typography variant="caption" color="textSecondary" sx={style9}>
-          &nbsp;comments
-        </Typography>
-      </IconButton>
+      {disabled && (
+        <IconButton sx={style8} onClick={handleShowComments}>
+          <CommentIcon fontSize="small" />
+          <Typography variant="caption" color="textSecondary" sx={style9}>
+            &nbsp;comments
+          </Typography>
+        </IconButton>
+      )}
     </CardActions>
   );
 };
