@@ -13,6 +13,7 @@ import useAuth from "../hooks/useAuth";
 import HomeUserDetails from "../components/homepage/HomeUserDetails";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
+import NotLoggedIn from "./NotLoggedIn";
 
 type OpenStateType = {
   videos: boolean;
@@ -35,6 +36,7 @@ const Homepage = () => {
   );
   if (isLoading || !data) return <div>...Loading Homepage</div>;
   if (isError) return <div>...Encountered Error</div>;
+  if (!user) return <NotLoggedIn />;
 
   const handleOpen = (value: keyof OpenStateType) => {
     setOpen({

@@ -4,14 +4,17 @@ import ShowTweets from "../components/homepage/ShowTweets";
 import { Box } from "@mui/material";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
+import NotLoggedIn from "./NotLoggedIn";
 
 const Tweets = () => {
   const { user } = useAuth();
   const { data, isLoading, isError } = useFetchUserTweets(
     user?.user?._id || ""
   );
+
   if (isLoading || !data) return <div>...Loading Tweets</div>;
   if (isError) return <div>...Encountered Error</div>;
+  if (!user) return <NotLoggedIn />;
 
   // console.log(data);
 

@@ -3,7 +3,7 @@ import { CardActions, IconButton, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
 import useFetchCommentsOnComments from "../../hooks/data-fetching/useFetchCommentsOnComments";
-import type { TweetCommentType } from "../../hooks/data-fetching/useFetchCommentsOnTweets";
+import Sample6 from "./Sample6";
 
 const style4 = { position: "relative", top: "2px" };
 const style7 = { mt: 0, p: 0, padding: "10px" };
@@ -13,10 +13,10 @@ const style8 = {
 };
 const style9 = { position: "relative", top: "1px" };
 
-const Sample4: React.FC<Sample2Props> = ({ comment, disabled }) => {
+const Sample4: React.FC<Sample2Props> = ({ ID, disabled }) => {
   const fetchCommentOnCommentMutate = useFetchCommentsOnComments();
   const handleShowReply = () => {
-    fetchCommentOnCommentMutate.mutate(comment._id, {
+    fetchCommentOnCommentMutate.mutate(ID, {
       onSuccess: () => {},
     });
   };
@@ -43,7 +43,19 @@ const Sample4: React.FC<Sample2Props> = ({ comment, disabled }) => {
           </IconButton>
         )}
       </CardActions>
-      {}
+      {fetchCommentOnCommentMutate.isPending ? (
+        <div>....Loading replies</div>
+      ) : (
+        <div>
+          {fetchCommentOnCommentMutate.data?.comments.docs.map((reply) => {
+            return (
+              <div key={reply._id}>
+                <Sample6 reply={reply} />
+              </div>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 };
@@ -51,6 +63,6 @@ const Sample4: React.FC<Sample2Props> = ({ comment, disabled }) => {
 export default Sample4;
 
 type Sample2Props = {
-  comment: TweetCommentType;
+  ID: string;
   disabled: boolean;
 };

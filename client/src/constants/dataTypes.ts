@@ -40,20 +40,6 @@ export type PlaylistType = {
   createdAt: string; // ISO date string
 };
 
-export type HomePageFormatType = {
-  _id: string;
-  username: string;
-  email: string;
-  fullname: string;
-  avatar: string;
-  coverImage: string;
-  createdAt: string; // ISO date string
-  subscribers: SubscriberType[];
-  videos: VideoType[];
-  tweets: TweetType[];
-  playlists: PlaylistType[];
-};
-
 export type LikedType = VideoLike | CommentLike | TweetLike;
 
 export interface BaseLike {
