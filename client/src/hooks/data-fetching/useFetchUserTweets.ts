@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import type { UserTweetsAPIResponse } from "../../constants/responseTypes";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
@@ -21,3 +20,28 @@ const useFetchUserTweets = (user_ID: string) => {
   });
 };
 export default useFetchUserTweets;
+
+interface UserTweetsAPIResponse {
+  statusCode: number;
+  data: {
+    tweets: TweetType[];
+  };
+  message: string;
+  success: boolean;
+}
+
+export interface TweetType {
+  _id: string;
+  content: string;
+  owner: MinimalUserType; // MinimalUserType Id reference
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface MinimalUserType {
+  _id: string;
+  fullname?: string;
+  username?: string;
+  avatar: string;
+}

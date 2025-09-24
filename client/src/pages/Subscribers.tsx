@@ -4,14 +4,17 @@ import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import useFetchUserSubscribers from "../hooks/data-fetching/useFetchUserSubscribers";
 import useAuth from "../hooks/useAuth";
 import convertISOIntoLocalTime from "../utilities/convertISOIntoLocalTime";
+import NotLoggedIn from "./NotLoggedIn";
 
 const Subscribers = () => {
   const { user } = useAuth();
-  const { data, isLoading, isError } = useFetchUserSubscribers(
+  const { data, isPending, isError } = useFetchUserSubscribers(
     user?.user?._id || ""
   );
-  if (isLoading || !data) return <div>...Loading Subscribers</div>;
+  if (isPending) return <div>...Loading Subscribers</div>;
+  if (!data) return <div>No Subscribers</div>;
   if (isError) return <div>...Encountered Error</div>;
+  if (!user) return <NotLoggedIn />;
 
   const renderSubscriberList = data.subscribers.map((sub) => (
     <Box

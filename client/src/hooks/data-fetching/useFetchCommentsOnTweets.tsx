@@ -12,7 +12,7 @@ const useFetchCommentsOnTweets = () => {
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENTS");
       const data: ApiResponse = await response.json();
-      console.log(data.data.comments);
+      // console.log(data.data.comments);
       return data.data;
     },
   });
@@ -27,6 +27,7 @@ export type TweetCommentType = {
     _id: string;
     fullname: string;
     avatar: string;
+    username: string;
   };
   createdAt: string;
   updatedAt: string;
