@@ -1,3 +1,4 @@
+import React from "react";
 import { CardActions, IconButton, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -10,13 +11,7 @@ const style8 = {
 };
 const style9 = { position: "relative", top: "1px" };
 
-const Sample2 = ({
-  handleShowComments,
-  disabled,
-}: {
-  handleShowComments?: () => void;
-  disabled: boolean;
-}) => {
+const Sample2: React.FC<Sample2Props> = ({ handleShowComments, disabled }) => {
   return (
     <CardActions sx={style7}>
       <IconButton disabled={false} sx={style8}>
@@ -30,7 +25,7 @@ const Sample2 = ({
           &nbsp;Like
         </Typography>
       </IconButton>
-      {disabled && (
+      {!disabled && (
         <IconButton sx={style8} onClick={handleShowComments}>
           <CommentIcon fontSize="small" />
           <Typography variant="caption" color="textSecondary" sx={style9}>
@@ -43,3 +38,8 @@ const Sample2 = ({
 };
 
 export default Sample2;
+
+type Sample2Props = {
+  handleShowComments?: () => void;
+  disabled: boolean;
+};
