@@ -8,10 +8,11 @@ import NotLoggedIn from "./NotLoggedIn";
 
 const Subscribers = () => {
   const { user } = useAuth();
-  const { data, isLoading, isError } = useFetchUserSubscribers(
+  const { data, isPending, isError } = useFetchUserSubscribers(
     user?.user?._id || ""
   );
-  if (isLoading || !data) return <div>...Loading Subscribers</div>;
+  if (isPending) return <div>...Loading Subscribers</div>;
+  if (!data) return <div>No Subscribers</div>;
   if (isError) return <div>...Encountered Error</div>;
   if (!user) return <NotLoggedIn />;
 

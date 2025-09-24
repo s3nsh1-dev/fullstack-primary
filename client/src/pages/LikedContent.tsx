@@ -7,11 +7,13 @@ import NotLoggedIn from "./NotLoggedIn";
 
 const LikedContent = () => {
   const { user } = useAuth();
-  const { data, isLoading, isError } = useFetchLikedContent(
+  const { data, isPending, isError } = useFetchLikedContent(
     user?.user?._id || ""
   );
-  if (isLoading || !data) return <div>...Loading Liked Content</div>;
+  if (isPending) return <div>...Loading Liked Content</div>;
   if (isError) return <div>...Encountered Error</div>;
+  if (!data) return <div>No Liked Content</div>;
+
   if (!user) return <NotLoggedIn />;
   // console.log(data);
 

@@ -31,11 +31,12 @@ const Homepage = () => {
     tweets: false,
     subscribed: false,
   });
-  const { data, isLoading, isError } = useFetchHomepageDetails(
+  const { data, isPending, isError } = useFetchHomepageDetails(
     user?.user._id || ""
   );
-  if (isLoading || !data) return <div>...Loading Homepage</div>;
+  if (isPending) return <div>...Loading Homepage</div>;
   if (isError) return <div>...Encountered Error</div>;
+  if (!data) return <div>Nothing to show on Homepage</div>;
   if (!user) return <NotLoggedIn />;
 
   const handleOpen = (value: keyof OpenStateType) => {

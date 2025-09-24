@@ -8,13 +8,24 @@ import NotLoggedIn from "./NotLoggedIn";
 
 const Tweets = () => {
   const { user } = useAuth();
-  const { data, isLoading, isError } = useFetchUserTweets(
+  const { data, isError, isLoading } = useFetchUserTweets(
     user?.user?._id || ""
   );
+  if (!user) {
+    return <NotLoggedIn />;
+  }
 
-  if (isLoading || !data) return <div>...Loading Tweets</div>;
-  if (isError) return <div>...Encountered Error</div>;
-  if (!user) return <NotLoggedIn />;
+  if (isLoading) {
+    return <div>...Loading Tweets</div>;
+  }
+
+  if (isError) {
+    return <div>...Encountered Error</div>;
+  }
+
+  if (!data) {
+    return <div>No Tweets</div>;
+  }
 
   // console.log(data);
 
