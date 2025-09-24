@@ -1,4 +1,4 @@
-import type { TweetType } from "../../constants/dataTypes";
+import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
 import { Typography, Stack } from "@mui/material";
 import IndividualTweet from "../Tweets/IndividualTweet";
 

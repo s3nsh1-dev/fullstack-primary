@@ -6,12 +6,10 @@ import {
   CardContent,
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
-import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import type React from "react";
+import type { TweetCommentType } from "../../hooks/data-fetching/useFetchCommentsOnTweets";
 
 const style1 = { padding: "10px" };
-const style2 = { width: 56, height: 56 };
 const style3 = {
   fontSize: "clamp(1rem, 2vw, 1.2rem)",
   fontWeight: "bold",
@@ -25,36 +23,36 @@ const style5 = {
 };
 const style6 = { mt: "5px" };
 
-const Sample1: React.FC<Sample1Props> = ({ tweet }) => {
+const Sample3: React.FC<Sample3Props> = ({ comment }) => {
   return (
     <CardActionArea sx={style1}>
       <Stack direction="column" spacing={1} alignItems="start">
         <Stack direction="row" spacing={1}>
-          <Avatar alt="Remy Sharp" src={tweet.owner.avatar} sx={style2} />
+          <Avatar alt="Remy Sharp" src={comment.owner.avatar} />
           <Stack justifyContent="center">
             <Stack direction="row" spacing={0.5} alignItems="center">
               <Typography variant="body1" color="textPrimary" sx={style3}>
-                {tweet.owner.fullname}
+                {comment.owner.fullname}
               </Typography>
               <Typography
                 variant="caption"
                 color="textSecondary"
                 fontStyle="italic"
               >
-                @{tweet.owner.username}
+                @{comment.owner.username}
               </Typography>
             </Stack>
             <Stack direction="row" spacing={1}>
               <TwitterIcon color="primary" fontSize="small" />
               <Typography variant="caption" color="textSecondary" sx={style4}>
-                {convertISOIntoLocalTime(tweet.createdAt)}
+                {convertISOIntoLocalTime(comment.createdAt)}
               </Typography>
             </Stack>
           </Stack>
         </Stack>
         <CardContent sx={style5}>
           <Typography variant="body1" color="textPrimary" sx={style6}>
-            {tweet.content}
+            {comment.content}
           </Typography>
         </CardContent>
       </Stack>
@@ -62,8 +60,8 @@ const Sample1: React.FC<Sample1Props> = ({ tweet }) => {
   );
 };
 
-export default Sample1;
+export default Sample3;
 
-type Sample1Props = {
-  tweet: TweetType;
+type Sample3Props = {
+  comment: TweetCommentType;
 };
