@@ -52,7 +52,9 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
       {interaction && (
         <>
           <Sample2 handleShowComments={handleShowComments} disabled={false} />
-          {!fetchCommentMutate.isPending && (
+          {fetchCommentMutate.isPending ? (
+            <div>....Loading Comments</div>
+          ) : (
             <div>
               {fetchCommentMutate.data?.comments.docs.map((comment) => (
                 <div key={comment._id}>

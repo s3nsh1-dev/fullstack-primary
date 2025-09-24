@@ -7,7 +7,6 @@ import {
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import type { TweetCommentType } from "../../hooks/data-fetching/useFetchCommentsOnTweets";
 
 const style1 = { padding: "10px" };
 const style3 = {
@@ -23,36 +22,36 @@ const style5 = {
 };
 const style6 = { mt: "5px" };
 
-const Sample3: React.FC<Sample3Props> = ({ comment }) => {
+const Sample3: React.FC<Sample3Props> = ({ data }) => {
   return (
     <CardActionArea sx={style1}>
       <Stack direction="column" spacing={1} alignItems="start">
         <Stack direction="row" spacing={1}>
-          <Avatar alt="Remy Sharp" src={comment.owner.avatar} />
+          <Avatar alt="Remy Sharp" src={data.owner.avatar} />
           <Stack justifyContent="center">
             <Stack direction="row" spacing={0.5} alignItems="center">
               <Typography variant="body1" color="textPrimary" sx={style3}>
-                {comment.owner.fullname}
+                {data.owner.fullname}
               </Typography>
               <Typography
                 variant="caption"
                 color="textSecondary"
                 fontStyle="italic"
               >
-                @{comment.owner.username}
+                @{data.owner.username}
               </Typography>
             </Stack>
             <Stack direction="row" spacing={1}>
               <TwitterIcon color="primary" fontSize="small" />
               <Typography variant="caption" color="textSecondary" sx={style4}>
-                {convertISOIntoLocalTime(comment.createdAt)}
+                {convertISOIntoLocalTime(data.createdAt)}
               </Typography>
             </Stack>
           </Stack>
         </Stack>
         <CardContent sx={style5}>
           <Typography variant="body1" color="textPrimary" sx={style6}>
-            {comment.content}
+            {data.content}
           </Typography>
         </CardContent>
       </Stack>
@@ -63,5 +62,16 @@ const Sample3: React.FC<Sample3Props> = ({ comment }) => {
 export default Sample3;
 
 type Sample3Props = {
-  comment: TweetCommentType;
+  data: {
+    _id: string;
+    content: string;
+    owner: {
+      _id: string;
+      fullname: string;
+      avatar: string;
+      username: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  };
 };

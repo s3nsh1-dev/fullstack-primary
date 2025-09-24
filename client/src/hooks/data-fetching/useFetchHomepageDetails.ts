@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import type { HomePageFormatType } from "../../constants/dataTypes";
+import type {
+  SubscriberType,
+  VideoType,
+  PlaylistType,
+} from "../../constants/dataTypes";
+import type { TweetType } from "./useFetchUserTweets";
 
 const useFetchHomepageDetails = (user_ID: string) => {
   return useQuery({
@@ -23,3 +28,17 @@ const useFetchHomepageDetails = (user_ID: string) => {
   });
 };
 export default useFetchHomepageDetails;
+
+export type HomePageFormatType = {
+  _id: string;
+  username: string;
+  email: string;
+  fullname: string;
+  avatar: string;
+  coverImage: string;
+  createdAt: string; // ISO date string
+  subscribers: SubscriberType[];
+  videos: VideoType[];
+  tweets: TweetType[];
+  playlists: PlaylistType[];
+};

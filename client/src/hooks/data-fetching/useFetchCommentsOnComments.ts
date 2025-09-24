@@ -26,6 +26,7 @@ export type ReplyType = {
     _id: string;
     fullname: string;
     avatar: string;
+    username: string;
   };
   createdAt: string;
   updatedAt: string;

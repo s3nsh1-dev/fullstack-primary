@@ -13,8 +13,8 @@ const Sample5: React.FC<Sample5Props> = ({ comment }) => {
   };
   return (
     <Card sx={styleMode2}>
-      <Sample3 comment={comment} />
-      <Sample4 comment={comment} disabled={false} />
+      <Sample3 data={comment} />
+      <Sample4 ID={comment._id} disabled={false} />
     </Card>
   );
 };

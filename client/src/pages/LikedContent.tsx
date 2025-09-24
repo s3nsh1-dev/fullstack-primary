@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth";
 import LikesList from "../components/homepage/LikesList";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
+import NotLoggedIn from "./NotLoggedIn";
 
 const LikedContent = () => {
   const { user } = useAuth();
@@ -11,7 +12,7 @@ const LikedContent = () => {
   );
   if (isLoading || !data) return <div>...Loading Liked Content</div>;
   if (isError) return <div>...Encountered Error</div>;
-
+  if (!user) return <NotLoggedIn />;
   // console.log(data);
 
   return (
