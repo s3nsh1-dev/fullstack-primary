@@ -17,6 +17,10 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({ children }) => {
       onSuccess: (data) => {
         setUser(data);
       },
+      onError: () => {
+        setUser(null);
+      },
+      // onSettled solved my problem of !data return <>...No data</>
       onSettled: () => {
         setLoading(false);
       },
