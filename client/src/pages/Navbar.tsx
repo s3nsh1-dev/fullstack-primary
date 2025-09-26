@@ -17,8 +17,11 @@ import {
   Main,
   AppBar,
 } from "../components/ui-components/NavbarStyledComponents";
+import useAuth from "../hooks/useAuth";
+import NotLoggedIn from "./NotLoggedIn";
 
 const Navbar: React.FC<TestProps> = ({ navTitle }) => {
+  const { user, loading } = useAuth();
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen((prev) => !prev);
@@ -93,7 +96,7 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
         )}
       </>
       <Main open={open}>
-        <Outlet />
+        {!user && !loading ? <NotLoggedIn /> : <Outlet />}
       </Main>
     </>
   );
