@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import type { UserLoginResponseType } from "../../constants/responseTypes";
 
 const useRefreshUser = () => {
-  return useQuery({
-    queryKey: ["currentUser"],
-    queryFn: async () => {
+  return useMutation({
+    mutationKey: ["currentUser"],
+    mutationFn: async () => {
       const response = await fetch(
         `${import.meta.env.VITE_SERVER_URL}/users/refresh-token`,
         {
@@ -18,7 +18,6 @@ const useRefreshUser = () => {
       const user = data.data;
       return user;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 export default useRefreshUser;

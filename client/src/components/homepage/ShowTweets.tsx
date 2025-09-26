@@ -2,14 +2,8 @@ import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
 import { Stack } from "@mui/material";
 import IndividualTweet from "../Tweets/IndividualTweet";
 
-const ShowTweets = ({
-  tweets,
-  interaction,
-}: {
-  tweets: TweetType[];
-  interaction: boolean;
-}) => {
-  const renderTweets = tweets.map((tweet) => (
+const ShowTweets: React.FC<ShowTweetsProps> = ({ data, interaction }) => {
+  const renderTweets = data.map((tweet) => (
     <IndividualTweet key={tweet._id} tweet={tweet} interaction={interaction} />
   ));
 
@@ -17,3 +11,8 @@ const ShowTweets = ({
 };
 
 export default ShowTweets;
+
+type ShowTweetsProps = {
+  data: TweetType[];
+  interaction: boolean;
+};

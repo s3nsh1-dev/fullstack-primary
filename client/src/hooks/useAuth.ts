@@ -6,8 +6,8 @@ const useAuth = () => {
 
   if (!contextValue)
     throw new Error("AuthContextProvider not wrapped correctly");
-  const { user, login, logout } = contextValue;
+  const { user, login, logout, loading } = contextValue;
 
-  return { user, login, logout };
+  return { user, login, logout, loading };
 };
 export default useAuth;

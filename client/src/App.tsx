@@ -1,9 +1,7 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { getTheme } from "./utilities/muiThemeController";
 import useMode from "./hooks/useMode";
-import useAuth from "./hooks/useAuth";
 import Navbar from "./pages/Navbar";
 import Test from "./pages/Test";
 import Dashboard from "./pages/Dashboard";
@@ -15,17 +13,13 @@ import Subscribers from "./pages/Subscribers";
 import Support from "./pages/Support";
 import Tweets from "./pages/Tweets";
 import WatchHistory from "./pages/WatchHistory";
-import useRefreshUser from "./hooks/data-fetching/useRefreshUser";
+import useAuth from "./hooks/useAuth";
+import AppLoadingProgress from "./pages/AppLoadingProgress";
 
 function App() {
   const { mode } = useMode();
-  const { login } = useAuth();
-  const { data, isSuccess } = useRefreshUser();
-  React.useEffect(() => {
-    if (isSuccess && data) {
-      login(data);
-    }
-  }, [isSuccess, data, login]);
+  const { loading } = useAuth();
+  if (loading) return <AppLoadingProgress />;
 
   return (
     <Box sx={{ marginTop: "57px" }}>
