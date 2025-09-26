@@ -13,9 +13,13 @@ import Subscribers from "./pages/Subscribers";
 import Support from "./pages/Support";
 import Tweets from "./pages/Tweets";
 import WatchHistory from "./pages/WatchHistory";
+import useAuth from "./hooks/useAuth";
+import AppLoadingProgress from "./pages/AppLoadingProgress";
 
 function App() {
   const { mode } = useMode();
+  const { loading } = useAuth();
+  if (loading) return <AppLoadingProgress />;
 
   return (
     <Box sx={{ marginTop: "57px" }}>
