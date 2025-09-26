@@ -1,29 +1,12 @@
 import { useState } from "react";
-import { Box, ButtonGroup } from "@mui/material";
-import { emptyPageText } from "../constants/constants";
-import ShowPlaylists from "../components/homepage/ShowPlaylists";
-import ShowVideos from "../components/homepage/ShowVideos";
-import ShowSubscribed from "../components/homepage/ShowSubscribed";
-import ShowTweets from "../components/homepage/ShowTweets";
-import useMode from "../hooks/useMode";
-import { StyledButton } from "../components/ui-components/StyledComponents";
-import { buttonColor } from "../constants/uiConstants";
+import { Box } from "@mui/material";
 import useFetchHomepageDetails from "../hooks/data-fetching/useFetchHomepageDetails";
 import useAuth from "../hooks/useAuth";
-import HomeUserDetails from "../components/homepage/HomeUserDetails";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
-import NotLoggedIn from "./NotLoggedIn";
-
-type OpenStateType = {
-  videos: boolean;
-  playlists: boolean;
-  tweets: boolean;
-  subscribed: boolean;
-};
+import SubHomepage from "../components/homepage/SubHomepage";
 
 const Homepage = () => {
-  const { mode } = useMode();
   const { user } = useAuth();
   const [open, setOpen] = useState<OpenStateType>({
     videos: true,
@@ -31,13 +14,12 @@ const Homepage = () => {
     tweets: false,
     subscribed: false,
   });
-  const { data, isPending, isError } = useFetchHomepageDetails(
+  const { data, isLoading, isError } = useFetchHomepageDetails(
     user?.user._id || ""
   );
-  if (isPending) return <div>...Loading Homepage</div>;
+  if (isLoading) return <div>...Loading Homepage</div>;
   if (isError) return <div>...Encountered Error</div>;
-  if (!data) return <div>Nothing to show on Homepage</div>;
-  if (!user) return <NotLoggedIn />;
+  if (!data) return <div>....No Homepage Info</div>;
 
   const handleOpen = (value: keyof OpenStateType) => {
     setOpen({
@@ -54,45 +36,16 @@ const Homepage = () => {
         text="Home"
         icon={<HomeOutlinedIcon sx={{ fontSize: 28, color: "primary.main" }} />}
       />
-      <HomeUserDetails data={data} />
-      <Box className="dynamic-content">
-        <ButtonGroup
-          variant="text"
-          color="inherit"
-          aria-label="Basic button group"
-          sx={{
-            width: "100%",
-          }}
-        >
-          {emptyPageText.map((button) => {
-            const foo = button.id as keyof OpenStateType;
-            return (
-              <StyledButton
-                id={button.id}
-                mode={mode}
-                sx={{
-                  width: "100%",
-                  backgroundColor:
-                    open[foo] === false ? buttonColor.default : "transparent",
-                }}
-                onClick={() => handleOpen(button.id as keyof OpenStateType)}
-              >
-                {button.title}
-              </StyledButton>
-            );
-          })}
-        </ButtonGroup>
-        <Box className="select-content" m={1}>
-          {open.videos && <ShowVideos videos={data.videos} />}
-          {open.playlists && <ShowPlaylists playlists={data.playlists} />}
-          {open.tweets && (
-            <ShowTweets tweets={data.tweets} interaction={false} />
-          )}
-          {open.subscribed && <ShowSubscribed subscribed={data.subscribers} />}
-        </Box>
-      </Box>
+      <SubHomepage open={open} data={data} handleOpen={handleOpen} />
     </Box>
   );
 };
 
 export default Homepage;
+
+type OpenStateType = {
+  videos: boolean;
+  playlists: boolean;
+  tweets: boolean;
+  subscribed: boolean;
+};
