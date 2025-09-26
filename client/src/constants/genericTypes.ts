@@ -11,6 +11,7 @@ export type AuthContextType = {
   user: UserLoginAuthDataType | null;
   login: (userData: UserLoginAuthDataType) => void;
   logout: () => void;
+  loading: boolean;
 };
 export interface ChildrenProps {
   children: React.ReactNode;
