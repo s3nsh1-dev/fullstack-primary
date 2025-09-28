@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
+const URL = import.meta.env.VITE_SERVER_URL;
+
 const useToggleLikeOnVideo = () => {
   return useMutation({
     mutationKey: ["likeComment"],
