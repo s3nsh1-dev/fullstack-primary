@@ -12,31 +12,53 @@ import CommenterCard from "./CommenterCard";
 import useFetchCommentsOnTweets from "../../hooks/data-fetching/useFetchCommentsOnTweets";
 import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
+import useMutateLikeUserTweet from "../../hooks/data-fetching/useMutateLikeUserTweet";
 
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   tweetId,
   handleShowComments,
   disabled,
   showComments,
+  likeStatus,
 }) => {
+  const [like, setLike] = React.useState<boolean>(likeStatus);
   const fetchCommentMutate = useFetchCommentsOnTweets();
+  const toggleTweetLike = useMutateLikeUserTweet();
 
-  const handleClick = () => {
+  const handleCommentClick = () => {
     handleShowComments();
     fetchCommentMutate.mutate(tweetId);
+  };
+  const handleLikeClick = () => {
+    toggleTweetLike.mutate(tweetId, {
+      onSuccess: (data) => {
+        if ("tweet" in data) {
+          setLike(true);
+        } else {
+          setLike(false);
+        }
+      },
+    });
   };
 
   return (
     <>
       <CardActions sx={style7}>
-        <IconButton disabled={false} sx={style8}>
-          <ThumbUpOffAltIcon fontSize="small" color="action" />
-          <Typography variant="caption" color="textSecondary" sx={style4}>
+        <IconButton disabled={false} sx={style8} onClick={handleLikeClick}>
+          <ThumbUpOffAltIcon
+            fontSize="small"
+            color={like ? "primary" : "action"}
+          />
+          <Typography
+            variant="caption"
+            color={like ? "primary" : "textSecondary"}
+            sx={style4}
+          >
             &nbsp;Like
           </Typography>
         </IconButton>
         {!disabled && (
-          <IconButton sx={style8} onClick={handleClick}>
+          <IconButton sx={style8} onClick={handleCommentClick}>
             <CommentIcon fontSize="small" />
             <Typography variant="caption" color="textSecondary" sx={style9}>
               &nbsp;comments
@@ -77,4 +99,5 @@ type TweetProfileActionsProps = {
   handleShowComments: () => void;
   disabled: boolean;
   showComments: boolean;
+  likeStatus: boolean;
 };
