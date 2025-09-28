@@ -1,41 +1,38 @@
 import React from "react";
-import Sample1 from "./Sample1";
-import Sample2 from "./Sample2";
-import Sample5 from "./Sample5";
+import CommentTweetProfileHeader from "./CommentTweetProfileHeader";
+import TweetProfileActions from "./TweetProfileActions";
+
 import { Card } from "@mui/material";
 import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
-import useFetchCommentsOnTweets from "../../hooks/data-fetching/useFetchCommentsOnTweets";
+import { style2 } from "../../constants/tweets.constants";
 
 const IndividualTweet: React.FC<IndividualTweetProps> = ({
   tweet,
   interaction,
 }) => {
-  const fetchCommentMutate = useFetchCommentsOnTweets();
   const [showComments, setShowComments] = React.useState(false);
   const handleShowComments = () => {
     setShowComments(!showComments);
-    fetchCommentMutate.mutate(tweet._id, {
-      onSuccess: () => {},
-    });
   };
 
   return (
-    <Card key={tweet._id} variant="outlined">
-      <Sample1 tweet={tweet} />
+    <Card key={tweet._id} variant="elevation" elevation={4}>
+      <CommentTweetProfileHeader
+        imgSrc={tweet.owner.avatar}
+        fullname={tweet.owner.fullname || "fake-fullname"}
+        style2={style2}
+        content={tweet.content}
+        username={tweet.owner.username || "fake-username"}
+        createdAt={tweet.createdAt}
+      />
       {interaction && (
         <>
-          <Sample2 handleShowComments={handleShowComments} disabled={false} />
-          {fetchCommentMutate.isPending ? (
-            <div>....Loading Comments</div>
-          ) : (
-            <div>
-              {fetchCommentMutate.data?.comments.docs.map((comment) => (
-                <div key={comment._id}>
-                  <Sample5 comment={comment} />
-                </div>
-              ))}
-            </div>
-          )}
+          <TweetProfileActions
+            tweetId={tweet._id}
+            handleShowComments={handleShowComments}
+            disabled={false}
+            showComments={showComments}
+          />
         </>
       )}
     </Card>
