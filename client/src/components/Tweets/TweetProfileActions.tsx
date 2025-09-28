@@ -46,7 +46,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
       </CardActions>
       {showComments && (
         <>
-          <div>{fetchCommentMutate.isError && "Error"}</div>
+          <div>{fetchCommentMutate.isError && "Encountered Error"}</div>
           <div>
             {fetchCommentMutate.isSuccess === false ? (
               <CircularProgressCenter size={20} />
@@ -64,7 +64,6 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
               </>
             )}
           </div>
-          <div></div>
         </>
       )}
     </>

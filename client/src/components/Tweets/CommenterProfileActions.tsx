@@ -10,16 +10,18 @@ import {
   style8,
   style9,
 } from "../../constants/tweets.constants";
+import CircularProgressCenter from "../ui-components/CircularProgressCenter";
+import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 
 const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
   ID,
   disabled,
 }) => {
+  const [showReplies, setShowReplies] = React.useState(false);
   const fetchCommentOnCommentMutate = useFetchCommentsOnComments();
   const handleShowReply = () => {
-    fetchCommentOnCommentMutate.mutate(ID, {
-      onSuccess: () => {},
-    });
+    setShowReplies(!showReplies);
+    fetchCommentOnCommentMutate.mutate(ID);
   };
   return (
     <>
@@ -39,18 +41,32 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
           </IconButton>
         )}
       </CardActions>
-      {fetchCommentOnCommentMutate.isPending ? (
-        <div>....Loading replies</div>
-      ) : (
-        <div>
-          {fetchCommentOnCommentMutate.data?.comments.docs.map((reply) => {
-            return (
-              <div key={reply._id}>
-                <RepliesCard reply={reply} />
-              </div>
-            );
-          })}
-        </div>
+      {showReplies && (
+        <>
+          <div>
+            {fetchCommentOnCommentMutate.isError && "Encountered Error"}
+          </div>
+          <div>
+            {fetchCommentOnCommentMutate.isPending ? (
+              <CircularProgressCenter size={20} />
+            ) : (
+              <>
+                {fetchCommentOnCommentMutate.data?.comments.docs.length ===
+                0 ? (
+                  <CaptionTextCenter>no replies</CaptionTextCenter>
+                ) : (
+                  <>
+                    {fetchCommentOnCommentMutate.data?.comments.docs.map(
+                      (reply) => (
+                        <RepliesCard key={reply._id} reply={reply} />
+                      )
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        </>
       )}
     </>
   );
