@@ -1,16 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 
-const URL = import.meta.env.VITE_SERVER_URL;
-
-const useMutateLikeUserTweet = () => {
+const useToggleLikeOnVideo = () => {
   return useMutation({
-    mutationKey: ["likeTweet"],
-    mutationFn: async (tweet_ID: string) => {
-      const response = await fetch(`${URL}/likes/toggle/t/${tweet_ID}`, {
+    mutationKey: ["likeComment"],
+    mutationFn: async (videoId: string) => {
+      const response = await fetch(`${URL}/likes/toggle/v/${videoId}`, {
         method: "POST",
         credentials: "include",
       });
-      if (!response.ok) throw new Error("ERROR WHILE FETCHING TWEET LIKES");
+      if (!response.ok) throw new Error("ERROR WHILE FETCHING VIDEO LIKES");
       const data: ApiResponse<LikeAddedResponse | LikeRemovedResponse> =
         await response.json();
       console.log(data);
@@ -19,8 +17,7 @@ const useMutateLikeUserTweet = () => {
   });
 };
 
-export default useMutateLikeUserTweet;
-
+export default useToggleLikeOnVideo;
 export type LikeRemovedResponse = {
   result: {
     acknowledged: boolean;
@@ -29,7 +26,7 @@ export type LikeRemovedResponse = {
 };
 export type LikeAddedResponse = {
   result: {
-    tweet: string; // tweet ID
+    video: string; // tweet ID
     likedBy: string; // user ID
     _id: string; // like record ID
     createdAt: string; // ISO date string
