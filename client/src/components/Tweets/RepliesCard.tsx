@@ -1,9 +1,20 @@
 import React from "react";
-import { Card } from "@mui/material";
+import { Card, CircularProgress } from "@mui/material";
 import CommentTweetProfileHeader from "./CommentTweetProfileHeader";
 import RepliesProfileActions from "./RepliesProfileActions";
+import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
 
 const RepliesCard: React.FC<RepliesCardProps> = ({ reply }) => {
+  const { data, isLoading, isError } = useCheckLikeOnComments(reply._id);
+  if (isLoading)
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
+  if (isError) return <div>....Encountered Error</div>;
+  if (!data) return <CircularProgress />;
+
   const styleMode2 = {
     m: "0.5% 1% 1% 1%",
     boxShadow: "none",
@@ -18,7 +29,11 @@ const RepliesCard: React.FC<RepliesCardProps> = ({ reply }) => {
         username={reply.owner.username || "fake-username"}
         createdAt={reply.createdAt}
       />
-      <RepliesProfileActions ID={reply._id} disabled={true} />
+      <RepliesProfileActions
+        ID={reply._id}
+        // disabled={true}
+        likeStatus={data.data}
+      />
     </Card>
   );
 };
