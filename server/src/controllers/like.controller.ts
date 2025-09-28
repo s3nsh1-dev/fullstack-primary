@@ -331,6 +331,53 @@ const isTweetLiked = asyncHandler(async (req, res) => {
     );
 });
 
+const isCommentLiked = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+
+  if (!isValidObjectId(commentId))
+    throw new ApiError(400, "INVALID COMMENT ID");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const isCommentLiked = await Like.findOne({
+    comment: commentId,
+    likedBy: req.user._id,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        isCommentLiked ? true : false,
+        "COMMENT IS LIKED SUCCESSFULLY"
+      )
+    );
+});
+
+const isVideoLiked = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID VIDEO ID");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const isVideoLiked = await Like.findOne({
+    video: videoId,
+    likedBy: req.user._id,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        isVideoLiked ? true : false,
+        "VIDEO IS LIKED SUCCESSFULLY"
+      )
+    );
+});
+
 const getLikedComments = asyncHandler(async (req, res) => {
   //TODO: get all liked videos
 
@@ -613,4 +660,6 @@ export {
   getLikedTweets,
   getEveryLikedContent,
   isTweetLiked,
+  isCommentLiked,
+  isVideoLiked,
 };
