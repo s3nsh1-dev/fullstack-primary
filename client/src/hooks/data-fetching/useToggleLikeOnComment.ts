@@ -13,7 +13,6 @@ const useToggleLikeOnComment = () => {
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENT LIKES");
       const data: ApiResponse<LikeAddedResponse | LikeRemovedResponse> =
         await response.json();
-      console.log(data);
       return data.data.result;
     },
   });

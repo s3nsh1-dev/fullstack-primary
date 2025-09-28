@@ -21,6 +21,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
     );
   if (isError) return <div>....Encountered Error</div>;
   if (!data) return <CircularProgress />;
+
   const handleShowComments = () => {
     setShowComments(!showComments);
   };
@@ -28,7 +29,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
   return (
     <Card key={tweet._id} variant="elevation" elevation={4}>
       <CommentTweetProfileHeader
-        imgSrc={tweet.owner.avatar}
+        imgSrc={tweet.owner.avatar || ""}
         fullname={tweet.owner.fullname || "fake-fullname"}
         style2={style2}
         content={tweet.content}
