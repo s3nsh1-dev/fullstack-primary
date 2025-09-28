@@ -1,9 +1,10 @@
 import React from "react";
-import { Card } from "@mui/material";
+import { Card, CircularProgress } from "@mui/material";
 import CommentTweetProfileHeader from "./CommentTweetProfileHeader";
 import CommenterProfileActions from "./CommenterProfileActions";
 import useMode from "../../hooks/useMode";
 import type { TweetCommentType } from "../../hooks/data-fetching/useFetchCommentsOnTweets";
+import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
 
 const CommenterCard: React.FC<CommenterCardProps> = ({ comment }) => {
   const { mode } = useMode();
@@ -12,6 +13,16 @@ const CommenterCard: React.FC<CommenterCardProps> = ({ comment }) => {
     backgroundColor: mode ? "Whitesmoke" : "black",
     boxShadow: "none",
   };
+  const { data, isLoading, isError } = useCheckLikeOnComments(comment._id);
+  if (isLoading)
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
+  if (isError) return <div>....Encountered Error</div>;
+  if (!data) return <CircularProgress />;
+
   return (
     <Card sx={styleMode2}>
       <CommentTweetProfileHeader
@@ -22,7 +33,11 @@ const CommenterCard: React.FC<CommenterCardProps> = ({ comment }) => {
         username={comment.owner.username || "fake-username"}
         createdAt={comment.createdAt}
       />
-      <CommenterProfileActions ID={comment._id} disabled={false} />
+      <CommenterProfileActions
+        ID={comment._id}
+        disabled={false}
+        likeStatus={data.data}
+      />
     </Card>
   );
 };

@@ -12,23 +12,48 @@ import {
 } from "../../constants/tweets.constants";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
+import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 
 const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
   ID,
   disabled,
+  likeStatus,
 }) => {
+  const [like, setLike] = React.useState<boolean>(likeStatus);
   const [showReplies, setShowReplies] = React.useState(false);
+  const toggleTweetLike = useToggleLikeOnComment();
   const fetchCommentOnCommentMutate = useFetchCommentsOnComments();
+
   const handleShowReply = () => {
     setShowReplies(!showReplies);
     fetchCommentOnCommentMutate.mutate(ID);
   };
+
+  const handleCommentLike = () => {
+    toggleTweetLike.mutate(ID, {
+      onSuccess: (data) => {
+        if ("comment" in data) {
+          setLike(true);
+        } else {
+          setLike(false);
+        }
+      },
+    });
+  };
+
   return (
     <>
       <CardActions sx={style7}>
-        <IconButton disabled={false} sx={style8}>
-          <ThumbUpOffAltIcon fontSize="small" color="action" />
-          <Typography variant="caption" color="textSecondary" sx={style4}>
+        <IconButton disabled={false} sx={style8} onClick={handleCommentLike}>
+          <ThumbUpOffAltIcon
+            fontSize="small"
+            color={like ? "primary" : "action"}
+          />
+          <Typography
+            variant="caption"
+            color={like ? "primary" : "textSecondary"}
+            sx={style4}
+          >
             &nbsp;Like
           </Typography>
         </IconButton>
@@ -77,4 +102,5 @@ export default CommenterProfileActions;
 type CommenterProfileActionsProps = {
   ID: string;
   disabled: boolean;
+  likeStatus: boolean;
 };

@@ -22,8 +22,8 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   likeStatus,
 }) => {
   const [like, setLike] = React.useState<boolean>(likeStatus);
-  const fetchCommentMutate = useFetchCommentsOnTweets();
   const toggleTweetLike = useMutateLikeUserTweet();
+  const fetchCommentMutate = useFetchCommentsOnTweets();
 
   const handleCommentClick = () => {
     handleShowComments();
