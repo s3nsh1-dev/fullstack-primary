@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
+const URL = import.meta.env.VITE_SERVER_URL;
+
 const useToggleLikeOnVideo = () => {
   return useMutation({
     mutationKey: ["likeComment"],
@@ -11,7 +13,6 @@ const useToggleLikeOnVideo = () => {
       if (!response.ok) throw new Error("ERROR WHILE FETCHING VIDEO LIKES");
       const data: ApiResponse<LikeAddedResponse | LikeRemovedResponse> =
         await response.json();
-      console.log(data);
       return data.data.result;
     },
   });

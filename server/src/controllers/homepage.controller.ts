@@ -83,7 +83,17 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
         let: { userId: "$_id" },
         pipeline: [
           { $match: { $expr: { $eq: ["$owner", "$$userId"] } } },
-          { $project: { content: 1, createdAt: 1 } },
+          { $project: { content: 1, createdAt: 1, owner: 1 } },
+          {
+            $lookup: {
+              from: "users",
+              as: "owner",
+              localField: "owner",
+              foreignField: "_id",
+              pipeline: [{ $project: { fullname: 1, avatar: 1, username: 1 } }],
+            },
+          },
+          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
         ],
       },
     },

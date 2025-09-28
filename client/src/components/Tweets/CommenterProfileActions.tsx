@@ -81,6 +81,10 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
                   <CaptionTextCenter>no replies</CaptionTextCenter>
                 ) : (
                   <>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <input type="text" style={{ width: "60%" }} />
+                      <button>Add Reply</button>
+                    </div>
                     {fetchCommentOnCommentMutate.data?.comments.docs.map(
                       (reply) => (
                         <RepliesCard key={reply._id} reply={reply} />
