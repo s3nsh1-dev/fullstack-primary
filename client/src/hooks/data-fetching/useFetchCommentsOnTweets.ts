@@ -12,7 +12,6 @@ const useFetchCommentsOnTweets = () => {
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENTS");
       const data: ApiResponse = await response.json();
-      // console.log(data.data.comments);
       return data.data;
     },
   });

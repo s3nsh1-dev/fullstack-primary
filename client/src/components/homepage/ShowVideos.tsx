@@ -76,7 +76,6 @@ const ShowVideos = ({ videos }: { videos: VideoType[] }) => {
                 },
               }}
               onClick={() => {
-                console.log("Play video:", video._id);
                 // Add your play video logic here
               }}
             >

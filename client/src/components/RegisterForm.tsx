@@ -48,7 +48,6 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
     e.preventDefault();
     registerMutate.mutate(formData, {
       onSuccess: (data: UserLoginAuthDataType) => {
-        console.log("What data we are sending", data);
         login(data);
       },
     });

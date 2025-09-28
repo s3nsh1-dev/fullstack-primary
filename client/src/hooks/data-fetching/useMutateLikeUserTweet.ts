@@ -13,7 +13,6 @@ const useMutateLikeUserTweet = () => {
       if (!response.ok) throw new Error("ERROR WHILE FETCHING TWEET LIKES");
       const data: ApiResponse<LikeAddedResponse | LikeRemovedResponse> =
         await response.json();
-      console.log(data);
       return data.data.result;
     },
   });
