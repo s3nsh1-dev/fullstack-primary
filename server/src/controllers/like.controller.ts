@@ -32,7 +32,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     resultFindings = createVideoLike;
     responseMessage = "LIKE ADDED TO VIDEO";
   } else {
-    resultFindings = await Like.findOneAndDelete({
+    resultFindings = await Like.deleteOne({
       video: videoId,
       likedBy: req.user._id,
     });
@@ -79,7 +79,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     if (!isOwner(searchCommentLike.likedBy, req.user._id.toString())) {
       throw new ApiError(400, "USER NOT AUTHORIZED TO MAKE CHANGES");
     }
-    resultFindings = await Like.findOneAndDelete({
+    resultFindings = await Like.deleteOne({
       comment: commentId,
       likedBy: req.user._id,
     });
@@ -122,7 +122,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     resultFindings = createTweetLike;
     responseMessage = "LIKE ADDED TO TWEET";
   } else {
-    resultFindings = await Like.findOneAndDelete({
+    resultFindings = await Like.deleteOne({
       tweet: tweetId,
       likedBy: req.user._id,
     });
@@ -305,6 +305,75 @@ const getLikedTweets = asyncHandler(async (req, res) => {
         200,
         { likes: likedTweets, length: likedTweets.length },
         "USER LIKED TWEETS FETCHED SUCCESSFULLY"
+      )
+    );
+});
+const isTweetLiked = asyncHandler(async (req, res) => {
+  const { tweetId } = req.params;
+
+  if (!isValidObjectId(tweetId)) throw new ApiError(400, "INVALID TWEET ID");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const isTweetLiked = await Like.findOne({
+    tweet: tweetId,
+    likedBy: req.user._id,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        isTweetLiked ? true : false,
+        "TWEET IS LIKED SUCCESSFULLY"
+      )
+    );
+});
+
+const isCommentLiked = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+
+  if (!isValidObjectId(commentId))
+    throw new ApiError(400, "INVALID COMMENT ID");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const isCommentLiked = await Like.findOne({
+    comment: commentId,
+    likedBy: req.user._id,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        isCommentLiked ? true : false,
+        "COMMENT IS LIKED SUCCESSFULLY"
+      )
+    );
+});
+
+const isVideoLiked = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID VIDEO ID");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+
+  const isVideoLiked = await Like.findOne({
+    video: videoId,
+    likedBy: req.user._id,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        isVideoLiked ? true : false,
+        "VIDEO IS LIKED SUCCESSFULLY"
       )
     );
 });
@@ -590,4 +659,7 @@ export {
   getLikedComments,
   getLikedTweets,
   getEveryLikedContent,
+  isTweetLiked,
+  isCommentLiked,
+  isVideoLiked,
 };

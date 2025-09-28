@@ -7,51 +7,52 @@ import {
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import type React from "react";
+import {
+  style1,
+  style3,
+  style4,
+  style5,
+  style6,
+} from "../../constants/tweets.constants";
 
-const style1 = { padding: "10px" };
-const style3 = {
-  fontSize: "clamp(1rem, 2vw, 1.2rem)",
-  fontWeight: "bold",
-};
-const style4 = { position: "relative", top: "2px" };
-const style5 = {
-  p: 0, // shorthand for padding: 0
-  "&:last-child": {
-    pb: 0, // remove bottom padding
-  },
-};
-const style6 = { mt: "5px" };
-
-const Sample3: React.FC<Sample3Props> = ({ data }) => {
+const CommentTweetProfileHeader: React.FC<CommentTweetProfileCardProps> = ({
+  style2,
+  imgSrc,
+  fullname,
+  username,
+  createdAt,
+  content,
+}) => {
   return (
     <CardActionArea sx={style1}>
       <Stack direction="column" spacing={1} alignItems="start">
-        <Stack direction="row" spacing={1}>
-          <Avatar alt="Remy Sharp" src={data.owner.avatar} />
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Avatar alt="" src={imgSrc} sx={style2} />
           <Stack justifyContent="center">
             <Stack direction="row" spacing={0.5} alignItems="center">
               <Typography variant="body1" color="textPrimary" sx={style3}>
-                {data.owner.fullname}
+                {fullname}
               </Typography>
               <Typography
                 variant="caption"
                 color="textSecondary"
                 fontStyle="italic"
               >
-                @{data.owner.username}
+                @{username}
               </Typography>
             </Stack>
             <Stack direction="row" spacing={1}>
               <TwitterIcon color="primary" fontSize="small" />
               <Typography variant="caption" color="textSecondary" sx={style4}>
-                {convertISOIntoLocalTime(data.createdAt)}
+                {convertISOIntoLocalTime(createdAt)}
               </Typography>
             </Stack>
           </Stack>
         </Stack>
         <CardContent sx={style5}>
           <Typography variant="body1" color="textPrimary" sx={style6}>
-            {data.content}
+            {content}
           </Typography>
         </CardContent>
       </Stack>
@@ -59,19 +60,13 @@ const Sample3: React.FC<Sample3Props> = ({ data }) => {
   );
 };
 
-export default Sample3;
+export default CommentTweetProfileHeader;
 
-type Sample3Props = {
-  data: {
-    _id: string;
-    content: string;
-    owner: {
-      _id: string;
-      fullname: string;
-      avatar: string;
-      username: string;
-    };
-    createdAt: string;
-    updatedAt: string;
-  };
+type CommentTweetProfileCardProps = {
+  imgSrc: string;
+  fullname: string;
+  username: string;
+  createdAt: string;
+  content: string;
+  style2: object;
 };
