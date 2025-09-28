@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  CardActions,
-  IconButton,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
+import { CardActions, IconButton, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
 import {
@@ -15,6 +10,8 @@ import {
 } from "../../constants/tweets.constants";
 import CommenterCard from "./CommenterCard";
 import useFetchCommentsOnTweets from "../../hooks/data-fetching/useFetchCommentsOnTweets";
+import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
+import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   tweetId,
@@ -52,26 +49,11 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
           <div>{fetchCommentMutate.isError && "Error"}</div>
           <div>
             {fetchCommentMutate.isSuccess === false ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginBottom: "10px",
-                }}
-              >
-                <CircularProgress color="secondary" size={20} />
-              </div>
+              <CircularProgressCenter size={20} />
             ) : (
               <>
                 {fetchCommentMutate.data?.comments.docs.length === 0 ? (
-                  <Typography
-                    color="textSecondary"
-                    variant="caption"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    no comments
-                  </Typography>
+                  <CaptionTextCenter>no comments</CaptionTextCenter>
                 ) : (
                   <>
                     {fetchCommentMutate.data?.comments.docs.map((comment) => (
