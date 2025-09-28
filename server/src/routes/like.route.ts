@@ -8,6 +8,8 @@ import {
   getLikedTweets,
   getEveryLikedContent,
   isTweetLiked,
+  isCommentLiked,
+  isVideoLiked,
 } from "../controllers/like.controller";
 import verifyJWT from "../middleware/auth.middleware";
 
@@ -22,5 +24,7 @@ likeRouter.route("/comments").get(getLikedComments);
 likeRouter.route("/tweets").get(getLikedTweets);
 likeRouter.route("/content/:userId").get(getEveryLikedContent);
 likeRouter.route("/check-tweet/:tweetId").get(isTweetLiked);
+likeRouter.route("/check-comment/:commentId").get(isCommentLiked);
+likeRouter.route("/check-video/:videoId").get(isVideoLiked);
 
 export default likeRouter;
