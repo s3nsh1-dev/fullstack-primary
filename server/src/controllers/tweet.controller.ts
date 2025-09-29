@@ -56,7 +56,7 @@ const updateTweet = asyncHandler(async (req, res) => {
         from: "users",
         localField: "owner",
         foreignField: "_id",
-        as: "ownerDetails",
+        as: "owner",
         pipeline: [
           {
             $project: {
@@ -70,18 +70,28 @@ const updateTweet = asyncHandler(async (req, res) => {
       },
     },
     {
+      $unwind: {
+        path: "$owner",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
       $project: {
         _id: 1,
         content: 1,
-        ownerDetails: { $first: "$ownerDetails" },
+        owner: 1,
+        updatedAt: 1,
+        createdAt: 1,
       },
     },
   ]);
-  if (!tweet) throw new ApiError(404, "TWEET NOT FOUND");
+  if (!tweet[0]) throw new ApiError(404, "TWEET NOT FOUND");
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { tweet }, "TWEET UPDATED SUCCESSFULLY"));
+    .json(
+      new ApiResponse(200, { tweet: tweet[0] }, "TWEET UPDATED SUCCESSFULLY")
+    );
 });
 
 const deleteTweet = asyncHandler(async (req, res) => {
