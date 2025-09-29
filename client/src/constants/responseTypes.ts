@@ -6,6 +6,7 @@ import type {
   VideoPaginationType,
   UserSubscriberListType,
 } from "./dataTypes";
+import type { DeleteOneResponse } from "./genericTypes";
 
 export interface UserTweetsAPIResponse {
   statusCode: number;
@@ -50,3 +51,9 @@ export interface UserSubscribersAPIResponse {
   message: string;
   success: boolean;
 }
+export type DeleteOneApiResponse = {
+  statusCode: number;
+  data: DeleteOneResponse;
+  message: string;
+  success: boolean;
+};
