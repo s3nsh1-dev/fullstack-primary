@@ -13,6 +13,7 @@ import {
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
+import AddTweetCommentForm from "./AddTweetCommentForm";
 
 const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
   ID,
@@ -81,10 +82,7 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
                   <CaptionTextCenter>no replies</CaptionTextCenter>
                 ) : (
                   <>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <input type="text" style={{ width: "60%" }} />
-                      <button>Add Reply</button>
-                    </div>
+                    <AddTweetCommentForm />
                     {fetchCommentOnCommentMutate.data?.comments.docs.map(
                       (reply) => (
                         <RepliesCard key={reply._id} reply={reply} />
