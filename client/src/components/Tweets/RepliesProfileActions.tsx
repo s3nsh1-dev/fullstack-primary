@@ -1,12 +1,19 @@
 import React from "react";
 import { CardActions, IconButton, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
-import { style4, style7, style8 } from "../../constants/tweets.constants";
+import {
+  style4,
+  style7,
+  style8,
+  style9,
+} from "../../constants/tweets.constants";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
   ID,
   likeStatus,
+  alterReply,
 }) => {
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const toggleTweetLike = useToggleLikeOnComment();
@@ -38,6 +45,16 @@ const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
             &nbsp;Like
           </Typography>
         </IconButton>
+        {alterReply && (
+          <>
+            <IconButton sx={style8}>
+              <DeleteOutlineIcon fontSize="small" color="error" />
+              <Typography variant="caption" color="error" sx={style9}>
+                &nbsp;delete
+              </Typography>
+            </IconButton>
+          </>
+        )}
       </CardActions>
     </>
   );
@@ -46,6 +63,7 @@ const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
 export default RepliesProfileActions;
 
 type RepliesProfileActionsProps = {
+  alterReply: boolean;
   ID: string;
   likeStatus: boolean;
 };

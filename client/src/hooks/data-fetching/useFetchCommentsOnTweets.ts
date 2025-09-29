@@ -13,7 +13,6 @@ const useFetchCommentsOnTweets = (tweetId: string) => {
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENTS");
       const data: ApiResponse = await response.json();
-      console.log(data);
       return data.data;
     },
     enabled: false,

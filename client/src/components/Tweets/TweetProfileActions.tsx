@@ -15,8 +15,11 @@ import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useMutateLikeUserTweet from "../../hooks/data-fetching/useMutateLikeUserTweet";
 import AddTweetCommentForm from "./AddTweetCommentForm";
 import { useQueryClient } from "@tanstack/react-query"; // <-- import queryClient
+import UpdateIcon from "@mui/icons-material/Update";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
+  alterTweet,
   tweetId,
   handleShowComments,
   disabled,
@@ -70,11 +73,27 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
         </IconButton>
         {!disabled && (
           <IconButton sx={style8} onClick={handleCommentClick}>
-            <CommentIcon fontSize="small" />
-            <Typography variant="caption" color="textSecondary" sx={style9}>
+            <CommentIcon fontSize="small" color="secondary" />
+            <Typography variant="caption" color="secondary" sx={style9}>
               &nbsp;comments
             </Typography>
           </IconButton>
+        )}
+        {alterTweet && (
+          <>
+            <IconButton sx={style8}>
+              <UpdateIcon fontSize="small" color="success" />
+              <Typography variant="caption" color="success" sx={style9}>
+                &nbsp;update
+              </Typography>
+            </IconButton>
+            <IconButton sx={style8}>
+              <DeleteOutlineIcon fontSize="small" color="error" />
+              <Typography variant="caption" color="error" sx={style9}>
+                &nbsp;delete
+              </Typography>
+            </IconButton>
+          </>
         )}
       </CardActions>
       {showComments && (
@@ -102,6 +121,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
 export default TweetProfileActions;
 
 type TweetProfileActionsProps = {
+  alterTweet: boolean;
   tweetId: string;
   handleShowComments: () => void;
   disabled: boolean;
