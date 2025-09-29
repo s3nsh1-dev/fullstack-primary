@@ -2,11 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useAddCommentOnTweet = () => {
+const useAddCommentOnComment = () => {
   return useMutation({
-    mutationKey: ["addCommentOnTweet"],
-    mutationFn: async ({ content, tweet_ID }: InputType) => {
-      const response = await fetch(`${URL}/comments/t/${tweet_ID}`, {
+    mutationKey: ["addCommentOnComment"],
+    mutationFn: async ({ content, comment_ID }: InputType) => {
+      const response = await fetch(`${URL}/comments/c/${comment_ID}`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -21,9 +21,9 @@ const useAddCommentOnTweet = () => {
   });
 };
 
-export default useAddCommentOnTweet;
+export default useAddCommentOnComment;
 
 type InputType = {
   content: string;
-  tweet_ID: string;
+  comment_ID: string;
 };

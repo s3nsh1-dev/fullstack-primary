@@ -5,9 +5,11 @@ import CommenterProfileActions from "./CommenterProfileActions";
 import useMode from "../../hooks/useMode";
 import type { TweetCommentType } from "../../hooks/data-fetching/useFetchCommentsOnTweets";
 import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
+import useAuth from "../../hooks/useAuth";
 
 const CommenterCard: React.FC<CommenterCardProps> = ({ comment }) => {
   const { mode } = useMode();
+  const { user } = useAuth();
   const styleMode2 = {
     m: "0.5% 1% 1% 1%",
     backgroundColor: mode ? "Whitesmoke" : "black",
@@ -34,6 +36,7 @@ const CommenterCard: React.FC<CommenterCardProps> = ({ comment }) => {
         createdAt={comment.createdAt}
       />
       <CommenterProfileActions
+        alterComment={user?.user._id === comment.owner._id}
         ID={comment._id}
         disabled={false}
         likeStatus={data.data}

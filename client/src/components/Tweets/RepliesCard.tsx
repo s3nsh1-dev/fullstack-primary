@@ -3,8 +3,10 @@ import { Card, CircularProgress } from "@mui/material";
 import CommentTweetProfileHeader from "./CommentTweetProfileHeader";
 import RepliesProfileActions from "./RepliesProfileActions";
 import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
+import useAuth from "../../hooks/useAuth";
 
 const RepliesCard: React.FC<RepliesCardProps> = ({ reply }) => {
+  const { user } = useAuth();
   const { data, isLoading, isError } = useCheckLikeOnComments(reply._id);
   if (isLoading)
     return (
@@ -31,7 +33,7 @@ const RepliesCard: React.FC<RepliesCardProps> = ({ reply }) => {
       />
       <RepliesProfileActions
         ID={reply._id}
-        // disabled={true}
+        alterReply={user?.user._id === reply.owner._id}
         likeStatus={data.data}
       />
     </Card>

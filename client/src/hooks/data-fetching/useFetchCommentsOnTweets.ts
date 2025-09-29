@@ -1,12 +1,13 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useFetchCommentsOnTweets = () => {
-  return useMutation({
-    mutationKey: ["commentOnTweet"],
-    mutationFn: async (tweet_ID: string) => {
-      const response = await fetch(`${URL}/comments/t/${tweet_ID}`, {
+const useFetchCommentsOnTweets = (tweetId: string) => {
+  return useQuery({
+    queryKey: ["commentOnTweet", tweetId],
+
+    queryFn: async () => {
+      const response = await fetch(`${URL}/comments/t/${tweetId}`, {
         method: "GET",
         credentials: "include",
       });
@@ -14,6 +15,7 @@ const useFetchCommentsOnTweets = () => {
       const data: ApiResponse = await response.json();
       return data.data;
     },
+    enabled: false,
   });
 };
 export default useFetchCommentsOnTweets;

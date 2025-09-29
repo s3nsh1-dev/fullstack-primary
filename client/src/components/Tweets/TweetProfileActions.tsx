@@ -1,5 +1,5 @@
 import React from "react";
-import { CardActions, IconButton, Typography, Box } from "@mui/material";
+import { CardActions, IconButton, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
 import {
@@ -13,24 +13,35 @@ import useFetchCommentsOnTweets from "../../hooks/data-fetching/useFetchComments
 import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useMutateLikeUserTweet from "../../hooks/data-fetching/useMutateLikeUserTweet";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import useMode from "../../hooks/useMode";
-import { backgroundColor, textColor } from "../../constants/uiConstants";
+import AddTweetCommentForm from "./AddTweetCommentForm";
+import { useQueryClient } from "@tanstack/react-query"; // <-- import queryClient
+import UpdateIcon from "@mui/icons-material/Update";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
+  alterTweet,
   tweetId,
   handleShowComments,
   disabled,
   showComments,
   likeStatus,
 }) => {
-  const { mode } = useMode();
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const toggleTweetLike = useMutateLikeUserTweet();
-  const fetchCommentMutate = useFetchCommentsOnTweets();
+  const { data, isLoading, isError, refetch } = useFetchCommentsOnTweets(
+    tweetId
+    // showComments
+  );
+  const queryClient = useQueryClient();
+
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (isError) return <div>....Encountered Error</div>;
 
   const handleCommentClick = () => {
+    // Invalidate previous comments call for this tweet
     handleShowComments();
-    fetchCommentMutate.mutate(tweetId);
+    refetch({});
+    queryClient.invalidateQueries({ queryKey: ["commentOnTweet", tweetId] });
   };
   const handleLikeClick = () => {
     toggleTweetLike.mutate(tweetId, {
@@ -62,69 +73,44 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
         </IconButton>
         {!disabled && (
           <IconButton sx={style8} onClick={handleCommentClick}>
-            <CommentIcon fontSize="small" />
-            <Typography variant="caption" color="textSecondary" sx={style9}>
+            <CommentIcon fontSize="small" color="secondary" />
+            <Typography variant="caption" color="secondary" sx={style9}>
               &nbsp;comments
             </Typography>
           </IconButton>
         )}
+        {alterTweet && (
+          <>
+            <IconButton sx={style8}>
+              <UpdateIcon fontSize="small" color="success" />
+              <Typography variant="caption" color="success" sx={style9}>
+                &nbsp;update
+              </Typography>
+            </IconButton>
+            <IconButton sx={style8}>
+              <DeleteOutlineIcon fontSize="small" color="error" />
+              <Typography variant="caption" color="error" sx={style9}>
+                &nbsp;delete
+              </Typography>
+            </IconButton>
+          </>
+        )}
       </CardActions>
       {showComments && (
         <>
-          <div>{fetchCommentMutate.isError && "Encountered Error"}</div>
           <div>
-            {fetchCommentMutate.isSuccess === false ? (
-              <CircularProgressCenter size={20} />
-            ) : (
-              <>
-                {fetchCommentMutate.data?.comments.docs.length === 0 ? (
-                  <CaptionTextCenter>no comments</CaptionTextCenter>
-                ) : (
-                  <>
-                    <Box
-                      component="form"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                      }}
-                    >
-                      <input
-                        type="text"
-                        name="comment-on-tweet"
-                        style={{
-                          width: "60%",
-                          backgroundColor: "transparent",
-                          border: `1px solid ${
-                            mode ? backgroundColor.dark : backgroundColor.light
-                          }`,
-                          color: mode ? textColor.dark : textColor.light,
-                          padding: "0px 10px",
-                        }}
-                        placeholder="add comment"
-                      />
-                      <IconButton
-                        type="submit"
-                        sx={{
-                          marginLeft: "5px",
-                          padding: "5px",
-                          "&: hover": {
-                            color: "secondary.main",
-                          },
-                        }}
-                      >
-                        <AddBoxIcon />
-                      </IconButton>
-                    </Box>
-                    {fetchCommentMutate.data?.comments.docs.map((comment) => (
-                      <CommenterCard key={comment._id} comment={comment} />
-                    ))}
-                  </>
-                )}
-              </>
-            )}
+            <>
+              <AddTweetCommentForm ID={tweetId} />
+              {data?.comments.docs.length === 0 ? (
+                <CaptionTextCenter>no comments</CaptionTextCenter>
+              ) : (
+                <>
+                  {data?.comments.docs.map((comment) => (
+                    <CommenterCard key={comment._id} comment={comment} />
+                  ))}
+                </>
+              )}
+            </>
           </div>
         </>
       )}
@@ -135,6 +121,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
 export default TweetProfileActions;
 
 type TweetProfileActionsProps = {
+  alterTweet: boolean;
   tweetId: string;
   handleShowComments: () => void;
   disabled: boolean;

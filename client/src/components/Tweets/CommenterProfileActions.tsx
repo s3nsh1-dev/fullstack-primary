@@ -13,8 +13,11 @@ import {
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
+import AddReplyOnComment from "./AddReplyOnComment";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
+  alterComment,
   ID,
   disabled,
   likeStatus,
@@ -22,11 +25,11 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const [showReplies, setShowReplies] = React.useState(false);
   const toggleTweetLike = useToggleLikeOnComment();
-  const fetchCommentOnCommentMutate = useFetchCommentsOnComments();
+  const { data, isLoading, isError, refetch } = useFetchCommentsOnComments(ID);
 
   const handleShowReply = () => {
     setShowReplies(!showReplies);
-    fetchCommentOnCommentMutate.mutate(ID);
+    refetch();
   };
 
   const handleCommentLike = () => {
@@ -40,6 +43,9 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
       },
     });
   };
+
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (isError) return <div>....Encountered Error</div>;
 
   return (
     <>
@@ -59,42 +65,35 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
         </IconButton>
         {!disabled && (
           <IconButton sx={style8} onClick={handleShowReply}>
-            <CommentIcon fontSize="small" />
-            <Typography variant="caption" color="textSecondary" sx={style9}>
+            <CommentIcon fontSize="small" color="secondary" />
+            <Typography variant="caption" color="secondary" sx={style9}>
               &nbsp;reply
             </Typography>
           </IconButton>
         )}
+        {alterComment && (
+          <>
+            <IconButton sx={style8}>
+              <DeleteOutlineIcon fontSize="small" color="error" />
+              <Typography variant="caption" color="error" sx={style9}>
+                &nbsp;delete
+              </Typography>
+            </IconButton>
+          </>
+        )}
       </CardActions>
       {showReplies && (
         <>
-          <div>
-            {fetchCommentOnCommentMutate.isError && "Encountered Error"}
-          </div>
-          <div>
-            {fetchCommentOnCommentMutate.isPending ? (
-              <CircularProgressCenter size={20} />
-            ) : (
-              <>
-                {fetchCommentOnCommentMutate.data?.comments.docs.length ===
-                0 ? (
-                  <CaptionTextCenter>no replies</CaptionTextCenter>
-                ) : (
-                  <>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <input type="text" style={{ width: "60%" }} />
-                      <button>Add Reply</button>
-                    </div>
-                    {fetchCommentOnCommentMutate.data?.comments.docs.map(
-                      (reply) => (
-                        <RepliesCard key={reply._id} reply={reply} />
-                      )
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </div>
+          <AddReplyOnComment ID={ID} />
+          {data?.comments.docs.length === 0 ? (
+            <CaptionTextCenter>no replies</CaptionTextCenter>
+          ) : (
+            <>
+              {data?.comments.docs.map((reply) => (
+                <RepliesCard key={reply._id} reply={reply} />
+              ))}
+            </>
+          )}
         </>
       )}
     </>
@@ -104,6 +103,7 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
 export default CommenterProfileActions;
 
 type CommenterProfileActionsProps = {
+  alterComment: boolean;
   ID: string;
   disabled: boolean;
   likeStatus: boolean;
