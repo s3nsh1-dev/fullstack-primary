@@ -14,8 +14,10 @@ import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 import AddReplyOnComment from "./AddReplyOnComment";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
+  alterComment,
   ID,
   disabled,
   likeStatus,
@@ -63,11 +65,21 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
         </IconButton>
         {!disabled && (
           <IconButton sx={style8} onClick={handleShowReply}>
-            <CommentIcon fontSize="small" />
-            <Typography variant="caption" color="textSecondary" sx={style9}>
+            <CommentIcon fontSize="small" color="secondary" />
+            <Typography variant="caption" color="secondary" sx={style9}>
               &nbsp;reply
             </Typography>
           </IconButton>
+        )}
+        {alterComment && (
+          <>
+            <IconButton sx={style8}>
+              <DeleteOutlineIcon fontSize="small" color="error" />
+              <Typography variant="caption" color="error" sx={style9}>
+                &nbsp;delete
+              </Typography>
+            </IconButton>
+          </>
         )}
       </CardActions>
       {showReplies && (
@@ -91,6 +103,7 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
 export default CommenterProfileActions;
 
 type CommenterProfileActionsProps = {
+  alterComment: boolean;
   ID: string;
   disabled: boolean;
   likeStatus: boolean;

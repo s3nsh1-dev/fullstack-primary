@@ -6,6 +6,7 @@ import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
 import { style2 } from "../../constants/tweets.constants";
 import useCheckLikeOnTweet from "../../hooks/data-fetching/useCheckLikeOnTweet";
 import CircularProgress from "@mui/material/CircularProgress";
+import useAuth from "../../hooks/useAuth";
 
 const IndividualTweet: React.FC<IndividualTweetProps> = ({
   tweet,
@@ -13,6 +14,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
 }) => {
   const [showComments, setShowComments] = React.useState(false);
   const { data, isLoading, isError } = useCheckLikeOnTweet(tweet._id);
+  const { user } = useAuth();
   if (isLoading)
     return (
       <div>
@@ -39,6 +41,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
       {interaction && (
         <>
           <TweetProfileActions
+            alterTweet={user?.user._id === tweet.owner._id}
             tweetId={tweet._id}
             handleShowComments={handleShowComments}
             disabled={false}
