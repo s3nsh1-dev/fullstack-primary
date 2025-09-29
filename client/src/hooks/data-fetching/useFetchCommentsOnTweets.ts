@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useFetchCommentsOnTweets = (tweetId: string, enabled: boolean) => {
+const useFetchCommentsOnTweets = (tweetId: string) => {
   return useQuery({
     queryKey: ["commentOnTweet", tweetId],
 
@@ -13,9 +13,10 @@ const useFetchCommentsOnTweets = (tweetId: string, enabled: boolean) => {
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENTS");
       const data: ApiResponse = await response.json();
+      console.log(data);
       return data.data;
     },
-    enabled,
+    enabled: false,
   });
 };
 export default useFetchCommentsOnTweets;

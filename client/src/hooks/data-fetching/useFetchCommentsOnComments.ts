@@ -1,11 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useFetchCommentsOnComments = () => {
-  return useMutation({
-    mutationKey: ["replyOnComments"],
-    mutationFn: async (comment_ID: string) => {
+const useFetchCommentsOnComments = (comment_ID: string) => {
+  return useQuery({
+    queryKey: ["replyOnComments"],
+    queryFn: async () => {
       const response = await fetch(`${URL}/comments/c/${comment_ID}`, {
         method: "GET",
         credentials: "include",
@@ -14,6 +14,7 @@ const useFetchCommentsOnComments = () => {
       const data: ApiResponse = await response.json();
       return data.data;
     },
+    enabled: false,
   });
 };
 export default useFetchCommentsOnComments;
