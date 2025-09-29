@@ -35,3 +35,10 @@ export type EmptyPageTextType = {
   heading: string;
   description: string;
 };
+
+export type DeleteOneResponse = {
+  result: {
+    acknowledged: boolean;
+    deletedCount: number;
+  };
+};
