@@ -18,7 +18,7 @@ commentRouter.use(verifyJWT); // Apply verifyJWT middleware to all routes in thi
 commentRouter.route("/v/:video_ID").get(getVideoComments).post(addVideoComment);
 commentRouter.route("/t/:tweet_ID").get(getTweetComments).post(addTweetComment);
 commentRouter
-  .route("/c/:comment_ID")
+  .route("/modify/:comment_ID")
   .delete(deleteComment)
   .patch(updateComment);
 commentRouter
