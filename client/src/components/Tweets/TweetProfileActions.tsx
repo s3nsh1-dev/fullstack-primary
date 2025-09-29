@@ -1,5 +1,5 @@
 import React from "react";
-import { CardActions, IconButton, Typography, Box } from "@mui/material";
+import { CardActions, IconButton, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
 import {
@@ -13,9 +13,8 @@ import useFetchCommentsOnTweets from "../../hooks/data-fetching/useFetchComments
 import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useMutateLikeUserTweet from "../../hooks/data-fetching/useMutateLikeUserTweet";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import useMode from "../../hooks/useMode";
-import { backgroundColor, textColor } from "../../constants/uiConstants";
+import AddTweetCommentForm from "./AddTweetCommentForm";
+
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   tweetId,
   handleShowComments,
@@ -23,7 +22,6 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   showComments,
   likeStatus,
 }) => {
-  const { mode } = useMode();
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const toggleTweetLike = useMutateLikeUserTweet();
   const fetchCommentMutate = useFetchCommentsOnTweets();
@@ -81,43 +79,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
                   <CaptionTextCenter>no comments</CaptionTextCenter>
                 ) : (
                   <>
-                    <Box
-                      component="form"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                      }}
-                    >
-                      <input
-                        type="text"
-                        name="comment-on-tweet"
-                        style={{
-                          width: "60%",
-                          backgroundColor: "transparent",
-                          border: `1px solid ${
-                            mode ? backgroundColor.dark : backgroundColor.light
-                          }`,
-                          color: mode ? textColor.dark : textColor.light,
-                          padding: "0px 10px",
-                        }}
-                        placeholder="add comment"
-                      />
-                      <IconButton
-                        type="submit"
-                        sx={{
-                          marginLeft: "5px",
-                          padding: "5px",
-                          "&: hover": {
-                            color: "secondary.main",
-                          },
-                        }}
-                      >
-                        <AddBoxIcon />
-                      </IconButton>
-                    </Box>
+                    <AddTweetCommentForm />
                     {fetchCommentMutate.data?.comments.docs.map((comment) => (
                       <CommenterCard key={comment._id} comment={comment} />
                     ))}
