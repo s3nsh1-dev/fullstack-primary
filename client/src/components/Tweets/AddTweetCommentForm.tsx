@@ -5,6 +5,7 @@ import { backgroundColor, textColor } from "../../constants/uiConstants";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import useAddCommentOnTweet from "../../hooks/data-fetching/useAddCommentOnTweet";
 import { useQueryClient } from "@tanstack/react-query";
+import useFetchCommentsOnTweets from "../../hooks/data-fetching/useFetchCommentsOnTweets";
 
 const AddTweetCommentForm = ({ ID }: { ID: string }) => {
   const queryClient = useQueryClient();
@@ -14,6 +15,7 @@ const AddTweetCommentForm = ({ ID }: { ID: string }) => {
   const addCommentMutate = useAddCommentOnTweet();
   const [formData, setFormData] = React.useState(resetForm);
   const { mode } = useMode();
+  const { refetch: refetchCommentsForTweet } = useFetchCommentsOnTweets(ID);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -21,8 +23,9 @@ const AddTweetCommentForm = ({ ID }: { ID: string }) => {
       addCommentMutate.mutate(
         { content: formData.content, tweet_ID: ID },
         {
-          onSettled: () => {
+          onSettled: async () => {
             setFormData(resetForm);
+            refetchCommentsForTweet();
           },
         }
       );

@@ -23,11 +23,11 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const [showReplies, setShowReplies] = React.useState(false);
   const toggleTweetLike = useToggleLikeOnComment();
-  const fetchCommentOnCommentMutate = useFetchCommentsOnComments();
+  const { data, isLoading, isError, refetch } = useFetchCommentsOnComments(ID);
 
   const handleShowReply = () => {
     setShowReplies(!showReplies);
-    fetchCommentOnCommentMutate.mutate(ID);
+    refetch();
   };
 
   const handleCommentLike = () => {
@@ -41,6 +41,9 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
       },
     });
   };
+
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (isError) return <div>....Encountered Error</div>;
 
   return (
     <>
@@ -69,30 +72,16 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
       </CardActions>
       {showReplies && (
         <>
-          <div>
-            {fetchCommentOnCommentMutate.isError && "Encountered Error"}
-          </div>
-          <div>
-            {fetchCommentOnCommentMutate.isPending ? (
-              <CircularProgressCenter size={20} />
-            ) : (
-              <>
-                <AddReplyOnComment ID={ID} />
-                {fetchCommentOnCommentMutate.data?.comments.docs.length ===
-                0 ? (
-                  <CaptionTextCenter>no replies</CaptionTextCenter>
-                ) : (
-                  <>
-                    {fetchCommentOnCommentMutate.data?.comments.docs.map(
-                      (reply) => (
-                        <RepliesCard key={reply._id} reply={reply} />
-                      )
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </div>
+          <AddReplyOnComment ID={ID} />
+          {data?.comments.docs.length === 0 ? (
+            <CaptionTextCenter>no replies</CaptionTextCenter>
+          ) : (
+            <>
+              {data?.comments.docs.map((reply) => (
+                <RepliesCard key={reply._id} reply={reply} />
+              ))}
+            </>
+          )}
         </>
       )}
     </>
