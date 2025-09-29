@@ -7,7 +7,7 @@ const useDeleteTweet = () => {
   return useMutation({
     mutationKey: ["deleteComment"],
     mutationFn: async (commentId: string) => {
-      const response = await fetch(`${URL}/comments/c/${commentId}`, {
+      const response = await fetch(`${URL}/comments/modify/${commentId}`, {
         method: "DELETE",
         credentials: "include",
       });
