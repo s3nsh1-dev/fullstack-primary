@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
+const URL = import.meta.env.VITE_SERVER_URL;
+
 const useAddCommentOnTweet = () => {
   return useMutation({
     mutationKey: ["addCommentOnTweet"],

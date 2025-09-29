@@ -14,6 +14,7 @@ import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useMutateLikeUserTweet from "../../hooks/data-fetching/useMutateLikeUserTweet";
 import AddTweetCommentForm from "./AddTweetCommentForm";
+import { useQueryClient } from "@tanstack/react-query"; // <-- import queryClient
 
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   tweetId,
@@ -24,11 +25,20 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
 }) => {
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const toggleTweetLike = useMutateLikeUserTweet();
-  const fetchCommentMutate = useFetchCommentsOnTweets();
+  const { data, isLoading, isError, refetch } = useFetchCommentsOnTweets(
+    tweetId,
+    showComments
+  );
+  const queryClient = useQueryClient();
+
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (isError) return <div>....Encountered Error</div>;
 
   const handleCommentClick = () => {
+    // Invalidate previous comments call for this tweet
     handleShowComments();
-    fetchCommentMutate.mutate(tweetId);
+    refetch({});
+    queryClient.invalidateQueries({ queryKey: ["commentOnTweet", tweetId] });
   };
   const handleLikeClick = () => {
     toggleTweetLike.mutate(tweetId, {
@@ -69,24 +79,19 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
       </CardActions>
       {showComments && (
         <>
-          <div>{fetchCommentMutate.isError && "Encountered Error"}</div>
           <div>
-            {fetchCommentMutate.isSuccess === false ? (
-              <CircularProgressCenter size={20} />
-            ) : (
-              <>
-                {fetchCommentMutate.data?.comments.docs.length === 0 ? (
-                  <CaptionTextCenter>no comments</CaptionTextCenter>
-                ) : (
-                  <>
-                    <AddTweetCommentForm />
-                    {fetchCommentMutate.data?.comments.docs.map((comment) => (
-                      <CommenterCard key={comment._id} comment={comment} />
-                    ))}
-                  </>
-                )}
-              </>
-            )}
+            <>
+              <AddTweetCommentForm ID={tweetId} />
+              {data?.comments.docs.length === 0 ? (
+                <CaptionTextCenter>no comments</CaptionTextCenter>
+              ) : (
+                <>
+                  {data?.comments.docs.map((comment) => (
+                    <CommenterCard key={comment._id} comment={comment} />
+                  ))}
+                </>
+              )}
+            </>
           </div>
         </>
       )}
