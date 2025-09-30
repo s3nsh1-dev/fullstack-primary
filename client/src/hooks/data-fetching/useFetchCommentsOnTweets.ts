@@ -5,7 +5,6 @@ const URL = import.meta.env.VITE_SERVER_URL;
 const useFetchCommentsOnTweets = (tweetId: string) => {
   return useQuery({
     queryKey: ["commentOnTweet", tweetId],
-
     queryFn: async () => {
       const response = await fetch(`${URL}/comments/t/${tweetId}`, {
         method: "GET",

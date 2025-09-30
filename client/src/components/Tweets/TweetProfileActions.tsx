@@ -14,7 +14,6 @@ import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useMutateLikeUserTweet from "../../hooks/data-fetching/useMutateLikeUserTweet";
 import AddTweetCommentForm from "./AddTweetCommentForm";
-import { useQueryClient } from "@tanstack/react-query"; // <-- import queryClient
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
@@ -32,7 +31,6 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
     tweetId
     // showComments
   );
-  const queryClient = useQueryClient();
 
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (isError) return <div>....Encountered Error</div>;
@@ -40,8 +38,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   const handleCommentClick = () => {
     // Invalidate previous comments call for this tweet
     handleShowComments();
-    refetch({});
-    queryClient.invalidateQueries({ queryKey: ["commentOnTweet", tweetId] });
+    refetch();
   };
   const handleLikeClick = () => {
     toggleTweetLike.mutate(tweetId, {
@@ -54,7 +51,8 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
       },
     });
   };
-  console.log(tweetId, data?.comments.docs);
+  const handleUpdateClick = () => {};
+  const handleDeleteClick = () => {};
   return (
     <>
       <CardActions sx={style7}>
@@ -81,13 +79,13 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
         )}
         {alterTweet && (
           <>
-            <IconButton sx={style8}>
+            <IconButton sx={style8} onClick={handleUpdateClick}>
               <UpdateIcon fontSize="small" color="success" />
               <Typography variant="caption" color="success" sx={style9}>
                 &nbsp;update
               </Typography>
             </IconButton>
-            <IconButton sx={style8}>
+            <IconButton sx={style8} onClick={handleDeleteClick}>
               <DeleteOutlineIcon fontSize="small" color="error" />
               <Typography variant="caption" color="error" sx={style9}>
                 &nbsp;delete
