@@ -4,6 +4,9 @@ import { Comment } from "../models/comment.model";
 import { asyncHandler } from "../utils/asyncHandler";
 import { isOwner } from "../utils/checkIsOwner";
 import { toObjectId } from "../utils/convertToObjectId";
+import { Tweet } from "../models/tweet.model";
+import { isValidObjectId } from "mongoose";
+import { Video } from "../models/video.model";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
@@ -69,8 +72,10 @@ const addVideoComment = asyncHandler(async (req, res) => {
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED USER");
 
-  console.log("Video_id =", video_ID);
-  console.log("Owner_id =", req.user._id);
+  if (!isValidObjectId(video_ID)) throw new ApiError(400, "INVALID VIDEO ID");
+
+  const video = await Video.findById(video_ID);
+  if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
 
   const comment = await Comment.create({
     content,
@@ -140,7 +145,7 @@ const deleteComment = asyncHandler(async (req, res) => {
     throw new ApiError(403, "NOT AUTHORIZED TO MAKE CHANGES");
   }
 
-  const deletedComment = await Comment.deleteOne();
+  const deletedComment = await Comment.deleteOne({ _id: comment_ID });
   if (!deletedComment) throw new ApiError(404, "COMMENT NOT FOUND");
 
   return res
@@ -221,6 +226,9 @@ const addTweetComment = asyncHandler(async (req, res) => {
   console.log("Owner_id =", req.user._id);
   console.log("Tweet_id =", tweet_ID);
 
+  const tweet = await Tweet.findById(tweet_ID);
+  if (!tweet) throw new ApiError(404, "TWEET NOT FOUND");
+
   const comment = await Comment.create({
     content,
     tweet: toObjectId(tweet_ID),
@@ -244,6 +252,9 @@ const addCommentToComment = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED USER");
+
+  const comment = await Comment.findById(comment_ID);
+  if (!comment) throw new ApiError(404, "COMMENT NOT FOUND");
 
   const newComment = await Comment.create({
     content,

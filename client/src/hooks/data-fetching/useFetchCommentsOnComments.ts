@@ -4,7 +4,7 @@ const URL = import.meta.env.VITE_SERVER_URL;
 
 const useFetchCommentsOnComments = (comment_ID: string) => {
   return useQuery({
-    queryKey: ["replyOnComments"],
+    queryKey: ["replyOnComments", comment_ID],
     queryFn: async () => {
       const response = await fetch(`${URL}/comments/c/${comment_ID}`, {
         method: "GET",

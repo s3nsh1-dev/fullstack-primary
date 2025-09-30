@@ -3,11 +3,11 @@ import type { DeleteOneApiResponse } from "../../constants/responseTypes";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useDeleteTweet = () => {
+const useDeleteComment = () => {
   return useMutation({
     mutationKey: ["deleteComment"],
     mutationFn: async (commentId: string) => {
-      const response = await fetch(`${URL}/comments/c/${commentId}`, {
+      const response = await fetch(`${URL}/comments/modify/${commentId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -18,4 +18,4 @@ const useDeleteTweet = () => {
   });
 };
 
-export default useDeleteTweet;
+export default useDeleteComment;
