@@ -40,7 +40,6 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
     tweetId
     // showComments
   );
-  console.log(tweetId);
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (isError) return <div>....Encountered Error</div>;
 
@@ -64,10 +63,10 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
       },
     });
   };
-  const handleDeleteClick = async () => {
+  const handleDeleteClick = () => {
     deleteTweetMutate.mutate(tweetId);
     // queryClient.invalidateQueries({ queryKey: ["userTweets", user?.user._id] });
-    await queryClient.refetchQueries({
+    queryClient.refetchQueries({
       queryKey: ["userTweets", user?.user._id],
     });
   };

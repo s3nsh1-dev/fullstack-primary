@@ -21,13 +21,28 @@ const UpdateTweetContentForm = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (content.length > 3) {
-      addReplyMutate.mutate({ tweetId, content });
-    } else {
-      alert("Content should be more than 3 characters");
+    if (content.length <= 3) {
+      return alert("Content should be more than 3 characters");
     }
-    setContent("");
-    closeModal();
+    addReplyMutate.mutate(
+      { tweetId, content },
+      {
+        onSuccess: () => {
+          // After successful update
+          queryClient.invalidateQueries({
+            queryKey: ["userTweets", user?.user._id],
+          });
+        },
+        onSettled: () => {
+          setContent("");
+          closeModal();
+        },
+        onError: (err) => {
+          console.error(err);
+          alert("Failed to update tweet");
+        },
+      }
+    );
   };
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -91,14 +106,6 @@ const UpdateTweetContentForm = ({
           variant="contained"
           color="success"
           sx={{ gap: 0.5 }}
-          onClick={async () => {
-            queryClient.invalidateQueries({
-              queryKey: ["userTweets", user?.user._id],
-            });
-            await queryClient.refetchQueries({
-              queryKey: ["userTweets", user?.user._id],
-            });
-          }}
         >
           <SaveIcon fontSize="small" />
           Save

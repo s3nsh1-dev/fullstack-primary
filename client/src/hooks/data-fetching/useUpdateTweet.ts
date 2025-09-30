@@ -6,7 +6,6 @@ const useUpdateTweet = () => {
   return useMutation({
     mutationKey: ["updateTweet"],
     mutationFn: async ({ tweetId, content }: UpdateTweetInputType) => {
-      console.log("UPDATE TWEET", tweetId, content);
       const response = await fetch(`${URL}/tweets/${tweetId}`, {
         method: "PATCH",
         credentials: "include",
@@ -15,7 +14,6 @@ const useUpdateTweet = () => {
       });
       if (!response.ok) throw new Error("ERROR WHILE UPDATING TWEET");
       const result: UpdateTweetResponse = await response.json();
-      console.log(result);
       return result;
     },
   });
