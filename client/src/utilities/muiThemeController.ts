@@ -63,8 +63,10 @@ export const getTheme = (mode: ModeType) => {
           root: {
             textTransform: "none",
             fontSize: "1rem",
-            borderRadius: 0,
+            // borderRadius: 0,
             fontWeight: 600,
+            height: "40px",
+
             color: mode ? textColor.dark : textColor.light,
             ":hover": {
               borderBottom: `2px solid ${

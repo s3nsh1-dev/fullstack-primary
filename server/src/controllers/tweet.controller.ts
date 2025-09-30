@@ -44,53 +44,38 @@ const getUserTweets = asyncHandler(async (req, res) => {
 
 const updateTweet = asyncHandler(async (req, res) => {
   //TODO: update tweet
+
+  console.log("UPDATE TWEET is getting hit");
+
   const { content } = req.body;
   const { tweetId } = req.params;
   if (!isValidObjectId(tweetId)) throw new ApiError(400, "INVALID TWEET_ID");
+  if (!content) throw new ApiError(400, "CONTENT NOT FOUND");
 
-  const tweet = await Tweet.aggregate([
+  const updatedTweet = await Tweet.aggregate([
     { $match: { _id: toObjectId(tweetId) } },
     { $set: { content } },
     {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "owner",
-        pipeline: [
-          {
-            $project: {
-              id: 1,
-              username: 1,
-              fullname: 1,
-              avatar: 1,
-            },
-          },
-        ],
-      },
-    },
-    {
-      $unwind: {
-        path: "$owner",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $project: {
-        _id: 1,
-        content: 1,
-        owner: 1,
-        updatedAt: 1,
-        createdAt: 1,
+      $merge: {
+        into: "tweets",
+        on: "_id",
+        whenMatched: "merge",
+        whenNotMatched: "discard",
       },
     },
   ]);
-  if (!tweet[0]) throw new ApiError(404, "TWEET NOT FOUND");
+
+  console.log(updatedTweet);
+  if (!updatedTweet) throw new ApiError(404, "TWEET NOT FOUND");
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { tweet: tweet[0] }, "TWEET UPDATED SUCCESSFULLY")
+      new ApiResponse(
+        200,
+        { tweet: updatedTweet[0] },
+        "TWEET UPDATED SUCCESSFULLY"
+      )
     );
 });
 

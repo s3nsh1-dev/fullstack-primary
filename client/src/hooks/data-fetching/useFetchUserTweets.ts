@@ -13,10 +13,11 @@ const useFetchUserTweets = (user_ID: string) => {
       if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
       const data: UserTweetsAPIResponse = await response.json();
       const result = data.data.tweets;
+      console.log(result);
       return result;
     },
     enabled: !!user_ID, // only fetch if user._id exists
-    staleTime: 10 * 60 * 1000, // 10min
+    // staleTime: 10 * 60 * 1000, // 10min
   });
 };
 export default useFetchUserTweets;
