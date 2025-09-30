@@ -19,6 +19,8 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import useDeleteTweet from "../../hooks/data-fetching/useDeleteTweet";
 import useAuth from "../../hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
+import FormModal from "../others/FormModal";
+import UpdateTweetContentForm from "./UpdateTweetContentForm";
 
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   alterTweet,
@@ -32,14 +34,19 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   const deleteTweetMutate = useDeleteTweet();
   const queryClient = useQueryClient();
   const [like, setLike] = React.useState<boolean>(likeStatus);
+  const [openModal, setOpenModal] = React.useState(false);
   const toggleTweetLike = useMutateLikeUserTweet();
   const { data, isLoading, isError, refetch } = useFetchCommentsOnTweets(
     tweetId
     // showComments
   );
-
+  console.log(tweetId);
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (isError) return <div>....Encountered Error</div>;
+
+  const handleToggleModal = () => {
+    setOpenModal(!openModal);
+  };
 
   const handleCommentClick = () => {
     // Invalidate previous comments call for this tweet
@@ -57,11 +64,12 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
       },
     });
   };
-  const handleUpdateClick = () => {};
-  const handleDeleteClick = () => {
+  const handleDeleteClick = async () => {
     deleteTweetMutate.mutate(tweetId);
     // queryClient.invalidateQueries({ queryKey: ["userTweets", user?.user._id] });
-    queryClient.refetchQueries({ queryKey: ["userTweets", user?.user._id] });
+    await queryClient.refetchQueries({
+      queryKey: ["userTweets", user?.user._id],
+    });
   };
   return (
     <>
@@ -89,7 +97,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
         )}
         {alterTweet && (
           <>
-            <IconButton sx={style8} onClick={handleUpdateClick}>
+            <IconButton sx={style8} onClick={handleToggleModal}>
               <UpdateIcon fontSize="small" color="success" />
               <Typography variant="caption" color="success" sx={style9}>
                 &nbsp;update
@@ -122,6 +130,14 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
             </>
           </div>
         </>
+      )}
+      {openModal && (
+        <FormModal open={openModal} toggleModal={() => setOpenModal(false)}>
+          <UpdateTweetContentForm
+            tweetId={tweetId}
+            closeModal={() => setOpenModal(false)}
+          />
+        </FormModal>
       )}
     </>
   );
