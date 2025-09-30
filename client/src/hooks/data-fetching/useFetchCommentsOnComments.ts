@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 const URL = import.meta.env.VITE_SERVER_URL;
 
 const useFetchCommentsOnComments = (comment_ID: string) => {
-  console.log("making call for", comment_ID);
   return useQuery({
     queryKey: ["replyOnComments", comment_ID],
     queryFn: async () => {

@@ -15,6 +15,7 @@ import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 import AddReplyOnComment from "./AddReplyOnComment";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import UpdateIcon from "@mui/icons-material/Update";
 
 const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
   alterComment,
@@ -31,7 +32,6 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
     setShowReplies(!showReplies);
     refetch();
   };
-  console.log(ID, data?.comments.docs);
 
   const handleCommentLike = () => {
     toggleTweetLike.mutate(ID, {
@@ -44,6 +44,8 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
       },
     });
   };
+  const handleUpdateClick = () => {};
+  const handleDeleteClick = () => {};
 
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (isError) return <div>....Encountered Error</div>;
@@ -74,7 +76,13 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
         )}
         {alterComment && (
           <>
-            <IconButton sx={style8}>
+            <IconButton sx={style8} onClick={handleUpdateClick}>
+              <UpdateIcon fontSize="small" color="success" />
+              <Typography variant="caption" color="success" sx={style9}>
+                &nbsp;update
+              </Typography>
+            </IconButton>
+            <IconButton sx={style8} onClick={handleDeleteClick}>
               <DeleteOutlineIcon fontSize="small" color="error" />
               <Typography variant="caption" color="error" sx={style9}>
                 &nbsp;delete
