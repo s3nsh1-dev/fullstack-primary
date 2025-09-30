@@ -6,17 +6,18 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import useAddCommentOnComment from "../../hooks/data-fetching/useAddCommentOnComment";
 import useFetchCommentsOnComments from "../../hooks/data-fetching/useFetchCommentsOnComments";
 
-const AddReplyOnComment = ({ ID }: { ID: string }) => {
+const AddReplyOnComment = ({ commentId }: { commentId: string }) => {
   const { mode } = useMode();
   const [content, setContent] = React.useState<string>("");
   const addReplyMutate = useAddCommentOnComment();
-  const { refetch: refreshRepliesForComment } = useFetchCommentsOnComments(ID);
+  const { refetch: refreshRepliesForComment } =
+    useFetchCommentsOnComments(commentId);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (content.length > 3) {
       addReplyMutate.mutate(
-        { content, comment_ID: ID },
+        { content, comment_ID: commentId },
         {
           onSettled: () => {
             setContent("");

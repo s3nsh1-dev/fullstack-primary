@@ -41,7 +41,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
       {interaction && (
         <>
           <TweetProfileActions
-            alterTweet={user?.user._id === tweet.owner._id}
+            tweetOwner={user?.user._id === tweet.owner._id}
             tweetId={tweet._id}
             handleShowComments={handleShowComments}
             disabled={false}

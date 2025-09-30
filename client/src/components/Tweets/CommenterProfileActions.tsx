@@ -16,25 +16,37 @@ import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnCom
 import AddReplyOnComment from "./AddReplyOnComment";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import UpdateIcon from "@mui/icons-material/Update";
+import useDeleteComment from "../../hooks/data-fetching/useDeleteComment";
+import { useQueryClient } from "@tanstack/react-query";
+import FormModal from "../others/FormModal";
+import UpdateCommentForm from "./UpdateCommentForm";
 
 const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
-  alterComment,
-  ID,
+  commentOwner,
+  tweetOwner,
+  commentId,
   disabled,
   likeStatus,
+  tweetId,
 }) => {
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const [showReplies, setShowReplies] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
   const toggleTweetLike = useToggleLikeOnComment();
-  const { data, isLoading, isError, refetch } = useFetchCommentsOnComments(ID);
+  const { data, isLoading, isError, refetch } =
+    useFetchCommentsOnComments(commentId);
+  const queryClient = useQueryClient();
+  const deleteCommentMutate = useDeleteComment();
 
   const handleShowReply = () => {
     setShowReplies(!showReplies);
     refetch();
   };
-
+  const handleToggleModal = () => {
+    setOpenModal(!openModal);
+  };
   const handleCommentLike = () => {
-    toggleTweetLike.mutate(ID, {
+    toggleTweetLike.mutate(commentId, {
       onSuccess: (data) => {
         if ("comment" in data) {
           setLike(true);
@@ -44,8 +56,15 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
       },
     });
   };
-  const handleUpdateClick = () => {};
-  const handleDeleteClick = () => {};
+  const handleDeleteClick = () => {
+    deleteCommentMutate.mutate(commentId, {
+      onSuccess: () => {
+        queryClient.refetchQueries({
+          queryKey: ["commentOnTweet", tweetId],
+        });
+      },
+    });
+  };
 
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (isError) return <div>....Encountered Error</div>;
@@ -74,14 +93,18 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
             </Typography>
           </IconButton>
         )}
-        {alterComment && (
+        {commentOwner && (
           <>
-            <IconButton sx={style8} onClick={handleUpdateClick}>
+            <IconButton sx={style8} onClick={handleToggleModal}>
               <UpdateIcon fontSize="small" color="success" />
               <Typography variant="caption" color="success" sx={style9}>
                 &nbsp;update
               </Typography>
             </IconButton>
+          </>
+        )}
+        {(tweetOwner || commentOwner) && (
+          <>
             <IconButton sx={style8} onClick={handleDeleteClick}>
               <DeleteOutlineIcon fontSize="small" color="error" />
               <Typography variant="caption" color="error" sx={style9}>
@@ -93,17 +116,31 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
       </CardActions>
       {showReplies && (
         <>
-          <AddReplyOnComment ID={ID} />
+          <AddReplyOnComment commentId={commentId} />
           {data?.comments.docs.length === 0 ? (
             <CaptionTextCenter>no replies</CaptionTextCenter>
           ) : (
             <>
               {data?.comments.docs.map((reply) => (
-                <RepliesCard key={reply._id} reply={reply} />
+                <RepliesCard
+                  key={reply._id}
+                  reply={reply}
+                  tweetOwner={tweetOwner}
+                  commentId={commentId}
+                />
               ))}
             </>
           )}
         </>
+      )}
+      {openModal && (
+        <FormModal open={openModal} toggleModal={() => setOpenModal(false)}>
+          <UpdateCommentForm
+            commentId={commentId}
+            tweetId={tweetId}
+            closeModal={() => setOpenModal(false)}
+          />
+        </FormModal>
       )}
     </>
   );
@@ -112,8 +149,10 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
 export default CommenterProfileActions;
 
 type CommenterProfileActionsProps = {
-  alterComment: boolean;
-  ID: string;
+  commentOwner: boolean;
+  commentId: string;
   disabled: boolean;
   likeStatus: boolean;
+  tweetOwner: boolean;
+  tweetId: string;
 };

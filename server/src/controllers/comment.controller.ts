@@ -141,7 +141,10 @@ const deleteComment = asyncHandler(async (req, res) => {
   const comment = await Comment.findById(comment_ID);
   if (!comment) throw new ApiError(404, "COMMENT NOT FOUND");
 
-  if (!isOwner(comment.owner, req.user._id.toString())) {
+  // the owner of the content in which comment is being made should be able to delete the comment
+  // like comment.content.owner<by aggregate|populate> === req.user._id
+
+  if (!isOwner(comment.owner, req.user._id.toString()) && !isAdmin(req.user)) {
     throw new ApiError(403, "NOT AUTHORIZED TO MAKE CHANGES");
   }
 
