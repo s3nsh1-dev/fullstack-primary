@@ -54,7 +54,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
       },
     });
   };
-
+  console.log(tweetId, data?.comments.docs);
   return (
     <>
       <CardActions sx={style7}>
@@ -96,6 +96,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
           </>
         )}
       </CardActions>
+
       {showComments && (
         <>
           <div>
