@@ -24,6 +24,7 @@ const CommenterCard: React.FC<CommenterCardProps> = ({ comment }) => {
     );
   if (isError) return <div>....Encountered Error</div>;
   if (!data) return <CircularProgress />;
+  console.log(comment.content, comment._id);
 
   return (
     <Card sx={styleMode2}>

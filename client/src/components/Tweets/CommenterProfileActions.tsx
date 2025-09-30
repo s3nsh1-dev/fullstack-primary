@@ -31,6 +31,7 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
     setShowReplies(!showReplies);
     refetch();
   };
+  console.log(ID, data?.comments.docs);
 
   const handleCommentLike = () => {
     toggleTweetLike.mutate(ID, {
