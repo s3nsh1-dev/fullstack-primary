@@ -16,6 +16,9 @@ import useMutateLikeUserTweet from "../../hooks/data-fetching/useMutateLikeUserT
 import AddTweetCommentForm from "./AddTweetCommentForm";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import useDeleteTweet from "../../hooks/data-fetching/useDeleteTweet";
+import useAuth from "../../hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   alterTweet,
@@ -25,6 +28,9 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   showComments,
   likeStatus,
 }) => {
+  const { user } = useAuth();
+  const deleteTweetMutate = useDeleteTweet();
+  const queryClient = useQueryClient();
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const toggleTweetLike = useMutateLikeUserTweet();
   const { data, isLoading, isError, refetch } = useFetchCommentsOnTweets(
@@ -52,7 +58,11 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
     });
   };
   const handleUpdateClick = () => {};
-  const handleDeleteClick = () => {};
+  const handleDeleteClick = () => {
+    deleteTweetMutate.mutate(tweetId);
+    // queryClient.invalidateQueries({ queryKey: ["userTweets", user?.user._id] });
+    queryClient.refetchQueries({ queryKey: ["userTweets", user?.user._id] });
+  };
   return (
     <>
       <CardActions sx={style7}>

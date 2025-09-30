@@ -3,7 +3,7 @@ import type { DeleteOneApiResponse } from "../../constants/responseTypes";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useDeleteTweet = () => {
+const useDeleteComment = () => {
   return useMutation({
     mutationKey: ["deleteComment"],
     mutationFn: async (commentId: string) => {
@@ -18,4 +18,4 @@ const useDeleteTweet = () => {
   });
 };
 
-export default useDeleteTweet;
+export default useDeleteComment;
