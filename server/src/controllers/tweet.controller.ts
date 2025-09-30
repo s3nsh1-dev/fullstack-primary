@@ -45,8 +45,6 @@ const getUserTweets = asyncHandler(async (req, res) => {
 const updateTweet = asyncHandler(async (req, res) => {
   //TODO: update tweet
 
-  console.log("UPDATE TWEET is getting hit");
-
   const { content } = req.body;
   const { tweetId } = req.params;
   if (!isValidObjectId(tweetId)) throw new ApiError(400, "INVALID TWEET_ID");
@@ -65,7 +63,6 @@ const updateTweet = asyncHandler(async (req, res) => {
     },
   ]);
 
-  console.log(updatedTweet);
   if (!updatedTweet) throw new ApiError(404, "TWEET NOT FOUND");
 
   return res

@@ -195,7 +195,6 @@ const updateVideo = asyncHandler(async (req, res) => {
     if (!uploadedThumbnail) throw new ApiError(400, "THUMBNAIL UPLOAD FAILED");
 
     const foo = await deleteFromCloudinary(video.thumbPublicId);
-    console.log("Deleted old thumbnail: ", foo);
     video.thumbnail = uploadedThumbnail.url;
     video.thumbPublicId = uploadedThumbnail.public_id;
   }
