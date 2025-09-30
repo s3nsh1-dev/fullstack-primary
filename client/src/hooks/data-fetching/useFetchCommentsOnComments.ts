@@ -14,7 +14,8 @@ const useFetchCommentsOnComments = (comment_ID: string) => {
       const data: ApiResponse = await response.json();
       return data.data;
     },
-    enabled: false,
+    enabled: !!comment_ID,
+    staleTime: 5 * 60 * 1000,
   });
 };
 export default useFetchCommentsOnComments;
