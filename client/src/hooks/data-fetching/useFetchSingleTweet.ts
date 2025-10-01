@@ -13,10 +13,8 @@ const useFetchSingleTweet = (tweetId: string) => {
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING TWEET");
       const data: UserTweetsAPIResponse = await response.json();
-      console.log(data);
       const result = await data.data?.tweet;
       if (!result) throw new Error("TWEET NOT FOUND");
-      console.log(result);
       return result;
     },
     enabled: !!tweetId,

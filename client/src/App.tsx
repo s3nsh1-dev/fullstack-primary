@@ -16,6 +16,9 @@ import WatchHistory from "./pages/WatchHistory";
 import useAuth from "./hooks/useAuth";
 import AppLoadingProgress from "./pages/AppLoadingProgress";
 import OpenSingleTweetPage from "./pages/OpenSingleTweetPage";
+import ChannelHomePage from "./pages/ChannelHomePage";
+import ChannelTweetsPage from "./pages/ChannelTweetsPage";
+import ChannelVideosPage from "./pages/ChannelVideosPage";
 
 function App() {
   const { mode } = useMode();
@@ -43,6 +46,17 @@ function App() {
                 path="/tweets/:tweetId"
                 element={<OpenSingleTweetPage />}
               />
+              <Route path="/channels">
+                <Route path=":channelId/home" element={<ChannelHomePage />} />
+                <Route
+                  path=":channelId/tweets"
+                  element={<ChannelTweetsPage />}
+                />
+                <Route
+                  path=":channelId/videos"
+                  element={<ChannelVideosPage />}
+                />
+              </Route>
             </Route>
             {/* routes without Navbar */}
             <Route path="/test" element={<Test />} />
@@ -54,3 +68,13 @@ function App() {
 }
 
 export default App;
+
+// /tweets/:tweetId → single tweet page
+
+// /videos/:videoId → single video page
+
+// /channels/:channelId/home → channel homepage
+
+// /channels/:channelId/tweets → channel tweets
+
+// /channels/:channelId/videos → channel videos
