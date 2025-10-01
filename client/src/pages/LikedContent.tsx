@@ -7,11 +7,13 @@ import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 const LikedContent = () => {
   const { user } = useAuth();
   const { data, isLoading, isError } = useFetchLikedContent(
-    user?.user?._id || ""
+    user?.user?._id || "INVALID_USER_ID"
   );
   if (isLoading) return <div>...Loading Liked Content</div>;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <div>No Liked Content</div>;
+
+  console.log(data);
 
   return (
     <div>
