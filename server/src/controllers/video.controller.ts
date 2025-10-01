@@ -15,7 +15,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
   //   throw new ApiError(401, "USER_NOT_AUTHENTICATED");
   // const user = await User.findById(req.user._id as string);
   // if (!user) throw new ApiError(404, "USER NOT FOUND");
-  // console.log("User: ", user.fullname);
 
   const {
     page = "1",
