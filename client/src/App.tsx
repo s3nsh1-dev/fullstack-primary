@@ -15,6 +15,7 @@ import Tweets from "./pages/Tweets";
 import WatchHistory from "./pages/WatchHistory";
 import useAuth from "./hooks/useAuth";
 import AppLoadingProgress from "./pages/AppLoadingProgress";
+import OpenSingleTweetPage from "./pages/OpenSingleTweetPage";
 
 function App() {
   const { mode } = useMode();
@@ -38,6 +39,10 @@ function App() {
               <Route path="/support" element={<Support />} />
               <Route path="/tweets" element={<Tweets />} />
               <Route path="/history" element={<WatchHistory />} />
+              <Route
+                path="/tweets/:tweetId"
+                element={<OpenSingleTweetPage />}
+              />
             </Route>
             {/* routes without Navbar */}
             <Route path="/test" element={<Test />} />

@@ -41,7 +41,9 @@ export interface TweetType {
 
 export interface MinimalUserType {
   _id: string;
+  avatar: string;
   fullname?: string;
   username?: string;
-  avatar: string;
+  coverImage?: string;
+  email?: string;
 }
