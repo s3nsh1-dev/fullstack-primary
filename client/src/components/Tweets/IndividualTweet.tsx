@@ -1,12 +1,13 @@
 import React from "react";
 import CommentTweetProfileHeader from "./CommentTweetProfileHeader";
 import TweetProfileActions from "./TweetProfileActions";
-import { Card } from "@mui/material";
+import { Box, Card } from "@mui/material";
 import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
 import { style2 } from "../../constants/tweets.constants";
 import useCheckLikeOnTweet from "../../hooks/data-fetching/useCheckLikeOnTweet";
 import CircularProgress from "@mui/material/CircularProgress";
 import useAuth from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 const IndividualTweet: React.FC<IndividualTweetProps> = ({
   tweet,
@@ -30,14 +31,20 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
 
   return (
     <Card key={tweet._id} variant="elevation" elevation={4}>
-      <CommentTweetProfileHeader
-        imgSrc={tweet.owner.avatar || ""}
-        fullname={tweet.owner.fullname || "fake-fullname"}
-        style2={style2}
-        content={tweet.content}
-        username={tweet.owner.username || "fake-username"}
-        createdAt={tweet.createdAt}
-      />
+      <Box
+        component={Link}
+        to={`/tweets/${tweet._id}`}
+        sx={{ textDecoration: "none" }}
+      >
+        <CommentTweetProfileHeader
+          imgSrc={tweet.owner.avatar || ""}
+          fullname={tweet.owner.fullname || "fake-fullname"}
+          style2={style2}
+          content={tweet.content}
+          username={tweet.owner.username || "fake-username"}
+          createdAt={tweet.createdAt}
+        />
+      </Box>
       {interaction && (
         <>
           <TweetProfileActions
