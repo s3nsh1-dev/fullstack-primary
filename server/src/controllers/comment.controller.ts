@@ -154,7 +154,6 @@ const deleteComment = asyncHandler(async (req, res) => {
       select: "_id content owner updatedAt",
       populate: { path: "owner", select: "_id fullname username avatar" },
     });
-  console.log(comment);
   if (!comment) throw new ApiError(404, "COMMENT NOT FOUND");
 
   const foo =
