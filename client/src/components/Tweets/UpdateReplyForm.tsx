@@ -75,7 +75,7 @@ const UpdateReplyForm = ({
           gap: 1,
         }}
       >
-        Update Comment <CommentIcon color="primary" />
+        Update Reply <CommentIcon color="primary" />
       </Typography>
 
       <TextField

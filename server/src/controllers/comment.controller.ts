@@ -138,14 +138,38 @@ const deleteComment = asyncHandler(async (req, res) => {
     throw new ApiError(400, "USER NOT AUTHENTICATED");
   }
 
-  const comment = await Comment.findById(comment_ID);
+  const comment = await Comment.findById(comment_ID)
+    .populate({
+      path: "tweet",
+      select: "_id content owner updatedAt",
+      populate: { path: "owner", select: "_id fullname username avatar" },
+    })
+    .populate({
+      path: "video",
+      select: "_id title thumbnail videoFile owner updatedAt",
+      populate: { path: "owner", select: "_id fullname username avatar" },
+    })
+    .populate({
+      path: "comment",
+      select: "_id content owner updatedAt",
+      populate: { path: "owner", select: "_id fullname username avatar" },
+    });
+  console.log(comment);
   if (!comment) throw new ApiError(404, "COMMENT NOT FOUND");
 
-  // the owner of the content in which comment is being made should be able to delete the comment
-  // like comment.content.owner<by aggregate|populate> === req.user._id
+  const foo =
+    comment.tweet?.owner?._id ??
+    comment.video?.owner?._id ??
+    comment.comment?.owner?._id;
 
-  if (!isOwner(comment.owner, req.user._id.toString()) && !isAdmin(req.user)) {
-    throw new ApiError(403, "NOT AUTHORIZED TO MAKE CHANGES");
+  if (
+    !isOwner(comment.owner, req.user._id.toString()) &&
+    !isOwner(foo, req.user._id.toString())
+  ) {
+    throw new ApiError(
+      403,
+      "NOT AUTHORIZED TO MAKE CHANGES COZ NEITHER COMMENT OWNER NOR CONTENT OWNER"
+    );
   }
 
   const deletedComment = await Comment.deleteOne({ _id: comment_ID });
