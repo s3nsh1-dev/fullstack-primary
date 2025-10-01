@@ -4,33 +4,36 @@ import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import { Link } from "react-router-dom";
 
 const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
-  const renderSubscriberList = subscribed.map((sub) => (
-    <Card
-      key={sub._id}
-      component={Link}
-      to={`/channels/${sub._id}/home`}
-      sx={{ textDecoration: "none" }}
-    >
-      <CardActionArea sx={style1}>
-        <Box component="img" src={sub.avatar} alt="user-avatar" sx={style2} />
-        <Box>
-          <Typography>
-            {sub.fullname}
-            <Typography
-              component="span"
-              variant="caption"
-              color="text.secondary"
-            >
-              &nbsp;@{sub.username}
+  const renderSubscriberList = subscribed.map((sub) => {
+    console.log(sub);
+    return (
+      <Card
+        key={sub._id}
+        component={Link}
+        to={`/channels/${sub.subscriber_id}/home`}
+        sx={{ textDecoration: "none" }}
+      >
+        <CardActionArea sx={style1}>
+          <Box component="img" src={sub.avatar} alt="user-avatar" sx={style2} />
+          <Box>
+            <Typography>
+              {sub.fullname}
+              <Typography
+                component="span"
+                variant="caption"
+                color="text.secondary"
+              >
+                &nbsp;@{sub.username}
+              </Typography>
             </Typography>
-          </Typography>
-          <Typography variant="caption">
-            {convertISOIntoLocalTime(sub.subscribedAt)}
-          </Typography>
-        </Box>
-      </CardActionArea>
-    </Card>
-  ));
+            <Typography variant="caption">
+              {convertISOIntoLocalTime(sub.subscribedAt)}
+            </Typography>
+          </Box>
+        </CardActionArea>
+      </Card>
+    );
+  });
 
   return <Box width="100%">{renderSubscriberList}</Box>;
 };

@@ -1,9 +1,10 @@
+import React from "react";
 import { Box, Typography, Divider } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import HomeProfilePictures from "./HomeProfilePictures";
-import type { HomePageFormatType } from "../../constants/dataTypes";
+import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
 
-const HomeUserDetails = ({ data }: { data: HomePageFormatType }) => {
+const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
   return (
     <Box
       mb={1}
@@ -13,7 +14,7 @@ const HomeUserDetails = ({ data }: { data: HomePageFormatType }) => {
       }}
     >
       {/* Profile Pictures */}
-      <HomeProfilePictures />
+      <HomeProfilePictures coverImage={data.coverImage} avatar={data.avatar} />
 
       {/* User Info */}
       <Box
@@ -74,3 +75,7 @@ const HomeUserDetails = ({ data }: { data: HomePageFormatType }) => {
 };
 
 export default HomeUserDetails;
+
+type HomeUserDetailsProps = {
+  data: HomePageFormatType;
+};

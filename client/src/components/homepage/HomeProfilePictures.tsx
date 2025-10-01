@@ -1,14 +1,15 @@
+import React from "react";
 import useMode from "../../hooks/useMode";
 import { Box, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { backgroundColor } from "../../constants/uiConstants";
-import useAuth from "../../hooks/useAuth";
 
-const HomeProfilePictures = () => {
+const HomeProfilePictures: React.FC<HomeProfilePicturesProps> = ({
+  coverImage,
+  avatar,
+}) => {
   const { mode } = useMode();
-  const { user } = useAuth();
-  const activeUser = user?.user;
-  if (!activeUser) return <div>You are not logged in</div>;
+
   return (
     <Box
       className="hero-section"
@@ -27,7 +28,7 @@ const HomeProfilePictures = () => {
           width: "100%",
           height: "100%",
           //   backgroundImage: `url('/cover.jpg')`,
-          backgroundImage: `url(${activeUser.coverImage})`,
+          backgroundImage: `url(${coverImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           position: "relative",
@@ -66,7 +67,7 @@ const HomeProfilePictures = () => {
           position: "absolute",
           bottom: -60,
           left: 24,
-          backgroundImage: `url(${activeUser.avatar})`,
+          backgroundImage: `url(${avatar})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "blue",
@@ -94,3 +95,8 @@ const HomeProfilePictures = () => {
 };
 
 export default HomeProfilePictures;
+
+type HomeProfilePicturesProps = {
+  coverImage: string;
+  avatar: string;
+};
