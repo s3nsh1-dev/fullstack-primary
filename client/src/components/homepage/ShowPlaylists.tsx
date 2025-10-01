@@ -11,7 +11,7 @@ import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 
 const ShowPlaylists = ({ playlists }: { playlists: PlaylistType[] }) => {
   if (!playlists || playlists.length === 0) {
-    return <Typography color="textSecondary">No playlists to show.</Typography>;
+    return <Typography color="textSecondary">No Playlists</Typography>;
   }
 
   return (

@@ -4,6 +4,10 @@ import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import { Link } from "react-router-dom";
 
 const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
+  if (!subscribed || subscribed.length === 0) {
+    return <Typography color="textSecondary">No Subscribers</Typography>;
+  }
+
   const renderSubscriberList = subscribed.map((sub) => {
     console.log(sub);
     return (
@@ -35,7 +39,17 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
     );
   });
 
-  return <Box width="100%">{renderSubscriberList}</Box>;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 1,
+      }}
+    >
+      {renderSubscriberList}
+    </Box>
+  );
 };
 
 export default ShowSubscribed;
