@@ -28,9 +28,12 @@ const UpdateTweetContentForm = ({
       { tweetId, content },
       {
         onSuccess: () => {
-          // After successful update
+          // After successful
           queryClient.invalidateQueries({
             queryKey: ["userTweets", user?.user._id],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["singleTweet", tweetId],
           });
         },
         onSettled: () => {

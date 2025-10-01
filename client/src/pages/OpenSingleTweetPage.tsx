@@ -8,10 +8,10 @@ const OpenSingleTweetPage = () => {
   const { data, isLoading, isError } = useFetchSingleTweet(
     tweetId || "INVALID_TWEET-ID"
   );
-  console.log(data, isLoading, isError);
   if (isLoading) return <div>...Loading Single Tweet</div>;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <div>Tweet Not Available</div>;
+
   return (
     <Box m={1}>
       <IndividualTweet interaction={true} tweet={data} />
