@@ -37,8 +37,7 @@ const UpdateCommentForm = ({
           closeModal();
         },
         onError: (err) => {
-          console.error(err);
-          alert("Failed to update comment. Please try again");
+          alert(`Failed to update comment. Please try again ${err}`);
         },
       }
     );

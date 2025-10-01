@@ -8,7 +8,6 @@ import SubHomepage from "../components/homepage/SubHomepage";
 
 const ChannelHomePage = () => {
   const { channelId } = useParams();
-  console.log(channelId);
 
   const [open, setOpen] = useState<OpenStateType>({
     videos: true,

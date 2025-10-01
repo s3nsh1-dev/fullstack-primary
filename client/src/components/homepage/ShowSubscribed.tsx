@@ -9,7 +9,6 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
   }
 
   const renderSubscriberList = subscribed.map((sub) => {
-    console.log(sub);
     return (
       <Card
         key={sub._id}

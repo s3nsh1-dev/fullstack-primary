@@ -41,8 +41,7 @@ const UpdateTweetContentForm = ({
           closeModal();
         },
         onError: (err) => {
-          console.error(err);
-          alert("Failed to update tweet");
+          alert(`Failed to update tweet: ${err}`);
         },
       }
     );
