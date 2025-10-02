@@ -2,15 +2,21 @@ import useFetchSingleTweet from "../hooks/data-fetching/useFetchSingleTweet";
 import IndividualTweet from "../components/Tweets/IndividualTweet";
 import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
+import ContentNotAvailable from "../components/others/ContentNotAvailable";
+import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 
 const OpenSingleTweetPage = () => {
   const { tweetId } = useParams<{ tweetId: string }>(); // fetch param from URL
-  const { data, isLoading, isError } = useFetchSingleTweet(
+  const { data, isLoading } = useFetchSingleTweet(
     tweetId || "INVALID_TWEET-ID"
   );
-  if (isLoading) return <div>...Loading Single Tweet</div>;
-  if (isError) return <div>...Encountered Error</div>;
-  if (!data) return <div>Tweet Not Available</div>;
+  if (isLoading)
+    return (
+      <div>
+        <CircularProgressCenter size={50} />
+      </div>
+    );
+  if (!data) return <ContentNotAvailable text="Tweet Not Available" />;
 
   return (
     <Box m={1}>
