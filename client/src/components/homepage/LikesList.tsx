@@ -1,5 +1,4 @@
 import { Box, Avatar, Typography } from "@mui/material";
-// or from "@chakra-ui/react" if you use Chakra
 
 import type {
   LikedType,
@@ -40,22 +39,27 @@ export default function LikesList({ data }: { data: LikedType[] }) {
           return (
             <Box key={item._id} p={2} border="1px solid #ddd" borderRadius={2}>
               <Typography variant="h6">💬 Comment</Typography>
-              <Typography>{item.comment.content}</Typography>
+              <Typography>
+                <Avatar src={item.comment.owner.avatar} sizes="small" />
+                <Typography component={"span"}>
+                  {item.comment.content}
+                </Typography>
+              </Typography>
 
               {/* Comment's video */}
               <Box mt={1}>
                 <Typography variant="subtitle2">on Video:</Typography>
-                <Typography>{item.comment.video.title}</Typography>
+                <Typography>{item.comment?.video?.title}</Typography>
                 <img
-                  src={item.comment.video.thumbnail}
-                  alt={item.comment.video.title}
+                  src={item.comment?.video?.thumbnail}
+                  alt={item.comment?.video?.title}
                   style={{ width: 200, borderRadius: 8 }}
                 />
               </Box>
 
               {/* Comment owner */}
               <Box display="flex" alignItems="center" gap={1} mt={1}>
-                <Avatar src={item.comment.owner.avatar} />
+                <Avatar src={item.comment.owner.avatar} sizes="small" />
                 <Typography>{item.comment.owner.fullname}</Typography>
               </Box>
             </Box>

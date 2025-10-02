@@ -23,3 +23,27 @@ const useFetchLikedContent = (user_ID: string) => {
 };
 
 export default useFetchLikedContent;
+
+interface User {
+  _id: string;
+  username: string;
+  fullname: string;
+  avatar: string;
+}
+
+interface Tweet {
+  _id: string;
+  content: string;
+  owner: User;
+  updatedAt: string;
+}
+
+interface LikedTweet {
+  _id: string;
+  tweet: Tweet;
+  likedBy: string;
+  updatedAt: string;
+}
+
+// Usage
+export type ApiResponse = LikedTweet;

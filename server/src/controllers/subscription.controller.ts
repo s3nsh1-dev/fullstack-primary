@@ -58,58 +58,12 @@ const getUserChannelSubscribersCount = asyncHandler(async (req, res) => {
   if (!isValidObjectId(channelId))
     throw new ApiError(400, "INVALID CHANNEL_ID");
 
-  const subscribers = await Subscription.aggregate([
-    {
-      $match: {
-        channel: toObjectId(channelId),
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "subscriber",
-        foreignField: "_id",
-        as: "subscriberInfo",
-        pipeline: [
-          {
-            $project: {
-              _id: 1,
-              fullname: 1,
-              avatar: 1,
-            },
-          },
-        ],
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "channel",
-        foreignField: "_id",
-        as: "channelInfo",
-        pipeline: [
-          {
-            $project: {
-              _id: 1,
-              fullname: 1,
-              avatar: 1,
-            },
-          },
-        ],
-      },
-    },
-    {
-      $addFields: {
-        subscriberInfo: {
-          $first: "$subscriberInfo",
-        },
-        channelInfo: {
-          $arrayElemAt: ["$channelInfo", 0],
-        },
-      },
-    },
-  ]);
-  if (!subscribers) throw new ApiError(404, "NO SUBSCRIBERS FOUND");
+  const subscribers = await Subscription.find({ channel: channelId })
+    .populate({
+      path: "subscriber",
+      select: "fullname avatar username",
+    })
+    .select("subscriber channel createdAt");
 
   return res
     .status(200)
@@ -131,7 +85,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
   }
 
   const channels = await Subscription.find({ subscriber: subscriberId })
-    .populate("channel", "_id fullname avatar")
+    .populate("channel", "_id fullname avatar username")
     .exec();
   if (!channels) throw new ApiError(404, "NO CHANNELS FOUND");
 

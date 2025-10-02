@@ -1,62 +1,33 @@
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import useFetchUserSubscribers from "../hooks/data-fetching/useFetchUserSubscribers";
 import useAuth from "../hooks/useAuth";
-import convertISOIntoLocalTime from "../utilities/convertISOIntoLocalTime";
+import SubscriberCard from "../components/subscribers/SubscriberCard";
+import ContentNotAvailable from "../components/others/ContentNotAvailable";
+import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 
 const Subscribers = () => {
   const { user } = useAuth();
   const { data, isLoading, isError } = useFetchUserSubscribers(
     user?.user?._id || ""
   );
-  if (isLoading) return <div>...Loading Subscribers</div>;
-  if (!data) return <div>No Subscribers</div>;
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (!data) return <ContentNotAvailable text="No Subscribers" />;
   if (isError) return <div>...Encountered Error</div>;
 
-  const renderSubscriberList = data.subscribers.map((sub) => (
-    <Box
-      key={sub._id}
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        p: 2,
-        mb: 2,
-        borderRadius: 2,
-        boxShadow: 1,
-        backgroundColor: "background.paper",
-      }}
-    >
-      <Box
-        component="img"
-        src={sub.subscriberInfo.avatar}
-        alt="user-avatar"
-        sx={{
-          height: 50,
-          width: 50,
-          borderRadius: "50%",
-          marginRight: 2,
-        }}
+  const renderSubscriberList = data.subscribers.map((sub) => {
+    return (
+      <SubscriberCard
+        key={sub._id}
+        subscriber={sub.subscriber._id}
+        avatar={sub.subscriber.avatar}
+        fullname={sub.subscriber.fullname || ""}
+        username={sub.subscriber.username || ""}
+        updatedAt={sub.createdAt}
       />
-      <Box>
-        <Typography>
-          {sub.subscriberInfo.fullname ?? "Unknown"}
-          {sub.subscriberInfo.username && (
-            <Typography
-              component="span"
-              variant="caption"
-              color="text.secondary"
-            >
-              &nbsp;@{sub.subscriberInfo.username}
-            </Typography>
-          )}
-        </Typography>
-        <Typography variant="caption">
-          {convertISOIntoLocalTime(sub.createdAt).toLocaleString()}
-        </Typography>
-      </Box>
-    </Box>
-  ));
+    );
+  });
 
   return (
     <Box m={1}>
@@ -66,7 +37,15 @@ const Subscribers = () => {
           <PeopleAltOutlinedIcon sx={{ fontSize: 28, color: "primary.main" }} />
         }
       />
-      <Box width="100%">{renderSubscriberList}</Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+        }}
+      >
+        {renderSubscriberList}
+      </Box>
     </Box>
   );
 };

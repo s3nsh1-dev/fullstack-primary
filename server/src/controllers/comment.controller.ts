@@ -176,7 +176,7 @@ const deleteComment = asyncHandler(async (req, res) => {
   const nestedComments = await Comment.find({ comment: comment._id }).select(
     "_id content comment owner"
   );
-  if (nestedComments) {
+  if (nestedComments.length > 0) {
     for (let com of nestedComments) {
       const comID = com._id;
       await Like.findOneAndDelete({ comment: comID });

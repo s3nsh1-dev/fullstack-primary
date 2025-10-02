@@ -1,7 +1,6 @@
 import type { SubscriberType } from "../../constants/dataTypes";
-import { Box, Typography, Card, CardActionArea } from "@mui/material";
-import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
-import { Link } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
+import SubscriberCard from "../subscribers/SubscriberCard";
 
 const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
   if (!subscribed || subscribed.length === 0) {
@@ -10,31 +9,14 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
 
   const renderSubscriberList = subscribed.map((sub) => {
     return (
-      <Card
+      <SubscriberCard
         key={sub._id}
-        component={Link}
-        to={`/channels/${sub.subscriber_id}/home`}
-        sx={{ textDecoration: "none" }}
-      >
-        <CardActionArea sx={style1}>
-          <Box component="img" src={sub.avatar} alt="user-avatar" sx={style2} />
-          <Box>
-            <Typography>
-              {sub.fullname}
-              <Typography
-                component="span"
-                variant="caption"
-                color="text.secondary"
-              >
-                &nbsp;@{sub.username}
-              </Typography>
-            </Typography>
-            <Typography variant="caption">
-              {convertISOIntoLocalTime(sub.subscribedAt)}
-            </Typography>
-          </Box>
-        </CardActionArea>
-      </Card>
+        subscriber={sub._id}
+        fullname={sub.fullname}
+        username={sub.username}
+        avatar={sub.avatar}
+        updatedAt={sub.subscribedAt}
+      />
     );
   });
 
@@ -52,19 +34,3 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
 };
 
 export default ShowSubscribed;
-
-const style1 = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "start",
-  p: 2, // padding inside the card
-  borderRadius: 2, // rounded corners
-  boxShadow: 1, // subtle shadow
-  backgroundColor: "background.paper", // card background
-};
-const style2 = {
-  height: 50,
-  width: 50,
-  borderRadius: "50%",
-  marginRight: 2,
-};
