@@ -40,55 +40,6 @@ export type PlaylistType = {
   createdAt: string; // ISO date string
 };
 
-export type LikedType = VideoLike | CommentLike | TweetLike;
-
-export interface BaseLike {
-  _id: string;
-  likedBy: string;
-  updatedAt: string; // ISO date string
-}
-
-// ================= VIDEO LIKE =================
-export interface VideoLike extends BaseLike {
-  video: {
-    _id: string;
-    owner: MinimalUserType;
-    videoFile: string;
-    thumbnail: string;
-    title: string;
-    description: string;
-    duration: number;
-    views: number;
-  };
-  comment?: never;
-  tweet?: never;
-}
-
-export interface CommentLike extends BaseLike {
-  comment: {
-    _id: string;
-    content: string;
-    video: {
-      _id: string;
-      owner: MinimalUserType;
-      thumbnail: string;
-      title: string;
-      duration: number;
-    };
-    owner: MinimalUserType;
-  };
-  video?: never;
-  tweet?: never;
-}
-export interface TweetLike extends BaseLike {
-  tweet: {
-    _id: string;
-    content: string;
-    owner: MinimalUserType;
-  };
-  video?: never;
-  comment?: never;
-}
 export interface MinimalUserType {
   _id: string;
   fullname?: string;
@@ -140,3 +91,53 @@ export type SubscriberType = {
   username: string;
   subscribedAt: string; // ISO date string
 };
+
+export type LikedType = VideoLike | CommentLike | TweetLike;
+
+export interface BaseLike {
+  _id: string;
+  likedBy: string;
+  updatedAt: string; // ISO date string
+}
+
+// ================= VIDEO LIKE =================
+export interface VideoLike extends BaseLike {
+  video: {
+    _id: string;
+    owner: MinimalUserType;
+    videoFile: string;
+    thumbnail: string;
+    title: string;
+    description: string;
+    duration: number;
+    views: number;
+  };
+  comment?: never;
+  tweet?: never;
+}
+
+export interface CommentLike extends BaseLike {
+  comment: {
+    _id: string;
+    content: string;
+    video: {
+      _id: string;
+      owner: MinimalUserType;
+      thumbnail: string;
+      title: string;
+      duration: number;
+    };
+    owner: MinimalUserType;
+  };
+  video?: never;
+  tweet?: never;
+}
+export interface TweetLike extends BaseLike {
+  tweet: {
+    _id: string;
+    content: string;
+    owner: MinimalUserType;
+  };
+  video?: never;
+  comment?: never;
+}

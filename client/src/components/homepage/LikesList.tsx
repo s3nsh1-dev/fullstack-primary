@@ -39,7 +39,12 @@ export default function LikesList({ data }: { data: LikedType[] }) {
           return (
             <Box key={item._id} p={2} border="1px solid #ddd" borderRadius={2}>
               <Typography variant="h6">💬 Comment</Typography>
-              <Typography>{item.comment.content}</Typography>
+              <Typography>
+                <Avatar src={item.comment.owner.avatar} sizes="small" />
+                <Typography component={"span"}>
+                  {item.comment.content}
+                </Typography>
+              </Typography>
 
               {/* Comment's video */}
               <Box mt={1}>
