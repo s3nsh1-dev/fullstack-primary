@@ -45,8 +45,6 @@ const getUserTweets = asyncHandler(async (req, res) => {
 const updateTweet = asyncHandler(async (req, res) => {
   //TODO: update tweet
 
-  console.log("UPDATE TWEET is getting hit");
-
   const { content } = req.body;
   const { tweetId } = req.params;
   if (!isValidObjectId(tweetId)) throw new ApiError(400, "INVALID TWEET_ID");
@@ -65,7 +63,6 @@ const updateTweet = asyncHandler(async (req, res) => {
     },
   ]);
 
-  console.log(updatedTweet);
   if (!updatedTweet) throw new ApiError(404, "TWEET NOT FOUND");
 
   return res
@@ -94,4 +91,22 @@ const deleteTweet = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { tweet }, "TWEET DELETED SUCCESSFULLY"));
 });
 
-export { createTweet, getUserTweets, updateTweet, deleteTweet };
+const fetchTweet = asyncHandler(async (req, res) => {
+  //TODO: get tweet
+
+  const { tweetId } = req.params;
+  if (!isValidObjectId(tweetId)) throw new ApiError(400, "INVALID TWEET_ID");
+
+  const tweet = await Tweet.findById(tweetId).populate({
+    path: "owner",
+    select: "username fullname avatar email coverImage",
+  });
+  if (!tweet) {
+    throw new ApiError(404, "TWEET NOT FOUND");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { tweet }, "TWEET RETRIEVED SUCCESSFULLY"));
+});
+
+export { createTweet, getUserTweets, updateTweet, deleteTweet, fetchTweet };

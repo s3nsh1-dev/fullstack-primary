@@ -3,7 +3,7 @@
 import { Types } from "mongoose";
 
 export const isOwner = (
-  owner: Types.ObjectId,
+  owner: Types.ObjectId | string,
   userId: string | Types.ObjectId
 ) => {
   try {

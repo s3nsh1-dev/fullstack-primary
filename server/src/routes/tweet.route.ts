@@ -4,6 +4,7 @@ import {
   deleteTweet,
   getUserTweets,
   updateTweet,
+  fetchTweet,
 } from "../controllers/tweet.controller";
 import verifyJWT from "../middleware/auth.middleware";
 
@@ -12,6 +13,10 @@ tweetRouter.use(verifyJWT); // Apply verifyJWT middleware to all routes in this 
 
 tweetRouter.route("/").post(createTweet);
 tweetRouter.route("/user/:userId").get(getUserTweets);
-tweetRouter.route("/:tweetId").patch(updateTweet).delete(deleteTweet);
+tweetRouter
+  .route("/:tweetId")
+  .patch(updateTweet)
+  .delete(deleteTweet)
+  .get(fetchTweet);
 
 export default tweetRouter;

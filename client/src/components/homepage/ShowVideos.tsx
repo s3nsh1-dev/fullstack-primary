@@ -7,7 +7,7 @@ import useMode from "../../hooks/useMode";
 const ShowVideos = ({ videos }: { videos: VideoType[] }) => {
   const { mode } = useMode();
   if (!videos || videos.length === 0) {
-    return <Typography color="textSecondary">No videos to show.</Typography>;
+    return <Typography color="textSecondary">No Videos</Typography>;
   }
 
   return (

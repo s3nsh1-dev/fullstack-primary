@@ -66,7 +66,7 @@ export default function LikesList({ data }: { data: LikedType[] }) {
           return (
             <Box key={item._id} p={2} border="1px solid #ddd" borderRadius={2}>
               <Typography variant="h6">🐦 Tweet</Typography>
-              <Typography>"{item.tweet.content}"</Typography>
+              <Typography>"{item.tweet?.content}"</Typography>
               <Box display="flex" alignItems="center" gap={1} mt={1}>
                 <Avatar src={item.tweet.owner.avatar} />
                 <Typography>{item.tweet.owner.fullname}</Typography>

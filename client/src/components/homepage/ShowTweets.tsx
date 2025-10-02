@@ -1,9 +1,13 @@
 import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import IndividualTweet from "../Tweets/IndividualTweet";
 
-const ShowTweets: React.FC<ShowTweetsProps> = ({ data, interaction }) => {
-  const renderTweets = data.map((tweet) => (
+const ShowTweets: React.FC<ShowTweetsProps> = ({ tweets, interaction }) => {
+  if (!tweets || tweets.length === 0) {
+    return <Typography color="textSecondary">No Tweets</Typography>;
+  }
+
+  const renderTweets = tweets.map((tweet) => (
     <IndividualTweet key={tweet._id} tweet={tweet} interaction={interaction} />
   ));
 
@@ -13,6 +17,6 @@ const ShowTweets: React.FC<ShowTweetsProps> = ({ data, interaction }) => {
 export default ShowTweets;
 
 type ShowTweetsProps = {
-  data: TweetType[];
+  tweets: TweetType[];
   interaction: boolean;
 };

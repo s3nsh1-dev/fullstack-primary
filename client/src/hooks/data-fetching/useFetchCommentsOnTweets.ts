@@ -14,7 +14,8 @@ const useFetchCommentsOnTweets = (tweetId: string) => {
       const data: ApiResponse = await response.json();
       return data.data;
     },
-    enabled: false,
+    enabled: !!tweetId,
+    staleTime: 5 * 60 * 1000,
   });
 };
 export default useFetchCommentsOnTweets;

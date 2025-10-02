@@ -5,7 +5,11 @@ import RepliesProfileActions from "./RepliesProfileActions";
 import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
 import useAuth from "../../hooks/useAuth";
 
-const RepliesCard: React.FC<RepliesCardProps> = ({ reply }) => {
+const RepliesCard: React.FC<RepliesCardProps> = ({
+  reply,
+  tweetOwner,
+  commentId,
+}) => {
   const { user } = useAuth();
   const { data, isLoading, isError } = useCheckLikeOnComments(reply._id);
   if (isLoading)
@@ -32,9 +36,11 @@ const RepliesCard: React.FC<RepliesCardProps> = ({ reply }) => {
         createdAt={reply.createdAt}
       />
       <RepliesProfileActions
-        ID={reply._id}
-        alterReply={user?.user._id === reply.owner._id}
+        replyId={reply._id}
+        replyOwner={user?.user._id === reply.owner._id}
         likeStatus={data.data}
+        tweetOwner={tweetOwner}
+        commentId={commentId}
       />
     </Card>
   );
@@ -55,4 +61,6 @@ type RepliesCardProps = {
     createdAt: string;
     updatedAt: string;
   };
+  tweetOwner: boolean;
+  commentId: string;
 };

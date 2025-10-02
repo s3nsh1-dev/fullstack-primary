@@ -7,7 +7,11 @@ import type { TweetCommentType } from "../../hooks/data-fetching/useFetchComment
 import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
 import useAuth from "../../hooks/useAuth";
 
-const CommenterCard: React.FC<CommenterCardProps> = ({ comment }) => {
+const CommenterCard: React.FC<CommenterCardProps> = ({
+  comment,
+  tweetOwner,
+  tweetId,
+}) => {
   const { mode } = useMode();
   const { user } = useAuth();
   const styleMode2 = {
@@ -36,10 +40,12 @@ const CommenterCard: React.FC<CommenterCardProps> = ({ comment }) => {
         createdAt={comment.createdAt}
       />
       <CommenterProfileActions
-        alterComment={user?.user._id === comment.owner._id}
-        ID={comment._id}
+        commentOwner={user?.user._id === comment.owner._id}
+        tweetOwner={tweetOwner}
+        commentId={comment._id}
         disabled={false}
         likeStatus={data.data}
+        tweetId={tweetId}
       />
     </Card>
   );
@@ -49,4 +55,6 @@ export default CommenterCard;
 
 type CommenterCardProps = {
   comment: TweetCommentType;
+  tweetOwner: boolean;
+  tweetId: string;
 };

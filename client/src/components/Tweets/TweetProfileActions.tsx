@@ -23,7 +23,7 @@ import FormModal from "../others/FormModal";
 import UpdateTweetContentForm from "./UpdateTweetContentForm";
 
 const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
-  alterTweet,
+  tweetOwner,
   tweetId,
   handleShowComments,
   disabled,
@@ -36,11 +36,8 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const [openModal, setOpenModal] = React.useState(false);
   const toggleTweetLike = useMutateLikeUserTweet();
-  const { data, isLoading, isError, refetch } = useFetchCommentsOnTweets(
-    tweetId
-    // showComments
-  );
-  console.log(tweetId);
+  const { data, isLoading, isError, refetch } =
+    useFetchCommentsOnTweets(tweetId);
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (isError) return <div>....Encountered Error</div>;
 
@@ -49,7 +46,6 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   };
 
   const handleCommentClick = () => {
-    // Invalidate previous comments call for this tweet
     handleShowComments();
     refetch();
   };
@@ -64,11 +60,13 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
       },
     });
   };
-  const handleDeleteClick = async () => {
-    deleteTweetMutate.mutate(tweetId);
-    // queryClient.invalidateQueries({ queryKey: ["userTweets", user?.user._id] });
-    await queryClient.refetchQueries({
-      queryKey: ["userTweets", user?.user._id],
+  const handleDeleteClick = () => {
+    deleteTweetMutate.mutate(tweetId, {
+      onSuccess: () => {
+        queryClient.refetchQueries({
+          queryKey: ["userTweets", user?.user._id],
+        });
+      },
     });
   };
   return (
@@ -95,7 +93,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
             </Typography>
           </IconButton>
         )}
-        {alterTweet && (
+        {tweetOwner && (
           <>
             <IconButton sx={style8} onClick={handleToggleModal}>
               <UpdateIcon fontSize="small" color="success" />
@@ -123,7 +121,12 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
               ) : (
                 <>
                   {data?.comments.docs.map((comment) => (
-                    <CommenterCard key={comment._id} comment={comment} />
+                    <CommenterCard
+                      key={comment._id}
+                      comment={comment}
+                      tweetOwner={tweetOwner}
+                      tweetId={tweetId}
+                    />
                   ))}
                 </>
               )}
@@ -146,7 +149,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
 export default TweetProfileActions;
 
 type TweetProfileActionsProps = {
-  alterTweet: boolean;
+  tweetOwner: boolean;
   tweetId: string;
   handleShowComments: () => void;
   disabled: boolean;

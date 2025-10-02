@@ -9,17 +9,27 @@ import {
 } from "../../constants/tweets.constants";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import UpdateIcon from "@mui/icons-material/Update";
+import FormModal from "../others/FormModal";
+import UpdateReplyForm from "./UpdateReplyForm";
+import useDeleteComment from "../../hooks/data-fetching/useDeleteComment";
+import { useQueryClient } from "@tanstack/react-query";
 
 const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
-  ID,
+  replyId,
   likeStatus,
-  alterReply,
+  replyOwner,
+  tweetOwner,
+  commentId,
 }) => {
   const [like, setLike] = React.useState<boolean>(likeStatus);
+  const [openModal, setOpenModal] = React.useState(false);
   const toggleTweetLike = useToggleLikeOnComment();
+  const queryClient = useQueryClient();
+  const deleteCommentMutate = useDeleteComment();
 
   const handleCommentLike = () => {
-    toggleTweetLike.mutate(ID, {
+    toggleTweetLike.mutate(replyId, {
       onSuccess: (data) => {
         if ("comment" in data) {
           setLike(true);
@@ -29,6 +39,21 @@ const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
       },
     });
   };
+
+  const handleToggleModal = () => {
+    setOpenModal(!openModal);
+  };
+
+  const handleDeleteReply = () => {
+    deleteCommentMutate.mutate(replyId, {
+      onSuccess: () => {
+        queryClient.refetchQueries({
+          queryKey: ["replyOnComments", commentId],
+        });
+      },
+    });
+  };
+
   return (
     <>
       <CardActions sx={style7}>
@@ -45,9 +70,19 @@ const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
             &nbsp;Like
           </Typography>
         </IconButton>
-        {alterReply && (
+        {replyOwner && (
           <>
-            <IconButton sx={style8}>
+            <IconButton sx={style8} onClick={handleToggleModal}>
+              <UpdateIcon fontSize="small" color="success" />
+              <Typography variant="caption" color="success" sx={style9}>
+                &nbsp;update
+              </Typography>
+            </IconButton>
+          </>
+        )}
+        {(replyOwner || tweetOwner) && (
+          <>
+            <IconButton sx={style8} onClick={handleDeleteReply}>
               <DeleteOutlineIcon fontSize="small" color="error" />
               <Typography variant="caption" color="error" sx={style9}>
                 &nbsp;delete
@@ -56,6 +91,15 @@ const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
           </>
         )}
       </CardActions>
+      {openModal && (
+        <FormModal open={openModal} toggleModal={() => setOpenModal(false)}>
+          <UpdateReplyForm
+            parentCommentId={commentId}
+            commentId={replyId}
+            closeModal={() => setOpenModal(false)}
+          />
+        </FormModal>
+      )}
     </>
   );
 };
@@ -63,7 +107,9 @@ const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
 export default RepliesProfileActions;
 
 type RepliesProfileActionsProps = {
-  alterReply: boolean;
-  ID: string;
+  replyOwner: boolean;
+  replyId: string;
   likeStatus: boolean;
+  tweetOwner: boolean;
+  commentId: string;
 };

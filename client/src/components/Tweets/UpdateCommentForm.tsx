@@ -1,39 +1,35 @@
 import React from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
-import useUpdateTweet from "../../hooks/data-fetching/useUpdateTweet";
 import { useQueryClient } from "@tanstack/react-query";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import useAuth from "../../hooks/useAuth";
+import CommentIcon from "@mui/icons-material/Comment";
+import useUpdateComment from "../../hooks/data-fetching/useUpdateComment";
 
-const UpdateTweetContentForm = ({
-  tweetId,
+const UpdateCommentForm = ({
+  commentId,
   closeModal,
+  tweetId,
 }: {
   tweetId: string;
+  commentId: string;
   closeModal: () => void;
 }) => {
-  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [content, setContent] = React.useState<string>("");
-  const updateTweetMutate = useUpdateTweet();
+  const updateCommentMutate = useUpdateComment();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (content.length <= 3) {
       return alert("Content should be more than 3 characters");
     }
-    updateTweetMutate.mutate(
-      { tweetId, content },
+    updateCommentMutate.mutate(
+      { commentId, content },
       {
         onSuccess: () => {
-          // After successful
           queryClient.invalidateQueries({
-            queryKey: ["userTweets", user?.user._id],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["singleTweet", tweetId],
+            queryKey: ["commentOnTweet", tweetId],
           });
         },
         onSettled: () => {
@@ -41,7 +37,7 @@ const UpdateTweetContentForm = ({
           closeModal();
         },
         onError: (err) => {
-          alert(`Failed to update tweet: ${err}`);
+          alert(`Failed to update comment. Please try again ${err}`);
         },
       }
     );
@@ -78,7 +74,7 @@ const UpdateTweetContentForm = ({
           gap: 1,
         }}
       >
-        Update Tweet <TwitterIcon color="primary" />
+        Update Comment <CommentIcon color="primary" />
       </Typography>
 
       <TextField
@@ -117,4 +113,4 @@ const UpdateTweetContentForm = ({
   );
 };
 
-export default UpdateTweetContentForm;
+export default UpdateCommentForm;

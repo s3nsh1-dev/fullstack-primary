@@ -50,7 +50,7 @@ export default async function serverMain() {
         console.log("MONGODB CONNECTION ERROR: ", error);
       })
       .finally(() => {
-        console.log("🚀 < PERMANENTLY RUNNING CODE >");
+        // console.log("🚀 < PERMANENTLY RUNNING CODE >");
       });
   } catch (error) {
     console.log("❌  SERVER ERROR: ", error);
