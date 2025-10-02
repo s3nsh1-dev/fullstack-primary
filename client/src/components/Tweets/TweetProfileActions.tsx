@@ -63,6 +63,9 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   const handleDeleteClick = () => {
     deleteTweetMutate.mutate(tweetId, {
       onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["singleTweet", tweetId],
+        });
         queryClient.refetchQueries({
           queryKey: ["userTweets", user?.user._id],
         });

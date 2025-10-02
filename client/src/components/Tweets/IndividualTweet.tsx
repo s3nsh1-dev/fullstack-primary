@@ -5,7 +5,7 @@ import { Box, Card } from "@mui/material";
 import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
 import { style2 } from "../../constants/tweets.constants";
 import useCheckLikeOnTweet from "../../hooks/data-fetching/useCheckLikeOnTweet";
-import CircularProgress from "@mui/material/CircularProgress";
+import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useAuth from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 
@@ -19,11 +19,11 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
   if (isLoading)
     return (
       <div>
-        <CircularProgress />
+        <CircularProgressCenter />
       </div>
     );
   if (isError) return <div>....Encountered Error</div>;
-  if (!data) return <CircularProgress />;
+  if (!data) return <CircularProgressCenter />;
 
   const handleShowComments = () => {
     setShowComments(!showComments);
