@@ -10,12 +10,7 @@ const OpenSingleTweetPage = () => {
   const { data, isLoading } = useFetchSingleTweet(
     tweetId || "INVALID_TWEET-ID"
   );
-  if (isLoading)
-    return (
-      <div>
-        <CircularProgressCenter size={50} />
-      </div>
-    );
+  if (isLoading) return <CircularProgressCenter size={50} />;
   if (!data) return <ContentNotAvailable text="Tweet Not Available" />;
 
   return (

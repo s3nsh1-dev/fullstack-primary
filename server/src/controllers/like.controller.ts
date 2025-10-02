@@ -612,28 +612,29 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
     .select("video tweet comment likedBy updatedAt")
     .populate({
       path: "video",
-      select: "title description thumbnail videoFile owner views duration",
-      populate: { path: "owner", select: "fullname avatar" },
+      select:
+        "title description thumbnail videoFile owner views duration updatedAt",
+      populate: { path: "owner", select: "fullname username avatar" },
     })
     .populate({
       path: "tweet",
-      select: "content owner",
-      populate: { path: "owner", select: "fullname avatar" },
+      select: "content owner updatedAt",
+      populate: { path: "owner", select: "fullname username avatar" },
     })
     .populate({
       path: "comment",
-      select: "content video tweet owner",
+      select: "content video tweet owner updatedAt",
       populate: [
-        { path: "owner", select: "fullname avatar" },
+        { path: "owner", select: "fullname username avatar" },
         {
           path: "video",
-          select: "title thumbnail duration owner",
-          populate: { path: "owner", select: "fullname avatar" },
+          select: "title thumbnail duration owner updatedAt",
+          populate: { path: "owner", select: "fullname username avatar" },
         },
         {
           path: "tweet",
-          select: "content owner",
-          populate: { path: "owner", select: "fullname avatar" },
+          select: "content owner updatedAt",
+          populate: { path: "owner", select: "fullname username avatar" },
         },
       ],
     });

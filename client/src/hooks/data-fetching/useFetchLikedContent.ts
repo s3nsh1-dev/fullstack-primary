@@ -14,6 +14,7 @@ const useFetchLikedContent = (user_ID: string) => {
       );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
       const data: LikedContentResponseType = await response.json();
+      // console.log(data);
       const result = data.data.likes;
       return result;
     },

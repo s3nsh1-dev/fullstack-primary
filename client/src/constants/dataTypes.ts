@@ -127,14 +127,11 @@ export interface VideoPaginationType {
 
 export interface UserSubscriberListType {
   _id: string;
-  subscriber: string; // userId
+  subscriber: MinimalUserType; // userId
   channel: string; // channelId
   createdAt: string; // ISO date
-  updatedAt: string; // ISO date
-  __v: number;
-  subscriberInfo: MinimalUserType;
-  channelInfo: MinimalUserType;
 }
+
 export type SubscriberType = {
   _id: string;
   subscriber_id: string;
