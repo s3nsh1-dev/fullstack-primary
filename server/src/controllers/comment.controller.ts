@@ -7,6 +7,7 @@ import { toObjectId } from "../utils/convertToObjectId";
 import { Tweet } from "../models/tweet.model";
 import { isValidObjectId } from "mongoose";
 import { Video } from "../models/video.model";
+import { Like } from "../models/like.model";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
@@ -171,18 +172,24 @@ const deleteComment = asyncHandler(async (req, res) => {
     );
   }
 
-  const deletedComment = await Comment.deleteOne({ _id: comment_ID });
-  if (!deletedComment) throw new ApiError(404, "COMMENT NOT FOUND");
+  // search for nested comments
+  const nestedComments = await Comment.find({ comment: comment._id }).select(
+    "_id content comment owner"
+  );
+  if (nestedComments) {
+    for (let com of nestedComments) {
+      const comID = com._id;
+      await Like.findOneAndDelete({ comment: comID });
+      await com.deleteOne({ _id: comID });
+    }
+  }
+
+  const searchLike = await Like.findOneAndDelete({ comment: comment._id });
+  const result = await comment.deleteOne({ _id: comment_ID });
 
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { result: deletedComment },
-        "Comment deleted successfully"
-      )
-    );
+    .json(new ApiResponse(200, { result }, "Comment deleted successfully"));
 });
 
 const getTweetComments = asyncHandler(async (req, res) => {
