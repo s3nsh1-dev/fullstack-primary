@@ -14,7 +14,6 @@ const useFetchLikedContent = (user_ID: string) => {
       );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
       const data: LikedContentResponseType = await response.json();
-      // console.log(data);
       const result = data.data.likes;
       return result;
     },
@@ -24,3 +23,27 @@ const useFetchLikedContent = (user_ID: string) => {
 };
 
 export default useFetchLikedContent;
+
+interface User {
+  _id: string;
+  username: string;
+  fullname: string;
+  avatar: string;
+}
+
+interface Tweet {
+  _id: string;
+  content: string;
+  owner: User;
+  updatedAt: string;
+}
+
+interface LikedTweet {
+  _id: string;
+  tweet: Tweet;
+  likedBy: string;
+  updatedAt: string;
+}
+
+// Usage
+export type ApiResponse = LikedTweet;
