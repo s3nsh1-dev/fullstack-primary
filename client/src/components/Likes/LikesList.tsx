@@ -5,8 +5,16 @@ import type {
   Comment,
   Tweet,
 } from "../../hooks/data-fetching/useFetchLikedContent";
-import { Card, CardActionArea } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  Typography,
+  CardContent,
+  Stack,
+} from "@mui/material";
 import ContentProfileHeader from "../Tweets/ContentProfileHeader";
+import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 
 const LikesList: React.FC<LikesListProps> = ({ data }) => {
   const renderAll = data.map((item) => {
@@ -14,15 +22,25 @@ const LikesList: React.FC<LikesListProps> = ({ data }) => {
       console.log("tweet", item.tweet);
       return (
         <Card key={item._id}>
-          <CardActionArea>
-            <ContentProfileHeader
-              style2={{}}
-              imgSrc={item.tweet.owner.avatar}
-              fullname={item.tweet.owner.fullname}
-              username={item.tweet.owner.username}
-              createdAt={item.tweet.updatedAt}
-              content={item.tweet.content}
-            />
+          <CardActionArea sx={style1}>
+            <Stack direction="column" spacing={1} alignItems="start">
+              <ContentProfileHeader
+                style2={{}}
+                imgSrc={item.tweet.owner.avatar}
+                fullname={item.tweet.owner.fullname}
+                username={item.tweet.owner.username}
+                createdAt={item.tweet.updatedAt}
+              />
+              <CardContent sx={style5}>
+                <Typography variant="body1" color="textPrimary" sx={style6}>
+                  {item.tweet.content}
+                </Typography>
+              </CardContent>
+            </Stack>
+            <Box>
+              <Typography> LikedBy --- me</Typography>
+              <Typography>{convertISOIntoLocalTime(item.updatedAt)}</Typography>
+            </Box>
           </CardActionArea>
         </Card>
       );
@@ -37,7 +55,11 @@ const LikesList: React.FC<LikesListProps> = ({ data }) => {
     }
   });
 
-  return <div>{renderAll}</div>;
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, m: 1 }}>
+      {renderAll}
+    </Box>
+  );
 };
 
 export default LikesList;
@@ -59,3 +81,13 @@ const isLikeComment = (
 ): item is LikedItem & { comment: Comment } => {
   return item.comment !== undefined;
 };
+
+const style1 = { padding: "10px" };
+
+const style5 = {
+  p: 0, // shorthand for padding: 0
+  "&:last-child": {
+    pb: 0, // remove bottom padding
+  },
+};
+const style6 = { mt: "5px" };

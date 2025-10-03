@@ -1,9 +1,21 @@
 import React from "react";
 import ContentProfileHeader from "./ContentProfileHeader";
 import TweetProfileActions from "./TweetProfileActions";
-import { Box, Card, CardActionArea } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  Stack,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
-import { style1, style2 } from "../../constants/tweets.constants";
+import {
+  style1,
+  style2,
+  style6,
+  style5,
+} from "../../constants/tweets.constants";
 import useCheckLikeOnTweet from "../../hooks/data-fetching/useCheckLikeOnTweet";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useAuth from "../../hooks/useAuth";
@@ -37,14 +49,20 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
         sx={{ textDecoration: "none" }}
       >
         <CardActionArea sx={style1}>
-          <ContentProfileHeader
-            imgSrc={tweet.owner.avatar || ""}
-            fullname={tweet.owner.fullname || "fake-fullname"}
-            style2={style2}
-            content={tweet.content}
-            username={tweet.owner.username || "fake-username"}
-            createdAt={tweet.createdAt}
-          />
+          <Stack direction="column" spacing={1} alignItems="start">
+            <ContentProfileHeader
+              imgSrc={tweet.owner.avatar || ""}
+              fullname={tweet.owner.fullname || "fake-fullname"}
+              style2={style2}
+              username={tweet.owner.username || "fake-username"}
+              createdAt={tweet.createdAt}
+            />
+            <CardContent sx={style5}>
+              <Typography variant="body1" color="textPrimary" sx={style6}>
+                {tweet.content}
+              </Typography>
+            </CardContent>
+          </Stack>
         </CardActionArea>
       </Box>
       {interaction && (
