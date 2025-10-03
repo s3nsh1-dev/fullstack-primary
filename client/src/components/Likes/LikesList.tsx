@@ -23,7 +23,7 @@ const LikesList: React.FC<LikesListProps> = ({ data }) => {
   const { user } = useAuth();
   const renderAll = data.map((item) => {
     if (isLikeTweet(item)) {
-      console.log("tweet", item.tweet);
+      // console.log("tweet", item.tweet);
       return (
         <Card key={item._id} sx={style1} elevation={4}>
           <Box
@@ -72,11 +72,11 @@ const LikesList: React.FC<LikesListProps> = ({ data }) => {
       );
     }
     if (isLikeVideo(item)) {
-      console.log("video", item.video);
+      // console.log("video", item.video);
       return <Card key={item._id}></Card>;
     }
     if (isLikeComment(item)) {
-      console.log("comment", item.comment);
+      // console.log("comment", item.comment);
       return <Card key={item._id}></Card>;
     }
   });
