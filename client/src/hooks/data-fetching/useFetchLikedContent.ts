@@ -32,7 +32,7 @@ interface User {
 }
 
 // Tweet type
-interface Tweet {
+export interface Tweet {
   _id: string;
   content: string;
   owner: User;
@@ -40,7 +40,7 @@ interface Tweet {
 }
 
 // Comment type
-interface Comment {
+export interface Comment {
   _id: string;
   content: string;
   tweet?: string; // Reference to tweet (if comment is on a tweet)
@@ -50,7 +50,7 @@ interface Comment {
 }
 
 // Video type
-interface Video {
+export interface Video {
   _id: string;
   owner: User;
   videoFile: string;
@@ -61,7 +61,7 @@ interface Video {
 }
 
 // Like item type (each item in the liked array)
-interface LikedItem {
+export interface LikedItem {
   _id: string;
   tweet?: Tweet; // Present if user liked a tweet
   comment?: Comment; // Present if user liked a comment
