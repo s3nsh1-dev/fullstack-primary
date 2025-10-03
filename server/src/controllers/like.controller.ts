@@ -468,7 +468,7 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
     })
     .populate({
       path: "comment",
-      select: "_id owner updatedAt content tweet comment",
+      select: "_id owner updatedAt content tweet comment video",
       populate: { path: "owner", select: "_id fullname username avatar" },
     })
     .populate({

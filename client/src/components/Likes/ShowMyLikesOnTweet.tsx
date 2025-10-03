@@ -1,8 +1,9 @@
 import React from "react";
 import type { LikedItem } from "../../hooks/data-fetching/useFetchLikedContent";
-import { Box, Card, Typography, CardContent, Divider } from "@mui/material";
+import { Box, Card, Typography, CardContent } from "@mui/material";
 import ContentProfileHeader from "../Tweets/ContentProfileHeader";
 import ShowLikeOwner from "./ShowLikeOwner";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
   return (
@@ -11,6 +12,7 @@ const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
         sx={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
         <ContentProfileHeader
@@ -20,10 +22,10 @@ const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
           username={item.tweet?.owner.username || "content-username"}
           createdAt={item.tweet?.updatedAt || "tweet-timestamp"}
         />
-        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
         <ShowLikeOwner timestamp={item.updatedAt} />
       </Box>
       <CardContent sx={style5}>
+        <TwitterIcon color="primary" fontSize="small" sx={{ mr: 1 }} />
         <Typography variant="body1" color="textPrimary" sx={style6}>
           {item.tweet?.content}
         </Typography>
@@ -41,5 +43,7 @@ const style5 = {
   "&:last-child": {
     pb: 0, // remove bottom padding
   },
+  display: "flex",
+  alignItems: "center",
 };
-const style6 = { mt: "5px" };
+const style6 = { mt: "5px", overflow: "hidden", textOverflow: "ellipsis" };

@@ -1,6 +1,6 @@
 import { Typography, Stack, Avatar } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
-import TwitterIcon from "@mui/icons-material/Twitter";
+// import TwitterIcon from "@mui/icons-material/Twitter";
 import type React from "react";
 import { style3, style4 } from "../../constants/tweets.constants";
 
@@ -28,7 +28,7 @@ const ContentProfileHeader: React.FC<ContentProfileCardProps> = ({
           </Typography>
         </Stack>
         <Stack direction="row" spacing={1}>
-          <TwitterIcon color="primary" fontSize="small" />
+          {/* <TwitterIcon color="primary" fontSize="small" /> */}
           <Typography variant="caption" color="textSecondary" sx={style4}>
             {convertISOIntoLocalTime(createdAt)}
           </Typography>
@@ -47,5 +47,3 @@ type ContentProfileCardProps = {
   createdAt: string;
   style2: object;
 };
-
-<Stack direction="column" spacing={1} alignItems="start"></Stack>;
