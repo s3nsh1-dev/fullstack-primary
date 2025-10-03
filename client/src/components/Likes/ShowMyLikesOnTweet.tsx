@@ -1,23 +1,12 @@
 import React from "react";
 import type { LikedItem } from "../../hooks/data-fetching/useFetchLikedContent";
-import {
-  Box,
-  Card,
-  Typography,
-  CardContent,
-  Avatar,
-  Divider,
-  IconButton,
-} from "@mui/material";
+import { Box, Card, Typography, CardContent, Divider } from "@mui/material";
 import ContentProfileHeader from "../Tweets/ContentProfileHeader";
-import useAuth from "../../hooks/useAuth";
-import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ShowLikeOwner from "./ShowLikeOwner";
 
 const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
-  const { user } = useAuth();
   return (
-    <Card key={item._id} sx={style1} elevation={4}>
+    <Card sx={style1} elevation={4}>
       <Box
         sx={{
           display: "flex",
@@ -32,24 +21,7 @@ const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
           createdAt={item.tweet?.updatedAt || "tweet-timestamp"}
         />
         <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-        <Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton>
-              <ThumbUpIcon fontSize="small" color="primary" />
-            </IconButton>
-            <Typography sx={{ mr: 1 }} variant="caption" color="textSecondary">
-              by
-            </Typography>
-            <Avatar
-              src={user?.user?.avatar}
-              alt="my-avatar"
-              sx={{ width: 25, height: 25 }}
-            />
-          </Box>
-          <Typography variant="caption" color="textSecondary">
-            {convertISOIntoLocalTime(item.updatedAt)}
-          </Typography>
-        </Box>
+        <ShowLikeOwner timestamp={item.updatedAt} />
       </Box>
       <CardContent sx={style5}>
         <Typography variant="body1" color="textPrimary" sx={style6}>
