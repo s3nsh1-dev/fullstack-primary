@@ -1,6 +1,6 @@
 import useFetchLikedContent from "../hooks/data-fetching/useFetchLikedContent";
 import useAuth from "../hooks/useAuth";
-import LikesList from "../components/homepage/LikesList";
+import LikesList from "../components/Likes/LikesList";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
@@ -14,8 +14,6 @@ const LikedContent = () => {
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <ContentNotAvailable text="No Liked Content" />;
-
-  console.log(data);
 
   return (
     <div>
