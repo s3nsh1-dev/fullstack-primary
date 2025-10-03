@@ -456,37 +456,7 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
 
-  // const likedContent = await Like.find({ likedBy: userId })
-  //   .select("video tweet comment likedBy updatedAt")
-  //   .populate({
-  //     path: "video",
-  //     select:
-  //       "title description thumbnail videoFile owner views duration updatedAt",
-  //     populate: { path: "owner", select: "fullname username avatar" },
-  //   })
-  //   .populate({
-  //     path: "tweet",
-  //     select: "content owner updatedAt",
-  //     populate: { path: "owner", select: "fullname username avatar" },
-  //   })
-  //   .populate({
-  //     path: "comment",
-  //     select: "content video tweet owner updatedAt",
-  //     populate: [
-  //       { path: "owner", select: "fullname username avatar" },
-  //       {
-  //         path: "video",
-  //         select: "title thumbnail duration owner updatedAt",
-  //         populate: { path: "owner", select: "fullname username avatar" },
-  //       },
-  //       {
-  //         path: "tweet",
-  //         select: "content owner updatedAt",
-  //         populate: { path: "owner", select: "fullname username avatar" },
-  //       },
-  //     ],
-  //   });
-
+  /*
   const everyLikedTweet = await Like.aggregate([
     {
       $match: {
@@ -541,7 +511,68 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
       },
     },
   ]);
-  const everyLikeCommentOnComment = await Like.aggregate([
+
+  const everyLikedVideo = await Like.aggregate([
+    {
+      $match: {
+        likedBy: new mongoose.Types.ObjectId(userId),
+        video: { $exists: true },
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "video",
+        foreignField: "_id",
+        as: "video",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    fullname: 1,
+                    username: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              owner: 1,
+              title: 1,
+              description: 1,
+              thumbnail: 1,
+              videoFile: 1,
+              duration: 1,
+              views: 1,
+              updatedAt: 1,
+            },
+          },
+          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+        ],
+      },
+    },
+    { $unwind: { path: "$video", preserveNullAndEmptyArrays: true } },
+    {
+      $project: {
+        _id: 1,
+        video: 1,
+        likedBy: 1,
+        updatedAt: 1,
+      },
+    },
+  ]);
+
+  const everyLikeCommentOnTweet = await Like.aggregate([
     {
       $match: {
         likedBy: new mongoose.Types.ObjectId(userId),
@@ -551,13 +582,89 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
     {
       $lookup: {
         from: "comments",
-        localField: "comment",
-        foreignField: "_id",
         as: "comment",
-        pipeline: [],
+        let: { commentId: "$comment" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$_id", "$$commentId"] },
+              tweet: { $exists: true }, // This ensures we only get direct comments on tweets
+              comment: { $exists: false }, // This ensures it's NOT a reply to another comment
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    fullname: 1,
+                    username: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $lookup: {
+              from: "tweets",
+              localField: "tweet",
+              foreignField: "_id",
+              as: "tweet",
+              pipeline: [
+                {
+                  $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "owner",
+                    pipeline: [
+                      {
+                        $project: {
+                          _id: 1,
+                          fullname: 1,
+                          username: 1,
+                          avatar: 1,
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  $unwind: {
+                    path: "$owner",
+                    preserveNullAndEmptyArrays: true,
+                  },
+                },
+                {
+                  $project: {
+                    _id: 1,
+                    owner: 1,
+                    content: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                  },
+                },
+              ],
+            },
+          },
+          { $unwind: { path: "$tweet", preserveNullAndEmptyArrays: true } },
+          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+        ],
       },
     },
     { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+    {
+      $match: {
+        comment: { $ne: null, $exists: true },
+        "comment.tweet": { $exists: true }, // Ensures the comment has a tweet reference
+      },
+    },
     {
       $project: {
         _id: 1,
@@ -568,15 +675,929 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
     },
   ]);
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { result: everyLikedTweet },
-        "USER LIKED CONTENT FETCHED SUCCESSFULLY"
-      )
-    );
+  const everyLikedCommentOnVideo = await Like.aggregate([
+    {
+      $match: {
+        likedBy: new mongoose.Types.ObjectId(userId),
+        comment: { $exists: true },
+      },
+    },
+    {
+      $lookup: {
+        from: "comments",
+        as: "comment",
+        let: { commentId: "$comment" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$_id", "$$commentId"] },
+              video: { $exists: true }, // This ensures we only get direct comments on videos
+              comment: { $exists: false }, // This ensures it's NOT a reply to another comment
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    fullname: 1,
+                    username: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $lookup: {
+              from: "videos",
+              localField: "video",
+              foreignField: "_id",
+              as: "video",
+              pipeline: [
+                {
+                  $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "owner",
+                    pipeline: [
+                      {
+                        $project: {
+                          _id: 1,
+                          fullname: 1,
+                          username: 1,
+                          avatar: 1,
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  $unwind: { path: "$owner", preserveNullAndEmptyArrays: true },
+                },
+                {
+                  $project: {
+                    _id: 1,
+                    owner: 1,
+                    title: 1,
+                    description: 1,
+                    thumbnail: 1,
+                    videoFile: 1,
+                    duration: 1,
+                    views: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                  },
+                },
+              ],
+            },
+          },
+          { $unwind: { path: "$video", preserveNullAndEmptyArrays: true } },
+          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+        ],
+      },
+    },
+    { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+    {
+      $match: {
+        comment: { $ne: null, $exists: true },
+        "comment.video": { $exists: true }, // Ensures the comment has a video reference
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        comment: 1,
+        likedBy: 1,
+        updatedAt: 1,
+      },
+    },
+  ]);
+
+  const everyLikeReplyOnCommentWithTweetAsContent = await Like.aggregate([
+    {
+      $match: {
+        likedBy: new mongoose.Types.ObjectId(userId),
+        comment: { $exists: true },
+      },
+    },
+    {
+      $lookup: {
+        from: "comments",
+        as: "comment",
+        let: { commentId: "$comment" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$_id", "$$commentId"] },
+              comment: { $exists: true }, // This ensures we only get replies to comments
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    fullname: 1,
+                    username: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $lookup: {
+              from: "comments",
+              localField: "comment",
+              foreignField: "_id",
+              as: "comment",
+              pipeline: [
+                {
+                  $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "owner",
+                    pipeline: [
+                      {
+                        $project: {
+                          _id: 1,
+                          fullname: 1,
+                          username: 1,
+                          avatar: 1,
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "tweets",
+                    localField: "tweet",
+                    foreignField: "_id",
+                    as: "tweet",
+                    pipeline: [
+                      {
+                        $project: {
+                          _id: 1,
+                          owner: 1,
+                          content: 1,
+                          updatedAt: 1,
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  $unwind: {
+                    path: "$tweet",
+                    preserveNullAndEmptyArrays: true,
+                  },
+                },
+                {
+                  $unwind: {
+                    path: "$owner",
+                    preserveNullAndEmptyArrays: true,
+                  },
+                },
+              ],
+            },
+          },
+          { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+        ],
+      },
+    },
+    { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+    // Add this match stage to filter out empty comments
+    {
+      $match: {
+        comment: { $ne: null, $exists: true }, // Ensures comment exists and is not null
+        "comment.comment": { $exists: true }, // Ensures it's a reply to a comment (not a direct tweet comment)
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        comment: 1,
+        likedBy: 1,
+        updatedAt: 1,
+      },
+    },
+  ]);
+
+  const everyLikeReplyOnCommentWithVideoAsContent = await Like.aggregate([
+    {
+      $match: {
+        likedBy: new mongoose.Types.ObjectId(userId),
+        comment: { $exists: true },
+      },
+    },
+    {
+      $lookup: {
+        from: "comments",
+        as: "comment",
+        let: { commentId: "$comment" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$_id", "$$commentId"] },
+              comment: { $exists: true }, // This ensures we only get replies to comments
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    fullname: 1,
+                    username: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $lookup: {
+              from: "comments",
+              localField: "comment",
+              foreignField: "_id",
+              as: "comment",
+              pipeline: [
+                {
+                  $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "owner",
+                    pipeline: [
+                      {
+                        $project: {
+                          _id: 1,
+                          fullname: 1,
+                          username: 1,
+                          avatar: 1,
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "videos",
+                    localField: "video",
+                    foreignField: "_id",
+                    as: "video",
+                    pipeline: [
+                      {
+                        $project: {
+                          _id: 1,
+                          owner: 1,
+                          title: 1,
+                          description: 1,
+                          thumbnail: 1,
+                          videoFile: 1,
+                          duration: 1,
+                          views: 1,
+                          updatedAt: 1,
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  $unwind: { path: "$video", preserveNullAndEmptyArrays: true },
+                },
+                {
+                  $unwind: { path: "$owner", preserveNullAndEmptyArrays: true },
+                },
+              ],
+            },
+          },
+          { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+        ],
+      },
+    },
+    { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+    {
+      $match: {
+        comment: { $ne: null, $exists: true }, // Ensures comment exists and is not null
+        "comment.comment": { $exists: true }, // Ensures it's a reply to a comment (not a direct video comment)
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        comment: 1,
+        likedBy: 1,
+        updatedAt: 1,
+      },
+    },
+  ]);
+*/
+  const [
+    everyLikedTweet,
+    everyLikedVideo,
+    everyLikeCommentOnTweet,
+    everyLikedCommentOnVideo,
+    everyLikeReplyOnCommentWithTweetAsContent,
+    everyLikeReplyOnCommentWithVideoAsContent,
+  ] = await Promise.all([
+    Like.aggregate([
+      {
+        $match: {
+          likedBy: new mongoose.Types.ObjectId(userId),
+          tweet: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "tweets",
+          localField: "tweet",
+          foreignField: "_id",
+          as: "tweet",
+          pipeline: [
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 1,
+                      fullname: 1,
+                      username: 1,
+                      avatar: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+                owner: 1,
+                content: 1,
+                updatedAt: 1,
+              },
+            },
+            { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+          ],
+        },
+      },
+      { $unwind: { path: "$tweet", preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          _id: 1,
+          tweet: 1,
+          likedBy: 1,
+          updatedAt: 1,
+        },
+      },
+    ]),
+    Like.aggregate([
+      {
+        $match: {
+          likedBy: new mongoose.Types.ObjectId(userId),
+          video: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "videos",
+          localField: "video",
+          foreignField: "_id",
+          as: "video",
+          pipeline: [
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 1,
+                      fullname: 1,
+                      username: 1,
+                      avatar: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+                owner: 1,
+                title: 1,
+                description: 1,
+                thumbnail: 1,
+                videoFile: 1,
+                duration: 1,
+                views: 1,
+                updatedAt: 1,
+              },
+            },
+            { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+          ],
+        },
+      },
+      { $unwind: { path: "$video", preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          _id: 1,
+          video: 1,
+          likedBy: 1,
+          updatedAt: 1,
+        },
+      },
+    ]),
+    Like.aggregate([
+      {
+        $match: {
+          likedBy: new mongoose.Types.ObjectId(userId),
+          comment: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          as: "comment",
+          let: { commentId: "$comment" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$_id", "$$commentId"] },
+                tweet: { $exists: true }, // This ensures we only get direct comments on tweets
+                comment: { $exists: false }, // This ensures it's NOT a reply to another comment
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 1,
+                      fullname: 1,
+                      username: 1,
+                      avatar: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "tweets",
+                localField: "tweet",
+                foreignField: "_id",
+                as: "tweet",
+                pipeline: [
+                  {
+                    $lookup: {
+                      from: "users",
+                      localField: "owner",
+                      foreignField: "_id",
+                      as: "owner",
+                      pipeline: [
+                        {
+                          $project: {
+                            _id: 1,
+                            fullname: 1,
+                            username: 1,
+                            avatar: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: "$owner",
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                  {
+                    $project: {
+                      _id: 1,
+                      owner: 1,
+                      content: 1,
+                      createdAt: 1,
+                      updatedAt: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            { $unwind: { path: "$tweet", preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+          ],
+        },
+      },
+      { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+      {
+        $match: {
+          comment: { $ne: null, $exists: true },
+          "comment.tweet": { $exists: true }, // Ensures the comment has a tweet reference
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          comment: 1,
+          likedBy: 1,
+          updatedAt: 1,
+        },
+      },
+    ]),
+    Like.aggregate([
+      {
+        $match: {
+          likedBy: new mongoose.Types.ObjectId(userId),
+          comment: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          as: "comment",
+          let: { commentId: "$comment" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$_id", "$$commentId"] },
+                video: { $exists: true }, // This ensures we only get direct comments on videos
+                comment: { $exists: false }, // This ensures it's NOT a reply to another comment
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 1,
+                      fullname: 1,
+                      username: 1,
+                      avatar: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "videos",
+                localField: "video",
+                foreignField: "_id",
+                as: "video",
+                pipeline: [
+                  {
+                    $lookup: {
+                      from: "users",
+                      localField: "owner",
+                      foreignField: "_id",
+                      as: "owner",
+                      pipeline: [
+                        {
+                          $project: {
+                            _id: 1,
+                            fullname: 1,
+                            username: 1,
+                            avatar: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: "$owner",
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                  {
+                    $project: {
+                      _id: 1,
+                      owner: 1,
+                      title: 1,
+                      description: 1,
+                      thumbnail: 1,
+                      videoFile: 1,
+                      duration: 1,
+                      views: 1,
+                      createdAt: 1,
+                      updatedAt: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            { $unwind: { path: "$video", preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+          ],
+        },
+      },
+      { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+      {
+        $match: {
+          comment: { $ne: null, $exists: true },
+          "comment.video": { $exists: true }, // Ensures the comment has a video reference
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          comment: 1,
+          likedBy: 1,
+          updatedAt: 1,
+        },
+      },
+    ]),
+    Like.aggregate([
+      {
+        $match: {
+          likedBy: new mongoose.Types.ObjectId(userId),
+          comment: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          as: "comment",
+          let: { commentId: "$comment" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$_id", "$$commentId"] },
+                comment: { $exists: true }, // This ensures we only get replies to comments
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 1,
+                      fullname: 1,
+                      username: 1,
+                      avatar: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "comments",
+                localField: "comment",
+                foreignField: "_id",
+                as: "comment",
+                pipeline: [
+                  {
+                    $lookup: {
+                      from: "users",
+                      localField: "owner",
+                      foreignField: "_id",
+                      as: "owner",
+                      pipeline: [
+                        {
+                          $project: {
+                            _id: 1,
+                            fullname: 1,
+                            username: 1,
+                            avatar: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    $lookup: {
+                      from: "tweets",
+                      localField: "tweet",
+                      foreignField: "_id",
+                      as: "tweet",
+                      pipeline: [
+                        {
+                          $project: {
+                            _id: 1,
+                            owner: 1,
+                            content: 1,
+                            updatedAt: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: "$tweet",
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: "$owner",
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                ],
+              },
+            },
+            { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+          ],
+        },
+      },
+      { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+      // Add this match stage to filter out empty comments
+      {
+        $match: {
+          comment: { $ne: null, $exists: true }, // Ensures comment exists and is not null
+          "comment.comment": { $exists: true }, // Ensures it's a reply to a comment (not a direct tweet comment)
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          comment: 1,
+          likedBy: 1,
+          updatedAt: 1,
+        },
+      },
+    ]),
+    Like.aggregate([
+      {
+        $match: {
+          likedBy: new mongoose.Types.ObjectId(userId),
+          comment: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          as: "comment",
+          let: { commentId: "$comment" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$_id", "$$commentId"] },
+                comment: { $exists: true }, // This ensures we only get replies to comments
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 1,
+                      fullname: 1,
+                      username: 1,
+                      avatar: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "comments",
+                localField: "comment",
+                foreignField: "_id",
+                as: "comment",
+                pipeline: [
+                  {
+                    $lookup: {
+                      from: "users",
+                      localField: "owner",
+                      foreignField: "_id",
+                      as: "owner",
+                      pipeline: [
+                        {
+                          $project: {
+                            _id: 1,
+                            fullname: 1,
+                            username: 1,
+                            avatar: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    $lookup: {
+                      from: "videos",
+                      localField: "video",
+                      foreignField: "_id",
+                      as: "video",
+                      pipeline: [
+                        {
+                          $project: {
+                            _id: 1,
+                            owner: 1,
+                            title: 1,
+                            description: 1,
+                            thumbnail: 1,
+                            videoFile: 1,
+                            duration: 1,
+                            views: 1,
+                            updatedAt: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: "$video",
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: "$owner",
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                ],
+              },
+            },
+            { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+          ],
+        },
+      },
+      { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
+      {
+        $match: {
+          comment: { $ne: null, $exists: true }, // Ensures comment exists and is not null
+          "comment.comment": { $exists: true }, // Ensures it's a reply to a comment (not a direct video comment)
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          comment: 1,
+          likedBy: 1,
+          updatedAt: 1,
+        },
+      },
+    ]),
+  ]);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        everyLikedTweet,
+        everyLikedVideo,
+        everyLikeCommentOnTweet,
+        everyLikedCommentOnVideo,
+        everyLikeReplyOnCommentWithTweetAsContent,
+        everyLikeReplyOnCommentWithVideoAsContent,
+      },
+      "USER LIKED CONTENT FETCHED SUCCESSFULLY"
+    )
+  );
 });
 
 export {
