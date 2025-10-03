@@ -1,9 +1,17 @@
 import React from "react";
-import { Card, CircularProgress } from "@mui/material";
-import CommentTweetProfileHeader from "./CommentTweetProfileHeader";
+import {
+  Card,
+  CircularProgress,
+  CardActionArea,
+  CardContent,
+  Stack,
+  Typography,
+} from "@mui/material";
+import ContentProfileHeader from "./ContentProfileHeader";
 import RepliesProfileActions from "./RepliesProfileActions";
 import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
 import useAuth from "../../hooks/useAuth";
+import { style1, style5, style6 } from "../../constants/tweets.constants";
 
 const RepliesCard: React.FC<RepliesCardProps> = ({
   reply,
@@ -27,14 +35,22 @@ const RepliesCard: React.FC<RepliesCardProps> = ({
   };
   return (
     <Card sx={styleMode2}>
-      <CommentTweetProfileHeader
-        imgSrc={reply.owner.avatar}
-        fullname={reply.owner.fullname || "fake-fullname"}
-        style2={{}}
-        content={reply.content}
-        username={reply.owner.username || "fake-username"}
-        createdAt={reply.createdAt}
-      />
+      <CardActionArea sx={style1}>
+        <Stack direction="column" spacing={1} alignItems="start">
+          <ContentProfileHeader
+            imgSrc={reply.owner.avatar}
+            fullname={reply.owner.fullname || "fake-fullname"}
+            style2={{}}
+            username={reply.owner.username || "fake-username"}
+            createdAt={reply.createdAt}
+          />
+          <CardContent sx={style5}>
+            <Typography variant="body1" color="textPrimary" sx={style6}>
+              {reply.content}
+            </Typography>
+          </CardContent>
+        </Stack>
+      </CardActionArea>
       <RepliesProfileActions
         replyId={reply._id}
         replyOwner={user?.user._id === reply.owner._id}

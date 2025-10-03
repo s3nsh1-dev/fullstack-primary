@@ -456,124 +456,37 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
 
-  // const likedContent = await Like.find({ likedBy: userId })
-  //   .select("video tweet comment likedBy updatedAt")
-  //   .populate({
-  //     path: "video",
-  //     select:
-  //       "title description thumbnail videoFile owner views duration updatedAt",
-  //     populate: { path: "owner", select: "fullname username avatar" },
-  //   })
-  //   .populate({
-  //     path: "tweet",
-  //     select: "content owner updatedAt",
-  //     populate: { path: "owner", select: "fullname username avatar" },
-  //   })
-  //   .populate({
-  //     path: "comment",
-  //     select: "content video tweet owner updatedAt",
-  //     populate: [
-  //       { path: "owner", select: "fullname username avatar" },
-  //       {
-  //         path: "video",
-  //         select: "title thumbnail duration owner updatedAt",
-  //         populate: { path: "owner", select: "fullname username avatar" },
-  //       },
-  //       {
-  //         path: "tweet",
-  //         select: "content owner updatedAt",
-  //         populate: { path: "owner", select: "fullname username avatar" },
-  //       },
-  //     ],
-  //   });
+  // const page = parseInt(req.query.page) || 1;
+  // const limit = parseInt(req.query.limit) || 20;
+  // const skip = (page - 1) * limit;
 
-  const everyLikedTweet = await Like.aggregate([
-    {
-      $match: {
-        likedBy: new mongoose.Types.ObjectId(userId),
-        tweet: { $exists: true },
-      },
-    },
-    {
-      $lookup: {
-        from: "tweets",
-        localField: "tweet",
-        foreignField: "_id",
-        as: "tweet",
-        pipeline: [
-          {
-            $lookup: {
-              from: "users",
-              localField: "owner",
-              foreignField: "_id",
-              as: "owner",
-              pipeline: [
-                {
-                  $project: {
-                    _id: 1,
-                    fullname: 1,
-                    username: 1,
-                    avatar: 1,
-                  },
-                },
-              ],
-            },
-          },
-          {
-            $project: {
-              _id: 1,
-              owner: 1,
-              content: 1,
-              updatedAt: 1,
-            },
-          },
-          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
-        ],
-      },
-    },
-    { $unwind: { path: "$tweet", preserveNullAndEmptyArrays: true } },
-    {
-      $project: {
-        _id: 1,
-        tweet: 1,
-        likedBy: 1,
-        updatedAt: 1,
-      },
-    },
-  ]);
-  const everyLikeCommentOnComment = await Like.aggregate([
-    {
-      $match: {
-        likedBy: new mongoose.Types.ObjectId(userId),
-        comment: { $exists: true },
-      },
-    },
-    {
-      $lookup: {
-        from: "comments",
-        localField: "comment",
-        foreignField: "_id",
-        as: "comment",
-        pipeline: [],
-      },
-    },
-    { $unwind: { path: "$comment", preserveNullAndEmptyArrays: true } },
-    {
-      $project: {
-        _id: 1,
-        comment: 1,
-        likedBy: 1,
-        updatedAt: 1,
-      },
-    },
-  ]);
+  const liked = await Like.find({ likedBy: userId })
+    .populate({
+      path: "tweet",
+      select: "_id owner updatedAt content",
+      populate: { path: "owner", select: "_id fullname username avatar" },
+    })
+    .populate({
+      path: "comment",
+      select: "_id owner updatedAt content tweet comment",
+      populate: { path: "owner", select: "_id fullname username avatar" },
+    })
+    .populate({
+      path: "video",
+      select: "_id owner updatedAt videoFile thumbnail title description",
+      populate: { path: "owner", select: "_id fullname username avatar" },
+    })
+    .select("_id likedBy updatedAt tweet comment video")
+    .sort({ updatedAt: -1 });
+  // .skip(skip)
+  // .limit(limit);
 
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        { result: everyLikedTweet },
+        { liked, total: liked.length },
         "USER LIKED CONTENT FETCHED SUCCESSFULLY"
       )
     );

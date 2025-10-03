@@ -1,11 +1,19 @@
 import React from "react";
-import { Card, CircularProgress } from "@mui/material";
-import CommentTweetProfileHeader from "./CommentTweetProfileHeader";
+import {
+  Card,
+  CircularProgress,
+  CardActionArea,
+  Stack,
+  CardContent,
+  Typography,
+} from "@mui/material";
+import ContentProfileHeader from "./ContentProfileHeader";
 import CommenterProfileActions from "./CommenterProfileActions";
 import useMode from "../../hooks/useMode";
 import type { TweetCommentType } from "../../hooks/data-fetching/useFetchCommentsOnTweets";
 import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
 import useAuth from "../../hooks/useAuth";
+import { style1, style5, style6 } from "../../constants/tweets.constants";
 
 const CommenterCard: React.FC<CommenterCardProps> = ({
   comment,
@@ -31,14 +39,22 @@ const CommenterCard: React.FC<CommenterCardProps> = ({
 
   return (
     <Card sx={styleMode2}>
-      <CommentTweetProfileHeader
-        imgSrc={comment.owner.avatar}
-        fullname={comment.owner.fullname || "fake-fullname"}
-        style2={{}}
-        content={comment.content}
-        username={comment.owner.username || "fake-username"}
-        createdAt={comment.createdAt}
-      />
+      <CardActionArea sx={style1}>
+        <Stack direction="column" spacing={1} alignItems="start">
+          <ContentProfileHeader
+            imgSrc={comment.owner.avatar}
+            fullname={comment.owner.fullname || "fake-fullname"}
+            style2={{}}
+            username={comment.owner.username || "fake-username"}
+            createdAt={comment.createdAt}
+          />
+          <CardContent sx={style5}>
+            <Typography variant="body1" color="textPrimary" sx={style6}>
+              {comment.content}
+            </Typography>
+          </CardContent>
+        </Stack>
+      </CardActionArea>
       <CommenterProfileActions
         commentOwner={user?.user._id === comment.owner._id}
         tweetOwner={tweetOwner}

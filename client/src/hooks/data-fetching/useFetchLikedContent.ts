@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import type { LikedContentResponseType } from "../../constants/responseTypes";
 
 const useFetchLikedContent = (user_ID: string) => {
   return useQuery({
@@ -13,8 +12,8 @@ const useFetchLikedContent = (user_ID: string) => {
         }
       );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
-      const data: LikedContentResponseType = await response.json();
-      const result = data.data.likes;
+      const data: LikedContentResponse = await response.json();
+      const result = data.data.liked;
       return result;
     },
     enabled: !!user_ID, // only fetch if user._id exists
@@ -24,6 +23,7 @@ const useFetchLikedContent = (user_ID: string) => {
 
 export default useFetchLikedContent;
 
+// User type (owner of content)
 interface User {
   _id: string;
   username: string;
@@ -31,19 +31,52 @@ interface User {
   avatar: string;
 }
 
-interface Tweet {
+// Tweet type
+export interface Tweet {
   _id: string;
   content: string;
   owner: User;
   updatedAt: string;
 }
 
-interface LikedTweet {
+// Comment type
+export interface Comment {
   _id: string;
-  tweet: Tweet;
+  content: string;
+  tweet?: string; // Reference to tweet (if comment is on a tweet)
+  comment?: string; // Reference to parent comment (if this is a reply)
+  owner: User;
+  updatedAt: string;
+}
+
+// Video type
+export interface Video {
+  _id: string;
+  owner: User;
+  videoFile: string;
+  thumbnail: string;
+  title: string;
+  description: string;
+  updatedAt: string;
+}
+
+// Like item type (each item in the liked array)
+export interface LikedItem {
+  _id: string;
+  tweet?: Tweet; // Present if user liked a tweet
+  comment?: Comment; // Present if user liked a comment
+  video?: Video; // Present if user liked a video
   likedBy: string;
   updatedAt: string;
 }
 
-// Usage
-export type ApiResponse = LikedTweet;
+// Main response type
+interface LikedContentResponse {
+  statusCode: number;
+  data: {
+    liked: LikedItem[];
+    total: number;
+  };
+  message: string;
+  success: boolean;
+}
