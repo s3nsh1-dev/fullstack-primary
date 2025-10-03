@@ -45,6 +45,7 @@ export interface Comment {
   content: string;
   tweet?: string; // Reference to tweet (if comment is on a tweet)
   comment?: string; // Reference to parent comment (if this is a reply)
+  video?: string; // Reference to video (if comment is on a video)
   owner: User;
   updatedAt: string;
 }
