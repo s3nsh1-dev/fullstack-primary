@@ -43,8 +43,6 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
         spacing={2}
         sx={{ mb: 2 }}
       >
-        {/* Views and Date */}
-
         {/* Action Buttons */}
         <Stack direction="row" spacing={1} flexWrap="wrap">
           <Paper
