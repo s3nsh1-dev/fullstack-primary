@@ -25,7 +25,7 @@ const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
         <ShowLikeOwner timestamp={item.updatedAt} />
       </Box>
       <CardContent sx={style5}>
-        <TwitterIcon color="primary" fontSize="small" sx={{ mr: 1 }} />
+        <TwitterIcon fontSize="small" sx={{ mr: 1 }} />
         <Typography variant="body1" color="textPrimary" sx={style6}>
           {item.tweet?.content}
         </Typography>
@@ -36,7 +36,7 @@ const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
 
 export default ShowMyLikesOnTweet;
 
-const style1 = { padding: "10px" };
+const style1 = { padding: "10px", backgroundColor: "#7685bfff" };
 
 const style5 = {
   p: 0, // shorthand for padding: 0
