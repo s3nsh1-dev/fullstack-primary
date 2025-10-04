@@ -1,7 +1,7 @@
 import React from "react";
 import { emptyPageText } from "../../constants/constants";
 import ShowPlaylists from "../../components/homepage/ShowPlaylists";
-import ShowVideos from "../../components/homepage/ShowVideos";
+import ShowVideos from "./ShowVideos";
 import ShowSubscribed from "../../components/homepage/ShowSubscribed";
 import ShowTweets from "../../components/homepage/ShowTweets";
 import useMode from "../../hooks/useMode";
