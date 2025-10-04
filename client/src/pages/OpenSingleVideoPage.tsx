@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import {
   Box,
-  Container,
   Typography,
   Paper,
   Chip,
@@ -21,9 +20,12 @@ import {
 import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import useFetchSingleVideo from "../hooks/data-fetching/useFetchSingleVideo";
+import useMode from "../hooks/useMode";
+import RelatedVideos from "../components/Videos/RelatedVideos";
 
 const OpenSingleVideoPage = () => {
   const { videoId } = useParams();
+  const { mode } = useMode(); // true = light mode, false = dark mode
 
   const { data, isLoading } = useFetchSingleVideo(
     videoId || "INVALID_Video-ID"
@@ -31,6 +33,22 @@ const OpenSingleVideoPage = () => {
 
   if (isLoading) return <CircularProgressCenter size={50} />;
   if (!data) return <ContentNotAvailable text="Video Not Available" />;
+
+  // Theme colors based on mode
+  const theme = {
+    bg: mode ? "#f9f9f9" : "#0f0f0f",
+    text: mode ? "#0f0f0f" : "#fff",
+    textSecondary: mode ? "#606060" : "#aaa",
+    paperBg: mode ? "#fff" : "#272727",
+    hoverBg: mode ? "#f2f2f2" : "#3f3f3f",
+    divider: mode ? "#e0e0e0" : "#3f3f3f",
+    chipBg: mode ? "#f2f2f2" : "#272727",
+    buttonBg: mode ? "#065fd4" : "#272727",
+    buttonText: mode ? "#fff" : "#fff",
+    subscribeBg: mode ? "#cc0000" : "#fff",
+    subscribeText: mode ? "#fff" : "#0f0f0f",
+    subscribeBgHover: mode ? "#a00000" : "#d9d9d9",
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -59,12 +77,17 @@ const OpenSingleVideoPage = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: "#0f0f0f", minHeight: "100vh", pb: 4 }}>
-      <Container maxWidth="xl" sx={{ pt: 3 }}>
+    <Box
+      sx={{
+        // minHeight: "100vh",
+        p: "1%",
+      }}
+    >
+      <Box sx={{ pt: 0 }}>
         <Box
           sx={{
             display: "flex",
-            gap: 3,
+            gap: 8,
             flexDirection: { xs: "column", lg: "row" },
           }}
         >
@@ -72,9 +95,9 @@ const OpenSingleVideoPage = () => {
           <Box sx={{ flex: 1 }}>
             {/* Video Player */}
             <Paper
-              elevation={0}
+              elevation={mode ? 1 : 0}
               sx={{
-                bgcolor: "#000",
+                bgcolor: "black",
                 borderRadius: 2,
                 overflow: "hidden",
                 position: "relative",
@@ -89,7 +112,7 @@ const OpenSingleVideoPage = () => {
                   left: 0,
                   width: "100%",
                   height: "100%",
-                  objectFit: "contain",
+                  objectFit: "cover",
                 }}
                 poster={data.thumbnail}
                 src={data.videoFile}
@@ -104,7 +127,7 @@ const OpenSingleVideoPage = () => {
               <Typography
                 variant="h5"
                 sx={{
-                  color: "#fff",
+                  color: theme.text,
                   fontWeight: 600,
                   mb: 1,
                   fontSize: { xs: "1.25rem", md: "1.5rem" },
@@ -122,46 +145,64 @@ const OpenSingleVideoPage = () => {
                 sx={{ mb: 2 }}
               >
                 {/* Views and Date */}
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Visibility sx={{ color: "#aaa", fontSize: 20 }} />
-                  <Typography variant="body2" sx={{ color: "#aaa" }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  alignItems="center"
+                  flexWrap="wrap"
+                >
+                  <Visibility
+                    sx={{ color: theme.textSecondary, fontSize: 20 }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: theme.textSecondary }}
+                  >
                     {formatViews(data.views)} views
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "#aaa" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: theme.textSecondary }}
+                  >
                     •
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "#aaa" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: theme.textSecondary }}
+                  >
                     {formatDate(data.createdAt)}
                   </Typography>
                   <Chip
                     label={formatDuration(data.duration)}
                     size="small"
                     sx={{
-                      bgcolor: "#272727",
-                      color: "#fff",
+                      bgcolor: theme.chipBg,
+                      color: theme.text,
                       fontSize: "0.75rem",
                       height: 24,
+                      border: mode ? "1px solid #e0e0e0" : "none",
                     }}
                   />
                 </Stack>
 
                 {/* Action Buttons */}
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} flexWrap="wrap">
                   <Paper
                     sx={{
-                      bgcolor: "#272727",
+                      bgcolor: theme.paperBg,
                       display: "flex",
                       borderRadius: 5,
                       overflow: "hidden",
+                      border: mode ? "1px solid #e0e0e0" : "none",
                     }}
-                    elevation={0}
+                    elevation={mode ? 0 : 0}
                   >
                     <IconButton
                       sx={{
-                        color: "#fff",
+                        color: theme.text,
                         borderRadius: 0,
                         px: 2,
-                        "&:hover": { bgcolor: "#3f3f3f" },
+                        "&:hover": { bgcolor: theme.hoverBg },
                       }}
                     >
                       <ThumbUpOutlined sx={{ fontSize: 20 }} />
@@ -172,14 +213,14 @@ const OpenSingleVideoPage = () => {
                     <Divider
                       orientation="vertical"
                       flexItem
-                      sx={{ bgcolor: "#3f3f3f" }}
+                      sx={{ bgcolor: theme.divider }}
                     />
                     <IconButton
                       sx={{
-                        color: "#fff",
+                        color: theme.text,
                         borderRadius: 0,
                         px: 2,
-                        "&:hover": { bgcolor: "#3f3f3f" },
+                        "&:hover": { bgcolor: theme.hoverBg },
                       }}
                     >
                       <ThumbDownOutlined sx={{ fontSize: 20 }} />
@@ -189,12 +230,13 @@ const OpenSingleVideoPage = () => {
                   <Button
                     startIcon={<ShareOutlined />}
                     sx={{
-                      bgcolor: "#272727",
-                      color: "#fff",
+                      bgcolor: theme.paperBg,
+                      color: theme.text,
                       borderRadius: 5,
                       px: 2,
                       textTransform: "none",
-                      "&:hover": { bgcolor: "#3f3f3f" },
+                      border: mode ? "1px solid #e0e0e0" : "none",
+                      "&:hover": { bgcolor: theme.hoverBg },
                     }}
                   >
                     Share
@@ -202,9 +244,10 @@ const OpenSingleVideoPage = () => {
 
                   <IconButton
                     sx={{
-                      bgcolor: "#272727",
-                      color: "#fff",
-                      "&:hover": { bgcolor: "#3f3f3f" },
+                      bgcolor: theme.paperBg,
+                      color: theme.text,
+                      border: mode ? "1px solid #e0e0e0" : "none",
+                      "&:hover": { bgcolor: theme.hoverBg },
                     }}
                   >
                     <MoreHoriz />
@@ -215,11 +258,12 @@ const OpenSingleVideoPage = () => {
               {/* Channel and Description */}
               <Paper
                 sx={{
-                  bgcolor: "#272727",
+                  bgcolor: theme.paperBg,
                   borderRadius: 2,
                   p: 2,
+                  border: mode ? "1px solid #e0e0e0" : "none",
                 }}
-                elevation={0}
+                elevation={mode ? 0 : 0}
               >
                 <Stack
                   direction="row"
@@ -239,24 +283,27 @@ const OpenSingleVideoPage = () => {
                   <Box sx={{ flex: 1 }}>
                     <Typography
                       variant="subtitle1"
-                      sx={{ color: "#fff", fontWeight: 600 }}
+                      sx={{ color: theme.text, fontWeight: 600 }}
                     >
                       Channel Name
                     </Typography>
-                    <Typography variant="caption" sx={{ color: "#aaa" }}>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: theme.textSecondary }}
+                    >
                       1.2M subscribers
                     </Typography>
                   </Box>
                   <Button
                     variant="contained"
                     sx={{
-                      bgcolor: "#fff",
-                      color: "#0f0f0f",
+                      bgcolor: theme.subscribeBg,
+                      color: theme.subscribeText,
                       borderRadius: 5,
                       textTransform: "none",
                       fontWeight: 600,
                       px: 3,
-                      "&:hover": { bgcolor: "#d9d9d9" },
+                      "&:hover": { bgcolor: theme.subscribeBgHover },
                     }}
                   >
                     Subscribe
@@ -266,7 +313,7 @@ const OpenSingleVideoPage = () => {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: "#fff",
+                    color: theme.text,
                     whiteSpace: "pre-wrap",
                     lineHeight: 1.6,
                   }}
@@ -279,109 +326,19 @@ const OpenSingleVideoPage = () => {
                     label="Unlisted"
                     size="small"
                     sx={{
-                      bgcolor: "#3f3f3f",
-                      color: "#fff",
+                      bgcolor: theme.hoverBg,
+                      color: theme.text,
                       mt: 2,
+                      border: mode ? "1px solid #e0e0e0" : "none",
                     }}
                   />
                 )}
               </Paper>
             </Box>
           </Box>
-
-          {/* Sidebar - Related Videos */}
-          <Box sx={{ width: { xs: "100%", lg: 400 } }}>
-            <Typography
-              variant="h6"
-              sx={{ color: "#fff", mb: 2, fontWeight: 600 }}
-            >
-              Related Videos
-            </Typography>
-            <Stack spacing={1}>
-              {[1, 2, 3, 4, 5].map((item) => (
-                <Paper
-                  key={item}
-                  sx={{
-                    display: "flex",
-                    gap: 1,
-                    bgcolor: "transparent",
-                    cursor: "pointer",
-                    p: 0,
-                    "&:hover": {
-                      bgcolor: "#272727",
-                    },
-                    borderRadius: 2,
-                    transition: "background-color 0.2s",
-                  }}
-                  elevation={0}
-                >
-                  <Box
-                    sx={{
-                      width: 168,
-                      height: 94,
-                      bgcolor: "#272727",
-                      borderRadius: 2,
-                      flexShrink: 0,
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <img
-                      src={data.thumbnail}
-                      alt="thumbnail"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <Chip
-                      label="4:12"
-                      size="small"
-                      sx={{
-                        position: "absolute",
-                        bottom: 4,
-                        right: 4,
-                        bgcolor: "rgba(0,0,0,0.8)",
-                        color: "#fff",
-                        fontSize: "0.75rem",
-                        height: 20,
-                      }}
-                    />
-                  </Box>
-                  <Box sx={{ flex: 1, py: 0.5 }}>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#fff",
-                        fontWeight: 500,
-                        mb: 0.5,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      Related Video Title {item}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{ color: "#aaa", display: "block" }}
-                    >
-                      Channel Name
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: "#aaa" }}>
-                      1.2M views • 2 days ago
-                    </Typography>
-                  </Box>
-                </Paper>
-              ))}
-            </Stack>
-          </Box>
+          <RelatedVideos />
         </Box>
-      </Container>
+      </Box>
     </Box>
   );
 };
