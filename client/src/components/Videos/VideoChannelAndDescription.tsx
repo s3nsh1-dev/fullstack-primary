@@ -14,8 +14,10 @@ import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVi
 const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
   theme,
   data,
+  channelInfo,
 }) => {
   const mode = useMode();
+
   return (
     <Paper
       sx={{
@@ -28,23 +30,26 @@ const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
     >
       <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ mb: 2 }}>
         <Avatar
+          src={channelInfo.avatar}
           sx={{
             width: 40,
             height: 40,
-            bgcolor: "#3ea6ff",
           }}
-        >
-          {data.title.charAt(0).toUpperCase()}
-        </Avatar>
+        />
+
         <Box sx={{ flex: 1 }}>
-          <Typography
-            variant="subtitle1"
-            sx={{ color: theme.text, fontWeight: 600 }}
-          >
-            Channel Name
+          <Typography variant="h6" sx={{ color: theme.text, fontWeight: 600 }}>
+            {channelInfo.fullname}
+            <Typography
+              component={"span"}
+              variant="body2"
+              color="textSecondary"
+            >
+              &nbsp;@{channelInfo.username}
+            </Typography>
           </Typography>
-          <Typography variant="caption" sx={{ color: theme.textSecondary }}>
-            1.2M subscribers
+          <Typography variant="subtitle1" sx={{ color: theme.textSecondary }}>
+            {channelInfo.subscriberCount} subscribers
           </Typography>
         </Box>
         <Button
@@ -103,4 +108,16 @@ type VideoChannelAndDescriptionProps = {
     hoverBg: string;
   };
   data: SingleVideoType;
+  channelInfo: UserChannel;
 };
+interface UserChannel {
+  _id: string;
+  username: string;
+  email: string;
+  fullname: string;
+  avatar: string;
+  coverImage: string;
+  subscriberCount: number;
+  channelSubscribedToCount: number;
+  isSubscribed: boolean;
+}

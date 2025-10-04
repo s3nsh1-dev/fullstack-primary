@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
-
 import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import useFetchSingleVideo from "../hooks/data-fetching/useFetchSingleVideo";
@@ -9,17 +8,26 @@ import RelatedVideos from "../components/Videos/RelatedVideos";
 import VideoPlayerMain from "../components/Videos/VideoPlayerMain";
 import VideoMetaDataAndAction from "../components/Videos/VideoMetaDataAndAction";
 import VideoChannelAndDescription from "../components/Videos/VideoChannelAndDescription";
+import useFetchUserChannelProfile from "../hooks/data-fetching/useFetchUserChannelProfile";
 
 const OpenSingleVideoPage = () => {
   const { videoId } = useParams();
-  const { mode } = useMode(); // true = light mode, false = dark mode
+  const { mode } = useMode();
 
   const { data, isLoading } = useFetchSingleVideo(
     videoId || "INVALID_Video-ID"
   );
+  const {
+    data: channelInfo,
+    isLoading: checkChannelLoading,
+    isError: checkChannelError,
+  } = useFetchUserChannelProfile(data?.owner.username || "fake-username");
 
   if (isLoading) return <CircularProgressCenter size={50} />;
+  if (checkChannelLoading) return <CircularProgressCenter />;
+  if (checkChannelError) return <div>....Encountered Error</div>;
   if (!data) return <ContentNotAvailable text="Video Not Available" />;
+  if (!channelInfo) return <ContentNotAvailable text="Cannot Find Channel" />;
 
   // Theme colors based on mode
   const theme = {
@@ -103,7 +111,11 @@ const OpenSingleVideoPage = () => {
               />
 
               {/* Channel and Description */}
-              <VideoChannelAndDescription theme={theme} data={data} />
+              <VideoChannelAndDescription
+                theme={theme}
+                data={data}
+                channelInfo={channelInfo}
+              />
             </Box>
           </Box>
           <RelatedVideos />
