@@ -1,20 +1,15 @@
 import React from "react";
-import {
-  Box,
-  Typography,
-  Paper,
-  Chip,
-  Stack,
-  Avatar,
-  Button,
-} from "@mui/material";
+import { Typography, Paper, Chip, Stack } from "@mui/material";
 import useMode from "../../hooks/useMode";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
+import { Visibility } from "@mui/icons-material";
 
 const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
   theme,
   data,
-  channelInfo,
+  formatViews,
+  formatDate,
+  formatDuration,
 }) => {
   const mode = useMode();
 
@@ -28,46 +23,29 @@ const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
       }}
       elevation={mode ? 0 : 0}
     >
-      <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ mb: 2 }}>
-        <Avatar
-          src={channelInfo.avatar}
+      <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+        <Visibility sx={{ color: theme.textSecondary, fontSize: 20 }} />
+        <Typography variant="body2" sx={{ color: theme.textSecondary }}>
+          {formatViews(data?.views)} views
+        </Typography>
+        <Typography variant="body2" sx={{ color: theme.textSecondary }}>
+          •
+        </Typography>
+        <Typography variant="body2" sx={{ color: theme.textSecondary }}>
+          {formatDate(data.createdAt)}
+        </Typography>
+        <Chip
+          label={formatDuration(data.duration)}
+          size="small"
           sx={{
-            width: 40,
-            height: 40,
+            bgcolor: theme.chipBg,
+            color: theme.text,
+            fontSize: "0.75rem",
+            height: 24,
+            border: mode ? "1px solid #e0e0e0" : "none",
           }}
         />
-
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="h6" sx={{ color: theme.text, fontWeight: 600 }}>
-            {channelInfo.fullname}
-            <Typography
-              component={"span"}
-              variant="body2"
-              color="textSecondary"
-            >
-              &nbsp;@{channelInfo.username}
-            </Typography>
-          </Typography>
-          <Typography variant="subtitle1" sx={{ color: theme.textSecondary }}>
-            {channelInfo.subscriberCount} subscribers
-          </Typography>
-        </Box>
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: theme.subscribeBg,
-            color: theme.subscribeText,
-            borderRadius: 5,
-            textTransform: "none",
-            fontWeight: 600,
-            px: 3,
-            "&:hover": { bgcolor: theme.subscribeBgHover },
-          }}
-        >
-          Subscribe
-        </Button>
       </Stack>
-
       <Typography
         variant="body2"
         sx={{
@@ -106,18 +84,10 @@ type VideoChannelAndDescriptionProps = {
     subscribeText: string;
     subscribeBgHover: string;
     hoverBg: string;
+    chipBg: string;
   };
   data: SingleVideoType;
-  channelInfo: UserChannel;
+  formatViews: (views: number) => string;
+  formatDate: (dateString: string) => string;
+  formatDuration: (duration: number) => string;
 };
-interface UserChannel {
-  _id: string;
-  username: string;
-  email: string;
-  fullname: string;
-  avatar: string;
-  coverImage: string;
-  subscriberCount: number;
-  channelSubscribedToCount: number;
-  isSubscribed: boolean;
-}
