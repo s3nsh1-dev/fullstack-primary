@@ -19,7 +19,7 @@ const useFetchSingleVideo = (videoId: string) => {
 
 export default useFetchSingleVideo;
 
-export interface Video {
+export interface SingleVideoType {
   _id: string;
   owner: string;
   videoFile: string;
@@ -37,7 +37,7 @@ export interface Video {
 }
 
 export interface Data {
-  video: Video;
+  video: SingleVideoType;
 }
 
 interface ApiResponse {
