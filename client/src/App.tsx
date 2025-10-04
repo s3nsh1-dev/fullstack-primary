@@ -17,8 +17,9 @@ import useAuth from "./hooks/useAuth";
 import AppLoadingProgress from "./pages/AppLoadingProgress";
 import OpenSingleTweetPage from "./pages/OpenSingleTweetPage";
 import ChannelHomePage from "./pages/ChannelHomePage";
-import ChannelTweetsPage from "./pages/ChannelTweetsPage";
-import ChannelVideosPage from "./pages/ChannelVideosPage";
+// import ChannelTweetsPage from "./pages/ChannelTweetsPage";
+// import ChannelVideosPage from "./pages/ChannelVideosPage";
+import OpenSingleVideoPage from "./pages/OpenSingleVideoPage";
 
 function App() {
   const { mode } = useMode();
@@ -42,12 +43,12 @@ function App() {
               <Route path="/support" element={<Support />} />
               <Route path="/tweets" element={<Tweets />} />
               <Route path="/history" element={<WatchHistory />} />
-              <Route
-                path="/tweets/:tweetId"
-                element={<OpenSingleTweetPage />}
-              />
+              <Route path="/tweets">
+                <Route path=":tweetId" element={<OpenSingleTweetPage />} />
+              </Route>
               <Route path="/channels">
                 <Route path=":channelId/home" element={<ChannelHomePage />} />
+                {/* These are useful when i implement tabs instead on states OR something else
                 <Route
                   path=":channelId/tweets"
                   element={<ChannelTweetsPage />}
@@ -55,7 +56,10 @@ function App() {
                 <Route
                   path=":channelId/videos"
                   element={<ChannelVideosPage />}
-                />
+                /> */}
+              </Route>
+              <Route path="/videos">
+                <Route path=":videoId" element={<OpenSingleVideoPage />} />
               </Route>
             </Route>
             {/* routes without Navbar */}
