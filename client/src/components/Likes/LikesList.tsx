@@ -16,7 +16,7 @@ const LikesList: React.FC<LikesListProps> = ({ data }) => {
     if (isLikeTweet(item))
       return <ShowMyLikesOnTweet key={item._id} item={item} />;
     if (isLikeVideo(item))
-      return <ShowMyLikesOnVideo key={item._id} item={item} />;
+      return <ShowMyLikesOnVideo key={item._id} item={item} link={link} />;
     if (isLikeComment(item))
       return <ShowMyLikesOnComment key={item._id} item={item} link={link} />;
   });

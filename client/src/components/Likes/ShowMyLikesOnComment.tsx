@@ -10,7 +10,7 @@ const ShowMyLikesOnComment: React.FC<ShowMyLikesOnCommentProps> = ({
   link,
 }) => {
   return (
-    <Card key={item._id} sx={style1} elevation={4}>
+    <Card sx={style1} elevation={4}>
       <Box
         sx={{
           display: "flex",
@@ -40,7 +40,7 @@ const ShowMyLikesOnComment: React.FC<ShowMyLikesOnCommentProps> = ({
 
 export default ShowMyLikesOnComment;
 
-const style1 = { padding: "10px" };
+const style1 = { padding: "10px", backgroundColor: "#5fb4a0ff" };
 
 const style5 = {
   p: 0, // shorthand for padding: 0
