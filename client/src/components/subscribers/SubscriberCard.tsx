@@ -15,6 +15,7 @@ const SubscriberCard: React.FC<SubscriberCardProps> = ({
       component={Link}
       to={`/channels/${subscriber}/home`}
       sx={{ textDecoration: "none" }}
+      elevation={4}
     >
       <CardActionArea sx={style1}>
         <Box component="img" src={avatar} alt="user-avatar" sx={style2} />
