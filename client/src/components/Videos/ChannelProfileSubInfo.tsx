@@ -27,16 +27,19 @@ const ChannelProfileSubInfo: React.FC<ChannelProfileSubInfoProps> = ({
       <Button
         variant="contained"
         sx={{
-          bgcolor: theme.subscribeBg,
+          bgcolor: !channelInfo.isSubscribed ? "grey" : "red",
           color: theme.subscribeText,
           borderRadius: 5,
           textTransform: "none",
           fontWeight: 600,
           px: 3,
-          "&:hover": { bgcolor: theme.subscribeBgHover },
+          "&:hover": {
+            bgcolor: "white",
+            color: channelInfo.isSubscribed ? "black" : "red",
+          },
         }}
       >
-        Subscribe
+        {channelInfo.isSubscribed ? "Subscribed" : "Subscribe"}
       </Button>
     </Stack>
   );
