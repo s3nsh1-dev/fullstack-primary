@@ -21,7 +21,13 @@ export default useFetchSingleVideo;
 
 export interface SingleVideoType {
   _id: string;
-  owner: string;
+  owner: {
+    _id: string;
+    username: string;
+    fullname: string;
+    avatar: string;
+    coverImage: string;
+  };
   videoFile: string;
   videoPublicId: string;
   thumbnail: string;
