@@ -155,7 +155,10 @@ const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
 
-  const fetchedVideo = await Video.findById(videoId);
+  const fetchedVideo = await Video.findById(videoId).populate(
+    "owner",
+    "_id fullname avatar username coverImage"
+  );
   if (!fetchedVideo) {
     throw new ApiError(404, "VIDEO NOT FOUND");
   }

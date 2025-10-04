@@ -1,8 +1,9 @@
 export const style1 = { padding: "10px" };
 export const style2 = { width: 56, height: 56 };
 export const style3 = {
-  fontSize: "clamp(1rem, 2vw, 1.2rem)",
+  fontSize: "clamp(1rem, 2vw, 1.3rem)",
   fontWeight: "bold",
+  whiteSpace: "nowrap",
 };
 export const style4 = { position: "relative", top: "2px" };
 export const style5 = {

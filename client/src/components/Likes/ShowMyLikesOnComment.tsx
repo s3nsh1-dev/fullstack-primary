@@ -1,11 +1,14 @@
 import React from "react";
 import type { LikedItem } from "../../hooks/data-fetching/useFetchLikedContent";
-import { Box, Card, Typography, CardContent } from "@mui/material";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import ContentProfileHeader from "../Tweets/ContentProfileHeader";
 import ShowLikeOwner from "./ShowLikeOwner";
-import TwitterIcon from "@mui/icons-material/Twitter";
+import CommentIcon from "@mui/icons-material/Comment";
 
-const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
+const ShowMyLikesOnComment: React.FC<ShowMyLikesOnCommentProps> = ({
+  item,
+  link,
+}) => {
   return (
     <Card sx={style1} elevation={4}>
       <Box
@@ -17,26 +20,27 @@ const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
       >
         <ContentProfileHeader
           style2={{}}
-          imgSrc={item.tweet?.owner.avatar || "content-avatar"}
-          fullname={item.tweet?.owner.fullname || "content-fullname"}
-          username={item.tweet?.owner.username || "content-username"}
-          createdAt={item.tweet?.updatedAt || "tweet-timestamp"}
+          imgSrc={item.comment?.owner.avatar || "content-avatar"}
+          fullname={item.comment?.owner.fullname || "content-fullname"}
+          username={item.comment?.owner.username || "content-username"}
+          createdAt={item.comment?.updatedAt || "tweet-timestamp"}
         />
         <ShowLikeOwner timestamp={item.updatedAt} />
       </Box>
+      {link && <Typography>link</Typography>}
       <CardContent sx={style5}>
-        <TwitterIcon fontSize="small" sx={{ mr: 1 }} />
+        <CommentIcon fontSize="small" sx={{ mr: 1 }} />
         <Typography variant="body1" color="textPrimary" sx={style6}>
-          {item.tweet?.content}
+          {item.comment?.content}
         </Typography>
       </CardContent>
     </Card>
   );
 };
 
-export default ShowMyLikesOnTweet;
+export default ShowMyLikesOnComment;
 
-const style1 = { padding: "10px", backgroundColor: "#7685bfff" };
+const style1 = { padding: "10px", backgroundColor: "#5fb4a0ff" };
 
 const style5 = {
   p: 0, // shorthand for padding: 0
@@ -47,3 +51,8 @@ const style5 = {
   alignItems: "center",
 };
 const style6 = { mt: "5px", overflow: "hidden", textOverflow: "ellipsis" };
+
+type ShowMyLikesOnCommentProps = {
+  item: LikedItem;
+  link: string | undefined;
+};
