@@ -105,16 +105,16 @@ const OpenSingleVideoPage = () => {
               <VideoMetaDataAndAction
                 data={data}
                 theme={theme}
-                formatDate={formatDate}
-                formatViews={formatViews}
-                formatDuration={formatDuration}
+                channelInfo={channelInfo}
               />
 
               {/* Channel and Description */}
               <VideoChannelAndDescription
                 theme={theme}
                 data={data}
-                channelInfo={channelInfo}
+                formatDate={formatDate}
+                formatViews={formatViews}
+                formatDuration={formatDuration}
               />
             </Box>
           </Box>
