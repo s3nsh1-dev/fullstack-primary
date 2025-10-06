@@ -14,7 +14,6 @@ const ShowMyLikesOnVideo: React.FC<ShowMyLikesOnVideoProps> = ({
   item,
   link,
 }) => {
-  console.log("video", item.video);
   return (
     <Card sx={style1} elevation={4}>
       <Box

@@ -68,7 +68,7 @@ export const getTheme = (mode: ModeType) => {
             height: "40px",
             border: "1px solid transparent",
 
-            color: mode ? textColor.dark : textColor.light,
+            // color: mode ? textColor.dark : textColor.light,
             ":hover": {
               borderBottom: `1px solid ${
                 mode ? backgroundColor.dark : backgroundColor.light
