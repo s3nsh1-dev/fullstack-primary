@@ -1,11 +1,29 @@
 import React from "react";
-
+import { formatCount } from "../../utilities/helperFncForStats";
 import { Stack, Avatar, Typography, Box, Button } from "@mui/material";
+import useToggleSubscription from "../../hooks/data-fetching/useToggleSubscription";
 
 const ChannelProfileSubInfo: React.FC<ChannelProfileSubInfoProps> = ({
   channelInfo,
   theme,
 }) => {
+  const [subbed, setSubbed] = React.useState(channelInfo.isSubscribed);
+  const [subCount, setSubCount] = React.useState(channelInfo.subscriberCount);
+  const subscriptionMutate = useToggleSubscription();
+  const toggleSubbed = () => {
+    subscriptionMutate.mutate(channelInfo._id, {
+      onSuccess: (response) => {
+        if ("channel" in response) {
+          setSubbed(true);
+          setSubCount((prev) => prev + 1);
+        } else {
+          setSubbed(false);
+          setSubCount((prev) => prev - 1);
+        }
+      },
+    });
+  };
+
   return (
     <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
       <Avatar
@@ -21,13 +39,14 @@ const ChannelProfileSubInfo: React.FC<ChannelProfileSubInfoProps> = ({
           {channelInfo.fullname}
         </Typography>
         <Typography variant="subtitle1" sx={{ color: theme.textSecondary }}>
-          {channelInfo.subscriberCount} subscribers
+          {formatCount(subCount)} subscribers
         </Typography>
       </Box>
       <Button
         variant="contained"
+        onClick={toggleSubbed}
         sx={{
-          bgcolor: !channelInfo.isSubscribed ? "grey" : "red",
+          bgcolor: subbed ? "grey" : "red",
           color: theme.subscribeText,
           borderRadius: 5,
           textTransform: "none",
@@ -35,11 +54,11 @@ const ChannelProfileSubInfo: React.FC<ChannelProfileSubInfoProps> = ({
           px: 3,
           "&:hover": {
             bgcolor: "white",
-            color: channelInfo.isSubscribed ? "black" : "red",
+            color: subbed ? "black" : "red",
           },
         }}
       >
-        {channelInfo.isSubscribed ? "Subscribed" : "Subscribe"}
+        {subbed ? "Subscribed" : "Subscribe"}
       </Button>
     </Stack>
   );

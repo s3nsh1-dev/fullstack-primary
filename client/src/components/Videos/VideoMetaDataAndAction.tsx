@@ -18,17 +18,32 @@ import {
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
 import ChannelProfileSubInfo from "./ChannelProfileSubInfo";
 import useToggleLikeOnVideo from "../../hooks/data-fetching/useToggleLikeOnVideo";
+import useFetchUserChannelProfile from "../../hooks/data-fetching/useFetchUserChannelProfile";
+import CircularProgressCenter from "../ui-components/CircularProgressCenter";
+import ContentNotAvailable from "../others/ContentNotAvailable";
+import { formatCount } from "../../utilities/helperFncForStats";
 
 const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
   theme,
   data,
-  channelInfo,
+  username,
   isLikedByUser,
+  likesCount,
 }) => {
+  const {
+    data: channelInfo,
+    isLoading,
+    isError,
+  } = useFetchUserChannelProfile(username);
   const mode = useMode();
+  const [totalLikes, setTotalLikes] = React.useState(likesCount);
   const [isLiked, setIsLiked] = React.useState(isLikedByUser);
   const { mutate: toggleLike } = useToggleLikeOnVideo();
+
   if (!data) return null;
+  if (isLoading) return <CircularProgressCenter />;
+  if (isError) return <div>....Encountered Error</div>;
+  if (!channelInfo) return <ContentNotAvailable text="Cannot Find Channel" />;
 
   const handleToggleLike = () => {
     toggleLike(data._id, {
@@ -36,8 +51,10 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
         // Optimistically update UI
         if ("video" in response) {
           setIsLiked(true);
+          setTotalLikes((prev) => prev + 1);
         } else {
           setIsLiked(false);
+          setTotalLikes((prev) => prev - 1);
         }
       },
     });
@@ -91,7 +108,7 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
                 sx={{ ml: 1 }}
                 color={isLiked ? "primary" : "inherit"}
               >
-                Like
+                {formatCount(totalLikes)}
               </Typography>
             </IconButton>
             <Divider
@@ -161,17 +178,18 @@ type ThemeType = {
 type VideoMetaDataAndActionProps = {
   theme: ThemeType;
   data: SingleVideoType;
-  channelInfo: UserChannel;
-  isLikedByUser: boolean;
-};
-type UserChannel = {
-  _id: string;
   username: string;
-  email: string;
-  fullname: string;
-  avatar: string;
-  coverImage: string;
-  subscriberCount: number;
-  channelSubscribedToCount: number;
-  isSubscribed: boolean;
+  isLikedByUser: boolean;
+  likesCount: number;
 };
+// type UserChannel = {
+//   _id: string;
+//   username: string;
+//   email: string;
+//   fullname: string;
+//   avatar: string;
+//   coverImage: string;
+//   subscriberCount: number;
+//   channelSubscribedToCount: number;
+//   isSubscribed: boolean;
+// };

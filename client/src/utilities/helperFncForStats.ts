@@ -24,7 +24,7 @@ export const formatDuration = (duration: number) => {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
-export const formatLikesCount = (count: number): string => {
+export const formatCount = (count: number): string => {
   if (count === 0) return "0";
   if (count < 1000) return count.toLocaleString();
   if (count < 1_000_000) {

@@ -8,7 +8,6 @@ import RelatedVideos from "../components/Videos/RelatedVideos";
 import VideoPlayerMain from "../components/Videos/VideoPlayerMain";
 import VideoMetaDataAndAction from "../components/Videos/VideoMetaDataAndAction";
 import VideoChannelAndDescription from "../components/Videos/VideoChannelAndDescription";
-import useFetchUserChannelProfile from "../hooks/data-fetching/useFetchUserChannelProfile";
 import VideoCommentSection from "../components/Videos/VideoCommentSection";
 
 const OpenSingleVideoPage = () => {
@@ -18,18 +17,10 @@ const OpenSingleVideoPage = () => {
   const { data, isLoading } = useFetchSingleVideo(
     videoId || "INVALID_Video-ID"
   );
-  const username = data?.video.owner.username || "";
-  const {
-    data: channelInfo,
-    isLoading: checkChannelLoading,
-    isError: checkChannelError,
-  } = useFetchUserChannelProfile(username || "");
 
   if (isLoading) return <CircularProgressCenter size={50} />;
-  if (checkChannelLoading) return <CircularProgressCenter />;
-  if (checkChannelError) return <div>....Encountered Error</div>;
+
   if (!data) return <ContentNotAvailable text="Video Not Available" />;
-  if (!channelInfo) return <ContentNotAvailable text="Cannot Find Channel" />;
 
   // Theme colors based on mode
   const theme = {
@@ -81,16 +72,13 @@ const OpenSingleVideoPage = () => {
               <VideoMetaDataAndAction
                 data={data.video}
                 theme={theme}
-                channelInfo={channelInfo}
                 isLikedByUser={data.isLikedByUser}
+                likesCount={data.likesCount}
+                username={data?.video.owner.username || ""}
               />
 
               {/* Channel and Description */}
-              <VideoChannelAndDescription
-                theme={theme}
-                data={data.video}
-                likesCount={data.likesCount}
-              />
+              <VideoChannelAndDescription theme={theme} data={data.video} />
             </Box>
             <VideoCommentSection />
           </Box>

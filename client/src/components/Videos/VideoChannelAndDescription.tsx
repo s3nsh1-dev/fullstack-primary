@@ -4,7 +4,6 @@ import useMode from "../../hooks/useMode";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
 import { Visibility } from "@mui/icons-material";
 import {
-  formatLikesCount,
   formatDate,
   formatViews,
   formatDuration,
@@ -13,7 +12,6 @@ import {
 const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
   theme,
   data,
-  likesCount,
 }) => {
   const mode = useMode();
 
@@ -28,12 +26,6 @@ const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
       elevation={mode ? 0 : 0}
     >
       <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-        <Typography variant="body2" sx={{ color: theme.textSecondary }}>
-          {formatLikesCount(likesCount)} likes
-        </Typography>
-        <Typography variant="body2" sx={{ color: theme.textSecondary }}>
-          •
-        </Typography>
         <Visibility sx={{ color: theme.textSecondary, fontSize: 20 }} />
         <Typography variant="body2" sx={{ color: theme.textSecondary }}>
           {formatViews(data?.views)} views
@@ -97,5 +89,4 @@ type VideoChannelAndDescriptionProps = {
     chipBg: string;
   };
   data: SingleVideoType;
-  likesCount: number;
 };
