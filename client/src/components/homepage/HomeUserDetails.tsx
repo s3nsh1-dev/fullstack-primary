@@ -3,13 +3,26 @@ import { Box, Typography, Divider, Button, Stack } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import HomeProfilePictures from "./HomeProfilePictures";
 import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
-import useAuth from "../../hooks/useAuth";
 import { formatCount } from "../../utilities/helperFncForStats";
+import useToggleSubscription from "../../hooks/data-fetching/useToggleSubscription";
 
 const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
-  const { user } = useAuth();
-  console.log("Content Data", user?.user);
-  console.log("fetched data", data);
+  const subMutate = useToggleSubscription();
+  const [subbed, setSubbed] = React.useState(data.isSubbed);
+  const [subCount, setSubCount] = React.useState(data.user.subscribers.length);
+  const handleSubscribe = () => {
+    subMutate.mutate(data.user._id, {
+      onSuccess: (response) => {
+        if ("channel" in response) {
+          setSubbed(true);
+          setSubCount((prev) => prev + 1);
+        } else {
+          setSubbed(false);
+          setSubCount((prev) => prev - 1);
+        }
+      },
+    });
+  };
   return (
     <Box
       mb={1}
@@ -76,7 +89,7 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
           {/* Right: Stats */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
             <Typography variant="body2">
-              Subscribers: {formatCount(data.user.subscribers.length)}
+              Subscribers: {formatCount(subCount)}
             </Typography>
             <Typography variant="body2">
               Videos: {formatCount(data.user.videos.length)}
@@ -86,8 +99,12 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
             </Typography>
           </Box>
         </Box>
-        <Button variant="contained" color="error" sx={{ ml: "0px" }}>
-          Subscribe
+        <Button
+          variant="contained"
+          onClick={handleSubscribe}
+          sx={{ ml: "0px", backgroundColor: subbed ? "white" : "red" }}
+        >
+          {subbed ? "Subscribed" : "Subscribe"}
         </Button>
       </Stack>
     </Box>

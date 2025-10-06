@@ -18,7 +18,6 @@ const SubHomepage: React.FC<SubHomepageProps> = ({
   handleOpen,
 }) => {
   const { mode } = useMode();
-
   return (
     <>
       <HomeUserDetails data={data} />
