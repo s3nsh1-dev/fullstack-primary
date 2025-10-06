@@ -15,7 +15,6 @@ const useFetchCommentsOnComments = (comment_ID: string) => {
       return data.data;
     },
     enabled: !!comment_ID,
-    staleTime: 5 * 60 * 1000,
   });
 };
 export default useFetchCommentsOnComments;

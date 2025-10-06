@@ -14,7 +14,6 @@ const useFetchCommentsOnVideo = (videoId: string) => {
       return data.data.comments;
     },
     enabled: !!videoId,
-    staleTime: 5 * 60 * 1000,
   });
 };
 

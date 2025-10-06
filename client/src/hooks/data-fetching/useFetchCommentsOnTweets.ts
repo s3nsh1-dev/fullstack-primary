@@ -15,7 +15,6 @@ const useFetchCommentsOnTweets = (tweetId: string) => {
       return data.data;
     },
     enabled: !!tweetId,
-    staleTime: 5 * 60 * 1000,
   });
 };
 export default useFetchCommentsOnTweets;
