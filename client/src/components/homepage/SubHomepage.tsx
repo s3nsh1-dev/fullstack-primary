@@ -50,12 +50,14 @@ const SubHomepage: React.FC<SubHomepageProps> = ({
           })}
         </ButtonGroup>
         <Box className="select-content" m={1}>
-          {open.videos && <ShowVideos videos={data.videos} />}
-          {open.playlists && <ShowPlaylists playlists={data.playlists} />}
+          {open.videos && <ShowVideos videos={data.user.videos} />}
+          {open.playlists && <ShowPlaylists playlists={data.user.playlists} />}
           {open.tweets && (
-            <ShowTweets tweets={data.tweets} interaction={false} />
+            <ShowTweets tweets={data.user.tweets} interaction={false} />
           )}
-          {open.subscribed && <ShowSubscribed subscribed={data.subscribers} />}
+          {open.subscribed && (
+            <ShowSubscribed subscribed={data.user.subscribers} />
+          )}
         </Box>
       </Box>
     </>
@@ -73,6 +75,9 @@ type OpenStateType = {
 
 type SubHomepageProps = {
   open: OpenStateType;
-  data: HomePageFormatType;
+  data: {
+    user: HomePageFormatType;
+    isSubbed: boolean;
+  };
   handleOpen: (value: keyof OpenStateType) => void;
 };

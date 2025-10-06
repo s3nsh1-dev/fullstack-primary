@@ -4,11 +4,13 @@ import { User } from "../models/user.model";
 import { asyncHandler } from "../utils/asyncHandler";
 import { isValidObjectId } from "mongoose";
 import { toObjectId } from "../utils/convertToObjectId";
-import { subscribe } from "diagnostics_channel";
+import { Subscription } from "../models/subscription.model";
 
 const getDetailsForHomepage = asyncHandler(async (req, res) => {
   const { user_ID } = req.params;
   if (!isValidObjectId(user_ID)) throw new ApiError(400, "INVALID USER_ID");
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
 
   const user = await User.aggregate([
     { $match: { _id: toObjectId(user_ID) } },
@@ -160,12 +162,22 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
       },
     },
   ]);
+  if (!user) throw new ApiError(401, "USER NOT FOUND FOR HOMEPAGE");
 
-  if (!user) {
-    throw new ApiError(401, "UNAUTHORIZED");
-  }
+  const checkSubbed = await Subscription.findOne({
+    channel: user_ID,
+    subscriber: req.user._id,
+  });
+  const isSubbed = checkSubbed ? true : false;
+
   return res
     .status(200)
-    .json(new ApiResponse(200, { user }, "LOGGED IN USER'S AUTH DETAILS"));
+    .json(
+      new ApiResponse(
+        200,
+        { user: user[0], isSubbed },
+        "LOGGED IN USER'S AUTH DETAILS"
+      )
+    );
 });
 export { getDetailsForHomepage };

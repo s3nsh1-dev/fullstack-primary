@@ -19,8 +19,8 @@ const useFetchHomepageDetails = (user_ID: string) => {
       );
       if (!response.ok)
         throw new Error("ERROR WHILE FETCHING SUBSCRIBER COUNT");
-      const data = await response.json();
-      const result: HomePageFormatType = data.data.user[0];
+      const data: ApiResponse = await response.json();
+      const result = data.data;
       return result;
     },
     enabled: !!user_ID, // only fetch if user._id exists
@@ -40,4 +40,15 @@ export type HomePageFormatType = {
   videos: VideoType[];
   tweets: TweetType[];
   playlists: PlaylistType[];
+  isSubbed: boolean;
+};
+
+type ApiResponse = {
+  data: {
+    user: HomePageFormatType;
+    isSubbed: boolean;
+  };
+  message: string;
+  success: boolean;
+  statusCode: number;
 };
