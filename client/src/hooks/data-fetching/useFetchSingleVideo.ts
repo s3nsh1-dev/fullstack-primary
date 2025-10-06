@@ -12,7 +12,7 @@ const useFetchSingleVideo = (videoId: string) => {
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING VIDEO");
       const data: ApiResponse = await response.json();
-      return data.data.video;
+      return data.data;
     },
   });
 };
@@ -44,6 +44,8 @@ export interface SingleVideoType {
 
 export interface Data {
   video: SingleVideoType;
+  isLikedByUser: boolean;
+  likesCount: number;
 }
 
 interface ApiResponse {
