@@ -18,7 +18,6 @@ const useFetchUserChannelProfile = (username: string) => {
       return result;
     },
     enabled: !!username,
-    staleTime: 10 * 60 * 1000,
   });
 };
 export default useFetchUserChannelProfile;
