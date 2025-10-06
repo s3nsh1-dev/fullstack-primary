@@ -7,7 +7,7 @@ const ChannelProfileSubInfo: React.FC<ChannelProfileSubInfoProps> = ({
   theme,
 }) => {
   return (
-    <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ mb: 2 }}>
+    <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
       <Avatar
         src={channelInfo.avatar}
         sx={{

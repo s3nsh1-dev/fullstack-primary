@@ -4,7 +4,7 @@ import CircularProgressCenter from "../components/ui-components/CircularProgress
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import useFetchSingleVideo from "../hooks/data-fetching/useFetchSingleVideo";
 import useMode from "../hooks/useMode";
-import RelatedVideos from "../components/Videos/RelatedVideos";
+// import RelatedVideos from "../components/Videos/RelatedVideos";
 import VideoPlayerMain from "../components/Videos/VideoPlayerMain";
 import VideoMetaDataAndAction from "../components/Videos/VideoMetaDataAndAction";
 import VideoChannelAndDescription from "../components/Videos/VideoChannelAndDescription";
@@ -118,7 +118,7 @@ const OpenSingleVideoPage = () => {
               />
             </Box>
           </Box>
-          <RelatedVideos />
+          {/* <RelatedVideos /> */}
         </Box>
       </Box>
     </Box>
