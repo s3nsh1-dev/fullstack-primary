@@ -10,8 +10,8 @@ const useFetchCommentsOnVideo = (videoId: string) => {
         credentials: "include",
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENTS");
-      const data = await response.json();
-      return data.data;
+      const data: CommentsResponse = await response.json();
+      return data.data.comments;
     },
     enabled: !!videoId,
     staleTime: 5 * 60 * 1000,
@@ -19,3 +19,35 @@ const useFetchCommentsOnVideo = (videoId: string) => {
 };
 
 export default useFetchCommentsOnVideo;
+
+type CommentsResponse = {
+  statusCode: number;
+  data: {
+    comments: {
+      docs: {
+        _id: string;
+        content: string;
+        video: string;
+        owner: {
+          _id: string;
+          username: string;
+          fullname: string;
+          avatar: string;
+        };
+        createdAt: string;
+        updatedAt: string;
+      }[];
+      totalDocs: number;
+      limit: number;
+      page: number;
+      totalPages: number;
+      pagingCounter: number;
+      hasPrevPage: boolean;
+      hasNextPage: boolean;
+      prevPage: number | null;
+      nextPage: number | null;
+    };
+  };
+  message: string;
+  success: boolean;
+};
