@@ -9,6 +9,7 @@ import VideoPlayerMain from "../components/Videos/VideoPlayerMain";
 import VideoMetaDataAndAction from "../components/Videos/VideoMetaDataAndAction";
 import VideoChannelAndDescription from "../components/Videos/VideoChannelAndDescription";
 import useFetchUserChannelProfile from "../hooks/data-fetching/useFetchUserChannelProfile";
+import VideoCommentSection from "../components/Videos/VideoCommentSection";
 
 const OpenSingleVideoPage = () => {
   const { videoId } = useParams();
@@ -21,7 +22,7 @@ const OpenSingleVideoPage = () => {
     data: channelInfo,
     isLoading: checkChannelLoading,
     isError: checkChannelError,
-  } = useFetchUserChannelProfile(data?.owner.username || "fake-username");
+  } = useFetchUserChannelProfile(data?.owner.username || "");
 
   if (isLoading) return <CircularProgressCenter size={50} />;
   if (checkChannelLoading) return <CircularProgressCenter />;
@@ -117,6 +118,7 @@ const OpenSingleVideoPage = () => {
                 formatDuration={formatDuration}
               />
             </Box>
+            <VideoCommentSection />
           </Box>
           {/* <RelatedVideos /> */}
         </Box>
