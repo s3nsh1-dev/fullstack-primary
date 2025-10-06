@@ -17,14 +17,32 @@ import {
 } from "@mui/icons-material";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
 import ChannelProfileSubInfo from "./ChannelProfileSubInfo";
+import useToggleLikeOnVideo from "../../hooks/data-fetching/useToggleLikeOnVideo";
 
 const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
   theme,
   data,
   channelInfo,
+  isLikedByUser,
 }) => {
   const mode = useMode();
+  const [isLiked, setIsLiked] = React.useState(isLikedByUser);
+  const { mutate: toggleLike } = useToggleLikeOnVideo();
   if (!data) return null;
+
+  const handleToggleLike = () => {
+    toggleLike(data._id, {
+      onSuccess: (response) => {
+        // Optimistically update UI
+        if ("video" in response) {
+          setIsLiked(true);
+        } else {
+          setIsLiked(false);
+        }
+      },
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -62,9 +80,17 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
                 px: 2,
                 "&:hover": { bgcolor: theme.hoverBg },
               }}
+              onClick={handleToggleLike}
             >
-              <ThumbUpOutlined sx={{ fontSize: 20 }} />
-              <Typography variant="body2" sx={{ ml: 1 }}>
+              <ThumbUpOutlined
+                sx={{ fontSize: 20 }}
+                color={isLiked ? "primary" : "inherit"}
+              />
+              <Typography
+                variant="body2"
+                sx={{ ml: 1 }}
+                color={isLiked ? "primary" : "inherit"}
+              >
                 Like
               </Typography>
             </IconButton>
@@ -74,6 +100,7 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
               sx={{ bgcolor: theme.divider }}
             />
             <IconButton
+              disabled
               sx={{
                 color: theme.text,
                 borderRadius: 0,
@@ -86,6 +113,7 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
           </Paper>
 
           <Button
+            disabled
             startIcon={<ShareOutlined />}
             sx={{
               bgcolor: theme.paperBg,
@@ -134,6 +162,7 @@ type VideoMetaDataAndActionProps = {
   theme: ThemeType;
   data: SingleVideoType;
   channelInfo: UserChannel;
+  isLikedByUser: boolean;
 };
 type UserChannel = {
   _id: string;

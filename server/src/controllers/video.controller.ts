@@ -154,11 +154,18 @@ const getVideoById = asyncHandler(async (req, res) => {
   //TODO: get video by id
   const { videoId } = req.params;
   if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
+  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
 
   const fetchedVideo = await Video.findById(videoId).populate(
     "owner",
     "_id fullname avatar username coverImage"
   );
+  const isLikedByUser = await Like.exists({
+    video: videoId,
+    likedBy: req.user._id,
+  });
+  const likesCount = await Like.countDocuments({ video: videoId });
+
   if (!fetchedVideo) {
     throw new ApiError(404, "VIDEO NOT FOUND");
   }
@@ -168,7 +175,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { video: fetchedVideo },
+        { video: fetchedVideo, isLikedByUser: !!isLikedByUser, likesCount },
         "VIDEO FETCHED SUCCESSFULLY"
       )
     );

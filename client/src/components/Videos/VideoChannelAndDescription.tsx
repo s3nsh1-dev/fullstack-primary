@@ -3,13 +3,17 @@ import { Typography, Paper, Chip, Stack } from "@mui/material";
 import useMode from "../../hooks/useMode";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
 import { Visibility } from "@mui/icons-material";
+import {
+  formatLikesCount,
+  formatDate,
+  formatViews,
+  formatDuration,
+} from "../../utilities/helperFncForStats";
 
 const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
   theme,
   data,
-  formatViews,
-  formatDate,
-  formatDuration,
+  likesCount,
 }) => {
   const mode = useMode();
 
@@ -24,6 +28,12 @@ const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
       elevation={mode ? 0 : 0}
     >
       <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+        <Typography variant="body2" sx={{ color: theme.textSecondary }}>
+          {formatLikesCount(likesCount)} likes
+        </Typography>
+        <Typography variant="body2" sx={{ color: theme.textSecondary }}>
+          •
+        </Typography>
         <Visibility sx={{ color: theme.textSecondary, fontSize: 20 }} />
         <Typography variant="body2" sx={{ color: theme.textSecondary }}>
           {formatViews(data?.views)} views
@@ -35,7 +45,7 @@ const VideoChannelAndDescription: React.FC<VideoChannelAndDescriptionProps> = ({
           {formatDate(data.createdAt)}
         </Typography>
         <Chip
-          label={formatDuration(data.duration)}
+          label={`${formatDuration(data.duration)} min`}
           size="small"
           sx={{
             bgcolor: theme.chipBg,
@@ -87,7 +97,5 @@ type VideoChannelAndDescriptionProps = {
     chipBg: string;
   };
   data: SingleVideoType;
-  formatViews: (views: number) => string;
-  formatDate: (dateString: string) => string;
-  formatDuration: (duration: number) => string;
+  likesCount: number;
 };
