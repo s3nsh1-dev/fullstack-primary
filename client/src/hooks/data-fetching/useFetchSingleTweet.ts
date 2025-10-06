@@ -17,7 +17,6 @@ const useFetchSingleTweet = (tweetId: string) => {
       return result;
     },
     enabled: !!tweetId,
-    staleTime: 10 * 60 * 1000,
   });
 };
 

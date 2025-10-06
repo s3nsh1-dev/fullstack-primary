@@ -36,7 +36,10 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     if (!isOwner(findChannelByID.subscriber, req.user._id.toString())) {
       throw new ApiError(400, " USER NOT AUTHORIZED TO MAKE CHANGES");
     }
-    resultFindings = await Subscription.findByIdAndDelete(findChannelByID._id);
+    resultFindings = await Subscription.deleteOne({
+      channel: channelId,
+      subscriber: subscriberId,
+    });
     responseMessage = "SUBSCRIPTION REMOVED";
   }
 

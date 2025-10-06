@@ -4,9 +4,10 @@ import { Box, IconButton, Typography } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import useMode from "../../hooks/useMode";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
+  const navigate = useNavigate();
   const { mode } = useMode();
   return (
     <Box
@@ -66,16 +67,13 @@ const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
             },
           }}
           onClick={() => {
-            // Add your play video logic here
+            navigate(`/videos/${video._id}`);
           }}
         >
-          <Box
-            component={Link}
-            to={`/videos/${video._id}`}
-            sx={{ textDecoration: "none" }}
-          >
-            <PlayCircleOutlineIcon fontSize="inherit" color="disabled" />
-          </Box>
+          <PlayCircleOutlineIcon
+            fontSize="inherit"
+            sx={{ color: "rgba(255,255,255,0.3)" }}
+          />
         </IconButton>
       </Box>
 

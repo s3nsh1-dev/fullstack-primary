@@ -16,7 +16,6 @@ const useFetchUserTweets = (user_ID: string) => {
       return result;
     },
     enabled: !!user_ID, // only fetch if user._id exists
-    staleTime: 10 * 60 * 1000, // 10min
   });
 };
 export default useFetchUserTweets;

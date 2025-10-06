@@ -11,7 +11,7 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
     return (
       <SubscriberCard
         key={sub._id}
-        subscriber={sub._id}
+        subscriber={sub.subscriber_id}
         fullname={sub.fullname}
         username={sub.username}
         avatar={sub.avatar}

@@ -10,11 +10,14 @@ const useFetchUserChannelProfile = (username: string) => {
         method: "GET",
         credentials: "include",
       });
-      if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
+      if (!response.ok)
+        throw new Error("ERROR WHILE FETCHING USER CHANNEL PROFILE");
       const data: UserChannelResponse = await response.json();
-      const result = data.data.data;
+      // if (!data) throw new Error("ERROR WHILE FETCHING USER CHANNEL PROFILE");
+      const result = data?.data?.data ?? null;
       return result;
     },
+    enabled: !!username,
   });
 };
 export default useFetchUserChannelProfile;

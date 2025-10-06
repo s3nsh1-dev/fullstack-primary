@@ -15,9 +15,7 @@ const ChannelHomePage = () => {
     tweets: false,
     subscribed: false,
   });
-  const { data, isLoading, isError } = useFetchHomepageDetails(
-    channelId || "INVALID_CHANNEL-ID"
-  );
+  const { data, isLoading, isError } = useFetchHomepageDetails(channelId || "");
   if (isLoading) return <div>...Loading Homepage</div>;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <div>....No Homepage Info</div>;
