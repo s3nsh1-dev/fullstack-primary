@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Card,
-  CircularProgress,
   CardActionArea,
   CardContent,
   Stack,
@@ -9,7 +8,6 @@ import {
 } from "@mui/material";
 import ContentProfileHeader from "./ContentProfileHeader";
 import RepliesProfileActions from "./RepliesProfileActions";
-import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
 import useAuth from "../../hooks/useAuth";
 import { style1, style5, style6 } from "../../constants/tweets.constants";
 
@@ -17,17 +15,9 @@ const RepliesCard: React.FC<RepliesCardProps> = ({
   reply,
   tweetOwner,
   commentId,
+  isLiked,
 }) => {
   const { user } = useAuth();
-  const { data, isLoading, isError } = useCheckLikeOnComments(reply._id);
-  if (isLoading)
-    return (
-      <div>
-        <CircularProgress />
-      </div>
-    );
-  if (isError) return <div>....Encountered Error</div>;
-  if (!data) return <CircularProgress />;
 
   const styleMode2 = {
     m: "0.5% 1% 1% 1%",
@@ -54,7 +44,7 @@ const RepliesCard: React.FC<RepliesCardProps> = ({
       <RepliesProfileActions
         replyId={reply._id}
         replyOwner={user?.user._id === reply.owner._id}
-        likeStatus={data.data}
+        likeStatus={isLiked}
         tweetOwner={tweetOwner}
         commentId={commentId}
       />
@@ -79,4 +69,5 @@ type RepliesCardProps = {
   };
   tweetOwner: boolean;
   commentId: string;
+  isLiked: boolean;
 };

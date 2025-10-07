@@ -31,26 +31,27 @@ export type TweetCommentType = {
   };
   createdAt: string;
   updatedAt: string;
-};
-
-type ResponseData = {
-  comments: {
-    docs: TweetCommentType[];
-    totalDocs: number;
-    limit: number;
-    page: number;
-    totalPages: number;
-    pagingCounter: number;
-    hasPrevPage: boolean;
-    hasNextPage: boolean;
-    prevPage: string | null;
-    nextPage: string | null;
-  };
+  isLiked: boolean;
 };
 
 type ApiResponse = {
   statusCode: number;
-  data: ResponseData;
+  data: {
+    comments: {
+      docs: TweetCommentType[];
+      totalDocs: number;
+      limit: number;
+      page: number;
+      totalPages: number;
+      pagingCounter: number;
+      hasPrevPage: boolean;
+      hasNextPage: boolean;
+      prevPage: string | null;
+      nextPage: string | null;
+    };
+    commentCount: number;
+    isLiked: boolean;
+  };
   message: string;
   success: boolean;
 };

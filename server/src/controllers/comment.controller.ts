@@ -8,12 +8,17 @@ import { Tweet } from "../models/tweet.model";
 import { isValidObjectId } from "mongoose";
 import { Video } from "../models/video.model";
 import { Like } from "../models/like.model";
+import mongoose from "mongoose";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
 
   const { video_ID } = req.params;
   const { page = 1, limit = 10 } = req.query;
+  if (!req.user || !req.user?._id)
+    throw new ApiError(400, "UNAUTHENTICATED USER");
+
+  const adminId = req.user._id;
 
   const comments = await Comment.aggregatePaginate(
     Comment.aggregate([
@@ -37,10 +42,32 @@ const getVideoComments = asyncHandler(async (req, res) => {
         },
       },
       {
-        $addFields: {
-          owner: { $first: "$owner" },
+        $lookup: {
+          from: "likes",
+          let: { commentId: "$_id" },
+          as: "likes",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$comment", "$$commentId"] },
+                    {
+                      $eq: [
+                        "$likedBy",
+                        new mongoose.Types.ObjectId(adminId.toString()),
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            { $limit: 1 }, // ✅ return only 1 doc if it exists
+          ],
         },
       },
+      { $addFields: { isLiked: { $gt: [{ $size: "$likes" }, 0] } } },
+      { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
       {
         $project: {
           _id: 1,
@@ -49,16 +76,33 @@ const getVideoComments = asyncHandler(async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           owner: 1,
+          isLiked: 1,
         },
       },
     ]),
     { page: Number(page), limit: Number(limit) }
   );
   if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
+  const commentCount = await Comment.countDocuments({
+    video: toObjectId(video_ID),
+  });
+
+  const fetchLike = await Like.exists({
+    video: toObjectId(video_ID),
+    likedBy: toObjectId(String(req.user?._id)),
+  });
+
+  const isLiked = fetchLike ? true : false;
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
+    .json(
+      new ApiResponse(
+        200,
+        { comments, commentCount, isLiked },
+        "COMMENTS FETCHED SUCCESSFULLY"
+      )
+    );
 });
 
 const addVideoComment = asyncHandler(async (req, res) => {
@@ -197,7 +241,10 @@ const getTweetComments = asyncHandler(async (req, res) => {
 
   const { tweet_ID } = req.params;
   const { page = 1, limit = 10 } = req.query;
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED USER");
 
+  const adminId = req.user._id;
   const comments = await Comment.aggregatePaginate(
     Comment.aggregate([
       { $match: { tweet: toObjectId(tweet_ID) } },
@@ -220,10 +267,32 @@ const getTweetComments = asyncHandler(async (req, res) => {
         },
       },
       {
-        $addFields: {
-          owner: { $first: "$owner" },
+        $lookup: {
+          from: "likes",
+          let: { commentId: "$_id" },
+          as: "likes",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$comment", "$$commentId"] },
+                    {
+                      $eq: [
+                        "$likedBy",
+                        new mongoose.Types.ObjectId(adminId.toString()),
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            { $limit: 1 }, // ✅ return only 1 doc if it exists
+          ],
         },
       },
+      { $addFields: { isLiked: { $gt: [{ $size: "$likes" }, 0] } } },
+      { $addFields: { owner: { $first: "$owner" } } },
       {
         $project: {
           _id: 1,
@@ -232,6 +301,7 @@ const getTweetComments = asyncHandler(async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           owner: 1,
+          isLiked: 1,
         },
       },
     ]),
@@ -239,9 +309,27 @@ const getTweetComments = asyncHandler(async (req, res) => {
   );
   if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
 
+  if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
+  const commentCount = await Comment.countDocuments({
+    tweet: toObjectId(tweet_ID),
+  });
+
+  const fetchLike = await Like.exists({
+    tweet: toObjectId(tweet_ID),
+    likedBy: toObjectId(String(req.user?._id)),
+  });
+
+  const isLiked = fetchLike ? true : false;
+
   return res
     .status(200)
-    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
+    .json(
+      new ApiResponse(
+        200,
+        { comments, commentCount, isLiked },
+        "COMMENTS FETCHED SUCCESSFULLY"
+      )
+    );
 });
 
 const addTweetComment = asyncHandler(async (req, res) => {
@@ -309,6 +397,11 @@ const getCommentsComment = asyncHandler(async (req, res) => {
   const { comment_ID } = req.params;
   const { page = 1, limit = 10 } = req.query;
 
+  if (!req.user || !req.user._id)
+    throw new ApiError(400, "UNAUTHENTICATED USER");
+
+  const adminId = String(req.user._id);
+
   const comments = await Comment.aggregatePaginate(
     Comment.aggregate([
       { $match: { comment: toObjectId(comment_ID) } },
@@ -331,6 +424,29 @@ const getCommentsComment = asyncHandler(async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "likes",
+          let: { commentId: "$_id" },
+          as: "likes",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$comment", "$$commentId"] },
+                    {
+                      $eq: ["$likedBy", new mongoose.Types.ObjectId(adminId)],
+                    },
+                  ],
+                },
+              },
+            },
+            { $limit: 1 }, // ✅ return only 1 doc if it exists
+          ],
+        },
+      },
+      { $addFields: { isLiked: { $gt: [{ $size: "$likes" }, 0] } } },
+      {
         $addFields: {
           owner: { $first: "$owner" },
         },
@@ -343,6 +459,7 @@ const getCommentsComment = asyncHandler(async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           owner: 1,
+          isLiked: 1,
         },
       },
     ]),
@@ -350,9 +467,27 @@ const getCommentsComment = asyncHandler(async (req, res) => {
   );
   if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
 
+  if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
+  const commentCount = await Comment.countDocuments({
+    comment: toObjectId(comment_ID),
+  });
+
+  const fetchLike = await Like.exists({
+    comment: toObjectId(comment_ID),
+    likedBy: toObjectId(String(req.user?._id)),
+  });
+
+  const isLiked = fetchLike ? true : false;
+
   return res
     .status(200)
-    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
+    .json(
+      new ApiResponse(
+        200,
+        { comments, commentCount, isLiked },
+        "COMMENTS FETCHED SUCCESSFULLY"
+      )
+    );
 });
 
 export {

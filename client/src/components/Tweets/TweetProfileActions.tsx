@@ -12,7 +12,7 @@ import CommenterCard from "./CommenterCard";
 import useFetchCommentsOnTweets from "../../hooks/data-fetching/useFetchCommentsOnTweets";
 import { CaptionTextCenter } from "../ui-components/TextStyledComponents";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
-import useMutateLikeUserTweet from "../../hooks/data-fetching/useMutateLikeUserTweet";
+import useToggleLikeOnTweet from "../../hooks/data-fetching/useToggleLikeOnTweet";
 import AddTweetCommentForm from "./AddTweetCommentForm";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -35,7 +35,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   const queryClient = useQueryClient();
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const [openModal, setOpenModal] = React.useState(false);
-  const toggleTweetLike = useMutateLikeUserTweet();
+  const toggleTweetLike = useToggleLikeOnTweet();
   const { data, isLoading, isError, refetch } =
     useFetchCommentsOnTweets(tweetId);
   if (isLoading) return <CircularProgressCenter size={20} />;
@@ -129,6 +129,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
                       comment={comment}
                       tweetOwner={tweetOwner}
                       tweetId={tweetId}
+                      isLiked={comment.isLiked}
                     />
                   ))}
                 </>

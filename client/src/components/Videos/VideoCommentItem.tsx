@@ -12,59 +12,16 @@ import {
   ThumbDownOutlined,
   MoreVert,
 } from "@mui/icons-material";
+// import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 
-type Owner = {
-  _id: string;
-  username: string;
-  fullname: string;
-  avatar?: string;
-};
-
-type Comment = {
-  _id: string;
-  content: string;
-  createdAt: string;
-  owner: Owner;
-};
-
-type ThemeType = {
-  text: string;
-  textSecondary: string;
-  hoverBg: string;
-};
-
-interface Props {
-  comment: Comment;
-  theme: ThemeType;
-}
-
-const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-    const diffMinutes = Math.ceil(diffTime / (1000 * 60));
-
-    if (diffMinutes < 60)
-      return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""} ago`;
-    if (diffHours < 24)
-      return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
-    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
-    if (diffDays < 30)
-      return `${Math.floor(diffDays / 7)} week${
-        Math.floor(diffDays / 7) > 1 ? "s" : ""
-      } ago`;
-    if (diffDays < 365)
-      return `${Math.floor(diffDays / 30)} month${
-        Math.floor(diffDays / 30) > 1 ? "s" : ""
-      } ago`;
-    return `${Math.floor(diffDays / 365)} year${
-      Math.floor(diffDays / 365) > 1 ? "s" : ""
-    } ago`;
+const VideoCommentItem: React.FC<VideoCommentItemProps> = ({
+  comment,
+  theme,
+}) => {
+  const [like, setLike] = React.useState(comment.isLiked);
+  const handleLikes = () => {
+    setLike((prev) => !prev);
   };
-
   return (
     <Stack direction="row" spacing={2}>
       <Avatar
@@ -110,8 +67,12 @@ const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
           <IconButton
             size="small"
             sx={{ color: theme.text, "&:hover": { bgcolor: theme.hoverBg } }}
+            onClick={handleLikes}
           >
-            <ThumbUpOutlined sx={{ fontSize: 18 }} />
+            <ThumbUpOutlined
+              sx={{ fontSize: 18 }}
+              color={like ? "primary" : "inherit"}
+            />
           </IconButton>
           <Typography
             variant="caption"
@@ -121,11 +82,12 @@ const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
               minWidth: 20,
             }}
           >
-            0
+            ?
           </Typography>
           <IconButton
             size="small"
             sx={{ color: theme.text, "&:hover": { bgcolor: theme.hoverBg } }}
+            disabled
           >
             <ThumbDownOutlined sx={{ fontSize: 18 }} />
           </IconButton>
@@ -160,3 +122,52 @@ const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
 };
 
 export default VideoCommentItem;
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+  const diffMinutes = Math.ceil(diffTime / (1000 * 60));
+
+  if (diffMinutes < 60)
+    return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""} ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+  if (diffDays < 30)
+    return `${Math.floor(diffDays / 7)} week${
+      Math.floor(diffDays / 7) > 1 ? "s" : ""
+    } ago`;
+  if (diffDays < 365)
+    return `${Math.floor(diffDays / 30)} month${
+      Math.floor(diffDays / 30) > 1 ? "s" : ""
+    } ago`;
+  return `${Math.floor(diffDays / 365)} year${
+    Math.floor(diffDays / 365) > 1 ? "s" : ""
+  } ago`;
+};
+
+type VideoCommentItemProps = {
+  comment: {
+    _id: string;
+    content: string;
+    video: string;
+    owner: {
+      _id: string;
+      username: string;
+      fullname: string;
+      avatar: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    isLiked: boolean;
+  };
+  theme: ThemeType;
+};
+
+type ThemeType = {
+  text: string;
+  textSecondary: string;
+  hoverBg: string;
+};

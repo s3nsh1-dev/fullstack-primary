@@ -127,6 +127,7 @@ const CommenterProfileActions: React.FC<CommenterProfileActionsProps> = ({
                   reply={reply}
                   tweetOwner={tweetOwner}
                   commentId={commentId}
+                  isLiked={reply.isLiked}
                 />
               ))}
             </>
