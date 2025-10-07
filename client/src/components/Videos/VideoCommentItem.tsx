@@ -14,8 +14,11 @@ import {
 } from "@mui/icons-material";
 // import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 
-const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
-  const [like, setLike] = React.useState(false);
+const VideoCommentItem: React.FC<VideoCommentItemProps> = ({
+  comment,
+  theme,
+}) => {
+  const [like, setLike] = React.useState(comment.isLiked);
   const handleLikes = () => {
     setLike((prev) => !prev);
   };
@@ -120,31 +123,6 @@ const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
 
 export default VideoCommentItem;
 
-type Owner = {
-  _id: string;
-  username: string;
-  fullname: string;
-  avatar?: string;
-};
-
-type Comment = {
-  _id: string;
-  content: string;
-  createdAt: string;
-  owner: Owner;
-};
-
-type ThemeType = {
-  text: string;
-  textSecondary: string;
-  hoverBg: string;
-};
-
-interface Props {
-  comment: Comment;
-  theme: ThemeType;
-}
-
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const now = new Date();
@@ -168,4 +146,28 @@ const formatDate = (dateString: string) => {
   return `${Math.floor(diffDays / 365)} year${
     Math.floor(diffDays / 365) > 1 ? "s" : ""
   } ago`;
+};
+
+type VideoCommentItemProps = {
+  comment: {
+    _id: string;
+    content: string;
+    video: string;
+    owner: {
+      _id: string;
+      username: string;
+      fullname: string;
+      avatar: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    isLiked: boolean;
+  };
+  theme: ThemeType;
+};
+
+type ThemeType = {
+  text: string;
+  textSecondary: string;
+  hoverBg: string;
 };
