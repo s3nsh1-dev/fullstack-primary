@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Card,
-  CircularProgress,
   CardActionArea,
   Stack,
   CardContent,
@@ -11,7 +10,6 @@ import ContentProfileHeader from "./ContentProfileHeader";
 import CommenterProfileActions from "./CommenterProfileActions";
 import useMode from "../../hooks/useMode";
 import type { TweetCommentType } from "../../hooks/data-fetching/useFetchCommentsOnTweets";
-import useCheckLikeOnComments from "../../hooks/data-fetching/useCheckLikeOnComments";
 import useAuth from "../../hooks/useAuth";
 import { style1, style5, style6 } from "../../constants/tweets.constants";
 
@@ -19,6 +17,7 @@ const CommenterCard: React.FC<CommenterCardProps> = ({
   comment,
   tweetOwner,
   tweetId,
+  isLiked,
 }) => {
   const { mode } = useMode();
   const { user } = useAuth();
@@ -27,15 +26,6 @@ const CommenterCard: React.FC<CommenterCardProps> = ({
     backgroundColor: mode ? "Whitesmoke" : "black",
     boxShadow: "none",
   };
-  const { data, isLoading, isError } = useCheckLikeOnComments(comment._id);
-  if (isLoading)
-    return (
-      <div>
-        <CircularProgress />
-      </div>
-    );
-  if (isError) return <div>....Encountered Error</div>;
-  if (!data) return <CircularProgress />;
 
   return (
     <Card sx={styleMode2}>
@@ -60,7 +50,7 @@ const CommenterCard: React.FC<CommenterCardProps> = ({
         tweetOwner={tweetOwner}
         commentId={comment._id}
         disabled={false}
-        likeStatus={data.data}
+        likeStatus={isLiked}
         tweetId={tweetId}
       />
     </Card>
@@ -73,4 +63,5 @@ type CommenterCardProps = {
   comment: TweetCommentType;
   tweetOwner: boolean;
   tweetId: string;
+  isLiked: boolean;
 };
