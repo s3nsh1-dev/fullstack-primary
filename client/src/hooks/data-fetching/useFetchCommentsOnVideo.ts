@@ -11,7 +11,8 @@ const useFetchCommentsOnVideo = (videoId: string) => {
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENTS");
       const data: CommentsResponse = await response.json();
-      return data.data.comments;
+      const result = data.data;
+      return result;
     },
     enabled: !!videoId,
   });
@@ -35,6 +36,7 @@ type CommentsResponse = {
         };
         createdAt: string;
         updatedAt: string;
+        isLiked: boolean;
       }[];
       totalDocs: number;
       limit: number;

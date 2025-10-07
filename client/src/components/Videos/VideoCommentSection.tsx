@@ -11,7 +11,6 @@ const VideoCommentSection = () => {
   const { videoId } = useParams();
   const { mode } = useMode(); // true = light mode, false = dark mode
   const { data, isLoading } = useFetchCommentsOnVideo(videoId || "");
-  const totalComments = data?.totalDocs;
 
   // Theme colors based on mode
   const theme = {
@@ -39,7 +38,7 @@ const VideoCommentSection = () => {
           fontSize: "1.25rem",
         }}
       >
-        {totalComments || data?.docs?.length || 0} Comments
+        {data?.commentCount || data?.comments.docs?.length || 0} Comments
       </Typography>
 
       {/* Add Comment Box */}
@@ -50,9 +49,9 @@ const VideoCommentSection = () => {
       {/* Comments List */}
       {isLoading ? (
         <CircularProgressCenter size={40} />
-      ) : data?.docs && data.docs.length > 0 ? (
+      ) : data?.comments.docs && data.commentCount > 0 ? (
         <Stack spacing={3}>
-          {data.docs.map((comment) => (
+          {data.comments.docs.map((comment) => (
             <VideoCommentItem
               key={comment._id}
               comment={comment}
