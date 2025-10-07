@@ -55,10 +55,24 @@ const getVideoComments = asyncHandler(async (req, res) => {
     { page: Number(page), limit: Number(limit) }
   );
   if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
+  const commentCount = await Comment.countDocuments({
+    video: toObjectId(video_ID),
+  });
+
+  const isLiked = await Like.exists({
+    video: toObjectId(video_ID),
+    user: toObjectId(String(req.user?._id)),
+  });
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
+    .json(
+      new ApiResponse(
+        200,
+        { comments, commentCount, isLiked },
+        "COMMENTS FETCHED SUCCESSFULLY"
+      )
+    );
 });
 
 const addVideoComment = asyncHandler(async (req, res) => {
@@ -239,9 +253,25 @@ const getTweetComments = asyncHandler(async (req, res) => {
   );
   if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
 
+  if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
+  const commentCount = await Comment.countDocuments({
+    tweet: toObjectId(tweet_ID),
+  });
+
+  const isLiked = await Like.exists({
+    tweet: toObjectId(tweet_ID),
+    user: toObjectId(String(req.user?._id)),
+  });
+
   return res
     .status(200)
-    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
+    .json(
+      new ApiResponse(
+        200,
+        { comments, commentCount, isLiked },
+        "COMMENTS FETCHED SUCCESSFULLY"
+      )
+    );
 });
 
 const addTweetComment = asyncHandler(async (req, res) => {
@@ -350,9 +380,25 @@ const getCommentsComment = asyncHandler(async (req, res) => {
   );
   if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
 
+  if (!comments) throw new ApiError(400, "PAGINATED COMMENTS NOT FOUND");
+  const commentCount = await Comment.countDocuments({
+    comment: toObjectId(comment_ID),
+  });
+
+  const isLiked = await Like.exists({
+    comment: toObjectId(comment_ID),
+    user: toObjectId(String(req.user?._id)),
+  });
+
   return res
     .status(200)
-    .json(new ApiResponse(200, { comments }, "COMMENTS FETCHED SUCCESSFULLY"));
+    .json(
+      new ApiResponse(
+        200,
+        { comments, commentCount, isLiked },
+        "COMMENTS FETCHED SUCCESSFULLY"
+      )
+    );
 });
 
 export {
