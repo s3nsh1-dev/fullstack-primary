@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useMutateLikeUserTweet = () => {
+const useToggleLikeOnTweet = () => {
   return useMutation({
     mutationKey: ["likeTweet"],
     mutationFn: async (tweet_ID: string) => {
@@ -18,7 +18,7 @@ const useMutateLikeUserTweet = () => {
   });
 };
 
-export default useMutateLikeUserTweet;
+export default useToggleLikeOnTweet;
 
 export type LikeRemovedResponse = {
   result: {
