@@ -59,10 +59,12 @@ const getVideoComments = asyncHandler(async (req, res) => {
     video: toObjectId(video_ID),
   });
 
-  const isLiked = await Like.exists({
+  const fetchLike = await Like.exists({
     video: toObjectId(video_ID),
     user: toObjectId(String(req.user?._id)),
   });
+
+  const isLiked = fetchLike ? true : false;
 
   return res
     .status(200)
@@ -258,10 +260,12 @@ const getTweetComments = asyncHandler(async (req, res) => {
     tweet: toObjectId(tweet_ID),
   });
 
-  const isLiked = await Like.exists({
+  const fetchLike = await Like.exists({
     tweet: toObjectId(tweet_ID),
     user: toObjectId(String(req.user?._id)),
   });
+
+  const isLiked = fetchLike ? true : false;
 
   return res
     .status(200)
@@ -385,10 +389,12 @@ const getCommentsComment = asyncHandler(async (req, res) => {
     comment: toObjectId(comment_ID),
   });
 
-  const isLiked = await Like.exists({
+  const fetchLike = await Like.exists({
     comment: toObjectId(comment_ID),
     user: toObjectId(String(req.user?._id)),
   });
+
+  const isLiked = fetchLike ? true : false;
 
   return res
     .status(200)
