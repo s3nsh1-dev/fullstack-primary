@@ -46,6 +46,8 @@ type CommentsResponse = {
       prevPage: number | null;
       nextPage: number | null;
     };
+    commentCount: number;
+    isLiked: boolean;
   };
   message: string;
   success: boolean;
