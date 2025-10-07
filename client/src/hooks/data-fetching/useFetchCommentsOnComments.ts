@@ -31,6 +31,7 @@ export type ReplyType = {
   };
   createdAt: string;
   updatedAt: string;
+  isLiked: boolean;
 };
 
 type ApiResponse = {

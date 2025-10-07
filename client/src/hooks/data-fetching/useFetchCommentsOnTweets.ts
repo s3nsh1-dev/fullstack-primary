@@ -31,6 +31,7 @@ export type TweetCommentType = {
   };
   createdAt: string;
   updatedAt: string;
+  isLiked: boolean;
 };
 
 type ApiResponse = {
