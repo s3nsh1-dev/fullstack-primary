@@ -12,6 +12,7 @@ import {
   ThumbDownOutlined,
   MoreVert,
 } from "@mui/icons-material";
+// import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 
 const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
   const [like, setLike] = React.useState(false);
@@ -63,6 +64,7 @@ const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
           <IconButton
             size="small"
             sx={{ color: theme.text, "&:hover": { bgcolor: theme.hoverBg } }}
+            onClick={handleLikes}
           >
             <ThumbUpOutlined
               sx={{ fontSize: 18 }}
@@ -117,6 +119,7 @@ const VideoCommentItem: React.FC<Props> = ({ comment, theme }) => {
 };
 
 export default VideoCommentItem;
+
 type Owner = {
   _id: string;
   username: string;
@@ -141,6 +144,7 @@ interface Props {
   comment: Comment;
   theme: ThemeType;
 }
+
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const now = new Date();
