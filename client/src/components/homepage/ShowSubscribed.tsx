@@ -1,13 +1,15 @@
-import type { SubscriberType } from "../../constants/dataTypes";
 import { Box, Typography } from "@mui/material";
 import SubscriberCard from "../subscribers/SubscriberCard";
+import { useOutletContext } from "react-router-dom";
+import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
 
-const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
-  if (!subscribed || subscribed.length === 0) {
+const ShowSubscribed = () => {
+  const { data } = useOutletContext<OutletContextType>();
+  if (!data || data.user.subscribers.length === 0) {
     return <Typography color="textSecondary">No Subscribers</Typography>;
   }
 
-  const renderSubscriberList = subscribed.map((sub) => {
+  const renderSubscriberList = data.user.subscribers.map((sub) => {
     return (
       <SubscriberCard
         key={sub._id}
@@ -34,3 +36,11 @@ const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
 };
 
 export default ShowSubscribed;
+
+interface OutletContextType {
+  data: {
+    user: HomePageFormatType;
+    isSubbed: boolean;
+  };
+  interaction: boolean;
+}

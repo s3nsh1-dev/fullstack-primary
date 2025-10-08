@@ -1,13 +1,15 @@
-import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
 import { Stack, Typography } from "@mui/material";
 import IndividualTweet from "../Tweets/IndividualTweet";
+import { useOutletContext } from "react-router-dom";
+import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
 
-const ShowTweets: React.FC<ShowTweetsProps> = ({ tweets, interaction }) => {
-  if (!tweets || tweets.length === 0) {
+const ShowTweets = () => {
+  const { data, interaction } = useOutletContext<OutletContextType>();
+  if (!data.user.tweets || data.user.tweets.length === 0) {
     return <Typography color="textSecondary">No Tweets</Typography>;
   }
 
-  const renderTweets = tweets.map((tweet) => (
+  const renderTweets = data.user.tweets.map((tweet) => (
     <IndividualTweet key={tweet._id} tweet={tweet} interaction={interaction} />
   ));
 
@@ -16,7 +18,10 @@ const ShowTweets: React.FC<ShowTweetsProps> = ({ tweets, interaction }) => {
 
 export default ShowTweets;
 
-type ShowTweetsProps = {
-  tweets: TweetType[];
+interface OutletContextType {
+  data: {
+    user: HomePageFormatType;
+    isSubbed: boolean;
+  };
   interaction: boolean;
-};
+}

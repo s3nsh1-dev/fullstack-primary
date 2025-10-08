@@ -1,82 +1,51 @@
 import React from "react";
 import { emptyPageText } from "../../constants/constants";
-import ShowPlaylists from "../../components/homepage/ShowPlaylists";
-import ShowVideos from "./ShowVideos";
-import ShowSubscribed from "../../components/homepage/ShowSubscribed";
-import ShowTweets from "../../components/homepage/ShowTweets";
 import useMode from "../../hooks/useMode";
 import { StyledButton } from "../../components/ui-components/StyledComponents";
 import { buttonColor } from "../../constants/uiConstants";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Box } from "@mui/material";
-import HomeUserDetails from "./HomeUserDetails";
-import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
+import { NavLink, useLocation } from "react-router-dom";
 
-const SubHomepage: React.FC<SubHomepageProps> = ({
-  open,
-  data,
-  handleOpen,
-}) => {
+const SubHomepage: React.FC<SubHomepageProps> = ({ username }) => {
   const { mode } = useMode();
+  const location = useLocation();
   return (
-    <>
-      <HomeUserDetails data={data} />
-      <Box className="dynamic-content">
-        <ButtonGroup
-          variant="text"
-          color="inherit"
-          aria-label="Basic button group"
-          sx={{
-            width: "100%",
-          }}
-        >
-          {emptyPageText.map((button) => {
-            const foo = button.id as keyof OpenStateType;
-            return (
+    <Box className="tabs-container">
+      <ButtonGroup
+        variant="text"
+        color="inherit"
+        aria-label="tabs-container"
+        fullWidth
+        // sx={{ width: "100%" }}
+      >
+        {emptyPageText.map((tab) => {
+          const to = `/${username}/${tab.id}`;
+          const isActive = location.pathname.endsWith(`/${tab.id}`);
+          return (
+            <NavLink key={tab.id} to={to} style={{ width: "100%" }}>
               <StyledButton
-                id={button.id}
+                id={tab.id}
                 mode={mode}
                 sx={{
                   width: "100%",
-                  backgroundColor:
-                    open[foo] === false ? buttonColor.default : "transparent",
+                  backgroundColor: !isActive
+                    ? buttonColor.default
+                    : "transparent",
                 }}
-                onClick={() => handleOpen(button.id as keyof OpenStateType)}
               >
-                {button.title}
+                {tab.title}
               </StyledButton>
-            );
-          })}
-        </ButtonGroup>
-        <Box className="select-content" m={1}>
-          {open.videos && <ShowVideos videos={data.user.videos} />}
-          {open.playlists && <ShowPlaylists playlists={data.user.playlists} />}
-          {open.tweets && (
-            <ShowTweets tweets={data.user.tweets} interaction={false} />
-          )}
-          {open.subscribed && (
-            <ShowSubscribed subscribed={data.user.subscribers} />
-          )}
-        </Box>
-      </Box>
-    </>
+            </NavLink>
+          );
+        })}
+      </ButtonGroup>
+    </Box>
   );
 };
 
 export default SubHomepage;
 
-type OpenStateType = {
-  videos: boolean;
-  playlists: boolean;
-  tweets: boolean;
-  subscribed: boolean;
-};
-
 type SubHomepageProps = {
-  open: OpenStateType;
-  data: {
-    user: HomePageFormatType;
-    isSubbed: boolean;
-  };
-  handleOpen: (value: keyof OpenStateType) => void;
+  username: string;
 };

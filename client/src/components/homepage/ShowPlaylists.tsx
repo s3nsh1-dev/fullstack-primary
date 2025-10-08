@@ -1,4 +1,3 @@
-import type { PlaylistType } from "../../constants/dataTypes";
 import {
   Card,
   CardContent,
@@ -8,15 +7,18 @@ import {
   Avatar,
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
+import { useOutletContext } from "react-router-dom";
+import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
 
-const ShowPlaylists = ({ playlists }: { playlists: PlaylistType[] }) => {
-  if (!playlists || playlists.length === 0) {
+const ShowPlaylists = () => {
+  const { data } = useOutletContext<OutletContextType>();
+  if (!data.user.playlists || data.user.playlists.length === 0) {
     return <Typography color="textSecondary">No Playlists</Typography>;
   }
 
   return (
     <Stack spacing={1}>
-      {playlists.map((playlist) => (
+      {data.user.playlists.map((playlist) => (
         <Card
           key={playlist._id}
           variant="outlined"
@@ -82,3 +84,11 @@ const ShowPlaylists = ({ playlists }: { playlists: PlaylistType[] }) => {
 };
 
 export default ShowPlaylists;
+
+interface OutletContextType {
+  data: {
+    user: HomePageFormatType;
+    isSubbed: boolean;
+  };
+  interaction: boolean;
+}
