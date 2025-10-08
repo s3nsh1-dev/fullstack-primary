@@ -8,7 +8,6 @@ import { Subscription } from "../models/subscription.model";
 
 const getDetailsForHomepage = asyncHandler(async (req, res) => {
   const { username } = req.params;
-  console.log("HOME USERNAME: ", username);
   if (!username) throw new ApiError(400, "INVALID USERNAME");
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");

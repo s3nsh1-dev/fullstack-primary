@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import SubHomepage from "../components/homepage/SubHomepage";
 
 const Homepage = () => {
-  console.log("homepage rendering");
   const { username } = useParams();
   const [open, setOpen] = useState<OpenStateType>({
     videos: true,
@@ -13,7 +12,6 @@ const Homepage = () => {
     tweets: false,
     subscribed: false,
   });
-  console.log("from params we have ", username);
   const { data, isLoading, isError } = useFetchHomepageDetails(username || "");
   if (isLoading) return <div>...Loading Homepage</div>;
   if (isError) return <div>...Encountered Error</div>;

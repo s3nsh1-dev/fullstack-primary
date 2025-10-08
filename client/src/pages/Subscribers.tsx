@@ -20,7 +20,7 @@ const Subscribers = () => {
     return (
       <SubscriberCard
         key={sub._id}
-        subscriber={sub.subscriber._id}
+        subscriber={sub.subscriber.username || ""}
         avatar={sub.subscriber.avatar}
         fullname={sub.subscriber.fullname || ""}
         username={sub.subscriber.username || ""}

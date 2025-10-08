@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { getTheme } from "./utilities/muiThemeController";
@@ -24,15 +24,7 @@ import OpenSingleVideoPage from "./pages/OpenSingleVideoPage";
 
 function App() {
   const { mode } = useMode();
-  const { user, loading } = useAuth();
-
-  const username = React.useRef<string | undefined>(undefined);
-  React.useEffect(() => {
-    if (user) {
-      username.current = user.user.username;
-    }
-  }, [user]);
-
+  const { loading } = useAuth();
   if (loading) return <AppLoadingProgress />;
 
   return (
@@ -44,7 +36,7 @@ function App() {
             {/* routes with Navbar */}
             <Route element={<Navbar navTitle="" />}>
               <Route path="/" element={<Dashboard />} />
-              <Route path={`/${user?.user.username}`} element={<Homepage />} />
+              <Route path={`/:username`} element={<Homepage />} />
               <Route path="/liked-content" element={<LikedContent />} />
               <Route path="/my-videos" element={<MyVideos />} />
               <Route path="/setting" element={<Settings />} />
