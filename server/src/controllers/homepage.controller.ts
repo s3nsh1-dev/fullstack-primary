@@ -7,13 +7,14 @@ import { toObjectId } from "../utils/convertToObjectId";
 import { Subscription } from "../models/subscription.model";
 
 const getDetailsForHomepage = asyncHandler(async (req, res) => {
-  const { user_ID } = req.params;
-  if (!isValidObjectId(user_ID)) throw new ApiError(400, "INVALID USER_ID");
+  const { username } = req.params;
+  console.log("HOME USERNAME: ", username);
+  if (!username) throw new ApiError(400, "INVALID USERNAME");
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");
 
   const user = await User.aggregate([
-    { $match: { _id: toObjectId(user_ID) } },
+    { $match: { username: username } },
     {
       $lookup: {
         from: "subscriptions",
@@ -165,7 +166,7 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError(401, "USER NOT FOUND FOR HOMEPAGE");
 
   const checkSubbed = await Subscription.findOne({
-    channel: user_ID,
+    channel: user[0]._id,
     subscriber: req.user._id,
   });
   const isSubbed = checkSubbed ? true : false;

@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { sideBarList, sideBarSecondaryList } from "../../constants/constants";
 import type { SidebarOptionType } from "../../constants/genericTypes";
 import { Box } from "@mui/material";
+import useAuth from "../../hooks/useAuth";
 
 const sideBarIconList = [
   <HomeIcon />,
@@ -36,6 +37,7 @@ const DrawerContents = ({
   closeDrawer: () => void;
 }) => {
   const { mode } = useMode();
+  const { user } = useAuth();
 
   const style = [
     {
@@ -75,7 +77,7 @@ const DrawerContents = ({
           <ListItem key={text.id} disablePadding sx={{ display: "block" }}>
             <Box
               component={Link}
-              to={text.path}
+              to={text.name === "Home" ? `/${user?.user.username}` : text.path}
               sx={{ textDecoration: "none" }}
             >
               <ListItemButton sx={style} onClick={closeDrawer}>

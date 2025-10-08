@@ -5,6 +5,6 @@ import { Router } from "express";
 const HomeRouter = Router();
 
 HomeRouter.use(verifyJWT);
-HomeRouter.route("/:user_ID").get(getDetailsForHomepage);
+HomeRouter.route("/:username").get(getDetailsForHomepage);
 
 export default HomeRouter;

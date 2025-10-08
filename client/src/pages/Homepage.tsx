@@ -1,22 +1,20 @@
 import { useState } from "react";
 import { Box } from "@mui/material";
 import useFetchHomepageDetails from "../hooks/data-fetching/useFetchHomepageDetails";
-import useAuth from "../hooks/useAuth";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import HomeTabTitles from "../components/ui-components/HomeTabTitles";
+import { useParams } from "react-router-dom";
 import SubHomepage from "../components/homepage/SubHomepage";
 
 const Homepage = () => {
-  const { user } = useAuth();
+  console.log("homepage rendering");
+  const { username } = useParams();
   const [open, setOpen] = useState<OpenStateType>({
     videos: true,
     playlists: false,
     tweets: false,
     subscribed: false,
   });
-  const { data, isLoading, isError } = useFetchHomepageDetails(
-    user?.user._id || ""
-  );
+  console.log("from params we have ", username);
+  const { data, isLoading, isError } = useFetchHomepageDetails(username || "");
   if (isLoading) return <div>...Loading Homepage</div>;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <div>....No Homepage Info</div>;
@@ -32,10 +30,6 @@ const Homepage = () => {
   };
   return (
     <Box>
-      <HomeTabTitles
-        text="Home"
-        icon={<HomeOutlinedIcon sx={{ fontSize: 28, color: "primary.main" }} />}
-      />
       <SubHomepage open={open} data={data} handleOpen={handleOpen} />
     </Box>
   );
