@@ -2,16 +2,15 @@ import React from "react";
 import { Box, Typography, Divider, Button, Stack } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import HomeProfilePictures from "./HomeProfilePictures";
-import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
 import { formatCount } from "../../utilities/helperFncForStats";
 import useToggleSubscription from "../../hooks/data-fetching/useToggleSubscription";
 
 const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
   const subMutate = useToggleSubscription();
-  const [subbed, setSubbed] = React.useState(data.isSubbed);
-  const [subCount, setSubCount] = React.useState(data.user.subscribers.length);
+  const [subbed, setSubbed] = React.useState(data?.isSubbed);
+  const [subCount, setSubCount] = React.useState(data?.totalSubscribers);
   const handleSubscribe = () => {
-    subMutate.mutate(data.user._id, {
+    subMutate.mutate(data.user?._id, {
       onSuccess: (response) => {
         if ("channel" in response) {
           setSubbed(true);
@@ -33,8 +32,8 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
     >
       {/* Profile Pictures */}
       <HomeProfilePictures
-        coverImage={data.user.coverImage}
-        avatar={data.user.avatar}
+        coverImage={data.user?.coverImage}
+        avatar={data.user?.avatar}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}
@@ -55,13 +54,13 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
 
           <Box>
             <Typography variant="h5" fontWeight="bold">
-              {data.user.fullname}{" "}
+              {data.user?.fullname}{" "}
               <Typography
                 component="span"
                 variant="caption"
                 color="text.secondary"
               >
-                @{data.user.username}
+                @{data.user?.username}
               </Typography>
             </Typography>
             <Typography variant="body2">
@@ -71,11 +70,11 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
                 sx={{ fontStyle: "italic" }}
                 variant="body2"
               >
-                {data.user.email}
+                {data.user?.email}
               </Typography>
             </Typography>
             <Typography variant="body2">
-              Created: {convertISOIntoLocalTime(data.user.createdAt)}
+              Created: {convertISOIntoLocalTime(data.user?.createdAt)}
             </Typography>
           </Box>
 
@@ -92,10 +91,10 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
               Subscribers: {formatCount(subCount)}
             </Typography>
             <Typography variant="body2">
-              Videos: {formatCount(data.user.videos.length)}
+              Videos: {formatCount(data?.totalVideos)}
             </Typography>
             <Typography variant="body2">
-              Tweets: {formatCount(data.user.tweets.length)}
+              Tweets: {formatCount(data?.totalTweets)}
             </Typography>
           </Box>
         </Box>
@@ -115,7 +114,18 @@ export default HomeUserDetails;
 
 type HomeUserDetailsProps = {
   data: {
-    user: HomePageFormatType;
+    user: {
+      _id: string;
+      username: string;
+      email: string;
+      fullname: string;
+      avatar: string;
+      coverImage: string;
+      createdAt: string; // ISO date string
+    };
     isSubbed: boolean;
+    totalSubscribers: number;
+    totalVideos: number;
+    totalTweets: number;
   };
 };

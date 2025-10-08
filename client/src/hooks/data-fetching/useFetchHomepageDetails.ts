@@ -1,10 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import type {
-  SubscriberType,
-  VideoType,
-  PlaylistType,
-} from "../../constants/dataTypes";
-import type { TweetType } from "./useFetchUserTweets";
 
 const useFetchHomepageDetails = (username: string) => {
   console.log("username:", username);
@@ -30,27 +24,23 @@ const useFetchHomepageDetails = (username: string) => {
 };
 export default useFetchHomepageDetails;
 
-export type HomePageFormatType = {
-  _id: string;
-  username: string;
-  email: string;
-  fullname: string;
-  avatar: string;
-  coverImage: string;
-  createdAt: string; // ISO date string
-  subscribers: SubscriberType[];
-  videos: VideoType[];
-  tweets: TweetType[];
-  playlists: PlaylistType[];
-  isSubbed: boolean;
-};
-
-type ApiResponse = {
+interface ApiResponse {
+  statusCode: number;
   data: {
-    user: HomePageFormatType;
+    user: {
+      _id: string;
+      username: string;
+      email: string;
+      fullname: string;
+      avatar: string;
+      coverImage: string;
+      createdAt: string; // ISO date string
+    };
     isSubbed: boolean;
+    totalSubscribers: number;
+    totalVideos: number;
+    totalTweets: number;
   };
   message: string;
   success: boolean;
-  statusCode: number;
-};
+}

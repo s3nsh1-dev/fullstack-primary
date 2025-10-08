@@ -19,7 +19,7 @@ const ShowTweets: React.FC<ShowTweetType> = ({ interaction }) => {
   if (isError) return <div>...Encountered Error</div>;
   if (!data || data.length === 0) return <div>No Tweets</div>;
 
-  const renderTweets = data.map((tweet) => (
+  const renderTweets = data?.map((tweet) => (
     <IndividualTweet key={tweet._id} tweet={tweet} interaction={interaction} />
   ));
 

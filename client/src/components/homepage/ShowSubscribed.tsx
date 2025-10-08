@@ -14,7 +14,7 @@ const ShowSubscribed = () => {
   if (!data) return <ContentNotAvailable text="No Subscribers" />;
   if (isError) return <div>...Encountered Error</div>;
 
-  const renderSubscriberList = data?.subscribers.map((sub) => {
+  const renderSubscriberList = data.subscribers?.map((sub) => {
     return (
       <SubscriberCard
         key={sub._id}
