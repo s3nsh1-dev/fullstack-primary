@@ -1,15 +1,25 @@
-import { Stack, Typography } from "@mui/material";
+import React from "react";
+import { Stack } from "@mui/material";
 import IndividualTweet from "../Tweets/IndividualTweet";
-import { useOutletContext } from "react-router-dom";
-import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
+import useAuth from "../../hooks/useAuth";
+import CircularProgressCenter from "../ui-components/CircularProgressCenter";
+import useFetchUserTweets from "../../hooks/data-fetching/useFetchUserTweets";
 
-const ShowTweets = () => {
-  const { data, interaction } = useOutletContext<OutletContextType>();
-  if (!data.user.tweets || data.user.tweets.length === 0) {
-    return <Typography color="textSecondary">No Tweets</Typography>;
-  }
+const ShowTweets: React.FC<ShowTweetType> = ({ interaction }) => {
+  const { user } = useAuth();
+  const { data, isError, isLoading } = useFetchUserTweets(
+    user?.user?._id || ""
+  );
+  if (isLoading)
+    return (
+      <div>
+        <CircularProgressCenter />
+      </div>
+    );
+  if (isError) return <div>...Encountered Error</div>;
+  if (!data || data.length === 0) return <div>No Tweets</div>;
 
-  const renderTweets = data.user.tweets.map((tweet) => (
+  const renderTweets = data.map((tweet) => (
     <IndividualTweet key={tweet._id} tweet={tweet} interaction={interaction} />
   ));
 
@@ -18,10 +28,6 @@ const ShowTweets = () => {
 
 export default ShowTweets;
 
-interface OutletContextType {
-  data: {
-    user: HomePageFormatType;
-    isSubbed: boolean;
-  };
+type ShowTweetType = {
   interaction: boolean;
-}
+};

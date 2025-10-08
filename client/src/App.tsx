@@ -44,7 +44,10 @@ function App() {
                 {/* Nested tabs */}
                 <Route path="videos" element={<ShowVideos />} />
                 <Route path="playlists" element={<ShowPlaylists />} />
-                <Route path="tweets" element={<ShowTweets />} />
+                <Route
+                  path="tweets"
+                  element={<ShowTweets interaction={false} />}
+                />
                 <Route path="subscribed" element={<ShowSubscribed />} />
 
                 {/* Default tab (redirect to videos) */}

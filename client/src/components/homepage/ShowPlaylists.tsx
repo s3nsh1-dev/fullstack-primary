@@ -7,11 +7,8 @@ import {
   Avatar,
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
-import { useOutletContext } from "react-router-dom";
-import type { HomePageFormatType } from "../../hooks/data-fetching/useFetchHomepageDetails";
 
 const ShowPlaylists = () => {
-  const { data } = useOutletContext<OutletContextType>();
   if (!data.user.playlists || data.user.playlists.length === 0) {
     return <Typography color="textSecondary">No Playlists</Typography>;
   }
@@ -84,11 +81,3 @@ const ShowPlaylists = () => {
 };
 
 export default ShowPlaylists;
-
-interface OutletContextType {
-  data: {
-    user: HomePageFormatType;
-    isSubbed: boolean;
-  };
-  interaction: boolean;
-}
