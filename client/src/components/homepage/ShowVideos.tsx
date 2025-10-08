@@ -16,7 +16,6 @@ const ShowVideos = () => {
   if (isLoading) return <CircularProgressCenter />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <div>No Video Uploaded</div>;
-  console.log(data);
   if (!data || data.videos.length === 0) {
     return <Typography color="textSecondary">No Videos</Typography>;
   }
