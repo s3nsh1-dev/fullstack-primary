@@ -1,4 +1,3 @@
-import type { PlaylistType } from "../../constants/dataTypes";
 import {
   Card,
   CardContent,
@@ -8,15 +7,22 @@ import {
   Avatar,
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
+import useAuth from "../../hooks/useAuth";
+import useFetchUserPlaylist from "../../hooks/data-fetching/useFetchUserPlaylist";
+import CircularProgressCenter from "../ui-components/CircularProgressCenter";
+import ContentNotAvailable from "../others/ContentNotAvailable";
 
-const ShowPlaylists = ({ playlists }: { playlists: PlaylistType[] }) => {
-  if (!playlists || playlists.length === 0) {
-    return <Typography color="textSecondary">No Playlists</Typography>;
-  }
-
+const ShowPlaylists = () => {
+  const { user } = useAuth();
+  const { data, isLoading, isError } = useFetchUserPlaylist(
+    user?.user?._id || ""
+  );
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (!data) return <ContentNotAvailable text="No Subscribers" />;
+  if (isError) return <div>...Encountered Error</div>;
   return (
     <Stack spacing={1}>
-      {playlists.map((playlist) => (
+      {data?.playlists?.map((playlist) => (
         <Card
           key={playlist._id}
           variant="outlined"
@@ -42,7 +48,7 @@ const ShowPlaylists = ({ playlists }: { playlists: PlaylistType[] }) => {
 
             {/* Videos List */}
             <Stack direction="row" flexWrap="wrap" spacing={2}>
-              {playlist.videos.map((video) => (
+              {playlist?.videos?.map((video) => (
                 <Card
                   key={video._id}
                   variant="outlined"

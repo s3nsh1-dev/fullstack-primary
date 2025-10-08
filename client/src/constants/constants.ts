@@ -3,7 +3,7 @@ import type { SidebarOptionType, EmptyPageTextType } from "./genericTypes";
 export const sideBarList: SidebarOptionType[] = [
   {
     id: 0,
-    path: "/home",
+    path: "/",
     name: "Home",
   },
   {

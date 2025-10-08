@@ -4,7 +4,6 @@ import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import { Link } from "react-router-dom";
 
 const SubscriberCard: React.FC<SubscriberCardProps> = ({
-  subscriber,
   avatar,
   fullname,
   username,
@@ -13,7 +12,7 @@ const SubscriberCard: React.FC<SubscriberCardProps> = ({
   return (
     <Card
       component={Link}
-      to={`/channels/${subscriber}/home`}
+      to={`/${username}`}
       sx={{ textDecoration: "none" }}
       elevation={4}
     >
@@ -42,7 +41,6 @@ const SubscriberCard: React.FC<SubscriberCardProps> = ({
 export default SubscriberCard;
 
 type SubscriberCardProps = {
-  subscriber: string;
   avatar: string;
   fullname: string;
   username: string;

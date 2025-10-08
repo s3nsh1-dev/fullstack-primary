@@ -12,15 +12,24 @@ import {
   ThumbDownOutlined,
   MoreVert,
 } from "@mui/icons-material";
-// import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
+import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 
 const VideoCommentItem: React.FC<VideoCommentItemProps> = ({
   comment,
   theme,
 }) => {
   const [like, setLike] = React.useState(comment.isLiked);
+  const toggleLike = useToggleLikeOnComment();
   const handleLikes = () => {
-    setLike((prev) => !prev);
+    toggleLike.mutate(comment._id, {
+      onSuccess: (data) => {
+        if ("comment" in data) {
+          setLike(true);
+        } else {
+          setLike(false);
+        }
+      },
+    });
   };
   return (
     <Stack direction="row" spacing={2}>

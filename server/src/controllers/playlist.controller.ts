@@ -43,7 +43,61 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
 
-  const playlists = await Playlist.find({ owner: userId });
+  const playlists = await Playlist.aggregate([
+    { $match: { owner: toObjectId(String(userId)) } },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "videos",
+        pipeline: [
+          {
+            $project: {
+              title: 1,
+              description: 1,
+              thumbnail: 1,
+              videoFile: 1,
+              duration: 1,
+              views: 1,
+              isPublished: 1,
+              updatedAt: 1,
+              owner: 1,
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    avatar: 1,
+                    username: 1,
+                    fullname: 1,
+                  },
+                },
+              ],
+            },
+          },
+          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+        ],
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        description: 1,
+        videos: 1, // now videos are full objects, not just IDs
+        owner: 1,
+        updatedAt: 1,
+        createdAt: 1,
+      },
+    },
+  ]);
   if (!playlists) throw new ApiError(400, "NO PLAYLIST FOUND");
 
   return res
@@ -71,13 +125,14 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         from: "users",
         localField: "owner",
         foreignField: "_id",
-        as: "ownerDetails",
+        as: "owner",
         pipeline: [
           {
             $project: {
               _id: 1,
               fullname: 1,
               avatar: 1,
+              username: 1,
             },
           },
         ],

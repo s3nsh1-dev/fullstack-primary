@@ -1,21 +1,27 @@
-import type { SubscriberType } from "../../constants/dataTypes";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import SubscriberCard from "../subscribers/SubscriberCard";
+import useAuth from "../../hooks/useAuth";
+import CircularProgressCenter from "../ui-components/CircularProgressCenter";
+import useFetchUserSubscribers from "../../hooks/data-fetching/useFetchUserSubscribers";
+import ContentNotAvailable from "../others/ContentNotAvailable";
 
-const ShowSubscribed = ({ subscribed }: { subscribed: SubscriberType[] }) => {
-  if (!subscribed || subscribed.length === 0) {
-    return <Typography color="textSecondary">No Subscribers</Typography>;
-  }
+const ShowSubscribed = () => {
+  const { user } = useAuth();
+  const { data, isLoading, isError } = useFetchUserSubscribers(
+    user?.user?._id || ""
+  );
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (!data) return <ContentNotAvailable text="No Subscribers" />;
+  if (isError) return <div>...Encountered Error</div>;
 
-  const renderSubscriberList = subscribed.map((sub) => {
+  const renderSubscriberList = data.subscribers?.map((sub) => {
     return (
       <SubscriberCard
         key={sub._id}
-        subscriber={sub.subscriber_id}
-        fullname={sub.fullname}
-        username={sub.username}
-        avatar={sub.avatar}
-        updatedAt={sub.subscribedAt}
+        fullname={sub.subscriber.fullname || ""}
+        username={sub.subscriber.username || ""}
+        avatar={sub.subscriber.avatar}
+        updatedAt={sub.createdAt}
       />
     );
   });
