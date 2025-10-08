@@ -13,7 +13,7 @@ const SubscriberCard: React.FC<SubscriberCardProps> = ({
   return (
     <Card
       component={Link}
-      to={`/channels/${subscriber}/home`}
+      to={`/${subscriber}`}
       sx={{ textDecoration: "none" }}
       elevation={4}
     >
