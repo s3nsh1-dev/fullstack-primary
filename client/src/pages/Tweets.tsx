@@ -16,7 +16,7 @@ const Tweets = () => {
       <Box m={1}>
         <Box sx={sxValue}>
           <ChatBubbleOutlineIcon />
-          <Typography variant="h6" fontWeight="bold">
+          <Typography variant="h6" fontWeight="bold" whiteSpace={"nowrap"}>
             Tweets
           </Typography>
           <DividerRoot>

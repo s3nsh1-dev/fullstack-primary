@@ -1,30 +1,60 @@
+import React from "react";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import ShowVideos from "../components/homepage/ShowVideos";
-import useFetchUserVideos from "../hooks/data-fetching/useFetchUserVideos";
-import useAuth from "../hooks/useAuth";
-import { Box } from "@mui/material";
-import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
+import { Box, Typography, Divider, IconButton } from "@mui/material";
+import { DividerRoot } from "../components/ui-components/StyledComponents";
+import VideoCallIcon from "@mui/icons-material/VideoCall";
+import FormModal from "../components/others/FormModal";
+import VideoUploadForm from "../components/Videos/VideoUploadForm";
 
 const MyVideos = () => {
-  const { user } = useAuth();
-  const { data, isLoading, isError } = useFetchUserVideos(
-    user?.user?._id || ""
-  );
-  if (isLoading) return <CircularProgressCenter />;
-  if (isError) return <div>...Encountered Error</div>;
-  if (!data) return <div>No Video Uploaded</div>;
+  const [openModal, setOpenModal] = React.useState<boolean>(false);
+  const toggleModal = () => setOpenModal((prev) => !prev);
+
   return (
-    <Box m={1}>
-      <HomeTabTitles
-        text="My Videos"
-        icon={
-          <PlayCircleOutlineIcon sx={{ fontSize: 28, color: "primary.main" }} />
-        }
-      />
-      <ShowVideos />
-    </Box>
+    <>
+      <Box m={1}>
+        <Box sx={sxValue}>
+          <PlayCircleOutlineIcon />
+          <Typography variant="h6" fontWeight="bold" whiteSpace={"nowrap"}>
+            My Videos
+          </Typography>
+          <DividerRoot>
+            <Divider textAlign="right">
+              <Typography>
+                <IconButton onClick={toggleModal}>
+                  <VideoCallIcon fontSize="large" />
+                </IconButton>
+                Upload
+              </Typography>
+            </Divider>
+          </DividerRoot>
+        </Box>
+        <ShowVideos />
+      </Box>
+      {openModal && (
+        <FormModal toggleModal={toggleModal} open={openModal}>
+          <VideoUploadForm
+            onSubmit={(formData) => {
+              console.log("Upload data:", formData);
+              // Call your API here
+              // uploadVideo(formData);
+            }}
+            onCancel={() => {
+              toggleModal();
+            }}
+          />
+        </FormModal>
+      )}
+    </>
   );
 };
 
 export default MyVideos;
+
+const sxValue = {
+  display: "flex",
+  alignItems: "center",
+  mb: 2,
+  gap: 1,
+};
