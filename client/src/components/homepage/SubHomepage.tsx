@@ -26,7 +26,6 @@ const SubHomepage: React.FC<SubHomepageProps> = ({ username }) => {
             location.pathname.endsWith(`/${tab.id}`) ||
             (isVideosTab && location.pathname === `/${username}`);
 
-          console.log("isActive", isActive);
           return (
             <NavLink key={tab.id} to={to} style={{ width: "100%" }}>
               <StyledButton

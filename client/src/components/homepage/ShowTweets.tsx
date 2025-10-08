@@ -4,10 +4,15 @@ import IndividualTweet from "../Tweets/IndividualTweet";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useFetchUserTweets from "../../hooks/data-fetching/useFetchUserTweets";
 import { useOutletContext } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const ShowTweets: React.FC<ShowTweetType> = ({ interaction }) => {
-  const { userId } = useOutletContext<OutletContextType>();
-  const { data, isError, isLoading } = useFetchUserTweets(userId || "");
+  const outletContext = useOutletContext<OutletContextType | undefined>();
+  const { user } = useAuth();
+
+  const effectiveUserId = outletContext?.userId ?? user?.user?._id ?? "";
+
+  const { data, isError, isLoading } = useFetchUserTweets(effectiveUserId);
   if (isLoading)
     return (
       <div>
