@@ -3,10 +3,15 @@ import SubscriberCard from "../subscribers/SubscriberCard";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useFetchUserSubscribers from "../../hooks/data-fetching/useFetchUserSubscribers";
 import { useOutletContext } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const ShowSubscribed = () => {
-  const { userId } = useOutletContext<OutletContextType>();
-  const { data, isLoading, isError } = useFetchUserSubscribers(userId || "");
+  const outletContext = useOutletContext<OutletContextType | undefined>();
+  const { user } = useAuth();
+
+  const effectiveUserId = outletContext?.userId ?? user?.user?._id ?? "";
+
+  const { data, isLoading, isError } = useFetchUserSubscribers(effectiveUserId);
 
   if (isError) return <div>...Encountered Error</div>;
   if (isLoading) return <CircularProgressCenter size={20} />;
