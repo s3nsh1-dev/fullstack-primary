@@ -98,3 +98,12 @@ export const FormInput = styled(TextField, {
     transition: "background-color 5000s ease-in-out 0s",
   },
 }));
+
+export const DividerRoot = styled("div")(({ theme }) => ({
+  width: "100%",
+  ...theme.typography.body2,
+  color: (theme.vars || theme).palette.text.secondary,
+  "& > :not(style) ~ :not(style)": {
+    marginTop: theme.spacing(2),
+  },
+}));

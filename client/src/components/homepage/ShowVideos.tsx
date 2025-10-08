@@ -1,17 +1,17 @@
 import { Box, Typography } from "@mui/material";
 import IndividualVideoUI from "../Videos/IndividualVideoUI";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
-import useAuth from "../../hooks/useAuth";
 import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
+import { useOutletContext } from "react-router-dom";
 
 const ShowVideos = () => {
-  const { user } = useAuth();
-  const { data, isLoading, isError } = useFetchUserVideos(
-    user?.user?._id || ""
-  );
-  if (isLoading) return <CircularProgressCenter />;
+  const { userId } = useOutletContext<OutletContextType>();
+
+  const { data, isLoading, isError } = useFetchUserVideos(userId || "");
+
   if (isError) return <div>...Encountered Error</div>;
-  if (!data || data.videos.length === 0) {
+  if (isLoading) return <CircularProgressCenter />;
+  if (!data || data.videos?.length === 0) {
     return <Typography color="textSecondary">No Videos</Typography>;
   }
 
@@ -32,3 +32,7 @@ const ShowVideos = () => {
   );
 };
 export default ShowVideos;
+
+type OutletContextType = {
+  userId: string;
+};
