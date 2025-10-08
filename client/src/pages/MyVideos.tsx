@@ -22,7 +22,7 @@ const MyVideos = () => {
           <PlayCircleOutlineIcon sx={{ fontSize: 28, color: "primary.main" }} />
         }
       />
-      <ShowVideos videos={data.videos} />
+      <ShowVideos />
     </Box>
   );
 };

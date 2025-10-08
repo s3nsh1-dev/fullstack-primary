@@ -17,7 +17,7 @@ const Homepage = () => {
       <HomeUserDetails data={data} />
       <SubHomepage username={username || ""} />
       <Box m={1}>
-        <Outlet context={{ data: data, interaction: false }} />
+        <Outlet />
       </Box>
     </Box>
   );
