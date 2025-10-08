@@ -62,10 +62,10 @@ export const emptyPageText: EmptyPageTextType[] = [
     description: "This channel has yet to make a Tweet.",
   },
   {
-    id: "subscribed",
+    id: "subscribers",
     logo: "",
-    title: "Subscribed",
-    heading: "No people subscribers",
+    title: "Subscribers",
+    heading: "No people subscribed",
     description: "This channel has yet to subscribe a new channel.",
   },
 ];

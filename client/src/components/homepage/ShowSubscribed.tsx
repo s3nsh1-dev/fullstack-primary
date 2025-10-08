@@ -1,18 +1,22 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import SubscriberCard from "../subscribers/SubscriberCard";
-import useAuth from "../../hooks/useAuth";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useFetchUserSubscribers from "../../hooks/data-fetching/useFetchUserSubscribers";
-import ContentNotAvailable from "../others/ContentNotAvailable";
+import { useOutletContext } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const ShowSubscribed = () => {
+  const outletContext = useOutletContext<OutletContextType | undefined>();
   const { user } = useAuth();
-  const { data, isLoading, isError } = useFetchUserSubscribers(
-    user?.user?._id || ""
-  );
-  if (isLoading) return <CircularProgressCenter size={20} />;
-  if (!data) return <ContentNotAvailable text="No Subscribers" />;
+
+  const effectiveUserId = outletContext?.userId ?? user?.user?._id ?? "";
+
+  const { data, isLoading, isError } = useFetchUserSubscribers(effectiveUserId);
+
   if (isError) return <div>...Encountered Error</div>;
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (!data || data.subscribers?.length === 0)
+    return <Typography color="textSecondary">No Subscribers</Typography>;
 
   const renderSubscriberList = data.subscribers?.map((sub) => {
     return (
@@ -40,3 +44,7 @@ const ShowSubscribed = () => {
 };
 
 export default ShowSubscribed;
+
+type OutletContextType = {
+  userId: string;
+};

@@ -48,7 +48,7 @@ function App() {
                   path="tweets"
                   element={<ShowTweets interaction={false} />}
                 />
-                <Route path="subscribed" element={<ShowSubscribed />} />
+                <Route path="subscribers" element={<ShowSubscribed />} />
 
                 {/* Default tab (redirect to videos) */}
                 <Route index element={<ShowVideos />} />
