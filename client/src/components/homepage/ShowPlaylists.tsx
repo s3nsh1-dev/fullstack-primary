@@ -7,19 +7,19 @@ import {
   Avatar,
 } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
-import useAuth from "../../hooks/useAuth";
 import useFetchUserPlaylist from "../../hooks/data-fetching/useFetchUserPlaylist";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
-import ContentNotAvailable from "../others/ContentNotAvailable";
+import { useOutletContext } from "react-router-dom";
 
 const ShowPlaylists = () => {
-  const { user } = useAuth();
-  const { data, isLoading, isError } = useFetchUserPlaylist(
-    user?.user?._id || ""
-  );
-  if (isLoading) return <CircularProgressCenter size={20} />;
-  if (!data) return <ContentNotAvailable text="No Subscribers" />;
+  const { userId } = useOutletContext<OutletContextType>();
+  const { data, isLoading, isError } = useFetchUserPlaylist(userId || "");
+
   if (isError) return <div>...Encountered Error</div>;
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (!data || data.playlists?.length === 0)
+    return <Typography color="textSecondary">No Playlists</Typography>;
+
   return (
     <Stack spacing={1}>
       {data?.playlists?.map((playlist) => (
@@ -88,3 +88,7 @@ const ShowPlaylists = () => {
 };
 
 export default ShowPlaylists;
+
+type OutletContextType = {
+  userId: string;
+};

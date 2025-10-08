@@ -101,7 +101,10 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
         <Button
           variant="contained"
           onClick={handleSubscribe}
-          sx={{ ml: "0px", backgroundColor: subbed ? "white" : "red" }}
+          sx={{
+            ml: "0px",
+            backgroundColor: subbed ? "grey" : "red",
+          }}
         >
           {subbed ? "Subscribed" : "Subscribe"}
         </Button>
