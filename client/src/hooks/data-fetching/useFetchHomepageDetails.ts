@@ -6,12 +6,14 @@ import type {
 } from "../../constants/dataTypes";
 import type { TweetType } from "./useFetchUserTweets";
 
-const useFetchHomepageDetails = (user_ID: string) => {
+const useFetchHomepageDetails = (username: string) => {
+  console.log("username:", username);
   return useQuery({
-    queryKey: ["homepage", user_ID],
+    queryKey: ["homepage", username],
     queryFn: async () => {
+      console.log("homepage data:");
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/homepage/${user_ID}`,
+        `${import.meta.env.VITE_SERVER_URL}/homepage/${username}`,
         {
           method: "GET",
           credentials: "include",
@@ -23,7 +25,7 @@ const useFetchHomepageDetails = (user_ID: string) => {
       const result = data.data;
       return result;
     },
-    enabled: !!user_ID, // only fetch if user._id exists
+    enabled: !!username, // only fetch if user._id exists
   });
 };
 export default useFetchHomepageDetails;
