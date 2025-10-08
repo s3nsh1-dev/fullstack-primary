@@ -21,7 +21,7 @@ const ShowVideos = () => {
     return <Typography color="textSecondary">No Videos</Typography>;
   }
 
-  const renderVideoList = data.videos.map((video) => {
+  const renderVideoList = data.videos?.map((video) => {
     return <IndividualVideoUI video={video} key={video._id} />;
   });
 
