@@ -1,24 +1,6 @@
 import React from "react";
 import { Box, Typography, TextField, Stack } from "@mui/material";
 
-interface ThemeLike {
-  bg: string;
-  text: string;
-  textSecondary: string;
-  border: string;
-  hoverBg: string;
-  inputBg: string;
-  primaryBg: string;
-}
-
-export interface DescriptionStepProps {
-  theme: ThemeLike;
-  description: string;
-  descriptionError?: string;
-  onDescriptionChange: (value: string) => void;
-  descriptionLength: number;
-}
-
 const DescriptionStep: React.FC<DescriptionStepProps> = ({
   theme,
   description,
@@ -66,3 +48,21 @@ const DescriptionStep: React.FC<DescriptionStepProps> = ({
 };
 
 export default DescriptionStep;
+
+interface ThemeLike {
+  bg: string;
+  text: string;
+  textSecondary: string;
+  border: string;
+  hoverBg: string;
+  inputBg: string;
+  primaryBg: string;
+}
+
+export interface DescriptionStepProps {
+  theme: ThemeLike;
+  description: string;
+  descriptionError?: string;
+  onDescriptionChange: (value: string) => void;
+  descriptionLength: number;
+}
