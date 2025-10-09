@@ -6,10 +6,16 @@ import { DividerRoot } from "../components/ui-components/StyledComponents";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import FormModal from "../components/others/FormModal";
 import VideoUploadForm from "../components/Videos/VideoUploadForm";
+import useUploadMyVideo from "../hooks/data-fetching/useUploadMyVideo";
+import { useQueryClient } from "@tanstack/react-query";
+import useAuth from "../hooks/useAuth";
 
 const MyVideos = () => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const toggleModal = () => setOpenModal((prev) => !prev);
+  const { mutate: uploadVideo } = useUploadMyVideo();
 
   return (
     <>
@@ -36,13 +42,16 @@ const MyVideos = () => {
         <FormModal toggleModal={toggleModal} open={openModal}>
           <VideoUploadForm
             onSubmit={(formData) => {
-              console.log("Upload data:", formData);
-              // Call your API here
-              // uploadVideo(formData);
-            }}
-            onCancel={() => {
+              uploadVideo(formData, {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: ["fetchVideos", user?.user?._id],
+                  });
+                },
+              });
               toggleModal();
             }}
+            onCancel={toggleModal}
           />
         </FormModal>
       )}
