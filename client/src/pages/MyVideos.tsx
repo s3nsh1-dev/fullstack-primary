@@ -6,10 +6,12 @@ import { DividerRoot } from "../components/ui-components/StyledComponents";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import FormModal from "../components/others/FormModal";
 import VideoUploadForm from "../components/Videos/VideoUploadForm";
+import useUploadMyVideo from "../hooks/data-fetching/useUploadMyVideo";
 
 const MyVideos = () => {
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const toggleModal = () => setOpenModal((prev) => !prev);
+  const { mutate: uploadVideo } = useUploadMyVideo();
 
   return (
     <>
@@ -36,13 +38,11 @@ const MyVideos = () => {
         <FormModal toggleModal={toggleModal} open={openModal}>
           <VideoUploadForm
             onSubmit={(formData) => {
-              console.log("Upload data:", formData);
-              // Call your API here
-              // uploadVideo(formData);
-            }}
-            onCancel={() => {
+              // Handle upload
+              uploadVideo(formData);
               toggleModal();
             }}
+            onCancel={toggleModal}
           />
         </FormModal>
       )}
