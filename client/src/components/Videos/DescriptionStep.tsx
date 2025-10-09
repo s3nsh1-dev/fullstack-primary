@@ -39,6 +39,7 @@ const DescriptionStep: React.FC<DescriptionStepProps> = ({
         <TextField
           fullWidth
           label="Description"
+          required
           multiline
           rows={6}
           value={description}
