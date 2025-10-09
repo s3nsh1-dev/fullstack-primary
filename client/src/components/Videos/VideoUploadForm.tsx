@@ -22,19 +22,6 @@ import VideoUploadStep from "./VideoUploadStep";
 import DetailsStep from "./DetailsStep";
 import DescriptionStep from "./DescriptionStep";
 
-interface VideoUploadFormProps {
-  onSubmit?: (formData: VideoFormData) => void;
-  onCancel?: () => void;
-}
-
-export interface VideoFormData {
-  videoFile: File | null;
-  thumbnail: File | null;
-  title: string;
-  description: string;
-  // visibility and tags removed — backend does not use them
-}
-
 const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
   const { mode } = useMode();
   const videoInputRef = useRef<HTMLInputElement | null>(null);
@@ -53,8 +40,6 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const steps = ["Upload Video", "Details & Thumbnail", "Description"];
 
   const theme = {
     bg: mode ? "#fff" : "#282828",
@@ -118,7 +103,9 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
         newErrors.title = "Title must be less than 100 characters";
       }
     } else if (step === 2) {
-      if (formData.description.length > 5000) {
+      if (!formData.description.trim()) {
+        newErrors.description = "Description is required";
+      } else if (formData.description.length > 5000) {
         newErrors.description = "Description must be less than 5000 characters";
       }
     }
@@ -176,8 +163,8 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
       sx={{
         width: "100%",
         maxWidth: 700,
-        mx: "auto",
-        height: "600px",
+        p: 1,
+        height: "80vh",
         display: "flex",
         flexDirection: "column",
       }}
@@ -332,3 +319,17 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
 };
 
 export default VideoUploadForm;
+
+const steps = ["Upload Video", "Details & Thumbnail", "Description"];
+interface VideoUploadFormProps {
+  onSubmit?: (formData: VideoFormData) => void;
+  onCancel?: () => void;
+}
+
+export interface VideoFormData {
+  videoFile: File | null;
+  thumbnail: File | null;
+  title: string;
+  description: string;
+  // visibility and tags removed — backend does not use them
+}
