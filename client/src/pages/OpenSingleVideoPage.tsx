@@ -20,10 +20,12 @@ const OpenSingleVideoPage = () => {
   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
 
   useEffect(() => {
-    updateWatchHistory(videoId || "");
-    queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log("useEffect calling");
+    updateWatchHistory(videoId || "");
   }, [videoId]);
+
+  queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
 
   const { data, isLoading } = useFetchSingleVideo(
     videoId || "INVALID_Video-ID"

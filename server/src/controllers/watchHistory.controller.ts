@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import mongoose, { isValidObjectId } from "mongoose";
+import { toObjectId } from "../utils/convertToObjectId";
 
 const getWatchHistory = asyncHandler(async (req, res) => {
   //TODO: get watchHistory for a user
@@ -29,8 +30,6 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       )
     : ["green"];
 
-  console.log("history array:", history);
-
   return res
     .status(200)
     .json(new ApiResponse(200, userWatchHistory, "Watch history fetched"));
@@ -38,36 +37,28 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 
 const addToWatchHistory = asyncHandler(async (req, res) => {
   if (!req.user || !req.user?._id) throw new ApiError(401, "Unauthorized");
-
   const userId = req.user._id;
-  const { videoId } = req.params;
 
+  const { videoId } = req.params;
   if (!videoId) throw new ApiError(400, "Video ID is required");
   if (!isValidObjectId(videoId)) throw new ApiError(400, "Invalid video ID");
 
   await User.findByIdAndUpdate(
     userId,
-    [
-      {
-        $set: {
-          watchHistory: {
-            $concatArrays: [
-              [videoId], // 1️⃣ Put the new video ID at the front
-              {
-                $filter: {
-                  input: "$watchHistory", // 2️⃣ Take the current watchHistory array
-                  as: "video",
-                  cond: { $ne: ["$$video", videoId] }, // 3️⃣ Exclude any occurrence of the same video
-                },
-              },
-            ],
-            $slice: 20, // 4️⃣ Keep only the first 20 items (most recent)
-          },
-        },
-      },
-    ],
+    {
+      $pull: { watchHistory: toObjectId(videoId) }, // Remove if already exists
+    },
+    {
+      new: true,
+    }
+  ).select("watchHistory");
+  await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: { watchHistory: { $each: [toObjectId(videoId)], $position: 0 } }, // Add to front
+    },
     { new: true }
-  );
+  ).select("watchHistory");
 
   const user = await User.findById(userId).select("watchHistory");
 
