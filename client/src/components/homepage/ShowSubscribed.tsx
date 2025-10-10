@@ -21,11 +21,11 @@ const ShowSubscribed = () => {
   const renderSubscriberList = data.subscribers?.map((sub) => {
     return (
       <SubscriberCard
-        key={sub._id}
-        fullname={sub.subscriber.fullname || ""}
-        username={sub.subscriber.username || ""}
-        avatar={sub.subscriber.avatar}
-        updatedAt={sub.createdAt}
+        key={sub?._id}
+        fullname={sub.subscriber?.fullname || ""}
+        username={sub.subscriber?.username || ""}
+        avatar={sub.subscriber?.avatar}
+        updatedAt={sub?.createdAt}
       />
     );
   });

@@ -45,27 +45,30 @@ const addToWatchHistory = asyncHandler(async (req, res) => {
   if (!videoId) throw new ApiError(400, "Video ID is required");
   if (!isValidObjectId(videoId)) throw new ApiError(400, "Invalid video ID");
 
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    { $pull: { watchHistory: videoId } },
-    { new: true }
-  );
-
-  // Now add to the front
   await User.findByIdAndUpdate(
     userId,
-    {
-      $push: {
-        watchHistory: {
-          $each: [videoId],
-          $position: 0, // Add at the beNingIng
+    [
+      {
+        $set: {
+          watchHistory: {
+            $concatArrays: [
+              [videoId], // 1️⃣ Put the new video ID at the front
+              {
+                $filter: {
+                  input: "$watchHistory", // 2️⃣ Take the current watchHistory array
+                  as: "video",
+                  cond: { $ne: ["$$video", videoId] }, // 3️⃣ Exclude any occurrence of the same video
+                },
+              },
+            ],
+            $slice: 20, // 4️⃣ Keep only the first 20 items (most recent)
+          },
         },
       },
-    },
+    ],
     { new: true }
   );
 
-  // Fetch updated history
   const user = await User.findById(userId).select("watchHistory");
 
   return res

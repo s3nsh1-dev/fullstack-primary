@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
@@ -9,10 +10,17 @@ import VideoPlayerMain from "../components/Videos/VideoPlayerMain";
 import VideoMetaDataAndAction from "../components/Videos/VideoMetaDataAndAction";
 import VideoChannelAndDescription from "../components/Videos/VideoChannelAndDescription";
 import VideoCommentSection from "../components/Videos/VideoCommentSection";
+import useUpdateWatchHistory from "../hooks/data-fetching/useUpdateWatchHistory";
 
 const OpenSingleVideoPage = () => {
   const { videoId } = useParams();
   const { mode } = useMode();
+  const { mutate: updateWatchHistory } = useUpdateWatchHistory();
+
+  useEffect(() => {
+    updateWatchHistory(videoId || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoId]);
 
   const { data, isLoading } = useFetchSingleVideo(
     videoId || "INVALID_Video-ID"
