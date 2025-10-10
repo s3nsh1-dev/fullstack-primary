@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const useFetchWatchHistory = () => {
   return useQuery({
-    queryKey: ["watch-history"],
+    queryKey: ["get-watch-history"],
     queryFn: async () => {
       const response = await fetch(`${URL}/users/history`, {
         method: "GET",
@@ -11,7 +11,7 @@ const useFetchWatchHistory = () => {
 
       if (!response.ok) throw new Error("Failed to fetch watch history");
       const data: WatchHistoryResponse = await response.json();
-      return data;
+      return data.data;
     },
   });
 };

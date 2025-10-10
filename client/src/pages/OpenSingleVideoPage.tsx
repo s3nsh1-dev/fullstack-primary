@@ -11,14 +11,17 @@ import VideoMetaDataAndAction from "../components/Videos/VideoMetaDataAndAction"
 import VideoChannelAndDescription from "../components/Videos/VideoChannelAndDescription";
 import VideoCommentSection from "../components/Videos/VideoCommentSection";
 import useUpdateWatchHistory from "../hooks/data-fetching/useUpdateWatchHistory";
+import { useQueryClient } from "@tanstack/react-query";
 
 const OpenSingleVideoPage = () => {
+  const queryClient = useQueryClient();
   const { videoId } = useParams();
   const { mode } = useMode();
   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
 
   useEffect(() => {
     updateWatchHistory(videoId || "");
+    queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoId]);
 
