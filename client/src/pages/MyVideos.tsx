@@ -9,6 +9,7 @@ import VideoUploadForm from "../components/Videos/VideoUploadForm";
 import useUploadMyVideo from "../hooks/data-fetching/useUploadMyVideo";
 import { useQueryClient } from "@tanstack/react-query";
 import useAuth from "../hooks/useAuth";
+import useMode from "../hooks/useMode";
 
 const MyVideos = () => {
   const { user } = useAuth();
@@ -16,6 +17,16 @@ const MyVideos = () => {
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const toggleModal = () => setOpenModal((prev) => !prev);
   const { mutate: uploadVideo } = useUploadMyVideo();
+  const { mode } = useMode();
+  const theme = {
+    bg: mode ? "#fff" : "#282828",
+    text: mode ? "#0f0f0f" : "#fff",
+    textSecondary: mode ? "#606060" : "#aaa",
+    border: mode ? "#e0e0e0" : "#3f3f3f",
+    hoverBg: mode ? "#f2f2f2" : "#3f3f3f",
+    inputBg: mode ? "#f9f9f9" : "#121212",
+    primaryBg: mode ? "#065fd4" : "#3ea6ff",
+  };
 
   return (
     <>
@@ -48,10 +59,13 @@ const MyVideos = () => {
                     queryKey: ["fetchVideos", user?.user?._id],
                   });
                 },
+                onSettled: () => {
+                  toggleModal();
+                },
               });
-              toggleModal();
             }}
             onCancel={toggleModal}
+            theme={theme}
           />
         </FormModal>
       )}

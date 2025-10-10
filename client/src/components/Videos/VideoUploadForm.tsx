@@ -4,52 +4,31 @@ import {
   Typography,
   Button,
   Stack,
-  LinearProgress,
   IconButton,
-  Alert,
   Stepper,
   Step,
   StepLabel,
 } from "@mui/material";
-import {
-  Close,
-  CheckCircle,
-  ArrowBack,
-  ArrowForward,
-} from "@mui/icons-material";
-import useMode from "../../hooks/useMode";
+import { Close, ArrowBack, ArrowForward } from "@mui/icons-material";
 import VideoUploadStep from "./VideoUploadStep";
 import DetailsStep from "./DetailsStep";
 import DescriptionStep from "./DescriptionStep";
+import useMode from "../../hooks/useMode";
 
-const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
+const VideoUploadForm = ({
+  onSubmit,
+  onCancel,
+  theme,
+}: VideoUploadFormProps) => {
   const { mode } = useMode();
   const videoInputRef = useRef<HTMLInputElement | null>(null);
   const thumbnailInputRef = useRef<HTMLInputElement | null>(null);
-
-  const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState<VideoFormData>({
-    videoFile: null,
-    thumbnail: null,
-    title: "",
-    description: "",
-  });
-
   const [videoPreview, setVideoPreview] = useState<string>("");
   const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const theme = {
-    bg: mode ? "#fff" : "#282828",
-    text: mode ? "#0f0f0f" : "#fff",
-    textSecondary: mode ? "#606060" : "#aaa",
-    border: mode ? "#e0e0e0" : "#3f3f3f",
-    hoverBg: mode ? "#f2f2f2" : "#3f3f3f",
-    inputBg: mode ? "#f9f9f9" : "#121212",
-    primaryBg: mode ? "#065fd4" : "#3ea6ff",
-  };
+  const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState<VideoFormData>(resetForm);
 
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -86,8 +65,6 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
       setErrors({ ...errors, thumbnail: "" });
     }
   };
-
-  // tags/visibility handlers removed — backend does not use them
 
   const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
@@ -129,24 +106,12 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
 
     setIsUploading(true);
 
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prev + 10;
-      });
-    }, 300);
-
     if (onSubmit) {
       onSubmit(formData);
     }
 
     setTimeout(() => {
-      clearInterval(interval);
       setIsUploading(false);
-      setUploadProgress(100);
     }, 3500);
   };
 
@@ -159,22 +124,13 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
   // Steps moved into separate presentational components to keep logic intact
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: 700,
-        p: 1,
-        height: "80vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Box sx={sxValue1}>
       {/* Header */}
       <Stack
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        sx={{ mb: 2 }}
+        mb={2}
       >
         <Typography variant="h5" sx={{ color: theme.text, fontWeight: 600 }}>
           Upload Video
@@ -200,28 +156,6 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
           </Step>
         ))}
       </Stepper>
-
-      {/* Upload Progress */}
-      {isUploading && (
-        <Box sx={{ mb: 2 }}>
-          <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
-            <Typography variant="body2" sx={{ color: theme.text }}>
-              Uploading...
-            </Typography>
-            <Typography variant="body2" sx={{ color: theme.text }}>
-              {uploadProgress}%
-            </Typography>
-          </Stack>
-          <LinearProgress variant="determinate" value={uploadProgress} />
-        </Box>
-      )}
-
-      {/* Success Message */}
-      {uploadProgress === 100 && !isUploading && (
-        <Alert icon={<CheckCircle />} severity="success" sx={{ mb: 2 }}>
-          Video uploaded successfully!
-        </Alert>
-      )}
 
       {/* Content Area */}
       <Box sx={{ flex: 1, overflow: "auto", mb: 2 }}>
@@ -321,10 +255,22 @@ const VideoUploadForm = ({ onSubmit, onCancel }: VideoUploadFormProps) => {
 export default VideoUploadForm;
 
 const steps = ["Upload Video", "Details & Thumbnail", "Description"];
+
 interface VideoUploadFormProps {
   onSubmit?: (formData: VideoFormData) => void;
   onCancel?: () => void;
+  theme: ThemeType;
 }
+
+type ThemeType = {
+  bg: string;
+  text: string;
+  textSecondary: string;
+  border: string;
+  hoverBg: string;
+  inputBg: string;
+  primaryBg: string;
+};
 
 export interface VideoFormData {
   videoFile: File | null;
@@ -333,3 +279,19 @@ export interface VideoFormData {
   description: string;
   // visibility and tags removed — backend does not use them
 }
+
+const sxValue1 = {
+  width: "100%",
+  maxWidth: 700,
+  p: 1,
+  height: "80vh",
+  display: "flex",
+  flexDirection: "column",
+};
+
+const resetForm = {
+  videoFile: null,
+  thumbnail: null,
+  title: "",
+  description: "",
+};

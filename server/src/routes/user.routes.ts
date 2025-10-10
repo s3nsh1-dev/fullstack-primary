@@ -10,9 +10,12 @@ import {
   updateUserAvatar,
   updateUserCoverImage,
   getUserChannelProfile,
-  getWatchHistory,
   fetchUserById,
 } from "../controllers/user.controller";
+import {
+  addToWatchHistory,
+  getWatchHistory,
+} from "../controllers/watchHistory.controller";
 import { multerUpload } from "../middleware/multer.middleware";
 import verifyJWT from "../middleware/auth.middleware";
 
@@ -41,6 +44,7 @@ userRouter
   .patch(verifyJWT, multerUpload.single("coverImage"), updateUserCoverImage);
 userRouter.route("/channel/:username").get(verifyJWT, getUserChannelProfile);
 userRouter.route("/history").get(verifyJWT, getWatchHistory);
+userRouter.route("/history/:videoId").post(verifyJWT, addToWatchHistory);
 
 export default userRouter;
 

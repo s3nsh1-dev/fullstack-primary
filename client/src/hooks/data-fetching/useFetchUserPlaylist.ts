@@ -4,13 +4,10 @@ const useFetchUserPlaylist = (user_ID: string) => {
   return useQuery({
     queryKey: ["userSubscribers", user_ID],
     queryFn: async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/playlists/user/${user_ID}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${URL}/playlists/user/${user_ID}`, {
+        method: "GET",
+        credentials: "include",
+      });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING USER PLAYLISTS");
       const data: PlaylistResponse = await response.json();
       const result = data.data;
@@ -21,6 +18,8 @@ const useFetchUserPlaylist = (user_ID: string) => {
 };
 
 export default useFetchUserPlaylist;
+
+const URL = import.meta.env.VITE_SERVER_URL;
 
 interface VideoOwner {
   _id: string;

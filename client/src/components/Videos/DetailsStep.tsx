@@ -2,30 +2,6 @@ import React from "react";
 import { Box, Typography, TextField, IconButton } from "@mui/material";
 import { Image as ImageIcon, Close } from "@mui/icons-material";
 
-interface ThemeLike {
-  bg: string;
-  text: string;
-  textSecondary: string;
-  border: string;
-  hoverBg: string;
-  inputBg: string;
-  primaryBg: string;
-}
-
-export interface DetailsStepProps {
-  theme: ThemeLike;
-  title: string;
-  titleError?: string;
-  onTitleChange: (value: string) => void;
-  titleLength: number;
-  thumbnailPreview: string;
-  onOpenThumbPicker: () => void;
-  onThumbChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRemoveThumb: () => void;
-  thumbnailInputRef: React.RefObject<HTMLInputElement | null>;
-  mode: boolean;
-}
-
 const DetailsStep: React.FC<DetailsStepProps> = ({
   theme,
   title,
@@ -143,3 +119,27 @@ const DetailsStep: React.FC<DetailsStepProps> = ({
 };
 
 export default DetailsStep;
+
+interface ThemeLike {
+  bg: string;
+  text: string;
+  textSecondary: string;
+  border: string;
+  hoverBg: string;
+  inputBg: string;
+  primaryBg: string;
+}
+
+export interface DetailsStepProps {
+  theme: ThemeLike;
+  title: string;
+  titleError?: string;
+  onTitleChange: (value: string) => void;
+  titleLength: number;
+  thumbnailPreview: string;
+  onOpenThumbPicker: () => void;
+  onThumbChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveThumb: () => void;
+  thumbnailInputRef: React.RefObject<HTMLInputElement | null>;
+  mode: boolean;
+}
