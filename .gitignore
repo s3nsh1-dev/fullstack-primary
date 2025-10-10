@@ -9,3 +9,5 @@
 
 # Project Related Files
 project_related_files/
+
+server/public/temp/*
