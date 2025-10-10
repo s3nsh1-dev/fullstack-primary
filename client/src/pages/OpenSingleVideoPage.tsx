@@ -20,9 +20,8 @@ const OpenSingleVideoPage = () => {
   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    console.log("useEffect calling");
     updateWatchHistory(videoId || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoId]);
 
   queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
