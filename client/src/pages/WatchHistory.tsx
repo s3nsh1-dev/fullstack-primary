@@ -50,12 +50,11 @@ const WatchHistory: React.FC = () => {
               boxShadow: 1,
               backgroundColor: "background.paper",
               transition: "transform 0.2s",
-              overflow: "hidden", // ✅ prevents scroll on hover
+              overflow: "hidden",
               width: "90vw",
               "&:hover": { transform: "scale(0.95)" },
             }}
           >
-            {/* Thumbnail */}
             <Box
               component="img"
               src={video.thumbnail}
@@ -69,7 +68,6 @@ const WatchHistory: React.FC = () => {
               }}
             />
 
-            {/* Video Info */}
             <Box sx={{ flex: 1 }}>
               <Typography
                 variant="subtitle1"
