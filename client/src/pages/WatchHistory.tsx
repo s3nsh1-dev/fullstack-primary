@@ -29,75 +29,28 @@ const WatchHistory: React.FC = () => {
       <Typography variant="h5" mb={2}>
         Watch History
       </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          maxHeight: "80vh",
-          overflowY: "auto",
-        }}
-      >
+      <Box sx={sx1}>
         {videos.map((video) => (
-          <Box
-            key={video._id}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              p: 1,
-              borderRadius: 2,
-              boxShadow: 1,
-              backgroundColor: "background.paper",
-              transition: "transform 0.2s",
-              overflow: "hidden",
-              width: "90vw",
-              "&:hover": { transform: "scale(0.95)" },
-            }}
-          >
+          <Box key={video._id} sx={sx2}>
             <Box
               component="img"
               src={video.thumbnail}
               alt={video.title}
-              sx={{
-                width: 120,
-                height: 70,
-                objectFit: "cover",
-                borderRadius: 1,
-                flexShrink: 0,
-              }}
+              sx={sx3}
             />
 
             <Box sx={{ flex: 1 }}>
-              <Typography
-                variant="subtitle1"
-                fontWeight={600}
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
+              <Typography variant="subtitle1" sx={sx4}>
                 {video.title || "Untitled Video"}
               </Typography>
 
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, mt: 0.5 }}
-              >
+              <Box sx={sx5}>
                 <Avatar
                   src={video.owner?.avatar}
                   alt={video.owner?.fullname}
                   sx={{ width: 24, height: 24 }}
                 />
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
+                <Typography variant="body2" color="textSecondary" sx={sx6}>
                   {video.owner?.fullname || "Unknown User"}
                 </Typography>
                 <Typography
@@ -108,18 +61,7 @@ const WatchHistory: React.FC = () => {
                   • {video.duration?.toFixed(2)}s
                 </Typography>
               </Box>
-
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                sx={{
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
+              <Typography variant="body2" color="textSecondary" sx={sx7}>
                 {video.description || "No description"}
               </Typography>
             </Box>
@@ -131,3 +73,56 @@ const WatchHistory: React.FC = () => {
 };
 
 export default WatchHistory;
+
+const sx1 = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 2,
+  maxHeight: "80vh",
+  overflowY: "auto",
+};
+
+const sx2 = {
+  display: "flex",
+  alignItems: "center",
+  gap: 2,
+  p: 1,
+  borderRadius: 2,
+  boxShadow: 1,
+  backgroundColor: "background.paper",
+  transition: "transform 0.2s",
+  overflow: "hidden",
+  width: "90vw",
+  "&:hover": { transform: "scale(0.95)" },
+};
+const sx3 = {
+  width: 120,
+  height: 70,
+  objectFit: "cover",
+  borderRadius: 1,
+  flexShrink: 0,
+};
+
+const sx4 = {
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  fontWeight: 600,
+};
+
+const sx5 = { display: "flex", alignItems: "center", gap: 1, mt: 0.5 };
+
+const sx6 = {
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+};
+
+const sx7 = {
+  display: "-webkit-box",
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: "vertical",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+};
