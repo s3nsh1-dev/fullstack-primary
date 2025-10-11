@@ -1,6 +1,7 @@
-import Test from "../pages/Test";
+import { Box } from "@mui/material";
 import useFetchFeed from "../hooks/data-fetching/useFetchFeed";
 import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
+import FeedItem from "../components/dashboard/FeedItem";
 
 const Dashboard = () => {
   const { data, isLoading, isError } = useFetchFeed();
@@ -10,17 +11,20 @@ const Dashboard = () => {
   if (!data) return <CircularProgressCenter size={80} />;
 
   return (
-    <div
-      style={{
-        gap: 10,
+    <Box
+      sx={{
         display: "flex",
         flexDirection: "column",
-        overflowWrap: "anywhere",
+        alignItems: "center",
+        gap: 2,
+        padding: 3,
+        minHeight: "100vh",
       }}
     >
-      {JSON.stringify(data)}
-      <Test />
-    </div>
+      {data.map((item) => (
+        <FeedItem key={item._id} item={item} />
+      ))}
+    </Box>
   );
 };
 
