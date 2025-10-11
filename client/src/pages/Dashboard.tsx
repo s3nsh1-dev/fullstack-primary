@@ -1,4 +1,3 @@
-// import { Box } from "@mui/material";
 import useFetchFeed from "../hooks/data-fetching/useFetchFeed";
 import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 import FeedItem from "../components/dashboard/FeedItem";
@@ -25,13 +24,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-// const sxValue = {
-//   display: "flex",
-//   flexDirection: "row",
-//   flexWrap: "wrap",
-//   alignItems: "center",
-//   gap: 2,
-//   padding: 3,
-//   minHeight: "100vh",
-// };

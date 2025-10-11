@@ -1,13 +1,15 @@
 import React from "react";
-import { Box, Avatar, Typography, IconButton } from "@mui/material";
-import { MoreVert } from "@mui/icons-material";
+import { Box, Avatar, Typography } from "@mui/material";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { formatDate } from "../../utilities/helperFncForStats";
 import type { Owner } from "../../hooks/data-fetching/useFetchFeed";
 
-const UserHeader: React.FC<{ owner: Owner; createdAt: string }> = ({
-  owner,
-  createdAt,
-}) => {
+const UserHeader: React.FC<{
+  owner: Owner;
+  createdAt: string;
+  isTweet: boolean;
+}> = ({ owner, createdAt, isTweet }) => {
   return (
     <Box
       display="flex"
@@ -30,9 +32,11 @@ const UserHeader: React.FC<{ owner: Owner; createdAt: string }> = ({
           </Typography>
         </Box>
       </Box>
-      <IconButton size="small">
-        <MoreVert fontSize="small" />
-      </IconButton>
+      {isTweet ? (
+        <TwitterIcon color="primary" fontSize="small" sx={{ mr: 1 }} />
+      ) : (
+        <OndemandVideoIcon color="error" fontSize="small" sx={{ mr: 1 }} />
+      )}
     </Box>
   );
 };

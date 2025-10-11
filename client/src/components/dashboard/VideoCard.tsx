@@ -12,14 +12,29 @@ import { PlayArrow, Visibility } from "@mui/icons-material";
 import { formatDuration } from "../../utilities/helperFncForStats";
 import type { VideoItem } from "../../hooks/data-fetching/useFetchFeed";
 import UserHeader from "./UserHeader";
+import { useNavigate } from "react-router-dom";
 
 const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/videos/${video._id}`);
+  };
+
   return (
     <Card sx={sxValue} elevation={10}>
       <CardContent>
-        <UserHeader owner={video.owner} createdAt={video.createdAt} />
+        <UserHeader
+          owner={video.owner}
+          createdAt={video.createdAt}
+          isTweet={false}
+        />
 
-        <Box position="relative" sx={{ cursor: "pointer" }}>
+        <Box
+          position="relative"
+          sx={{ cursor: "pointer" }}
+          onClick={handleCardClick}
+        >
           <CardMedia
             component="img"
             height="300"
@@ -53,7 +68,7 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
                 "&:hover": { backgroundColor: "white" },
               }}
             >
-              <PlayArrow sx={{ fontSize: 40 }} />
+              <PlayArrow sx={{ fontSize: 40 }} color="secondary" />
             </IconButton>
           </Box>
           <Chip
@@ -69,7 +84,6 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
             }}
           />
         </Box>
-
         <Box mt={2}>
           <Typography variant="h6" fontWeight={600} gutterBottom>
             {video.title}

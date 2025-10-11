@@ -14,8 +14,9 @@ const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
       key={video._id}
       sx={{
         width: 300,
-        borderRadius: 2,
-        boxShadow: 1,
+        borderRadius: 1,
+        boxShadow: 5,
+        // border: "1px solid purple",
         backgroundColor: "background.paper",
         overflow: "hidden",
         "&:hover": { boxShadow: 3 },

@@ -9,9 +9,9 @@ import type {
 const FeedItem: React.FC<{ item: FeedItemProps }> = ({ item }) => {
   const renderItem = [];
   if (typeof item === "object" && "videoFile" in item) {
-    renderItem.push(<VideoCard video={item} />);
+    renderItem.push(<VideoCard key={item._id} video={item} />);
   } else {
-    renderItem.push(<TweetCard tweet={item} />);
+    renderItem.push(<TweetCard key={item._id} tweet={item} />);
   }
   return <div>{renderItem}</div>;
 };
