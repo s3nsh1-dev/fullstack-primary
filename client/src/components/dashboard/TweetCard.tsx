@@ -5,7 +5,7 @@ import type { TweetItem } from "../../hooks/data-fetching/useFetchFeed";
 
 const TweetCard: React.FC<{ tweet: TweetItem }> = ({ tweet }) => {
   return (
-    <Card sx={sxValue}>
+    <Card sx={sxValue} elevation={10}>
       <CardContent>
         <UserHeader owner={tweet.owner} createdAt={tweet.createdAt} />
 
@@ -22,7 +22,6 @@ export default TweetCard;
 const sxValue = {
   maxWidth: 600,
   width: "100%",
-  boxShadow: 1,
   "&:hover": { boxShadow: 3 },
   transition: "box-shadow 0.3s",
 };
