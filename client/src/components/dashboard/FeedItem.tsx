@@ -18,5 +18,4 @@ const FeedItem: React.FC<{ item: FeedItemProps }> = ({ item }) => {
 
 export default FeedItem;
 
-// Type for any feed item (video or tweet)
 type FeedItemProps = VideoItem | TweetItem;

@@ -11,16 +11,7 @@ const Dashboard = () => {
   if (!data) return <CircularProgressCenter size={80} />;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 2,
-        padding: 3,
-        minHeight: "100vh",
-      }}
-    >
+    <Box sx={sxValue}>
       {data.map((item) => (
         <FeedItem key={item._id} item={item} />
       ))}
@@ -29,3 +20,11 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+const sxValue = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 2,
+  padding: 3,
+  minHeight: "100vh",
+};
