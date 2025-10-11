@@ -5,25 +5,40 @@ import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 
 const getFeed = asyncHandler(async (req, res) => {
-  const videos = await Video.find({ isPublished: true })
-    .sort({
-      createdAt: -1,
-    })
-    .populate({ path: "owner", select: "username fullname avatar" });
-  if (!videos.length) throw new ApiError(404, "No videos found");
-  const tweets = await Tweet.find().sort({ createdAt: -1 }).populate("owner");
-  if (!tweets.length) throw new ApiError(404, "No tweets found");
+  const FEED_LIMIT = 20;
 
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        videos: { data: videos, length: videos.length },
-        tweets: { data: tweets, length: tweets.length },
-      },
-      "FETCHED FEED SUCCESSFULLY"
-    )
+  const [videos, tweets] = await Promise.all([
+    Video.find({ isPublished: true })
+      .populate({ path: "owner", select: "username fullname avatar" })
+      .limit(FEED_LIMIT),
+    Tweet.find()
+      .populate({ path: "owner", select: "username fullname avatar" })
+      .limit(FEED_LIMIT),
+  ]);
+  if (!videos.length && !tweets.length)
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { videos: [], tweets: [], feed: [] },
+          "No content yet"
+        )
+      );
+
+  const feed = [...videos, ...tweets].sort(
+    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
   );
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { feed, length: feed.length },
+        "Fetched feed successfully"
+      )
+    );
 });
 
 export { getFeed };
