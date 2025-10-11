@@ -15,15 +15,7 @@ import UserHeader from "./UserHeader";
 
 const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
   return (
-    <Card
-      sx={{
-        maxWidth: 600,
-        width: "100%",
-        boxShadow: 1,
-        "&:hover": { boxShadow: 3 },
-        transition: "box-shadow 0.3s",
-      }}
-    >
+    <Card sx={sxValue}>
       <CardContent>
         <UserHeader owner={video.owner} createdAt={video.createdAt} />
 
@@ -104,3 +96,11 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
 };
 
 export default VideoCard;
+
+const sxValue = {
+  maxWidth: 600,
+  width: "100%",
+  boxShadow: 1,
+  "&:hover": { boxShadow: 3 },
+  transition: "box-shadow 0.3s",
+};
