@@ -42,7 +42,12 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
   };
 
   return (
-    <Card key={tweet._id} variant="elevation" elevation={4}>
+    <Card
+      key={tweet._id}
+      variant="elevation"
+      elevation={5}
+      // sx={{ border: "1px solid purple" }}
+    >
       <Box
         component={Link}
         to={`/tweets/${tweet._id}`}
