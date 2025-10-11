@@ -13,6 +13,7 @@ import likeRouter from "./routes/like.route";
 import playlistRouter from "./routes/playlist.route";
 import dashboardRouter from "./routes/dashboard.route";
 import HomeRouter from "./routes/homepage.route";
+import feedRouter from "./routes/feed.route";
 
 const app = express();
 
@@ -59,5 +60,6 @@ app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/playlists", playlistRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
 app.use("/api/v1/homepage", HomeRouter);
+app.use("/api/v1/feeds", feedRouter);
 
 export { app };

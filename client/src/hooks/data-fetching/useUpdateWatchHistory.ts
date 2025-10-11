@@ -11,7 +11,6 @@ const useUpdateWatchHistory = () => {
       });
       if (!response.ok) throw new Error("Failed to update watch history");
       const data: ApiResponse = await response.json();
-      console.log("Watch history updated:", data);
       return data;
     },
   });

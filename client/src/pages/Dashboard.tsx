@@ -1,40 +1,30 @@
-import useLogin from "../hooks/data-fetching/useLogin";
-import useAuth from "../hooks/useAuth";
-// import RegisterForm from "../components/RegisterForm";
-// import Logout from "./Logout";
-// import Login from "./Login";
-import Test from "../pages/Test";
+import { Box } from "@mui/material";
+import useFetchFeed from "../hooks/data-fetching/useFetchFeed";
+import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
+import FeedItem from "../components/dashboard/FeedItem";
 
 const Dashboard = () => {
-  const loginMutate = useLogin();
-  const { user } = useAuth();
+  const { data, isLoading, isError } = useFetchFeed();
+
+  if (isLoading) return <CircularProgressCenter size={80} />;
+  if (isError) return <div> SITE IS FACING SOME INTERNAL ISSUES</div>;
+  if (!data) return <CircularProgressCenter size={80} />;
 
   return (
-    <div
-      style={{
-        gap: 10,
-        display: "flex",
-        flexDirection: "column",
-        overflowWrap: "anywhere",
-      }}
-    >
-      {!user && <div>....Loading Dashboard</div>}
-      {loginMutate.isPending && <div>....Loading User</div>}
-      {loginMutate.isError && (
-        <div>Encountered error: Please try after some time</div>
-      )}
-      {/* {user && <p>{JSON.stringify(user)}</p>} */}
-      {/* <RegisterForm /> */}
-      {/* <Login /> */}
-      {/* <Logout /> */}
-      {user && (
-        <div>
-          User is logged IN : <div>{JSON.stringify(user)}</div>
-        </div>
-      )}
-      <Test />
-    </div>
+    <Box sx={sxValue}>
+      {data.map((item) => (
+        <FeedItem key={item._id} item={item} />
+      ))}
+    </Box>
   );
 };
 
 export default Dashboard;
+const sxValue = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 2,
+  padding: 3,
+  minHeight: "100vh",
+};
