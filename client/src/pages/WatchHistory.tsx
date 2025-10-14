@@ -79,8 +79,8 @@ const sx1 = {
   flexDirection: "column",
   alignItems: "center",
   gap: 2,
-  maxHeight: "80vh",
   overflowY: "auto",
+  p: 0.5,
 };
 
 const sx2 = {
@@ -89,7 +89,7 @@ const sx2 = {
   gap: 2,
   p: 1,
   borderRadius: 2,
-  boxShadow: 1,
+  boxShadow: 4,
   backgroundColor: "background.paper",
   transition: "transform 0.2s",
   overflow: "hidden",
