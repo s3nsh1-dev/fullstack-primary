@@ -19,7 +19,7 @@ const EditVideoOptions = () => {
   });
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
       {renderVideoCards}
     </Box>
   );
