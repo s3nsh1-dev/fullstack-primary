@@ -2,46 +2,47 @@ import React from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-import useMode from "../../hooks/useMode";
 import IOSTypeSwitch from "../ui-components/IOSTypeSwitch";
+import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 
 const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
-  const { mode } = useMode();
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: { xs: "column", sm: "row" },
         justifyContent: "space-between",
-        boxShadow: 2,
         borderRadius: 1,
         margin: "0px 1%",
-        border: `2px solid ${mode ? "#A7E399" : "#44444E"}`,
+        border: `1px solid grey`,
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <Box sx={{ display: "flex" }}>
           <Box
             component={"img"}
-            src={imageSource}
+            src={video?.thumbnail}
             alt="video-thumbnail"
             sx={{
               height: 100,
               width: 150,
+              objectFit: "cover",
+              borderTopLeftRadius: 2,
+              borderBottomLeftRadius: 2,
             }}
           />
         </Box>
         <Box>
-          <Typography fontWeight={"bold"}>Video Title</Typography>
+          <Typography fontWeight={"bold"}>{video?.title}</Typography>
           <Typography
             fontWeight={"bold"}
             color="textSecondary"
             fontSize="0.8rem"
           >
-            Video Description
+            {video?.description}
           </Typography>
           <Typography color="textSecondary" fontSize="0.8rem">
-            createAt
+            {convertISOIntoLocalTime(video?.createdAt)}
           </Typography>
         </Box>
       </Box>
@@ -51,6 +52,10 @@ const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
           alignItems: "center",
           justifyContent: "center",
           mr: { xs: 0, sm: 4 },
+          border: "1px solid grey",
+          width: { xs: "90%", sm: "25%" },
+          height: 50,
+          borderRadius: 10,
         }}
       >
         <IconButton
@@ -90,9 +95,6 @@ const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
 };
 
 export default EditVideoCard;
-
-const imageSource =
-  "https://images.unsplash.com/photo-1760281853870-7a0bbf208d11?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170";
 
 type EditVideoCardProps = {
   video: {

@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
 import useAuth from "../../hooks/useAuth";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
@@ -17,7 +18,11 @@ const EditVideoOptions = () => {
     return <EditVideoCard key={video._id} video={video} />;
   });
 
-  return <>{renderVideoCards}</>;
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
+      {renderVideoCards}
+    </Box>
+  );
 };
 
 export default EditVideoOptions;
