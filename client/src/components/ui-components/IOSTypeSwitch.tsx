@@ -8,22 +8,17 @@ const IOSTypeSwitch: React.FC<{ videoId: string; isPublished: boolean }> = ({
   isPublished,
 }) => {
   const [selected, setSelected] = useState(isPublished);
-  // const [stop, setStop] = useState(false);
-  const { mutate: togglePublish } = useTogglePublishVideo();
+  const { mutate: togglePublish, isPending } = useTogglePublishVideo();
   const handleSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelected(event.target.checked);
-    togglePublish(videoId, {
-      onSuccess: () => {},
-      onError: (error) => {
-        console.error("Error toggling video publish status:", error);
-      },
-    });
+    togglePublish(videoId);
   };
-  console.log("Selected:", selected);
+
   return (
     <IOSSwitch
       sx={{ m: 1 }}
       checked={selected}
+      disabled={isPending}
       onChange={(e) => handleSwitch(e)}
     />
   );
