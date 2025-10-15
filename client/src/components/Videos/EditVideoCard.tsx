@@ -10,7 +10,7 @@ const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
     <Card
       sx={{
         display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
+        flexDirection: { xs: "column", md: "row" },
         justifyContent: "space-between",
         borderRadius: 1,
         margin: "0px 1%",
@@ -34,11 +34,27 @@ const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
           />
         </Box>
         <Box>
-          <Typography fontWeight={"bold"}>{video?.title}</Typography>
+          <Typography
+            fontWeight={"bold"}
+            sx={{
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 1,
+              overflow: "hidden",
+            }}
+          >
+            {video?.title}
+          </Typography>
           <Typography
             fontWeight={"bold"}
             color="textSecondary"
             fontSize="0.8rem"
+            sx={{
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 2,
+              overflow: "hidden",
+            }}
           >
             {video?.description}
           </Typography>
@@ -53,10 +69,9 @@ const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-evenly",
-          margin: { xs: "5px auto", sm: "auto 10px auto auto" },
-          // mr: { xs: "auto", sm: 4 },
+          margin: { xs: "5px auto", md: "auto 10px auto auto" },
           border: "1px solid grey",
-          width: { xs: "90%", sm: "25%" },
+          width: 330,
           height: 50,
           borderRadius: 10,
           backgroundColor: "rgba(128, 128, 128, 0.2)", // light, subtle grey
