@@ -1,97 +1,23 @@
-import { Box, IconButton, Typography } from "@mui/material";
-import DeleteForever from "@mui/icons-material/DeleteForever";
-import EditIcon from "@mui/icons-material/Edit";
-import useMode from "../../hooks/useMode";
-import IOSTypeSwitch from "../ui-components/IOSTypeSwitch";
+import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
+import useAuth from "../../hooks/useAuth";
+import CircularProgressCenter from "../ui-components/CircularProgressCenter";
+import EditVideoCard from "./EditVideoCard";
 
 const EditVideoOptions = () => {
-  const { mode } = useMode();
-  return (
-    <>
-      Yeah
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          justifyContent: "space-between",
-          boxShadow: 2,
-          borderRadius: 1,
-          margin: "0px 1%",
-          border: `2px solid ${mode ? "#A7E399" : "#44444E"}`,
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Box sx={{ display: "flex" }}>
-            <Box
-              component={"img"}
-              src={imageSource}
-              alt="video-thumbnail"
-              sx={{
-                height: 100,
-                width: 150,
-              }}
-            />
-          </Box>
-          <Box>
-            <Typography fontWeight={"bold"}>Video Title</Typography>
-            <Typography
-              fontWeight={"bold"}
-              color="textSecondary"
-              fontSize="0.8rem"
-            >
-              Video Description
-            </Typography>
-            <Typography color="textSecondary" fontSize="0.8rem">
-              createAt
-            </Typography>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            mr: { xs: 0, sm: 4 },
-          }}
-        >
-          <IconButton
-            sx={{
-              borderRadius: 2,
-            }}
-          >
-            <DeleteForever color="error" />
-            <Typography
-              component={"span"}
-              color="error"
-              fontSize={"0.8rem"}
-              fontWeight={"bold"}
-            >
-              remove
-            </Typography>
-          </IconButton>
-          <IconButton
-            sx={{
-              borderRadius: 2,
-            }}
-          >
-            <EditIcon color="secondary" />
-            <Typography
-              component={"span"}
-              color="secondary"
-              fontSize={"0.8rem"}
-              fontWeight={"bold"}
-            >
-              changes
-            </Typography>
-          </IconButton>
-          <IOSTypeSwitch />
-        </Box>
-      </Box>
-    </>
+  const { user } = useAuth();
+  const { data, isLoading, isError } = useFetchUserVideos(
+    user?.user?._id || ""
   );
+  if (isError) return <div>...Encountered Error</div>;
+  if (isLoading) return <CircularProgressCenter size={80} />;
+  if (!data || data?.videos?.length < 1)
+    return <div>No Videos Uploaded Yet</div>;
+
+  const renderVideoCards = data?.videos?.map((video) => {
+    return <EditVideoCard key={video._id} video={video} />;
+  });
+
+  return <>{renderVideoCards}</>;
 };
 
 export default EditVideoOptions;
-
-const imageSource =
-  "https://images.unsplash.com/photo-1760281853870-7a0bbf208d11?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170";

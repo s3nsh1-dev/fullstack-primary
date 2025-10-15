@@ -1,7 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import type { UserVideosAPIResponse } from "../../constants/responseTypes";
-
-const URL = import.meta.env.VITE_SERVER_URL;
 
 const useFetchUserVideos = (user_ID: string) => {
   return useQuery({
@@ -12,7 +9,7 @@ const useFetchUserVideos = (user_ID: string) => {
         credentials: "include",
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
-      const data: UserVideosAPIResponse = await response.json();
+      const data: ApiResponse = await response.json();
       const result = data.data;
       return result;
     },
@@ -20,3 +17,31 @@ const useFetchUserVideos = (user_ID: string) => {
   });
 };
 export default useFetchUserVideos;
+
+const URL = import.meta.env.VITE_SERVER_URL;
+
+type ApiResponse = {
+  statusCode: number;
+  data: {
+    videos: {
+      _id: string;
+      videoFile: string;
+      thumbnail: string;
+      title: string;
+      description: string;
+      duration: number;
+      createdAt: string; // ISO date string
+      isPublished: boolean;
+      views: number;
+      owner: string;
+    }[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalCount: number;
+      totalPages: number;
+    };
+  };
+  message: string;
+  success: boolean;
+};

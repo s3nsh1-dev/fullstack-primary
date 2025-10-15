@@ -1,15 +1,30 @@
 import { styled } from "@mui/material/styles";
 import Switch, { type SwitchProps } from "@mui/material/Switch";
 import { useState } from "react";
+import useTogglePublishVideo from "../../hooks/data-fetching/useTogglePublishVideo";
 
-const IOSTypeSwitch = () => {
-  const [selected, setSelected] = useState(false);
-
+const IOSTypeSwitch: React.FC<{ videoId: string; isPublished: boolean }> = ({
+  videoId,
+  isPublished,
+}) => {
+  const [selected, setSelected] = useState(isPublished);
+  // const [stop, setStop] = useState(false);
+  const { mutate: togglePublish } = useTogglePublishVideo();
+  const handleSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelected(event.target.checked);
+    togglePublish(videoId, {
+      onSuccess: () => {},
+      onError: (error) => {
+        console.error("Error toggling video publish status:", error);
+      },
+    });
+  };
+  console.log("Selected:", selected);
   return (
     <IOSSwitch
       sx={{ m: 1 }}
       checked={selected}
-      onChange={(e) => setSelected(e.target.checked)}
+      onChange={(e) => handleSwitch(e)}
     />
   );
 };

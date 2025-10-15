@@ -70,25 +70,17 @@ const getAllVideos = asyncHandler(async (req, res) => {
     { $skip: (pageNum - 1) * limitNum },
     { $limit: limitNum },
     {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "ownerDetails",
-      },
-    },
-    {
       $project: {
         title: 1,
         description: 1,
         videoFile: 1,
         thumbnail: 1,
+        isPublished: 1,
+        views: 1,
         duration: 1,
         createdAt: 1,
-        "ownerDetails._id": 1,
-        "ownerDetails.fullname": 1,
-        "ownerDetails.username": 1,
-        "ownerDetails.avatar": 1,
+        updatedAt: 1,
+        owner: 1,
       },
     },
   ]);
@@ -222,43 +214,6 @@ const updateVideo = asyncHandler(async (req, res) => {
       )
     );
 });
-
-// const deleteVideo = asyncHandler(async (req, res) => {
-//   //TODO: delete video
-//   const { videoId } = req.params;
-//   if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
-//   if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
-
-//   // first finding ID because we need the VIDEO document to delete the cloudinary files
-//   const video = await Video.findById(videoId);
-//   if (!video) throw new ApiError(404, "VIDEO NOT FOUND");
-
-//   if (!isOwner(video.owner, req.user.id)) {
-//     throw new ApiError(403, "NOT AUTHORIZED TO DELETE THIS VIDEO");
-//   }
-
-//   const deletedCloudinaryVideoFile = await deleteFromCloudinary(
-//     video.videoPublicId
-//   );
-//   const deletedCloudinaryThumbnailFile = await deleteFromCloudinary(
-//     video.thumbPublicId
-//   );
-//   if (!deletedCloudinaryVideoFile || !deletedCloudinaryThumbnailFile)
-//     throw new ApiError(400, "CLOUDINARY FILE DELETION FAILED");
-
-//   const result = await video.deleteOne({ _id: videoId });
-//   if (!deletedVideoFile) throw new ApiError(400, "VIDEO DELETION FAILED");
-
-//   return res
-//     .status(200)
-//     .json(
-//       new ApiResponse(
-//         200,
-//         { result: deletedVideoFile },
-//         "VIDEO DELETED SUCCESSFULLY"
-//       )
-//     );
-// });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;

@@ -2,8 +2,8 @@ import type {
   TweetType,
   UserLoginAuthDataType,
   LikedType,
-  VideoType,
-  VideoPaginationType,
+  // VideoType,
+  // VideoPaginationType,
   UserSubscriberListType,
 } from "./dataTypes";
 import type { DeleteOneResponse } from "./genericTypes";
@@ -35,13 +35,37 @@ export interface LikedContentResponseType {
 export interface UserVideosAPIResponse {
   statusCode: number;
   data: {
-    videos: VideoType[];
-    pagination: VideoPaginationType;
+    videos: {
+      _id: string;
+      videoFile: string;
+      thumbnail: string;
+      title: string;
+      description: string;
+      duration: number;
+      isPublished?: boolean;
+      views?: number;
+      createdAt?: string; // ISO date string
+      updatedAt?: string; // ISO date string
+      __v?: number;
+      owner?: string;
+
+      ownerDetails?: {
+        _id: string;
+        username: string;
+        fullname: string;
+        avatar: string;
+      }[];
+    }[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalCount: number;
+      totalPages: number;
+    };
   };
   message: string;
   success: boolean;
 }
-
 export interface UserSubscribersAPIResponse {
   statusCode: number;
   data: {
