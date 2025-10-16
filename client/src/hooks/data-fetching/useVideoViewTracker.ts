@@ -1,14 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+// hooks/useVideoViewTracker.ts
+import { useEffect, useRef } from "react";
+import { useIncrementView } from "./useIncrementView";
+
+interface UseVideoViewTrackerProps {
+  videoId: string;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  enabled?: boolean;
+}
 
 export const useVideoViewTracker = ({
   videoId,
   videoRef,
   enabled = true,
 }: UseVideoViewTrackerProps) => {
-  const [viewCounted, setViewCounted] = useState(false);
   const watchTimeRef = useRef(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasTriggeredRef = useRef(false);
+
+  const { mutate: incrementView } = useIncrementView();
 
   useEffect(() => {
     if (!enabled || !videoRef.current || hasTriggeredRef.current) return;
@@ -25,9 +34,13 @@ export const useVideoViewTracker = ({
         if (!video.paused && !video.ended) {
           watchTimeRef.current += 1;
 
-          // Check if we should send the view count (after 3 seconds minimum)
-          if (watchTimeRef.current >= 3 && !hasTriggeredRef.current) {
-            sendViewCount();
+          // Send view count after watching for at least 5 seconds
+          if (watchTimeRef.current >= 5 && !hasTriggeredRef.current) {
+            hasTriggeredRef.current = true;
+            incrementView({
+              videoId,
+              watchTime: watchTimeRef.current,
+            });
           }
         }
       }, 1000);
@@ -41,40 +54,18 @@ export const useVideoViewTracker = ({
       }
     };
 
-    const sendViewCount = async () => {
-      if (hasTriggeredRef.current) return;
-      hasTriggeredRef.current = true;
-
-      try {
-        const response = await fetch(`/api/v1/videos/view/${videoId}`, {
-          method: "POST",
-          body: JSON.stringify({ watchTime: watchTimeRef.current }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const data = await response.json();
-
-        if (data?.data?.counted) {
-          setViewCounted(true);
-          console.log("✅ View counted successfully");
-        } else {
-          console.log("ℹ️ View not counted:", data?.data?.reason);
-        }
-      } catch (error) {
-        console.error("❌ Failed to count view:", error);
-        hasTriggeredRef.current = false; // Allow retry
-      }
-    };
-
     // Event listeners
     const handlePlay = () => startTracking();
     const handlePause = () => stopTracking();
     const handleEnded = () => {
       stopTracking();
-      if (!hasTriggeredRef.current) {
-        sendViewCount();
+      // Send final watch time if not already sent
+      if (!hasTriggeredRef.current && watchTimeRef.current >= 3) {
+        hasTriggeredRef.current = true;
+        incrementView({
+          videoId,
+          watchTime: watchTimeRef.current,
+        });
       }
     };
 
@@ -100,13 +91,7 @@ export const useVideoViewTracker = ({
       video.removeEventListener("ended", handleEnded);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [videoId, videoRef, enabled]);
+  }, [videoId, videoRef, enabled, incrementView]);
 
-  return { viewCounted, watchTime: watchTimeRef.current };
+  return { watchTime: watchTimeRef.current };
 };
-
-interface UseVideoViewTrackerProps {
-  videoId: string;
-  videoRef: React.RefObject<HTMLVideoElement>;
-  enabled?: boolean; // Allow disabling the tracker
-}
