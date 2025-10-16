@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-interface UseVideoViewTrackerProps {
-  videoId: string;
-  videoRef: React.RefObject<HTMLVideoElement>;
-  enabled?: boolean; // Allow disabling the tracker
-}
-
 export const useVideoViewTracker = ({
   videoId,
   videoRef,
@@ -110,3 +104,9 @@ export const useVideoViewTracker = ({
 
   return { viewCounted, watchTime: watchTimeRef.current };
 };
+
+interface UseVideoViewTrackerProps {
+  videoId: string;
+  videoRef: React.RefObject<HTMLVideoElement>;
+  enabled?: boolean; // Allow disabling the tracker
+}

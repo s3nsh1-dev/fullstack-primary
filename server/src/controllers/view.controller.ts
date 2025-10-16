@@ -1,6 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler";
 import { Video } from "../models/video.model";
-import { View } from "../models/View.model";
+import { View } from "../models/view.model";
 import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 
