@@ -25,14 +25,25 @@ const ShowVideos = () => {
   });
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 1,
-      }}
-    >
-      {renderVideoList}
+    <Box sx={{ margin: "auto", display: "flex", justifyContent: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "flex-start",
+          gap: 1,
+          width: {
+            // xs: "103rem",
+            // sm: "103rem",
+            // md: "103rem",
+            // xl: "103rem",
+            lg: "155em",
+          },
+        }}
+      >
+        {renderVideoList}
+        {renderVideoList}
+      </Box>
     </Box>
   );
 };

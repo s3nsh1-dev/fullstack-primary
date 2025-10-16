@@ -34,10 +34,10 @@ const OpenSingleVideoPage = () => {
 
   // Example: Trigger view count update after data is loaded.
   useEffect(() => {
-    if (data && data.video) {
+    if (data && data?.video) {
       // Replace 120 with the actual watch time in seconds
-      const watchTime = 120;
-      incrementView({ videoId: data.video._id, watchTime });
+      const watchTime = data.video.duration;
+      incrementView({ videoId: data.video?._id, watchTime });
     }
   }, [data, incrementView]);
 
