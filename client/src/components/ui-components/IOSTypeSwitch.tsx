@@ -2,16 +2,36 @@ import { styled } from "@mui/material/styles";
 import Switch, { type SwitchProps } from "@mui/material/Switch";
 import { useState } from "react";
 import useTogglePublishVideo from "../../hooks/data-fetching/useTogglePublishVideo";
+import { useQueryClient } from "@tanstack/react-query";
 
-const IOSTypeSwitch: React.FC<{ videoId: string; isPublished: boolean }> = ({
-  videoId,
-  isPublished,
-}) => {
+const IOSTypeSwitch: React.FC<{
+  video: {
+    _id: string;
+    videoFile: string;
+    thumbnail: string;
+    title: string;
+    description: string;
+    duration: number;
+    createdAt: string;
+    isPublished: boolean;
+    views: number;
+    owner: string;
+  };
+  isPublished: boolean;
+}> = ({ video, isPublished }) => {
+  const queryClient = useQueryClient();
   const [selected, setSelected] = useState(isPublished);
   const { mutate: togglePublish, isPending } = useTogglePublishVideo();
   const handleSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelected(event.target.checked);
-    togglePublish(videoId);
+    togglePublish(video?._id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["fetchVideos", video?.owner],
+        });
+        queryClient.invalidateQueries({ queryKey: ["feed"] });
+      },
+    });
   };
 
   return (

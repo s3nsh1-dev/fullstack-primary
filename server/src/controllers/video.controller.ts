@@ -191,15 +191,22 @@ const updateVideo = asyncHandler(async (req, res) => {
   video.title = title || video.title;
   video.description = description || video.description;
 
-  const files = req.file as Express.Multer.File;
-  const thumbnailLocalPath = files.path;
-  if (thumbnailLocalPath) {
-    const uploadedThumbnail = await uploadOnCloudinary(thumbnailLocalPath);
-    if (!uploadedThumbnail) throw new ApiError(400, "THUMBNAIL UPLOAD FAILED");
+  const previousThumbnailPublicId = video.thumbPublicId;
+  const previousThumbnailURL = video.thumbnail;
 
-    const foo = await deleteFromCloudinary(video.thumbPublicId);
-    video.thumbnail = uploadedThumbnail.url;
-    video.thumbPublicId = uploadedThumbnail.public_id;
+  const files = req.file as Express.Multer.File;
+  if (files) {
+    const thumbnailLocalPath = files.path;
+    if (thumbnailLocalPath) {
+      const uploadedThumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+      if (!uploadedThumbnail)
+        throw new ApiError(400, "THUMBNAIL UPLOAD FAILED");
+
+      const foo = await deleteFromCloudinary(video.thumbPublicId);
+      video.thumbnail = uploadedThumbnail.url || previousThumbnailURL;
+      video.thumbPublicId =
+        uploadedThumbnail.public_id || previousThumbnailPublicId;
+    }
   }
   const updatedVideo = await video.save({ validateModifiedOnly: true });
   if (!updatedVideo) throw new ApiError(400, "VIDEO UPDATE FAILED");

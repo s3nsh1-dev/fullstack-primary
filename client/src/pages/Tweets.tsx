@@ -21,9 +21,9 @@ const Tweets = () => {
           </Typography>
           <DividerRoot>
             <Divider textAlign="right">
-              <Typography>
+              <Typography fontWeight={"bold"}>
                 <IconButton onClick={handleOpenModal}>
-                  <AddCircleIcon fontSize="large" />
+                  <AddCircleIcon fontSize="large" color="success" />
                 </IconButton>
                 Create
               </Typography>
