@@ -202,6 +202,7 @@ const UpdateVideoModal: React.FC<PropType> = ({ open, onClose, video }) => {
                 variant="outlined"
                 startIcon={<CloudUploadIcon />}
                 fullWidth
+                color="secondary"
                 sx={{
                   py: 1.5,
                   borderStyle: "dashed",
@@ -257,6 +258,7 @@ const UpdateVideoModal: React.FC<PropType> = ({ open, onClose, video }) => {
             <Button
               onClick={handleUpdateVideo}
               variant="contained"
+              color="secondary"
               sx={{ minWidth: 100 }}
               disabled={
                 !videoForm.title &&

@@ -50,7 +50,7 @@ const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
             </Typography>
           </IconButton>
           <Divider orientation="vertical" flexItem sx={sxV3} />
-          <IOSTypeSwitch videoId={video._id} isPublished={video.isPublished} />
+          <IOSTypeSwitch video={video} isPublished={video.isPublished} />
         </Box>
       </Card>
       {openDelete && (
@@ -59,7 +59,7 @@ const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
           onClose={() => {
             setOpenDelete(false);
           }}
-          videoId={video?._id}
+          video={video}
         />
       )}
       {openUpdate && (
