@@ -1,7 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 
-// STILL A TEMPLATE
-
 const useDeleteVideo = () => {
   return useMutation({
     mutationKey: ["deleteVideo"],
@@ -11,7 +9,8 @@ const useDeleteVideo = () => {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("ERROR WHILE DELETING VIDEO");
-      return true;
+      const data: DeleteVideoResponse = await response.json();
+      return data.data.result;
     },
   });
 };
@@ -19,3 +18,15 @@ const useDeleteVideo = () => {
 export default useDeleteVideo;
 
 const URL = import.meta.env.VITE_SERVER_URL;
+
+interface DeleteVideoResponse {
+  statusCode: number;
+  data: {
+    result: {
+      acknowledged: boolean;
+      deletedCount: number;
+    };
+  };
+  message: string;
+  success: boolean;
+}
