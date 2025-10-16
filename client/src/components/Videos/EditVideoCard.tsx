@@ -4,39 +4,74 @@ import DeleteForever from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import IOSTypeSwitch from "../ui-components/IOSTypeSwitch";
 import EditVideoCardVideoFace from "./EditVideoCardVideoFace";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import UpdateVideoModal from "./UpdateVideoModal";
 
 const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
+  const [openDelete, setOpenDelete] = React.useState(false);
+  const [openUpdate, setOpenUpdate] = React.useState(false);
+
   return (
-    <Card sx={sxCard} elevation={4}>
-      <EditVideoCardVideoFace video={video} />
-      <Box sx={sxV1}>
-        <IconButton sx={sxV2}>
-          <DeleteForever color="error" />
-          <Typography
-            component={"span"}
-            color="error"
-            fontSize={"0.8rem"}
-            fontWeight={"bold"}
+    <>
+      <Card sx={sxCard} elevation={4}>
+        <EditVideoCardVideoFace video={video} />
+        <Box sx={sxV1}>
+          <IconButton
+            sx={sxV2}
+            onClick={() => {
+              setOpenDelete(true);
+            }}
           >
-            Remove
-          </Typography>
-        </IconButton>
-        <Divider orientation="vertical" flexItem sx={sxV3} />
-        <IconButton sx={sxV2}>
-          <EditIcon color="secondary" />
-          <Typography
-            component={"span"}
-            color="secondary"
-            fontSize={"0.8rem"}
-            fontWeight={"bold"}
+            <DeleteForever color="error" />
+            <Typography
+              component={"span"}
+              color="error"
+              fontSize={"0.8rem"}
+              fontWeight={"bold"}
+            >
+              Remove
+            </Typography>
+          </IconButton>
+          <Divider orientation="vertical" flexItem sx={sxV3} />
+          <IconButton
+            sx={sxV2}
+            onClick={() => {
+              setOpenUpdate(true);
+            }}
           >
-            Changes
-          </Typography>
-        </IconButton>
-        <Divider orientation="vertical" flexItem sx={sxV3} />
-        <IOSTypeSwitch videoId={video._id} isPublished={video.isPublished} />
-      </Box>
-    </Card>
+            <EditIcon color="secondary" />
+            <Typography
+              component={"span"}
+              color="secondary"
+              fontSize={"0.8rem"}
+              fontWeight={"bold"}
+            >
+              Changes
+            </Typography>
+          </IconButton>
+          <Divider orientation="vertical" flexItem sx={sxV3} />
+          <IOSTypeSwitch videoId={video._id} isPublished={video.isPublished} />
+        </Box>
+      </Card>
+      {openDelete && (
+        <DeleteConfirmationModal
+          open={openDelete}
+          onClose={() => {
+            setOpenDelete(false);
+          }}
+          videoId={video?._id}
+        />
+      )}
+      {openUpdate && (
+        <UpdateVideoModal
+          open={openUpdate}
+          onClose={() => {
+            setOpenUpdate(false);
+          }}
+          video={video}
+        />
+      )}
+    </>
   );
 };
 
