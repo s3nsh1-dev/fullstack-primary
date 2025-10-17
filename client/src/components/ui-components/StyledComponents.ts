@@ -44,6 +44,7 @@ export const ContainedButton = styled(Button, {
   fontSize: "clamp(0.85rem, 2vw, 1rem)",
   variant: "contained",
   height: "38px",
+  color: mode ? textColor.light : textColor.dark,
   boxShadow: mode
     ? "6px 6px 1px rgba(0, 0, 0, 0.7)"
     : "6px 6px 1px rgba(220, 220, 200)",

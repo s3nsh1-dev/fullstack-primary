@@ -3,17 +3,31 @@ import { useMutation } from "@tanstack/react-query";
 export const useIncrementView = () => {
   return useMutation({
     mutationFn: async ({ videoId, watchTime }: IncrementViewData) => {
-      const response = await fetch(`${URL}/videos/view/${videoId}`, {
+      const response = await fetch(`${URL}/views/${videoId}`, {
         method: "POST",
-        body: JSON.stringify(watchTime),
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ watchTime }), // ✅ Send as object with watchTime property
       });
-      if (!response.ok) throw new Error("Response Error for View Update");
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.message || "Response Error for View Update");
+      }
+
       const data = await response.json();
       return data;
     },
     onSuccess: (data) => {
       if (data?.data?.counted) {
         console.log("✅ View counted successfully");
+      } else {
+        console.log(
+          "ℹ️ View not counted:",
+          data?.data?.reason || "Unknown reason"
+        );
       }
     },
     onError: (error) => {

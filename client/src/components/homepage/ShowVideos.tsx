@@ -30,18 +30,10 @@ const ShowVideos = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "flex-start",
-          gap: 1,
-          width: {
-            // xs: "103rem",
-            // sm: "103rem",
-            // md: "103rem",
-            // xl: "103rem",
-            lg: "155em",
-          },
+          justifyContent: "center",
+          gap: "12px",
         }}
       >
-        {renderVideoList}
         {renderVideoList}
       </Box>
     </Box>

@@ -23,7 +23,7 @@ const incrementView = asyncHandler(async (req, res) => {
   }
 
   // Only count if user watched at least 30% or 30 seconds (whichever is less)
-  const minWatchTime = Math.min(video.duration * 0.3, 30);
+  const minWatchTime = Math.min(video.duration * 0.1, 5);
 
   if (watchTime < minWatchTime) {
     return res

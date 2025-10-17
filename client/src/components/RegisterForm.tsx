@@ -16,6 +16,7 @@ import type {
 } from "../constants/dataTypes";
 import useMode from "../hooks/useMode";
 import useAuth from "../hooks/useAuth";
+import { textColor } from "../constants/uiConstants";
 
 type RegisterFormProps = {
   toggleOpen: () => void;
@@ -86,6 +87,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
 
       <OutlinedButton
         component="label" // important
+        sx={{ color: mode ? textColor.dark : textColor.light }}
         mode={mode}
         startIcon={<CloudUploadIcon />}
       >
@@ -127,6 +129,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ toggleOpen }) => {
 
       <OutlinedButton
         mode={mode}
+        sx={{ color: mode ? textColor.dark : textColor.light }}
         component="label" // important
         startIcon={<CloudUploadIcon />}
       >

@@ -52,7 +52,7 @@ const MyVideos = () => {
                   <VideoCallIcon />
                   &nbsp; Upload
                 </Button>
-                <Typography variant="body2">•</Typography>
+                <Typography variant="body2">•••••</Typography>
                 <Button
                   onClick={() => {
                     navigate("/my-videos/edit");

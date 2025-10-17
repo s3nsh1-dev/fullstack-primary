@@ -12,34 +12,28 @@ import VideoChannelAndDescription from "../components/Videos/VideoChannelAndDesc
 import VideoCommentSection from "../components/Videos/VideoCommentSection";
 import useUpdateWatchHistory from "../hooks/data-fetching/useUpdateWatchHistory";
 import { useQueryClient } from "@tanstack/react-query";
-import { useIncrementView } from "../hooks/data-fetching/useIncrementView";
 
 const OpenSingleVideoPage = () => {
   const queryClient = useQueryClient();
   const { videoId } = useParams();
   const { mode } = useMode();
   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
-  const { mutate: incrementView } = useIncrementView();
 
   useEffect(() => {
     updateWatchHistory(videoId || "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoId]);
 
-  queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
+  }, [queryClient]);
 
   const { data, isLoading } = useFetchSingleVideo(
     videoId || "INVALID_Video-ID"
   );
 
-  // Example: Trigger view count update after data is loaded.
-  useEffect(() => {
-    if (data && data?.video) {
-      // Replace 120 with the actual watch time in seconds
-      const watchTime = data.video.duration;
-      incrementView({ videoId: data.video?._id, watchTime });
-    }
-  }, [data, incrementView]);
+  // ❌ REMOVED - Don't increment view here!
+  // The useVideoViewTracker hook in VideoPlayerMain handles this automatically
 
   if (isLoading) return <CircularProgressCenter size={50} />;
   if (!data) return <ContentNotAvailable text="Video Not Available" />;
@@ -72,7 +66,7 @@ const OpenSingleVideoPage = () => {
         >
           {/* Main Video Section */}
           <Box flex={1}>
-            {/* Video Player */}
+            {/* Video Player - View tracking happens automatically inside */}
             <VideoPlayerMain data={data.video} />
 
             {/* Video Info Section */}

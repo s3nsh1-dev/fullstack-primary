@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useRef } from "react";
 import useMode from "../../hooks/useMode";
 import { Paper } from "@mui/material";
+import { useVideoViewTracker } from "../../hooks/data-fetching/useVideoViewTracker";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
 
 const VideoPlayerMain: React.FC<VideoPlayerMainType> = ({ data }) => {
-  const mode = useMode();
+  const { mode } = useMode();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Automatically track video views
+  useVideoViewTracker({
+    videoId: data._id,
+    videoRef,
+    enabled: true,
+  });
+
   return (
     <Paper
       elevation={mode ? 1 : 0}
@@ -17,6 +27,7 @@ const VideoPlayerMain: React.FC<VideoPlayerMainType> = ({ data }) => {
       }}
     >
       <video
+        ref={videoRef}
         controls
         style={{
           position: "absolute",
