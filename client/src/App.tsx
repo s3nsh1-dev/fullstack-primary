@@ -35,7 +35,7 @@ function App() {
         <CssBaseline />
         <Routes>
           {/* routes with Navbar */}
-          <Route element={<Navbar navTitle="" />}>
+          <Route element={<Navbar />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/liked-content" element={<LikedContent />} />

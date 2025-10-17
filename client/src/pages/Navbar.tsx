@@ -1,7 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import SiteLogo from "../components/ui-components/SiteLogo";
@@ -10,7 +9,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
 import NavbarActionButtons from "../components/navbar/NavbarActionButtons";
 import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
-import type { TestProps } from "../constants/componentPropTypes";
 import { useTheme } from "@mui/material/styles";
 import { Outlet } from "react-router-dom";
 import {
@@ -20,7 +18,7 @@ import {
 import useAuth from "../hooks/useAuth";
 import NotLoggedIn from "./NotLoggedIn";
 
-const Navbar: React.FC<TestProps> = ({ navTitle }) => {
+const Navbar = () => {
   const { user, loading } = useAuth();
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
@@ -55,9 +53,6 @@ const Navbar: React.FC<TestProps> = ({ navTitle }) => {
                 <MenuIcon />
               </IconButton>
               <SiteLogo />
-              <Typography variant="h6" noWrap component="div">
-                {navTitle}
-              </Typography>
             </Box>
             <Box
               sx={{
