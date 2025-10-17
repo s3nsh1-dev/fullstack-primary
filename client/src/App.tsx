@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { getTheme } from "./utilities/muiThemeController";
 import useMode from "./hooks/useMode";
-import Navbar from "./pages/Navbar";
+// import Navbar from "./pages/Navbar";
 import Test from "./pages/Test";
 import Dashboard from "./pages/Dashboard";
 import Homepage from "./pages/Homepage";
@@ -23,6 +23,7 @@ import ShowTweets from "./components/homepage/ShowTweets";
 import ShowPlaylists from "./components/homepage/ShowPlaylists";
 import EditVideoOptions from "./components/Videos/EditVideoOptions";
 import NotFound from "./pages/NotFound";
+import LayoutWithNavbar from "./components/navbar/LayoutWithNavbar";
 
 function App() {
   const { mode } = useMode();
@@ -35,7 +36,7 @@ function App() {
         <CssBaseline />
         <Routes>
           {/* routes with Navbar */}
-          <Route element={<Navbar />}>
+          <Route element={<LayoutWithNavbar />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/liked-content" element={<LikedContent />} />

@@ -10,16 +10,16 @@ import DedicatedDrawer from "../components/navbar/DedicatedDrawer";
 import NavbarActionButtons from "../components/navbar/NavbarActionButtons";
 import NavbarSearchArea from "../components/navbar/NavbarSearchArea";
 import { useTheme } from "@mui/material/styles";
-import { Outlet } from "react-router-dom";
+// import { Outlet } from "react-router-dom";
 import {
-  Main,
+  // Main,
   AppBar,
 } from "../components/ui-components/NavbarStyledComponents";
-import useAuth from "../hooks/useAuth";
-import NotLoggedIn from "./NotLoggedIn";
+// import useAuth from "../hooks/useAuth";
+// import NotLoggedIn from "./NotLoggedIn";
 
 const Navbar = () => {
-  const { user, loading } = useAuth();
+  // const { user, loading } = useAuth();
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen((prev) => !prev);
@@ -90,9 +90,9 @@ const Navbar = () => {
           />
         )}
       </>
-      <Main open={open}>
+      {/* <Main open={open}>
         {!user && !loading ? <NotLoggedIn /> : <Outlet />}
-      </Main>
+      </Main> */}
     </>
   );
 };
