@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { getTheme } from "./utilities/muiThemeController";
 import useMode from "./hooks/useMode";
-// import Navbar from "./pages/Navbar";
 import Test from "./pages/Test";
 import Dashboard from "./pages/Dashboard";
 import Homepage from "./pages/Homepage";
@@ -31,14 +30,13 @@ function App() {
   if (loading) return <AppLoadingProgress />;
 
   return (
-    <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
-      <ThemeProvider theme={getTheme(mode)}>
+    <ThemeProvider theme={getTheme(mode)}>
+      <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
         <CssBaseline />
         <Routes>
           {/* routes with Navbar */}
           <Route element={<LayoutWithNavbar />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="*" element={<NotFound />} />
             <Route path="/liked-content" element={<LikedContent />} />
             <Route path="/setting" element={<Settings />} />
             <Route path="/subscribers" element={<Subscribers />} />
@@ -69,9 +67,10 @@ function App() {
           </Route>
           {/* routes without Navbar */}
           <Route path="/test" element={<Test />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-      </ThemeProvider>
-    </Box>
+      </Box>
+    </ThemeProvider>
   );
 }
 

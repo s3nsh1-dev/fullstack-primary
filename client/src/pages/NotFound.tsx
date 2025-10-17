@@ -25,11 +25,11 @@ const NotFound = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        // minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        bgcolor: isLight ? "#f9f9f9" : "#0f0f0f",
+        // bgcolor: isLight ? "#f9f9f9" : "#0f0f0f",
         py: 4,
       }}
     >
