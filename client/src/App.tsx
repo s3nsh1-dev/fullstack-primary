@@ -1,5 +1,4 @@
-// import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { getTheme } from "./utilities/muiThemeController";
 import useMode from "./hooks/useMode";
@@ -23,6 +22,7 @@ import ShowSubscribed from "./components/homepage/ShowSubscribed";
 import ShowTweets from "./components/homepage/ShowTweets";
 import ShowPlaylists from "./components/homepage/ShowPlaylists";
 import EditVideoOptions from "./components/Videos/EditVideoOptions";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const { mode } = useMode();
@@ -30,14 +30,15 @@ function App() {
   if (loading) return <AppLoadingProgress />;
 
   return (
-    <Box sx={{ marginTop: "57px" }}>
+    <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
       <ThemeProvider theme={getTheme(mode)}>
         <CssBaseline />
-        <BrowserRouter>
+        <>
           <Routes>
             {/* routes with Navbar */}
             <Route element={<Navbar navTitle="" />}>
               <Route path="/" element={<Dashboard />} />
+              <Route path="*" element={<NotFound />} />
               <Route path="/:username" element={<Homepage />}>
                 {/* Nested tabs */}
                 <Route path="videos" element={<ShowVideos />} />
@@ -57,9 +58,9 @@ function App() {
               <Route path="/setting" element={<Settings />} />
               <Route path="/subscribers" element={<Subscribers />} />
               <Route path="/support" element={<Support />} />
-              <Route path="/tweets" element={<Tweets />} />
               <Route path="/history" element={<WatchHistory />} />
               <Route path="/tweets">
+                <Route index element={<Tweets />} />
                 <Route path=":tweetId" element={<OpenSingleTweetPage />} />
               </Route>
               <Route path="/channels"></Route>
@@ -70,20 +71,10 @@ function App() {
             {/* routes without Navbar */}
             <Route path="/test" element={<Test />} />
           </Routes>
-        </BrowserRouter>
+        </>
       </ThemeProvider>
     </Box>
   );
 }
 
 export default App;
-
-// /tweets/:tweetId → single tweet page
-
-// /videos/:videoId → single video page
-
-// /channels/:channelId/home → channel homepage
-
-// /channels/:channelId/tweets → channel tweets
-
-// /channels/:channelId/videos → channel videos
