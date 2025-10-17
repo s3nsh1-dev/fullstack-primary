@@ -33,45 +33,42 @@ function App() {
     <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
       <ThemeProvider theme={getTheme(mode)}>
         <CssBaseline />
-        <>
-          <Routes>
-            {/* routes with Navbar */}
-            <Route element={<Navbar navTitle="" />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="*" element={<NotFound />} />
-              <Route path="/:username" element={<Homepage />}>
-                {/* Nested tabs */}
-                <Route path="videos" element={<ShowVideos />} />
-                <Route path="playlists" element={<ShowPlaylists />} />
-                <Route
-                  path="tweets"
-                  element={<ShowTweets interaction={false} />}
-                />
-                <Route path="subscribers" element={<ShowSubscribed />} />
-                <Route index element={<ShowVideos />} />
-              </Route>
-              <Route path="/liked-content" element={<LikedContent />} />
-              <Route path="/my-videos">
-                <Route path="" element={<MyVideos />} />
-                <Route path="edit" element={<EditVideoOptions />} />
-              </Route>
-              <Route path="/setting" element={<Settings />} />
-              <Route path="/subscribers" element={<Subscribers />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/history" element={<WatchHistory />} />
-              <Route path="/tweets">
-                <Route index element={<Tweets />} />
-                <Route path=":tweetId" element={<OpenSingleTweetPage />} />
-              </Route>
-              <Route path="/channels"></Route>
-              <Route path="/videos">
-                <Route path=":videoId" element={<OpenSingleVideoPage />} />
-              </Route>
+        <Routes>
+          {/* routes with Navbar */}
+          <Route element={<Navbar navTitle="" />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/liked-content" element={<LikedContent />} />
+            <Route path="/setting" element={<Settings />} />
+            <Route path="/subscribers" element={<Subscribers />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/history" element={<WatchHistory />} />
+            {/* Nested tabs*/}
+            <Route path="/my-videos">
+              <Route index element={<MyVideos />} />
+              <Route path="edit" element={<EditVideoOptions />} />
             </Route>
-            {/* routes without Navbar */}
-            <Route path="/test" element={<Test />} />
-          </Routes>
-        </>
+            <Route path="/tweets">
+              <Route index element={<Tweets />} />
+              <Route path=":tweetId" element={<OpenSingleTweetPage />} />
+            </Route>
+            <Route path="/:username" element={<Homepage />}>
+              <Route index element={<ShowVideos />} />
+              <Route path="videos" element={<ShowVideos />} />
+              <Route path="playlists" element={<ShowPlaylists />} />
+              <Route path="subscribers" element={<ShowSubscribed />} />
+              <Route
+                path="tweets"
+                element={<ShowTweets interaction={false} />}
+              />
+            </Route>
+            <Route path="/videos">
+              <Route path=":videoId" element={<OpenSingleVideoPage />} />
+            </Route>
+          </Route>
+          {/* routes without Navbar */}
+          <Route path="/test" element={<Test />} />
+        </Routes>
       </ThemeProvider>
     </Box>
   );
