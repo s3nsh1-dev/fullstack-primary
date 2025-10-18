@@ -3,11 +3,10 @@ import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { getTheme } from "./utilities/muiThemeController";
 import useAuth from "./hooks/useAuth";
 import useMode from "./hooks/useMode";
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 
 // Replace direct imports with lazy ones
 const Test = lazy(() => import("./pages/Test"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Homepage = lazy(() => import("./pages/Homepage"));
 const LikedContent = lazy(() => import("./pages/LikedContent"));
 const MyVideos = lazy(() => import("./pages/MyVideos"));
@@ -27,9 +26,11 @@ const ShowPlaylists = lazy(() => import("./components/homepage/ShowPlaylists"));
 const EditVideoOptions = lazy(
   () => import("./components/Videos/EditVideoOptions")
 );
+import Dashboard from "./pages/Dashboard";
 const NotFound = lazy(() => import("./pages/NotFound"));
-const Navbar = lazy(() => import("./pages/Navbar"));
+import Navbar from "./pages/Navbar";
 import AppLoadingProgress from "./pages/AppLoadingProgress";
+import ErrorBoundary from "./components/ui-components/ErrorBoundary";
 
 function App() {
   const { mode } = useMode();
@@ -38,9 +39,10 @@ function App() {
 
   return (
     <ThemeProvider theme={getTheme(mode)}>
-      <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
-        <CssBaseline />
-        <Suspense fallback={<AppLoadingProgress />}>
+      <CssBaseline />
+      <ErrorBoundary>
+        <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
+          {/* <Suspense fallback={<AppLoadingProgress />}> */}
           <Routes>
             {/* routes with Navbar */}
             <Route element={<Navbar />}>
@@ -77,8 +79,9 @@ function App() {
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </Suspense>
-      </Box>
+          {/* </Suspense> */}
+        </Box>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }

@@ -19,6 +19,7 @@ import useAuth from "../hooks/useAuth";
 import NotLoggedIn from "./NotLoggedIn";
 
 const Navbar = () => {
+  console.log("Navbar");
   const { user, loading } = useAuth();
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
