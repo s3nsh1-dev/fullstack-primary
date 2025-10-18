@@ -1,28 +1,35 @@
 import { Routes, Route } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { getTheme } from "./utilities/muiThemeController";
-import useMode from "./hooks/useMode";
-import Test from "./pages/Test";
-import Dashboard from "./pages/Dashboard";
-import Homepage from "./pages/Homepage";
-import LikedContent from "./pages/LikedContent";
-import MyVideos from "./pages/MyVideos";
-import Settings from "./pages/Settings";
-import Subscribers from "./pages/Subscribers";
-import Support from "./pages/Support";
-import Tweets from "./pages/Tweets";
-import WatchHistory from "./pages/WatchHistory";
 import useAuth from "./hooks/useAuth";
+import useMode from "./hooks/useMode";
+import { lazy, Suspense } from "react";
+
+// Replace direct imports with lazy ones
+const Test = lazy(() => import("./pages/Test"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Homepage = lazy(() => import("./pages/Homepage"));
+const LikedContent = lazy(() => import("./pages/LikedContent"));
+const MyVideos = lazy(() => import("./pages/MyVideos"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Subscribers = lazy(() => import("./pages/Subscribers"));
+const Support = lazy(() => import("./pages/Support"));
+const Tweets = lazy(() => import("./pages/Tweets"));
+const WatchHistory = lazy(() => import("./pages/WatchHistory"));
+const OpenSingleTweetPage = lazy(() => import("./pages/OpenSingleTweetPage"));
+const OpenSingleVideoPage = lazy(() => import("./pages/OpenSingleVideoPage"));
+const ShowVideos = lazy(() => import("./components/homepage/ShowVideos"));
+const ShowSubscribed = lazy(
+  () => import("./components/homepage/ShowSubscribed")
+);
+const ShowTweets = lazy(() => import("./components/homepage/ShowTweets"));
+const ShowPlaylists = lazy(() => import("./components/homepage/ShowPlaylists"));
+const EditVideoOptions = lazy(
+  () => import("./components/Videos/EditVideoOptions")
+);
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Navbar = lazy(() => import("./pages/Navbar"));
 import AppLoadingProgress from "./pages/AppLoadingProgress";
-import OpenSingleTweetPage from "./pages/OpenSingleTweetPage";
-import OpenSingleVideoPage from "./pages/OpenSingleVideoPage";
-import ShowVideos from "./components/homepage/ShowVideos";
-import ShowSubscribed from "./components/homepage/ShowSubscribed";
-import ShowTweets from "./components/homepage/ShowTweets";
-import ShowPlaylists from "./components/homepage/ShowPlaylists";
-import EditVideoOptions from "./components/Videos/EditVideoOptions";
-import NotFound from "./pages/NotFound";
-import LayoutWithNavbar from "./components/navbar/LayoutWithNavbar";
 
 function App() {
   const { mode } = useMode();
@@ -33,42 +40,44 @@ function App() {
     <ThemeProvider theme={getTheme(mode)}>
       <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
         <CssBaseline />
-        <Routes>
-          {/* routes with Navbar */}
-          <Route element={<LayoutWithNavbar />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/liked-content" element={<LikedContent />} />
-            <Route path="/setting" element={<Settings />} />
-            <Route path="/subscribers" element={<Subscribers />} />
-            <Route path="/support" element={<Support />} />
-            <Route path="/history" element={<WatchHistory />} />
-            {/* Nested tabs*/}
-            <Route path="/my-videos">
-              <Route index element={<MyVideos />} />
-              <Route path="edit" element={<EditVideoOptions />} />
+        <Suspense fallback={<AppLoadingProgress />}>
+          <Routes>
+            {/* routes with Navbar */}
+            <Route element={<Navbar />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/liked-content" element={<LikedContent />} />
+              <Route path="/setting" element={<Settings />} />
+              <Route path="/subscribers" element={<Subscribers />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/history" element={<WatchHistory />} />
+              {/* Nested tabs*/}
+              <Route path="/my-videos">
+                <Route index element={<MyVideos />} />
+                <Route path="edit" element={<EditVideoOptions />} />
+              </Route>
+              <Route path="/tweets">
+                <Route index element={<Tweets />} />
+                <Route path=":tweetId" element={<OpenSingleTweetPage />} />
+              </Route>
+              <Route path="/:username" element={<Homepage />}>
+                <Route index element={<ShowVideos />} />
+                <Route path="videos" element={<ShowVideos />} />
+                <Route path="playlists" element={<ShowPlaylists />} />
+                <Route path="subscribers" element={<ShowSubscribed />} />
+                <Route
+                  path="tweets"
+                  element={<ShowTweets interaction={false} />}
+                />
+              </Route>
+              <Route path="/videos">
+                <Route path=":videoId" element={<OpenSingleVideoPage />} />
+              </Route>
             </Route>
-            <Route path="/tweets">
-              <Route index element={<Tweets />} />
-              <Route path=":tweetId" element={<OpenSingleTweetPage />} />
-            </Route>
-            <Route path="/:username" element={<Homepage />}>
-              <Route index element={<ShowVideos />} />
-              <Route path="videos" element={<ShowVideos />} />
-              <Route path="playlists" element={<ShowPlaylists />} />
-              <Route path="subscribers" element={<ShowSubscribed />} />
-              <Route
-                path="tweets"
-                element={<ShowTweets interaction={false} />}
-              />
-            </Route>
-            <Route path="/videos">
-              <Route path=":videoId" element={<OpenSingleVideoPage />} />
-            </Route>
-          </Route>
-          {/* routes without Navbar */}
-          <Route path="/test" element={<Test />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            {/* routes without Navbar */}
+            <Route path="/test" element={<Test />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </Box>
     </ThemeProvider>
   );
