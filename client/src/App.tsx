@@ -42,7 +42,6 @@ function App() {
       <CssBaseline />
       <ErrorBoundary>
         <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
-          {/* <Suspense fallback={<AppLoadingProgress />}> */}
           <Routes>
             {/* routes with Navbar */}
             <Route element={<Navbar />}>
@@ -79,7 +78,6 @@ function App() {
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          {/* </Suspense> */}
         </Box>
       </ErrorBoundary>
     </ThemeProvider>
