@@ -3,14 +3,14 @@ import IndividualTweet from "../components/Tweets/IndividualTweet";
 import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
-import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
+import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 
 const OpenSingleTweetPage = () => {
   const { tweetId } = useParams<{ tweetId: string }>(); // fetch param from URL
   const { data, isLoading } = useFetchSingleTweet(
     tweetId || "INVALID_TWEET-ID"
   );
-  if (isLoading) return <CircularProgressCenter size={50} />;
+  if (isLoading) return <LoadingAnimation />;
   if (!data) return <ContentNotAvailable text="Tweet Not Available" />;
 
   return (

@@ -27,7 +27,7 @@ const EditVideoOptions = lazy(
   () => import("./components/Videos/EditVideoOptions")
 );
 import Dashboard from "./pages/Dashboard";
-const NotFound = lazy(() => import("./pages/NotFound"));
+import NotFound from "./pages/NotFound";
 import Navbar from "./pages/Navbar";
 import AppLoadingProgress from "./pages/AppLoadingProgress";
 import ErrorBoundary from "./components/ui-components/ErrorBoundary";

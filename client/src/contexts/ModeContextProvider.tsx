@@ -4,6 +4,7 @@ import type { ModeType } from "../constants/genericTypes";
 import type { ChildrenProps } from "../constants/genericTypes";
 
 const getStoredMode = (): ModeType => {
+  if (!localStorage.getItem("mode")) return true;
   return localStorage.getItem("mode") === "true";
 };
 

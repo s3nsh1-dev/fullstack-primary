@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import IndividualVideoUI from "../Videos/IndividualVideoUI";
-import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
 import { useOutletContext } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import LoadingAnimation from "../ui-components/LoadingAnimation";
 
 const ShowVideos = () => {
   // Safe optional access: may be undefined if not inside an Outlet
@@ -15,7 +15,7 @@ const ShowVideos = () => {
   const { data, isLoading, isError } = useFetchUserVideos(effectiveUserId);
 
   if (isError) return <div>...Encountered Error</div>;
-  if (isLoading) return <CircularProgressCenter />;
+  if (isLoading) return <LoadingAnimation />;
   if (!data || data.videos?.length === 0) {
     return <Typography color="textSecondary">No Videos</Typography>;
   }
