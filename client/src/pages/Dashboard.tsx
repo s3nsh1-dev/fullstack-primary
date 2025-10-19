@@ -2,11 +2,13 @@ import useFetchFeed from "../hooks/data-fetching/useFetchFeed";
 import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 import FeedItem from "../components/dashboard/FeedItem";
 import Masonry from "@mui/lab/Masonry";
+import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 
 const Dashboard = () => {
   const { data, isLoading, isError } = useFetchFeed();
 
-  if (isLoading) return <CircularProgressCenter size={80} />;
+  // if (isLoading) return <CircularProgressCenter size={80} />;
+  if (isLoading) return <LoadingAnimation />;
   if (isError) return <div> SITE IS FACING SOME INTERNAL ISSUES</div>;
   if (!data) return <CircularProgressCenter size={80} />;
 

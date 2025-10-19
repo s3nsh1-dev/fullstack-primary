@@ -3,15 +3,15 @@ import useAuth from "../hooks/useAuth";
 import LikesList from "../components/Likes/LikesList";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
-import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
+import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 
 const LikedContent = () => {
   const { user } = useAuth();
   const { data, isLoading, isError } = useFetchLikedContent(
     user?.user?._id || "INVALID_USER_ID"
   );
-  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (isLoading) return <LoadingAnimation />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <ContentNotAvailable text="No Liked Content" />;
 
