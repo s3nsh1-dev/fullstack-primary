@@ -3,6 +3,6 @@ import { searchingText } from "../controllers/searchUserText.controller";
 
 const searchUserTextRouter = Router();
 
-searchUserTextRouter.route("/q/:userText").get(searchingText);
+searchUserTextRouter.route("/q/:searchText").get(searchingText);
 
 export { searchUserTextRouter };
