@@ -15,6 +15,7 @@ import dashboardRouter from "./routes/dashboard.route";
 import HomeRouter from "./routes/homepage.route";
 import feedRouter from "./routes/feed.route";
 import viewRouter from "./routes/view.route";
+import { searchUserTextRouter } from "./routes/searchUserText.route";
 
 const app = express();
 
@@ -63,5 +64,6 @@ app.use("/api/v1/dashboard", dashboardRouter);
 app.use("/api/v1/homepage", HomeRouter);
 app.use("/api/v1/feeds", feedRouter);
 app.use("/api/v1/views", viewRouter);
+app.use("/api/v1/search", searchUserTextRouter);
 
 export { app };
