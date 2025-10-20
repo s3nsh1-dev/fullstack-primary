@@ -5,6 +5,11 @@ import useAuth from "./hooks/useAuth";
 import useMode from "./hooks/useMode";
 import { lazy } from "react";
 
+import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
+import Navbar from "./pages/Navbar";
+import AppLoadingProgress from "./pages/AppLoadingProgress";
+import ErrorBoundary from "./components/ui-components/ErrorBoundary";
 // Replace direct imports with lazy ones
 const Test = lazy(() => import("./pages/Test"));
 const Homepage = lazy(() => import("./pages/Homepage"));
@@ -26,12 +31,7 @@ const ShowPlaylists = lazy(() => import("./components/homepage/ShowPlaylists"));
 const EditVideoOptions = lazy(
   () => import("./components/Videos/EditVideoOptions")
 );
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import Navbar from "./pages/Navbar";
-import AppLoadingProgress from "./pages/AppLoadingProgress";
-import ErrorBoundary from "./components/ui-components/ErrorBoundary";
-
+const SearchPage = lazy(() => import("./pages/SearchPage"));
 function App() {
   const { mode } = useMode();
   const { loading } = useAuth();
@@ -51,6 +51,7 @@ function App() {
               <Route path="/subscribers" element={<Subscribers />} />
               <Route path="/support" element={<Support />} />
               <Route path="/history" element={<WatchHistory />} />
+              <Route path="/search" element={<SearchPage />} />
               {/* Nested tabs*/}
               <Route path="/my-videos">
                 <Route index element={<MyVideos />} />
