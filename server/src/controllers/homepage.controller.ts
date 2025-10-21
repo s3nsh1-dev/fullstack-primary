@@ -40,11 +40,14 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
   });
   const totalVideosCount = await Video.countDocuments({ owner: user[0]?._id });
   const totalTweetsCount = await Tweet.countDocuments({ owner: user[0]?._id });
-  const checkSubbed = await Subscription.findOne({
-    channel: user[0]?._id,
-    subscriber: userId,
-  });
-  const isSubbed = checkSubbed ? true : false;
+  let isSubbed = false;
+  if (userId && isValidObjectId(userId)) {
+    const checkSubbed = await Subscription.findOne({
+      channel: user[0]?._id,
+      subscriber: userId,
+    });
+    isSubbed = checkSubbed ? true : false;
+  }
 
   return res.status(200).json(
     new ApiResponse(
