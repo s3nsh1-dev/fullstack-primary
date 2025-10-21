@@ -12,15 +12,17 @@ import { useQueryClient } from "@tanstack/react-query";
 import useAuth from "../hooks/useAuth";
 import useMode from "../hooks/useMode";
 import { useNavigate } from "react-router-dom";
+import NotLoggedIn from "./NotLoggedIn";
 
 const MyVideos = () => {
-  const { user } = useAuth();
+  const { mode } = useMode();
+  const { user, loading } = useAuth();
+  const { mutate: uploadVideo } = useUploadMyVideo();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
+  if (!user && !loading) return <NotLoggedIn />;
   const toggleModal = () => setOpenModal((prev) => !prev);
-  const { mutate: uploadVideo } = useUploadMyVideo();
-  const { mode } = useMode();
   const theme = {
     bg: mode ? "#fff" : "#282828",
     text: mode ? "#0f0f0f" : "#fff",

@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import useSearchUserQuery from "../hooks/searching/useSearchUserQuery";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
+import ContentNotAvailable from "../components/others/ContentNotAvailable";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -9,7 +10,8 @@ const SearchPage = () => {
 
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <div>...Encountered Error</div>;
-  if (!data || "result" in data.data) return <div>No Matching result</div>;
+  if (!data || "result" in data.data)
+    return <ContentNotAvailable text="No Matching result" />;
 
   return <div>{JSON.stringify(data)}</div>;
 };

@@ -2,10 +2,14 @@ import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import useFetchWatchHistory from "../hooks/data-fetching/useFetchWatchHistory";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
+import NotLoggedIn from "./NotLoggedIn";
+import useAuth from "../hooks/useAuth";
 
 const WatchHistory: React.FC = () => {
   const { data, isLoading, isError } = useFetchWatchHistory();
+  const { user, loading } = useAuth();
 
+  if (!user && !loading) return <NotLoggedIn />;
   if (isError)
     return (
       <Typography color="error" textAlign="center" mt={4}>
