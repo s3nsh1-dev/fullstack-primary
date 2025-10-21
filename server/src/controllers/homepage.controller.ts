@@ -9,10 +9,8 @@ import { Subscription } from "../models/subscription.model";
 
 const getDetailsForHomepage = asyncHandler(async (req, res) => {
   const { username } = req.params;
+  const { userId } = req.query;
   if (!username) throw new ApiError(400, "INVALID USERNAME");
-  if (!req?.user || !req.user?._id) {
-  }
-  const sessionUserId = req.user?._id;
 
   const user = await User.aggregate([
     { $match: { username: username } },
@@ -44,7 +42,7 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
   const totalTweetsCount = await Tweet.countDocuments({ owner: user[0]?._id });
   const checkSubbed = await Subscription.findOne({
     channel: user[0]?._id,
-    subscriber: sessionUserId,
+    subscriber: userId,
   });
   const isSubbed = checkSubbed ? true : false;
 

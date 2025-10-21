@@ -4,10 +4,11 @@ import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import HomeProfilePictures from "./HomeProfilePictures";
 import { formatCount } from "../../utilities/helperFncForStats";
 import useToggleSubscription from "../../hooks/data-fetching/useToggleSubscription";
+import { useQueryClient } from "@tanstack/react-query";
 
 const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
-  console.log(data.isSubbed);
   const subMutate = useToggleSubscription();
+  const queryClient = useQueryClient();
   const [subbed, setSubbed] = React.useState(data?.isSubbed);
   const [subCount, setSubCount] = React.useState(data?.totalSubscribers);
   const handleSubscribe = () => {
@@ -20,6 +21,9 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
           setSubbed(false);
           setSubCount((prev) => prev - 1);
         }
+        queryClient.invalidateQueries({
+          queryKey: ["userSubscribers", data.user?._id],
+        });
       },
     });
   };
