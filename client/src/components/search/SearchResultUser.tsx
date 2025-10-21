@@ -1,8 +1,10 @@
 import React from "react";
 import type { UserSearchResult } from "../../hooks/searching/useSearchUserQuery";
 
-const SearchResultUser: React.FC<PropType> = () => {
-  const renderMatchingUser = <></>;
+const SearchResultUser: React.FC<PropType> = ({ users }) => {
+  const renderMatchingUser = users.map((user) => {
+    return <div key={user._id}></div>;
+  });
 
   return (
     <div

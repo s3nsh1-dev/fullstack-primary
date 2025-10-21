@@ -1,8 +1,10 @@
 import React from "react";
 import type { VideoSearchResult } from "../../hooks/searching/useSearchUserQuery";
 
-const SearchResultVideos: React.FC<PropType> = () => {
-  const renderMatchingVideos = <></>;
+const SearchResultVideos: React.FC<PropType> = ({ videos }) => {
+  const renderMatchingVideos = videos.map((video) => {
+    return <div key={video._id}></div>;
+  });
 
   return (
     <div

@@ -10,11 +10,11 @@ import SearchResultUser from "./SearchResultUser";
 
 const SearchContentList: React.FC<PropType> = ({ searchList }) => {
   return (
-    <div style={{ margin: "10px" }}>
+    <>
       <SearchResultUser users={searchList?.user} />
       <SearchResultTweet tweets={searchList?.tweet} />
       <SearchResultVideos videos={searchList?.video} />
-    </div>
+    </>
   );
 };
 

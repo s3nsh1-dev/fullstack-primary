@@ -3,6 +3,7 @@ import useSearchUserQuery from "../hooks/searching/useSearchUserQuery";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import SearchContentList from "../components/search/SearchContentList";
+import Typography from "@mui/material/Typography";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -15,7 +16,8 @@ const SearchPage = () => {
     return <ContentNotAvailable text="No Matching result" />;
 
   return (
-    <div>
+    <div style={{ margin: "0px 10px" }}>
+      <Typography py={1}>result for: {searchText}</Typography>
       <SearchContentList searchList={data?.data} />
     </div>
   );
