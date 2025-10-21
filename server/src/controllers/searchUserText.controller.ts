@@ -18,9 +18,12 @@ const searchingText = asyncHandler(async (req, res) => {
   const [searchUser, searchVideo, searchTweet] = await Promise.all([
     User.find({
       $or: [{ username: regex }, { fullname: regex }],
-    }).select("username fullname avatar"),
-    Video.find({ title: regex }).select("title thumbnail owner"),
-    Tweet.find({ content: regex }).select("content author createdAt"),
+    }).select("username fullname avatar email createdAt"),
+    Video.find({ title: regex }).populate("owner", "username fullname avatar"),
+    Tweet.find({ content: regex }).populate(
+      "owner",
+      "username fullname avatar"
+    ),
   ]);
 
   // If all are empty, return no matches message

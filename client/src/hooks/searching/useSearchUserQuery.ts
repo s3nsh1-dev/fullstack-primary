@@ -22,6 +22,41 @@ const URL = import.meta.env.VITE_SERVER_URL;
 
 // src/types/search.types.ts
 
+export interface TweetSearchResult {
+  _id: string;
+  content: string;
+  owner: OwnerInfo;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface VideoSearchResult {
+  _id: string;
+  owner: OwnerInfo;
+  videoFile: string;
+  videoPublicId: string;
+  thumbnail: string;
+  thumbPublicId: string;
+  title: string;
+  description: string;
+  duration: number;
+  views: number;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface UserSearchResult {
+  _id: string;
+  username: string;
+  email: string;
+  fullname: string;
+  avatar: string;
+  createdAt: string; // ISO 8601 timestamp
+}
+
 interface SearchResponse {
   statusCode: number;
   data: SearchData | NoContent;
@@ -39,23 +74,9 @@ interface SearchData {
   tweet: TweetSearchResult[];
 }
 
-interface UserSearchResult {
-  _id?: string;
+export interface OwnerInfo {
+  _id: string;
   username: string;
   fullname: string;
-  avatar?: string;
-}
-
-interface VideoSearchResult {
-  _id?: string;
-  title: string;
-  thumbnail?: string;
-  owner?: string;
-}
-
-interface TweetSearchResult {
-  _id?: string;
-  content: string;
-  author?: string;
-  createdAt: string;
+  avatar: string;
 }

@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import useSearchUserQuery from "../hooks/searching/useSearchUserQuery";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
+import SearchContentList from "../components/search/SearchContentList";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -13,7 +14,11 @@ const SearchPage = () => {
   if (!data || "result" in data.data)
     return <ContentNotAvailable text="No Matching result" />;
 
-  return <div>{JSON.stringify(data)}</div>;
+  return (
+    <div>
+      <SearchContentList searchList={data?.data} />
+    </div>
+  );
 };
 
 export default SearchPage;

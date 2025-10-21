@@ -97,7 +97,7 @@ const sx2 = {
   backgroundColor: "background.paper",
   transition: "transform 0.2s",
   overflow: "hidden",
-  width: "90vw",
+  width: "100%",
   "&:hover": { transform: "scale(0.95)" },
 };
 const sx3 = {
