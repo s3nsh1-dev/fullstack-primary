@@ -97,7 +97,7 @@ const OpenSingleVideoPage = () => {
                 theme={theme}
                 isLikedByUser={data.isLikedByUser}
                 likesCount={data.likesCount}
-                username={data?.video.owner.username || ""}
+                username={data?.video?.owner?.username || ""}
               />
 
               {/* Channel and Description */}

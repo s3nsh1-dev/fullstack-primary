@@ -42,7 +42,7 @@ userRouter
 userRouter
   .route("/cover-image")
   .patch(verifyJWT, multerUpload.single("coverImage"), updateUserCoverImage);
-userRouter.route("/channel/:username").get(verifyJWT, getUserChannelProfile);
+userRouter.route("/channel/:username").get(getUserChannelProfile);
 userRouter.route("/history").get(verifyJWT, getWatchHistory);
 userRouter.route("/history/:videoId").post(addToWatchHistory);
 
