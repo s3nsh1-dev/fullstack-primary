@@ -2,8 +2,13 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import { Box } from "@mui/material";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import ShowSubscribed from "../components/homepage/ShowSubscribed";
+import useAuth from "../hooks/useAuth";
+import NotLoggedIn from "./NotLoggedIn";
 
 const Subscribers = () => {
+  const { user, loading } = useAuth();
+  if (!user && !loading) return <NotLoggedIn />;
+
   return (
     <Box m={1}>
       <HomeTabTitles

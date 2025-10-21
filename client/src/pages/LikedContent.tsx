@@ -5,12 +5,15 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
+import NotLoggedIn from "./NotLoggedIn";
 
 const LikedContent = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { data, isLoading, isError } = useFetchLikedContent(
     user?.user?._id || "INVALID_USER_ID"
   );
+
+  if (!user && !loading) return <NotLoggedIn />;
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <ContentNotAvailable text="No Liked Content" />;

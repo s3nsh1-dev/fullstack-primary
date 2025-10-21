@@ -1,11 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 
-const useFetchHomepageDetails = (username: string) => {
+const useFetchHomepageDetails = ({
+  username,
+  userId,
+}: {
+  username: string;
+  userId: string;
+}) => {
   return useQuery({
     queryKey: ["homepage", username],
     queryFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/homepage/${username}`,
+        `${
+          import.meta.env.VITE_SERVER_URL
+        }/homepage/${username}?userId=${userId}`,
         {
           method: "GET",
           credentials: "include",

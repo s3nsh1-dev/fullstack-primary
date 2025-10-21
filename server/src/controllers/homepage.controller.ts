@@ -9,9 +9,8 @@ import { Subscription } from "../models/subscription.model";
 
 const getDetailsForHomepage = asyncHandler(async (req, res) => {
   const { username } = req.params;
+  const { userId } = req.query;
   if (!username) throw new ApiError(400, "INVALID USERNAME");
-  if (!req.user || !req.user._id)
-    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
 
   const user = await User.aggregate([
     { $match: { username: username } },
@@ -33,19 +32,22 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
     },
   ]);
   if (!user) throw new ApiError(401, "USER NOT FOUND FOR HOMEPAGE");
-  if (!isValidObjectId(user[0]._id))
+  if (!isValidObjectId(user[0]?._id))
     throw new ApiError(400, "INVALID USER_ID FOUND ON HOMEPAGE");
 
   const totalSubscribersCount = await Subscription.countDocuments({
-    channel: user[0]._id,
+    channel: user[0]?._id,
   });
-  const totalVideosCount = await Video.countDocuments({ owner: user[0]._id });
-  const totalTweetsCount = await Tweet.countDocuments({ owner: user[0]._id });
-  const checkSubbed = await Subscription.findOne({
-    channel: user[0]._id,
-    subscriber: req.user._id,
-  });
-  const isSubbed = checkSubbed ? true : false;
+  const totalVideosCount = await Video.countDocuments({ owner: user[0]?._id });
+  const totalTweetsCount = await Tweet.countDocuments({ owner: user[0]?._id });
+  let isSubbed = false;
+  if (userId && isValidObjectId(userId)) {
+    const checkSubbed = await Subscription.findOne({
+      channel: user[0]?._id,
+      subscriber: userId,
+    });
+    isSubbed = checkSubbed ? true : false;
+  }
 
   return res.status(200).json(
     new ApiResponse(

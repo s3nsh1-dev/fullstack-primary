@@ -36,12 +36,14 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 });
 
 const addToWatchHistory = asyncHandler(async (req, res) => {
-  if (!req.user || !req.user?._id) throw new ApiError(401, "Unauthorized");
-  const userId = req.user._id;
-
+  const { userId } = req.query;
   const { videoId } = req.params;
-  if (!videoId) throw new ApiError(400, "Video ID is required");
+
   if (!isValidObjectId(videoId)) throw new ApiError(400, "Invalid video ID");
+  if (!isValidObjectId(userId))
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { result: false }, "USER NOT LOGGED IN"));
 
   await User.findByIdAndUpdate(
     userId,

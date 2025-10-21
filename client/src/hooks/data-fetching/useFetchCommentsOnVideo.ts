@@ -1,14 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
-const useFetchCommentsOnVideo = (videoId: string) => {
+const useFetchCommentsOnVideo = ({
+  videoId,
+  userId,
+}: {
+  videoId: string;
+  userId: string;
+}) => {
   return useQuery({
     queryKey: ["videoComments", videoId],
     queryFn: async () => {
-      const response = await fetch(`${URL}/comments/v/${videoId}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${URL}/comments/v/${videoId}?usedId=${userId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENTS");
       const data: CommentsResponse = await response.json();
       const result = data.data;

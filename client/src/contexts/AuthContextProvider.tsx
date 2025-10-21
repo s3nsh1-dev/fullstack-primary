@@ -9,7 +9,6 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({ children }) => {
   const [user, setUser] = useState<UserLoginAuthDataType | null>(null);
   const login = (userData: UserLoginAuthDataType) => setUser(userData);
   const logout = () => setUser(null);
-  // const { mutate: refreshUser } = useRefreshUser();
   const callRefreshToken = useRefreshUser();
 
   useEffect(() => {
@@ -20,7 +19,6 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({ children }) => {
       onError: () => {
         setUser(null);
       },
-      // onSettled solved my problem of !data return <>...No data</>
       onSettled: () => {
         setLoading(false);
       },

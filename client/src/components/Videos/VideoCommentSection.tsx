@@ -1,5 +1,5 @@
 import { Box, Typography, Stack, Divider } from "@mui/material";
-import {} from "react";
+import useAuth from "../../hooks/useAuth";
 import useMode from "../../hooks/useMode";
 import useFetchCommentsOnVideo from "../../hooks/data-fetching/useFetchCommentsOnVideo";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
@@ -9,8 +9,12 @@ import VideoCommentItem from "./VideoCommentItem";
 
 const VideoCommentSection = () => {
   const { videoId } = useParams();
+  const { user } = useAuth();
   const { mode } = useMode(); // true = light mode, false = dark mode
-  const { data, isLoading } = useFetchCommentsOnVideo(videoId || "");
+  const { data, isLoading } = useFetchCommentsOnVideo({
+    videoId: videoId || "",
+    userId: user?.user?._id || "",
+  });
 
   // Theme colors based on mode
   const theme = {

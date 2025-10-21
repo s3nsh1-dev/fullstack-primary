@@ -13,17 +13,21 @@ import verifyJWT from "../middleware/auth.middleware";
 
 const commentRouter = Router();
 
-commentRouter.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
-
-commentRouter.route("/v/:video_ID").get(getVideoComments).post(addVideoComment);
-commentRouter.route("/t/:tweet_ID").get(getTweetComments).post(addTweetComment);
+commentRouter
+  .route("/v/:video_ID")
+  .get(getVideoComments)
+  .post(verifyJWT, addVideoComment);
+commentRouter
+  .route("/t/:tweet_ID")
+  .get(getTweetComments)
+  .post(verifyJWT, addTweetComment);
 commentRouter
   .route("/modify/:comment_ID")
-  .delete(deleteComment)
-  .patch(updateComment);
+  .delete(verifyJWT, deleteComment)
+  .patch(verifyJWT, updateComment);
 commentRouter
   .route("/c/:comment_ID")
-  .post(addCommentToComment)
+  .post(verifyJWT, addCommentToComment)
   .get(getCommentsComment);
 
 export default commentRouter;

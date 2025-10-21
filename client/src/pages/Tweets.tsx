@@ -6,9 +6,14 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import FormModal from "../components/others/FormModal";
 import CreateTweetForm from "../components/Tweets/CreateTweetForm";
 import { DividerRoot } from "../components/ui-components/StyledComponents";
+import useAuth from "../hooks/useAuth";
+import NotLoggedIn from "./NotLoggedIn";
 
 const Tweets = () => {
+  const { user, loading } = useAuth();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
+
+  if (!user && !loading) return <NotLoggedIn />;
   const handleOpenModal = () => setOpenModal((prev) => !prev);
 
   return (

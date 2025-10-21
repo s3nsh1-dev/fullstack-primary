@@ -15,12 +15,12 @@ import {
   Main,
   AppBar,
 } from "../components/ui-components/NavbarStyledComponents";
-import useAuth from "../hooks/useAuth";
-import NotLoggedIn from "./NotLoggedIn";
+// import useAuth from "../hooks/useAuth";
+// import NotLoggedIn from "./NotLoggedIn";
 
 const Navbar = () => {
   console.log("Navbar");
-  const { user, loading } = useAuth();
+  // const { user, loading } = useAuth();
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen((prev) => !prev);
@@ -92,7 +92,8 @@ const Navbar = () => {
         )}
       </>
       <Main open={open}>
-        {!user && !loading ? <NotLoggedIn /> : <Outlet />}
+        {<Outlet />}
+        {/* {!user && !loading ? <NotLoggedIn /> : <Outlet />} */}
       </Main>
     </>
   );
