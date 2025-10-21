@@ -2,7 +2,19 @@ import React from "react";
 import type { UserSearchResult } from "../../hooks/searching/useSearchUserQuery";
 
 const SearchResultUser: React.FC<PropType> = () => {
-  return <div></div>;
+  const renderMatchingUser = <></>;
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+      }}
+    >
+      {renderMatchingUser}
+    </div>
+  );
 };
 
 export default SearchResultUser;
