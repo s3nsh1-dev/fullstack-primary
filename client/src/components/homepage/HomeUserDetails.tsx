@@ -6,6 +6,7 @@ import { formatCount } from "../../utilities/helperFncForStats";
 import useToggleSubscription from "../../hooks/data-fetching/useToggleSubscription";
 
 const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
+  console.log(data.isSubbed);
   const subMutate = useToggleSubscription();
   const [subbed, setSubbed] = React.useState(data?.isSubbed);
   const [subCount, setSubCount] = React.useState(data?.totalSubscribers);

@@ -144,9 +144,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
 const getVideoById = asyncHandler(async (req, res) => {
   //TODO: get video by id
-  const { videoId } = req.params;
+  const { videoId, userId } = req.params;
   if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
-  if (!req.user || !req.user.id) throw new ApiError(400, "USER_ID IS REQUIRED");
 
   const fetchedVideo = await Video.findById(videoId).populate(
     "owner",
@@ -154,8 +153,9 @@ const getVideoById = asyncHandler(async (req, res) => {
   );
   const isLikedByUser = await Like.exists({
     video: videoId,
-    likedBy: req.user._id,
+    likedBy: userId,
   });
+  console.log("userId", userId, isLikedByUser);
   const likesCount = await Like.countDocuments({ video: videoId });
 
   if (!fetchedVideo) {

@@ -12,8 +12,11 @@ import VideoCommentSection from "../components/Videos/VideoCommentSection";
 import useUpdateWatchHistory from "../hooks/data-fetching/useUpdateWatchHistory";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
+import useAuth from "../hooks/useAuth";
 
 const OpenSingleVideoPage = () => {
+  const { user } = useAuth();
+  const userId = user?.user?._id || "";
   const queryClient = useQueryClient();
   const { videoId } = useParams();
   const { mode } = useMode();
@@ -28,9 +31,10 @@ const OpenSingleVideoPage = () => {
     queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
   }, [queryClient]);
 
-  const { data, isLoading } = useFetchSingleVideo(
-    videoId || "INVALID_Video-ID"
-  );
+  const { data, isLoading } = useFetchSingleVideo({
+    userId,
+    videoId: videoId || "",
+  });
 
   // ❌ REMOVED - Don't increment view here!
   // The useVideoViewTracker hook in VideoPlayerMain handles this automatically

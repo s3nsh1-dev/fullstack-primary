@@ -10,8 +10,9 @@ import { Subscription } from "../models/subscription.model";
 const getDetailsForHomepage = asyncHandler(async (req, res) => {
   const { username } = req.params;
   if (!username) throw new ApiError(400, "INVALID USERNAME");
-  if (!req.user || !req.user._id)
-    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+  if (!req.user || !req.user?._id) {
+  }
+  const sessionUserId = req.user?._id;
 
   const user = await User.aggregate([
     { $match: { username: username } },
@@ -41,9 +42,10 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
   });
   const totalVideosCount = await Video.countDocuments({ owner: user[0]._id });
   const totalTweetsCount = await Tweet.countDocuments({ owner: user[0]._id });
+  console.log("what is session user Id", sessionUserId);
   const checkSubbed = await Subscription.findOne({
     channel: user[0]._id,
-    subscriber: req.user._id,
+    subscriber: sessionUserId,
   });
   const isSubbed = checkSubbed ? true : false;
 

@@ -11,12 +11,12 @@ import verifyJWT from "../middleware/auth.middleware";
 import { multerUpload } from "../middleware/multer.middleware";
 
 const videoRouter = Router();
-videoRouter.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
 
 videoRouter
   .route("/")
   .get(getAllVideos)
   .post(
+    verifyJWT,
     multerUpload.fields([
       {
         name: "videoFile",
@@ -32,10 +32,13 @@ videoRouter
 
 videoRouter
   .route("/:videoId")
-  .get(getVideoById)
-  .delete(deleteVideo)
-  .patch(multerUpload.single("thumbnail"), updateVideo);
+  .delete(verifyJWT, deleteVideo)
+  .patch(verifyJWT, multerUpload.single("thumbnail"), updateVideo);
 
-videoRouter.route("/toggle/publish/:videoId").patch(togglePublishStatus);
+videoRouter
+  .route("/toggle/publish/:videoId")
+  .patch(verifyJWT, togglePublishStatus);
+
+videoRouter.route("/:userId/:videoId").get(getVideoById);
 
 export default videoRouter;

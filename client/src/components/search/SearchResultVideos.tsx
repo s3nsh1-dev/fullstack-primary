@@ -1,14 +1,16 @@
 import React from "react";
 import type { VideoSearchResult } from "../../hooks/searching/useSearchUserQuery";
 import { VideoSearchCard } from "./VideoSearchCard";
+import { useNavigate } from "react-router-dom";
 
 const SearchResultVideos: React.FC<PropType> = ({ videos }) => {
+  const navigate = useNavigate();
   const renderMatchingVideos = videos.map((video) => (
     <VideoSearchCard
       key={video._id}
       video={video}
       onClick={() => {
-        // Handle video click - navigate to video page
+        navigate(`/videos/${video?._id}`);
         console.log("Video clicked:", video._id);
       }}
     />

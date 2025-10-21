@@ -2,11 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useFetchSingleVideo = (videoId: string) => {
+const useFetchSingleVideo = ({
+  videoId,
+  userId,
+}: {
+  videoId: string;
+  userId: string;
+}) => {
   return useQuery({
     queryKey: ["singleVideo", videoId],
     queryFn: async () => {
-      const response = await fetch(`${URL}/videos/${videoId}`, {
+      const link = `${URL}/videos/${userId}/${videoId}`;
+      console.log("link with no userid", link);
+      const response = await fetch(link, {
         credentials: "include",
         method: "GET",
       });

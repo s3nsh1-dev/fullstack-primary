@@ -11,11 +11,14 @@ const Homepage = () => {
   const { user, loading } = useAuth();
   const { username } = useParams();
   const { data, isLoading, isError } = useFetchHomepageDetails(username || "");
+  const SessionUser = user?.user?._id || "undefined";
+  // console.log(username, SessionUser);
 
-  if (!user && !loading) return <NotLoggedIn />;
+  if (!user && !loading && username === SessionUser) return <NotLoggedIn />;
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <div>....No Homepage Info</div>;
+  console.log(data);
 
   return (
     <Box>
