@@ -23,7 +23,10 @@ const OpenSingleVideoPage = () => {
   const { mutate: updateWatchHistory } = useUpdateWatchHistory();
 
   useEffect(() => {
-    updateWatchHistory(videoId || "");
+    updateWatchHistory({
+      videoId: videoId || "",
+      userId: user?.user?._id || "",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoId]);
 
