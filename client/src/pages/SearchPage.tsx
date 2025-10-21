@@ -1,10 +1,17 @@
 import { useSearchParams } from "react-router-dom";
+import useSearchUserQuery from "../hooks/searching/useSearchUserQuery";
+import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const searchText = searchParams.get("q");
+  const { data, isLoading, isError } = useSearchUserQuery(searchText || "");
 
-  return <div>{searchText}</div>;
+  if (isLoading) return <LoadingAnimation />;
+  if (isError) return <div>...Encountered Error</div>;
+  if (!data || "result" in data.data) return <div>No Matching result</div>;
+
+  return <div>{JSON.stringify(data)}</div>;
 };
 
 export default SearchPage;

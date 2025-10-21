@@ -31,7 +31,13 @@ const searchingText = asyncHandler(async (req, res) => {
   ) {
     return res
       .status(200)
-      .json(new ApiResponse(200, {}, "No matching content found"));
+      .json(
+        new ApiResponse(
+          200,
+          { result: "No matching content found" },
+          "Search results fetched successfully"
+        )
+      );
   }
 
   return res
@@ -39,7 +45,7 @@ const searchingText = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { searchUser, searchVideo, searchTweet },
+        { user: searchUser, video: searchVideo, tweet: searchTweet },
         "Search results fetched successfully"
       )
     );
