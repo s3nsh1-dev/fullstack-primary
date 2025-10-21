@@ -1,9 +1,11 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import useMode from "../hooks/useMode";
 import { backgroundColor } from "../constants/uiConstants";
+import "../css/div/pageLoadingCubeAnimation.css";
 
 const AppLoadingProgress = () => {
   const { mode } = useMode();
+  const style = { border: `0.5px solid ${mode ? "#000" : "#fff"}` };
   return (
     <Box
       sx={{
@@ -14,7 +16,16 @@ const AppLoadingProgress = () => {
         backgroundColor: mode ? backgroundColor.light : backgroundColor.dark,
       }}
     >
-      <CircularProgress />
+      <div className="loader">
+        <div className="cube">
+          <div className="face" style={style}></div>
+          <div className="face" style={style}></div>
+          <div className="face" style={style}></div>
+          <div className="face" style={style}></div>
+          <div className="face" style={style}></div>
+          <div className="face" style={style}></div>
+        </div>
+      </div>
     </Box>
   );
 };

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
-import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import useFetchSingleVideo from "../hooks/data-fetching/useFetchSingleVideo";
 import useMode from "../hooks/useMode";
@@ -12,6 +11,7 @@ import VideoChannelAndDescription from "../components/Videos/VideoChannelAndDesc
 import VideoCommentSection from "../components/Videos/VideoCommentSection";
 import useUpdateWatchHistory from "../hooks/data-fetching/useUpdateWatchHistory";
 import { useQueryClient } from "@tanstack/react-query";
+import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 
 const OpenSingleVideoPage = () => {
   const queryClient = useQueryClient();
@@ -35,7 +35,7 @@ const OpenSingleVideoPage = () => {
   // ❌ REMOVED - Don't increment view here!
   // The useVideoViewTracker hook in VideoPlayerMain handles this automatically
 
-  if (isLoading) return <CircularProgressCenter size={50} />;
+  if (isLoading) return <LoadingAnimation />;
   if (!data) return <ContentNotAvailable text="Video Not Available" />;
 
   // Theme colors based on mode

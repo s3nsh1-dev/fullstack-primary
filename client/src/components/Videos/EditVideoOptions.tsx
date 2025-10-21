@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
 import useAuth from "../../hooks/useAuth";
-import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import EditVideoCard from "./EditVideoCard";
+import LoadingAnimation from "../ui-components/LoadingAnimation";
 
 const EditVideoOptions = () => {
   const { user } = useAuth();
@@ -10,7 +10,7 @@ const EditVideoOptions = () => {
     user?.user?._id || ""
   );
   if (isError) return <div>...Encountered Error</div>;
-  if (isLoading) return <CircularProgressCenter size={80} />;
+  if (isLoading) return <LoadingAnimation />;
   if (!data || data?.videos?.length < 1)
     return <div>No Videos Uploaded Yet</div>;
 

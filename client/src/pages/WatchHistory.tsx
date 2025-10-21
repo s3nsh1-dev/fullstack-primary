@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
-import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 import useFetchWatchHistory from "../hooks/data-fetching/useFetchWatchHistory";
+import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 
 const WatchHistory: React.FC = () => {
   const { data, isLoading, isError } = useFetchWatchHistory();
@@ -13,7 +13,7 @@ const WatchHistory: React.FC = () => {
       </Typography>
     );
 
-  if (isLoading) return <CircularProgressCenter />;
+  if (isLoading) return <LoadingAnimation />;
 
   const videos = data?.watchHistory?.slice(0, 20) || [];
 
