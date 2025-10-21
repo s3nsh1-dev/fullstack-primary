@@ -39,6 +39,7 @@ videoRouter
   .route("/toggle/publish/:videoId")
   .patch(verifyJWT, togglePublishStatus);
 
-videoRouter.route("/:userId/:videoId").get(getVideoById);
+// videoRouter.route("/:videoId/:userId?").get(getVideoById);
+videoRouter.route("/:videoId").get(getVideoById);
 
 export default videoRouter;

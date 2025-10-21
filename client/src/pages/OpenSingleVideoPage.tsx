@@ -32,8 +32,8 @@ const OpenSingleVideoPage = () => {
   }, [queryClient]);
 
   const { data, isLoading } = useFetchSingleVideo({
-    userId,
     videoId: videoId || "",
+    userId,
   });
 
   // ❌ REMOVED - Don't increment view here!

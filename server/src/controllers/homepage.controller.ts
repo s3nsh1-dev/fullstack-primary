@@ -42,7 +42,6 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
   });
   const totalVideosCount = await Video.countDocuments({ owner: user[0]._id });
   const totalTweetsCount = await Tweet.countDocuments({ owner: user[0]._id });
-  console.log("what is session user Id", sessionUserId);
   const checkSubbed = await Subscription.findOne({
     channel: user[0]._id,
     subscriber: sessionUserId,
