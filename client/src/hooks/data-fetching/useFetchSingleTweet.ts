@@ -13,7 +13,7 @@ const useFetchSingleTweet = (tweetId: string) => {
       });
       if (!response.ok) throw new Error("ERROR WHILE FETCHING TWEET");
       const data: UserTweetsAPIResponse = await response.json();
-      const result = data.data?.tweet;
+      const result = data?.data;
       return result;
     },
     enabled: !!tweetId,
@@ -26,6 +26,7 @@ interface UserTweetsAPIResponse {
   statusCode: number;
   data: {
     tweet: TweetType;
+    isLiked: boolean;
   };
   message: string;
   success: boolean;

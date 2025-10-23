@@ -16,38 +16,23 @@ import {
   style6,
   style5,
 } from "../../constants/tweets.constants";
-import useCheckLikeOnTweet from "../../hooks/data-fetching/useCheckLikeOnTweet";
-import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import useAuth from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 
 const IndividualTweet: React.FC<IndividualTweetProps> = ({
   tweet,
+  isLiked,
   interaction,
 }) => {
   const [showComments, setShowComments] = React.useState(false);
-  const { data, isLoading, isError } = useCheckLikeOnTweet(tweet._id);
   const { user } = useAuth();
-  if (isLoading)
-    return (
-      <div>
-        <CircularProgressCenter />
-      </div>
-    );
-  if (isError) return <div>....Encountered Error</div>;
-  if (!data) return <CircularProgressCenter />;
 
   const handleShowComments = () => {
     setShowComments(!showComments);
   };
 
   return (
-    <Card
-      key={tweet._id}
-      variant="elevation"
-      elevation={5}
-      // sx={{ border: "1px solid purple" }}
-    >
+    <Card key={tweet._id} variant="elevation" elevation={5}>
       <Box
         component={Link}
         to={`/tweets/${tweet._id}`}
@@ -77,7 +62,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
             tweetId={tweet._id}
             handleShowComments={handleShowComments}
             disabled={false}
-            likeStatus={data.data}
+            likeStatus={isLiked}
             showComments={showComments}
           />
         </>
@@ -90,5 +75,6 @@ export default IndividualTweet;
 
 type IndividualTweetProps = {
   tweet: TweetType;
+  isLiked: boolean;
   interaction: boolean;
 };
