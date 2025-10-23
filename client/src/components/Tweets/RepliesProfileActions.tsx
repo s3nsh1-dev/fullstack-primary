@@ -14,6 +14,7 @@ import FormModal from "../others/FormModal";
 import UpdateReplyForm from "./UpdateReplyForm";
 import useDeleteComment from "../../hooks/data-fetching/useDeleteComment";
 import { useQueryClient } from "@tanstack/react-query";
+import useAuth from "../../hooks/useAuth";
 
 const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
   replyId,
@@ -22,6 +23,7 @@ const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
   tweetOwner,
   commentId,
 }) => {
+  const { user } = useAuth();
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const [openModal, setOpenModal] = React.useState(false);
   const toggleTweetLike = useToggleLikeOnComment();
@@ -29,6 +31,7 @@ const RepliesProfileActions: React.FC<RepliesProfileActionsProps> = ({
   const deleteCommentMutate = useDeleteComment();
 
   const handleCommentLike = () => {
+    if (!user) return alert("Please login to like the reply");
     toggleTweetLike.mutate(replyId, {
       onSuccess: (data) => {
         if ("comment" in data) {

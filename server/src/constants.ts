@@ -6,8 +6,8 @@ export const DB_NAME = "videotube_database";
 export const httpOptions: CookieOptions = {
   httpOnly: true,
   secure: false,
-  // sameSite: "none",
   sameSite: "lax",
+  // sameSite: "none",
   /*
   for production
   secure: true,

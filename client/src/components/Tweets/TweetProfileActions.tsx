@@ -52,6 +52,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
     refetch();
   };
   const handleLikeClick = () => {
+    if (!user) return alert("Please login to like the tweet");
     toggleTweetLike.mutate(tweetId, {
       onSuccess: (data) => {
         if ("tweet" in data) {

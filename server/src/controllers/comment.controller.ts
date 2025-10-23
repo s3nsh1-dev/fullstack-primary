@@ -152,6 +152,7 @@ const addTweetComment = asyncHandler(async (req, res) => {
 
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED USER");
+  console.log("who is logged iN? :", req.user);
 
   const tweet = await Tweet.findById(tweet_ID);
   if (!tweet) throw new ApiError(404, "TWEET NOT FOUND");
