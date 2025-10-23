@@ -9,8 +9,8 @@ const ChannelProfileSubInfo: React.FC<ChannelProfileSubInfoProps> = ({
   theme,
 }) => {
   const { user } = useAuth();
-  const [subbed, setSubbed] = React.useState(channelInfo.isSubscribed);
-  const [subCount, setSubCount] = React.useState(channelInfo.subscriberCount);
+  const [subbed, setSubbed] = React.useState(channelInfo.isSubbed);
+  const [subCount, setSubCount] = React.useState(channelInfo.mySubCount);
   const subscriptionMutate = useToggleSubscription();
   const toggleSubbed = () => {
     if (!user) return alert("Please Login to Subscribe to this channel");
@@ -89,7 +89,7 @@ type UserChannel = {
   fullname: string;
   avatar: string;
   coverImage: string;
-  subscriberCount: number;
-  channelSubscribedToCount: number;
-  isSubscribed: boolean;
+  mySubCount: number;
+  meSubbingCount: number;
+  isSubbed: boolean;
 };

@@ -31,16 +31,16 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
   isLikedByUser,
   likesCount,
 }) => {
-  const {
-    data: channelInfo,
-    isLoading,
-    isError,
-  } = useFetchUserChannelProfile(username);
   const mode = useMode();
   const { user } = useAuth();
   const [totalLikes, setTotalLikes] = React.useState(likesCount);
   const [isLiked, setIsLiked] = React.useState(isLikedByUser);
   const { mutate: toggleLike } = useToggleLikeOnVideo();
+  const {
+    data: channelInfo,
+    isLoading,
+    isError,
+  } = useFetchUserChannelProfile({ username, adminId: user?.user?._id || "" });
   console.log("channelInfo", channelInfo);
 
   if (!data) return null;

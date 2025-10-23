@@ -10,6 +10,7 @@ import mongoose, { Types } from "mongoose";
 import { UserStaleType } from "../constants/ModelTypes";
 import { httpOptions as options } from "../constants";
 import { isValidObjectId } from "mongoose";
+import { toObjectId } from "../utils/convertToObjectId";
 
 const registerUser = asyncHandler(async (req, res) => {
   /**
@@ -379,6 +380,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.params;
+  const { adminId } = req.query;
   if (!username || !username?.trim()) {
     throw new ApiError(400, "USERNAME NOT FOUND");
   }
@@ -392,7 +394,8 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         from: "subscriptions",
         localField: "_id",
         foreignField: "channel",
-        as: "subscribers",
+        as: "mySub",
+        pipeline: [{ $project: { _id: 1 } }],
       },
     },
     {
@@ -400,42 +403,59 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         from: "subscriptions",
         localField: "_id",
         foreignField: "subscriber",
-        as: "subscribedTo",
+        as: "meSubbing",
+        pipeline: [{ $project: { _id: 1 } }],
       },
     },
+    ...(adminId && isValidObjectId(adminId)
+      ? [
+          {
+            $lookup: {
+              from: "subscriptions",
+              let: { ownerId: "$_id" },
+              as: "checkSub",
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$channel", "$$ownerId"] },
+                        { $eq: ["$subscriber", toObjectId(adminId as string)] },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ]
+      : []),
     {
       $addFields: {
-        subscriberCount: { $size: "$subscribers" },
-        channelSubscribedToCount: { $size: "$subscribedTo" },
-        isSubscribed: {
-          $in: [
-            req.user?._id,
-            {
-              $map: {
-                input: "$subscribers",
-                as: "sub",
-                in: "$$sub.subscriber",
-              },
-            },
-          ],
+        mySubCount: { $size: "$mySub" },
+        meSubbingCount: { $size: "$meSubbing" },
+        isSubbed: {
+          $cond: {
+            if: { $gt: [{ $size: { $ifNull: ["$checkSub", []] } }, 0] },
+            then: true,
+            else: false,
+          },
         },
       },
     },
-
     {
       $project: {
         fullname: 1,
         username: 1,
-        subscriberCount: 1,
-        channelSubscribedToCount: 1,
-        isSubscribed: 1,
+        email: 1,
         avatar: 1,
         coverImage: 1,
-        email: 1,
+        mySubCount: 1,
+        meSubbingCount: 1,
+        isSubbed: 1,
       },
     },
   ]);
-
   if (!channel || channel.length === 0) {
     throw new ApiError(400, "CHANNEL DOES NOT EXIST");
   }
