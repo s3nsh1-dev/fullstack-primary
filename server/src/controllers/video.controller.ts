@@ -142,42 +142,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, { video }, "VIDEO PUBLISHED SUCCESSFULLY"));
 });
 
-const getVideoById = asyncHandler(async (req, res) => {
-  //TODO: get video by id
-  const { videoId } = req.params;
-  const { userId } = req.query;
-  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
-
-  const fetchedVideo = await Video.findById(videoId).populate(
-    "owner",
-    "_id fullname avatar username coverImage"
-  );
-  let isLikedByUser = false;
-  if (isValidObjectId(userId)) {
-    const check = await Like.exists({
-      video: videoId,
-      likedBy: userId,
-    });
-    isLikedByUser = check ? true : false;
-  }
-
-  const likesCount = await Like.countDocuments({ video: videoId });
-
-  if (!fetchedVideo) {
-    throw new ApiError(404, "VIDEO NOT FOUND");
-  }
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { video: fetchedVideo, isLikedByUser: !!isLikedByUser, likesCount },
-        "VIDEO FETCHED SUCCESSFULLY"
-      )
-    );
-});
-
 const updateVideo = asyncHandler(async (req, res) => {
   //TODO: update video details like title, description and thumbnail
 
@@ -314,6 +278,42 @@ const deleteVideo = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, { result }, "VIDEO DELETED SUCCESSFULLY"));
+});
+
+const getVideoById = asyncHandler(async (req, res) => {
+  //TODO: get video by id
+  const { videoId } = req.params;
+  const { userId } = req.query;
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
+
+  const fetchedVideo = await Video.findById(videoId).populate(
+    "owner",
+    "_id fullname avatar username coverImage"
+  );
+  let isLikedByUser = false;
+  if (isValidObjectId(userId)) {
+    const check = await Like.exists({
+      video: videoId,
+      likedBy: userId,
+    });
+    isLikedByUser = check ? true : false;
+  }
+
+  const likesCount = await Like.countDocuments({ video: videoId });
+
+  if (!fetchedVideo) {
+    throw new ApiError(404, "VIDEO NOT FOUND");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { video: fetchedVideo, isLikedByUser: !!isLikedByUser, likesCount },
+        "VIDEO FETCHED SUCCESSFULLY"
+      )
+    );
 });
 
 export {

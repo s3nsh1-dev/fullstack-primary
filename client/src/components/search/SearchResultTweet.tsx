@@ -6,7 +6,12 @@ const SearchResultTweet: React.FC<PropType> = ({ tweets }) => {
   if (tweets?.length === 0) return <div></div>;
   const renderMatchingTweets = tweets.map((tweet) => {
     return (
-      <IndividualTweet key={tweet?._id} tweet={tweet} interaction={false} />
+      <IndividualTweet
+        key={tweet?._id}
+        tweet={tweet}
+        interaction={false}
+        isLiked={tweet.isLiked}
+      />
     );
   });
   return (

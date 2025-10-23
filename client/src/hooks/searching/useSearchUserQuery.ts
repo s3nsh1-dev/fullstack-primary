@@ -28,7 +28,7 @@ export interface TweetSearchResult {
   owner: OwnerInfo;
   createdAt: string;
   updatedAt: string;
-  __v: number;
+  isLiked: boolean;
 }
 
 export interface VideoSearchResult {
