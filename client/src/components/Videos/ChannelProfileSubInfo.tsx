@@ -2,15 +2,18 @@ import React from "react";
 import { formatCount } from "../../utilities/helperFncForStats";
 import { Stack, Avatar, Typography, Box, Button } from "@mui/material";
 import useToggleSubscription from "../../hooks/data-fetching/useToggleSubscription";
+import useAuth from "../../hooks/useAuth";
 
 const ChannelProfileSubInfo: React.FC<ChannelProfileSubInfoProps> = ({
   channelInfo,
   theme,
 }) => {
+  const { user } = useAuth();
   const [subbed, setSubbed] = React.useState(channelInfo.isSubscribed);
   const [subCount, setSubCount] = React.useState(channelInfo.subscriberCount);
   const subscriptionMutate = useToggleSubscription();
   const toggleSubbed = () => {
+    if (!user) return alert("Please Login to Subscribe to this channel");
     subscriptionMutate.mutate(channelInfo._id, {
       onSuccess: (response) => {
         if ("channel" in response) {

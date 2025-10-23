@@ -23,7 +23,14 @@ export default useFetchUserTweets;
 interface UserTweetsAPIResponse {
   statusCode: number;
   data: {
-    tweets: TweetType[];
+    tweets: {
+      _id: string;
+      content: string;
+      owner: MinimalUserType; // MinimalUserType Id reference
+      createdAt: string;
+      updatedAt: string;
+      isLiked: boolean;
+    }[];
   };
   message: string;
   success: boolean;
@@ -35,7 +42,6 @@ export interface TweetType {
   owner: MinimalUserType; // MinimalUserType Id reference
   createdAt: string;
   updatedAt: string;
-  __v: number;
 }
 
 export interface MinimalUserType {

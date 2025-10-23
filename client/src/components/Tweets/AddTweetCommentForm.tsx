@@ -6,8 +6,10 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import useAddCommentOnTweet from "../../hooks/data-fetching/useAddCommentOnTweet";
 import { useQueryClient } from "@tanstack/react-query";
 import useFetchCommentsOnTweets from "../../hooks/data-fetching/useFetchCommentsOnTweets";
+import useAuth from "../../hooks/useAuth";
 
 const AddTweetCommentForm = ({ ID }: { ID: string }) => {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const resetForm = {
     content: "",
@@ -15,7 +17,10 @@ const AddTweetCommentForm = ({ ID }: { ID: string }) => {
   const addCommentMutate = useAddCommentOnTweet();
   const [formData, setFormData] = React.useState(resetForm);
   const { mode } = useMode();
-  const { refetch: refetchCommentsForTweet } = useFetchCommentsOnTweets(ID);
+  const { refetch: refetchCommentsForTweet } = useFetchCommentsOnTweets({
+    tweetId: ID,
+    userId: user?.user._id || "",
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

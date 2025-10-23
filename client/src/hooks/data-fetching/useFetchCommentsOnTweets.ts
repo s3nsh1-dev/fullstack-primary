@@ -2,14 +2,23 @@ import { useQuery } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useFetchCommentsOnTweets = (tweetId: string) => {
+const useFetchCommentsOnTweets = ({
+  tweetId,
+  userId,
+}: {
+  tweetId: string;
+  userId: string;
+}) => {
   return useQuery({
     queryKey: ["commentOnTweet", tweetId],
     queryFn: async () => {
-      const response = await fetch(`${URL}/comments/t/${tweetId}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${URL}/comments/t/${tweetId}?userId=${userId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING COMMENTS");
       const data: ApiResponse = await response.json();
       return data.data;

@@ -15,7 +15,11 @@ const OpenSingleTweetPage = () => {
 
   return (
     <Box m={1}>
-      <IndividualTweet interaction={true} tweet={data} />
+      <IndividualTweet
+        interaction={true}
+        tweet={data.tweet}
+        isLiked={data.isLiked}
+      />
     </Box>
   );
 };

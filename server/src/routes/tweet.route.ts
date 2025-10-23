@@ -9,14 +9,13 @@ import {
 import verifyJWT from "../middleware/auth.middleware";
 
 const tweetRouter = Router();
-tweetRouter.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
 
-tweetRouter.route("/").post(createTweet);
+tweetRouter.route("/").post(verifyJWT, createTweet);
 tweetRouter.route("/user/:userId").get(getUserTweets);
 tweetRouter
   .route("/:tweetId")
-  .patch(updateTweet)
-  .delete(deleteTweet)
+  .patch(verifyJWT, updateTweet)
+  .delete(verifyJWT, deleteTweet)
   .get(fetchTweet);
 
 export default tweetRouter;

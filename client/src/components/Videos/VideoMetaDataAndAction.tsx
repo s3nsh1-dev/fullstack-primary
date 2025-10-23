@@ -22,6 +22,7 @@ import useFetchUserChannelProfile from "../../hooks/data-fetching/useFetchUserCh
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import ContentNotAvailable from "../others/ContentNotAvailable";
 import { formatCount } from "../../utilities/helperFncForStats";
+import useAuth from "../../hooks/useAuth";
 
 const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
   theme,
@@ -36,9 +37,11 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
     isError,
   } = useFetchUserChannelProfile(username);
   const mode = useMode();
+  const { user } = useAuth();
   const [totalLikes, setTotalLikes] = React.useState(likesCount);
   const [isLiked, setIsLiked] = React.useState(isLikedByUser);
   const { mutate: toggleLike } = useToggleLikeOnVideo();
+  console.log("channelInfo", channelInfo);
 
   if (!data) return null;
   if (isLoading) return <CircularProgressCenter />;
@@ -46,6 +49,7 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
   if (!channelInfo) return <ContentNotAvailable text="Cannot Find Channel" />;
 
   const handleToggleLike = () => {
+    if (!user) return alert("Please Login to like the video");
     toggleLike(data._id, {
       onSuccess: (response) => {
         // Optimistically update UI

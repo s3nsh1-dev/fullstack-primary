@@ -36,8 +36,10 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
   const [like, setLike] = React.useState<boolean>(likeStatus);
   const [openModal, setOpenModal] = React.useState(false);
   const toggleTweetLike = useToggleLikeOnTweet();
-  const { data, isLoading, isError, refetch } =
-    useFetchCommentsOnTweets(tweetId);
+  const { data, isLoading, isError, refetch } = useFetchCommentsOnTweets({
+    tweetId,
+    userId: user?.user._id || "",
+  });
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (isError) return <div>....Encountered Error</div>;
 
@@ -50,6 +52,7 @@ const TweetProfileActions: React.FC<TweetProfileActionsProps> = ({
     refetch();
   };
   const handleLikeClick = () => {
+    if (!user) return alert("Please login to like the tweet");
     toggleTweetLike.mutate(tweetId, {
       onSuccess: (data) => {
         if ("tweet" in data) {
