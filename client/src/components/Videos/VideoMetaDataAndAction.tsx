@@ -41,6 +41,7 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
   const [totalLikes, setTotalLikes] = React.useState(likesCount);
   const [isLiked, setIsLiked] = React.useState(isLikedByUser);
   const { mutate: toggleLike } = useToggleLikeOnVideo();
+  console.log("channelInfo", channelInfo);
 
   if (!data) return null;
   if (isLoading) return <CircularProgressCenter />;

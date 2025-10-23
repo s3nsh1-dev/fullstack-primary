@@ -22,6 +22,7 @@ const Homepage = () => {
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <div>....No Homepage Info</div>;
+  console.log("Homepage data", data);
 
   return (
     <>
