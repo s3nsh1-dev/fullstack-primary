@@ -15,20 +15,24 @@ const Homepage = () => {
     username: username || "",
     userId: sessionUser,
   });
+  console.log("Session=", sessionUser, ", Username=", username);
 
-  if (!user && !loading && username === sessionUser) return <NotLoggedIn />;
+  if (!user && !loading && sessionUser === "" && username === "undefined")
+    return <NotLoggedIn />;
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data) return <div>....No Homepage Info</div>;
 
   return (
-    <Box>
-      <HomeUserDetails data={data} />
-      <SubHomepage username={username || ""} />
-      <Box m={1}>
-        <Outlet context={{ userId: data?.user?._id }} />
+    <>
+      <Box>
+        <HomeUserDetails data={data} />
+        <SubHomepage username={username || ""} />
+        <Box m={1}>
+          <Outlet context={{ userId: data?.user?._id }} />
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

@@ -13,14 +13,17 @@ import {
   MoreVert,
 } from "@mui/icons-material";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
+import useAuth from "../../hooks/useAuth";
 
 const VideoCommentItem: React.FC<VideoCommentItemProps> = ({
   comment,
   theme,
 }) => {
+  const { user } = useAuth();
   const [like, setLike] = React.useState(comment.isLiked);
   const toggleLike = useToggleLikeOnComment();
   const handleLikes = () => {
+    if (!user) return alert("Please Login to like this comment");
     toggleLike.mutate(comment._id, {
       onSuccess: (data) => {
         if ("comment" in data) {

@@ -4,7 +4,7 @@ import { getTheme } from "./utilities/muiThemeController";
 import useAuth from "./hooks/useAuth";
 import useMode from "./hooks/useMode";
 import { lazy } from "react";
-
+//components and pages
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Navbar from "./pages/Navbar";
