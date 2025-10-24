@@ -2,14 +2,23 @@ import { useQuery } from "@tanstack/react-query";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useFetchUserChannelProfile = (username: string) => {
+const useFetchUserChannelProfile = ({
+  username,
+  adminId,
+}: {
+  username: string;
+  adminId: string;
+}) => {
   return useQuery({
     queryKey: ["userChannelProfile", username],
     queryFn: async () => {
-      const response = await fetch(`${URL}/users/channel/${username}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${URL}/users/channel/${username}?adminId=${adminId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (!response.ok)
         throw new Error("ERROR WHILE FETCHING USER CHANNEL PROFILE");
       const data: UserChannelResponse = await response.json();
@@ -29,9 +38,9 @@ export interface UserChannel {
   fullname: string;
   avatar: string;
   coverImage: string;
-  subscriberCount: number;
-  channelSubscribedToCount: number;
-  isSubscribed: boolean;
+  mySubCount: number;
+  meSubbingCount: number;
+  isSubbed: boolean;
 }
 
 export interface UserChannelData {
