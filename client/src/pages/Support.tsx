@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 const Support = () => {
+  console.log("Support");
   return (
     <Box
       sx={{

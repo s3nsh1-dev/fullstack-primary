@@ -6,6 +6,7 @@ const URL = import.meta.env.VITE_SERVER_URL;
 const useLogin = () => {
   return useMutation({
     mutationFn: async (credentials: UserLoginType) => {
+      console.log("useLogin API");
       const response = await fetch(`${URL}/users/login`, {
         method: "POST",
         credentials: "include",

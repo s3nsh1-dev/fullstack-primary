@@ -15,12 +15,7 @@ import {
   Main,
   AppBar,
 } from "../components/ui-components/NavbarStyledComponents";
-// import useAuth from "../hooks/useAuth";
-// import NotLoggedIn from "./NotLoggedIn";
-
 const Navbar = () => {
-  console.log("Navbar");
-  // const { user, loading } = useAuth();
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen((prev) => !prev);
@@ -37,6 +32,8 @@ const Navbar = () => {
   React.useEffect(() => {
     setOpen(false);
   }, [isMobile, notMobileButCollapsed]);
+
+  console.log("Navbar");
 
   return (
     <>
