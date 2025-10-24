@@ -10,7 +10,7 @@ const useFetchSingleVideo = ({
   userId: string;
 }) => {
   return useQuery({
-    queryKey: ["singleVideo", videoId],
+    queryKey: ["singleVideo", videoId, userId],
     queryFn: async () => {
       const link = `${URL}/videos/${videoId}?userId=${userId}`;
       const response = await fetch(link, {

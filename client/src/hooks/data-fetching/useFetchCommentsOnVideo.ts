@@ -9,7 +9,7 @@ const useFetchCommentsOnVideo = ({
   userId: string;
 }) => {
   return useQuery({
-    queryKey: ["videoComments", videoId],
+    queryKey: ["videoComments", videoId, userId],
     queryFn: async () => {
       const response = await fetch(
         `${URL}/comments/v/${videoId}?usedId=${userId}`,

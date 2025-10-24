@@ -10,7 +10,7 @@ const useFetchCommentsOnTweets = ({
   userId: string;
 }) => {
   return useQuery({
-    queryKey: ["commentOnTweet", tweetId],
+    queryKey: ["commentOnTweet", tweetId, userId],
     queryFn: async () => {
       const response = await fetch(
         `${URL}/comments/t/${tweetId}?userId=${userId}`,

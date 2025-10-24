@@ -10,13 +10,13 @@ import "./index.css";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
+  <QueryClientProvider client={queryClient}>
+    <AuthContextProvider>
       <ModeContextProvider>
-        <AuthContextProvider>
+        <BrowserRouter>
           <App />
-        </AuthContextProvider>
+        </BrowserRouter>
       </ModeContextProvider>
-    </QueryClientProvider>
-  </BrowserRouter>
+    </AuthContextProvider>
+  </QueryClientProvider>
 );
