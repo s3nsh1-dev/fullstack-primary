@@ -20,19 +20,6 @@ export const useIncrementView = () => {
       const data = await response.json();
       return data;
     },
-    onSuccess: (data) => {
-      if (data?.data?.counted) {
-        console.log("✅ View counted successfully");
-      } else {
-        console.log(
-          "ℹ️ View not counted:",
-          data?.data?.reason || "Unknown reason"
-        );
-      }
-    },
-    onError: (error) => {
-      console.error("❌ Failed to count view:", error);
-    },
   });
 };
 

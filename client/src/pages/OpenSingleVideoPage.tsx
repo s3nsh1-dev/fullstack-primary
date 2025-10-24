@@ -39,7 +39,6 @@ const OpenSingleVideoPage = () => {
     userId,
   });
 
-  console.log("video data", data);
   // ❌ REMOVED - Don't increment view here!
   // The useVideoViewTracker hook in VideoPlayerMain handles this automatically
 

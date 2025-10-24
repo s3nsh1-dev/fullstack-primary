@@ -41,7 +41,6 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
     isLoading,
     isError,
   } = useFetchUserChannelProfile({ username, adminId: user?.user?._id || "" });
-  console.log("channelInfo", channelInfo);
 
   if (!data) return null;
   if (isLoading) return <CircularProgressCenter />;

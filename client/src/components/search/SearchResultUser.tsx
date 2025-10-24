@@ -11,7 +11,6 @@ const SearchResultUser: React.FC<PropType> = ({ users }) => {
       user={user}
       onClick={() => {
         navigate(`/${user?.username}`);
-        console.log("User clicked:", user._id);
       }}
     />
   ));
