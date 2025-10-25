@@ -11,6 +11,7 @@ const HomeTabTitles: FC<HomeTabTitlesProps> = ({ text, icon }) => {
         alignItems: "center",
         mb: 2,
         gap: 1,
+        whiteSpace: "nowrap",
       }}
     >
       {icon}

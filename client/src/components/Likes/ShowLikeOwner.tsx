@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import useAuth from "../../hooks/useAuth";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import useTheme from "@mui/material/styles/useTheme";
+import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const ShowLikeOwner = ({ timestamp }: { timestamp: string }) => {

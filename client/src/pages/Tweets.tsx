@@ -11,6 +11,7 @@ import CreateTweetForm from "../components/Tweets/CreateTweetForm";
 import { DividerRoot } from "../components/ui-components/StyledComponents";
 import useAuth from "../hooks/useAuth";
 import NotLoggedIn from "./NotLoggedIn";
+import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 
 const Tweets = () => {
   const { user, loading } = useAuth();
@@ -21,12 +22,9 @@ const Tweets = () => {
 
   return (
     <>
-      <Box m={1}>
+      <Box p={1}>
         <Box sx={sxValue}>
-          <ChatBubbleOutlineIcon />
-          <Typography variant="h6" fontWeight="bold" whiteSpace={"nowrap"}>
-            Tweets
-          </Typography>
+          <HomeTabTitles text="Tweets" icon={<ChatBubbleOutlineIcon />} />
           <DividerRoot>
             <Divider textAlign="right">
               <Typography fontWeight={"bold"}>

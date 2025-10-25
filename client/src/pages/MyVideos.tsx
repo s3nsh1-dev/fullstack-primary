@@ -16,6 +16,7 @@ import useAuth from "../hooks/useAuth";
 import useMode from "../hooks/useMode";
 import { useNavigate } from "react-router-dom";
 import NotLoggedIn from "./NotLoggedIn";
+import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 
 const MyVideos = () => {
   const { mode } = useMode();
@@ -38,12 +39,9 @@ const MyVideos = () => {
 
   return (
     <>
-      <Box m={1}>
+      <Box p={1}>
         <Box sx={sxValue}>
-          <PlayCircleOutlineIcon />
-          <Typography variant="h6" fontWeight="bold" whiteSpace={"nowrap"}>
-            My Videos
-          </Typography>
+          <HomeTabTitles text="My Videos" icon={<PlayCircleOutlineIcon />} />
           <DividerRoot>
             <Divider textAlign="right">
               <Box

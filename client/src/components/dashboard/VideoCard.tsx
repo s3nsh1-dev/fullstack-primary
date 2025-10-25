@@ -22,7 +22,7 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
 
   return (
     <Card sx={sxValue} elevation={10}>
-      <CardContent>
+      <CardContent sx={sxV2}>
         <UserHeader
           owner={video.owner}
           createdAt={video.createdAt}
@@ -42,6 +42,7 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
             sx={{
               borderRadius: 1,
               backgroundColor: "grey.900",
+              height: 150,
             }}
           />
           <Box
@@ -111,9 +112,14 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
 export default VideoCard;
 
 const sxValue = {
-  maxWidth: 600,
   width: "100%",
-  //   boxShadow: 1,
   "&:hover": { boxShadow: 3 },
   transition: "box-shadow 0.3s",
+};
+
+const sxV2 = {
+  "&:last-child": {
+    paddingBottom: "10px",
+  },
+  padding: "10px",
 };

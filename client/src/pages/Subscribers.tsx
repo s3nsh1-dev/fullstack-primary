@@ -10,7 +10,7 @@ const Subscribers = () => {
   if (!user && !loading) return <NotLoggedIn />;
 
   return (
-    <Box m={1}>
+    <Box p={1}>
       <HomeTabTitles
         text="Subscribers"
         icon={

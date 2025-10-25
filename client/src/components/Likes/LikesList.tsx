@@ -22,7 +22,7 @@ const LikesList: React.FC<LikesListProps> = ({ data }) => {
   });
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5, m: 1 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
       {renderAll}
     </Box>
   );
