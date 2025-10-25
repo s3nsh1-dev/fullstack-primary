@@ -15,7 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import useUpdateAvatar from "../../hooks/CRUD-hooks/useUpdateAvatar";
 
-const UpdateAvatar: React.FC<PropType> = ({ onClose, currentAvatar }) => {
+const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
   const { mutate: changeAvatar, isPending } = useUpdateAvatar();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentAvatar);
@@ -106,7 +106,6 @@ const UpdateAvatar: React.FC<PropType> = ({ onClose, currentAvatar }) => {
       },
     });
   };
-
   return (
     <Dialog
       open={true}
@@ -298,7 +297,7 @@ const UpdateAvatar: React.FC<PropType> = ({ onClose, currentAvatar }) => {
   );
 };
 
-export default UpdateAvatar;
+export default ChangeProfileImage;
 
 type PropType = {
   onClose: () => void;
