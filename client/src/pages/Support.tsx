@@ -16,7 +16,7 @@ const Support = () => {
         overflowY: "auto",
       }}
     >
-      <Paper elevation={2} sx={{ p: "3%" }}>
+      <Paper elevation={2} sx={{ p: "3%", border: "1px solid purple" }}>
         <Typography variant="h3" component="h1" gutterBottom fontWeight={700}>
           Terms and Conditions
         </Typography>
