@@ -9,12 +9,10 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import {
-  ThumbUpOutlined,
-  ThumbDownOutlined,
-  ShareOutlined,
-  MoreHoriz,
-} from "@mui/icons-material";
+import ThumbUpOutlined from "@mui/icons-material/ThumbUpOutlined";
+import ThumbDownOutlined from "@mui/icons-material/ThumbDownOutlined";
+import ShareOutlined from "@mui/icons-material/ShareOutlined";
+import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
 import ChannelProfileSubInfo from "./ChannelProfileSubInfo";
 import useToggleLikeOnVideo from "../../hooks/data-fetching/useToggleLikeOnVideo";

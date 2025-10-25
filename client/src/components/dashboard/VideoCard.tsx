@@ -8,7 +8,8 @@ import {
   IconButton,
   Chip,
 } from "@mui/material";
-import { PlayArrow, Visibility } from "@mui/icons-material";
+import Visibility from "@mui/icons-material/Visibility";
+import PlayArrow from "@mui/icons-material/PlayArrow";
 import { formatDuration } from "../../utilities/helperFncForStats";
 import type { VideoItem } from "../../hooks/data-fetching/useFetchFeed";
 import UserHeader from "./UserHeader";

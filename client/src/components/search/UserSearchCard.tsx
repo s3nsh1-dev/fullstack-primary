@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Typography, Avatar, Box } from "@mui/material";
-import { CheckCircle } from "@mui/icons-material";
+import CheckCircle from "@mui/icons-material/CheckCircle";
 import type { UserSearchResult } from "../../hooks/searching/useSearchUserQuery";
 import { getTimeAgo } from "../../utilities/helperFncForStats";
 

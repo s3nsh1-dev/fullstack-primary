@@ -2,7 +2,7 @@ import React from "react";
 import { Typography, Paper, Chip, Stack } from "@mui/material";
 import useMode from "../../hooks/useMode";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
-import { Visibility } from "@mui/icons-material";
+import Visibility from "@mui/icons-material/Visibility";
 import {
   formatDate,
   formatViews,

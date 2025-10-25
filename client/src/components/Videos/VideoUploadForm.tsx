@@ -9,7 +9,9 @@ import {
   Step,
   StepLabel,
 } from "@mui/material";
-import { Close, ArrowBack, ArrowForward } from "@mui/icons-material";
+import Close from "@mui/icons-material/Close";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import ArrowForward from "@mui/icons-material/ArrowForward";
 import VideoUploadStep from "./VideoUploadStep";
 import DetailsStep from "./DetailsStep";
 import DescriptionStep from "./DescriptionStep";

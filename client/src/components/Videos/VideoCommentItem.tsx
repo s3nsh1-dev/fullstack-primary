@@ -7,11 +7,9 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import {
-  ThumbUpOutlined,
-  ThumbDownOutlined,
-  MoreVert,
-} from "@mui/icons-material";
+import ThumbUpOutlined from "@mui/icons-material/ThumbUpOutlined";
+import ThumbDownOutlined from "@mui/icons-material/ThumbDownOutlined";
+import MoreVert from "@mui/icons-material/MoreVert";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 import useAuth from "../../hooks/useAuth";
 

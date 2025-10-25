@@ -7,12 +7,10 @@ import {
   IconButton,
   Chip,
 } from "@mui/material";
-import {
-  VideoLibrary,
-  CloudUpload,
-  Close,
-  CheckCircle,
-} from "@mui/icons-material";
+import VideoLibrary from "@mui/icons-material/VideoLibrary";
+import CloudUpload from "@mui/icons-material/CloudUpload";
+import Close from "@mui/icons-material/Close";
+import CheckCircle from "@mui/icons-material/CheckCircle";
 
 interface ThemeLike {
   bg: string;

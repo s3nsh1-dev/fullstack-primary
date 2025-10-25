@@ -1,6 +1,5 @@
 import { Typography, Stack, Avatar } from "@mui/material";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
-// import TwitterIcon from "@mui/icons-material/Twitter";
 import type React from "react";
 import { style3, style4 } from "../../constants/tweets.constants";
 

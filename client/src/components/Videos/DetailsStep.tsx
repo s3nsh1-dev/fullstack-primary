@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography, TextField, IconButton } from "@mui/material";
-import { Image as ImageIcon, Close } from "@mui/icons-material";
+import Image from "@mui/icons-material/Image";
+import Close from "@mui/icons-material/Close";
 
 const DetailsStep: React.FC<DetailsStepProps> = ({
   theme,
@@ -66,9 +67,7 @@ const DetailsStep: React.FC<DetailsStepProps> = ({
               }}
               onClick={onOpenThumbPicker}
             >
-              <ImageIcon
-                sx={{ fontSize: 48, color: theme.textSecondary, mb: 1 }}
-              />
+              <Image sx={{ fontSize: 48, color: theme.textSecondary, mb: 1 }} />
               <Typography variant="body2" sx={{ color: theme.text, mb: 1 }}>
                 Upload Thumbnail
               </Typography>
