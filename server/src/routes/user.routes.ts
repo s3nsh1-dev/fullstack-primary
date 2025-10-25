@@ -13,6 +13,10 @@ import {
   fetchUserById,
 } from "../controllers/user.controller";
 import {
+  updateCoverImage,
+  updateAvatar,
+} from "../controllers/userImage.controller";
+import {
   addToWatchHistory,
   getWatchHistory,
 } from "../controllers/watchHistory.controller";
@@ -45,6 +49,8 @@ userRouter
 userRouter.route("/channel/:username").get(getUserChannelProfile);
 userRouter.route("/history").get(verifyJWT, getWatchHistory);
 userRouter.route("/history/:videoId").post(addToWatchHistory);
+userRouter.route("/avatar").post(verifyJWT, updateAvatar);
+userRouter.route("/cover").post(verifyJWT, updateCoverImage);
 
 export default userRouter;
 

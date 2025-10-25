@@ -13,12 +13,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import useUpdateAvatar from "../../hooks/CRUD-hooks/useUpdateAvatar";
 
-const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
-  const { mutate: changeAvatar, isPending } = useUpdateAvatar();
+const ChangeProfileImage: React.FC<PropType> = ({
+  onClose,
+  currentImage,
+  loading,
+  submitRequest,
+}) => {
+  // const { mutate: changeAvatar } = useUpdateAvatar();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(currentAvatar);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(currentImage);
   const [error, setError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
@@ -85,7 +89,7 @@ const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); // Prevent parent click events
     setSelectedFile(null);
-    setPreviewUrl(currentAvatar);
+    setPreviewUrl(currentImage);
     setError("");
   };
 
@@ -97,14 +101,10 @@ const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
       return;
     }
 
-    const avatarForm = new FormData();
-    avatarForm.append("avatar", selectedFile);
+    const imageForm = new FormData();
+    imageForm.append("picture", selectedFile);
 
-    changeAvatar(avatarForm, {
-      onSuccess: () => {
-        onClose();
-      },
-    });
+    submitRequest(imageForm);
   };
   return (
     <Dialog
@@ -211,7 +211,7 @@ const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
                   bgcolor: "action.hover",
                 },
               }}
-              onClick={() => document.getElementById("avatar-input")?.click()}
+              onClick={() => document.getElementById("picture-input")?.click()}
             >
               <CameraAltIcon
                 sx={{
@@ -230,8 +230,8 @@ const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
               </Typography>
               <input
                 type="file"
-                id="avatar-input"
-                name="avatar"
+                id="picture-input"
+                name="picture"
                 accept="image/*"
                 onChange={handleFileChange}
                 style={{ display: "none" }}
@@ -260,7 +260,7 @@ const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
                 color="error"
                 onClick={onClose}
                 variant="outlined"
-                disabled={isPending}
+                disabled={loading}
                 sx={{
                   minWidth: 100,
                   textTransform: "none",
@@ -273,13 +273,9 @@ const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
                 type="submit"
                 color="secondary"
                 variant="contained"
-                disabled={!selectedFile || isPending}
+                disabled={!selectedFile || loading}
                 startIcon={
-                  isPending ? (
-                    <CircularProgress size={20} />
-                  ) : (
-                    <CloudUploadIcon />
-                  )
+                  loading ? <CircularProgress size={20} /> : <CloudUploadIcon />
                 }
                 sx={{
                   minWidth: 100,
@@ -287,7 +283,7 @@ const ChangeProfileImage: React.FC<PropType> = ({ onClose, currentAvatar }) => {
                   fontWeight: 500,
                 }}
               >
-                {isPending ? "Uploading..." : "Upload"}
+                {loading ? "Uploading..." : "Upload"}
               </Button>
             </Box>
           </Box>
@@ -301,5 +297,7 @@ export default ChangeProfileImage;
 
 type PropType = {
   onClose: () => void;
-  currentAvatar: string;
+  currentImage: string;
+  loading: boolean;
+  submitRequest: (value: FormData) => void;
 };

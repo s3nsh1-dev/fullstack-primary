@@ -5,8 +5,9 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import { backgroundColor } from "../../constants/uiConstants";
 import FormModal from "../others/FormModal";
-import UpdateAvatar from "./UpdateAvatar";
-import UpdateCoverImage from "./UpdateCoverImage";
+import useUpdateAvatar from "../../hooks/CRUD-hooks/useUpdateAvatar";
+import useUpdateCoverImage from "../../hooks/CRUD-hooks/useUpdateCoverImage";
+import ChangeProfileImage from "./ChangeProfileImage";
 
 const HomeProfilePictures: React.FC<HomeProfilePicturesProps> = ({
   coverImage,
@@ -60,6 +61,24 @@ const HomeProfilePictures: React.FC<HomeProfilePicturesProps> = ({
   const [coverModal, setCoverModal] = React.useState<boolean>(false);
   const toggleAvatarModal = () => setAvatarModal((prev) => !prev);
   const toggleCoverModal = () => setCoverModal((prev) => !prev);
+  const { mutate: changeAvatar, isPending: loadingAvatar } = useUpdateAvatar();
+  const { mutate: changeCover, isPending: loadingCover } =
+    useUpdateCoverImage();
+
+  const handleSubmitAvatar = (value: FormData) => {
+    changeAvatar(value, {
+      onSuccess: () => {
+        setAvatarModal(false);
+      },
+    });
+  };
+  const handleSubmitCover = (value: FormData) => {
+    changeCover(value, {
+      onSuccess: () => {
+        setCoverModal(false);
+      },
+    });
+  };
 
   return (
     <>
@@ -84,17 +103,26 @@ const HomeProfilePictures: React.FC<HomeProfilePicturesProps> = ({
       </Box>
       {avatarModal && (
         <FormModal open={avatarModal} toggleModal={toggleAvatarModal}>
-          <UpdateAvatar
+          <ChangeProfileImage
             onClose={() => {
               setAvatarModal(false);
             }}
-            currentAvatar={avatar}
+            currentImage={avatar}
+            submitRequest={handleSubmitAvatar}
+            loading={loadingAvatar}
           />
         </FormModal>
       )}
       {coverModal && (
         <FormModal open={coverModal} toggleModal={toggleCoverModal}>
-          <UpdateCoverImage />
+          <ChangeProfileImage
+            onClose={() => {
+              setCoverModal(false);
+            }}
+            currentImage={coverImage}
+            submitRequest={handleSubmitCover}
+            loading={loadingCover}
+          />
         </FormModal>
       )}
     </>
