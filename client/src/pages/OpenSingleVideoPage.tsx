@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import useFetchSingleVideo from "../hooks/data-fetching/useFetchSingleVideo";
 import useMode from "../hooks/useMode";

@@ -1,11 +1,9 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Stack,
-  Box,
-  Avatar,
-} from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import useFetchUserPlaylist from "../../hooks/data-fetching/useFetchUserPlaylist";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";

@@ -1,5 +1,8 @@
 import React from "react";
-import { Box, Card, CardActionArea, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import Typography from "@mui/material/Typography";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import { Link } from "react-router-dom";
 

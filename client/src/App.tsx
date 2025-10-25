@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
 import { getTheme } from "./utilities/muiThemeController";
 import useAuth from "./hooks/useAuth";
 import useMode from "./hooks/useMode";

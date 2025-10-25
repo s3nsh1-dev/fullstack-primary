@@ -1,7 +1,10 @@
 import React from "react";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import ShowVideos from "../components/homepage/ShowVideos";
-import { Box, Typography, Divider, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 import { DividerRoot } from "../components/ui-components/StyledComponents";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import FormModal from "../components/others/FormModal";

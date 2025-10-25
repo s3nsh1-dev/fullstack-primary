@@ -1,17 +1,15 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Typography,
-  Modal,
-  Paper,
-  Fade,
-  IconButton,
-  Stack,
-  Alert,
-  Chip,
-  Divider,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import Paper from "@mui/material/Paper";
+import Fade from "@mui/material/Fade";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";

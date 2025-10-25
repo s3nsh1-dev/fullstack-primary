@@ -1,5 +1,5 @@
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import ShowSubscribed from "../components/homepage/ShowSubscribed";
 import useAuth from "../hooks/useAuth";

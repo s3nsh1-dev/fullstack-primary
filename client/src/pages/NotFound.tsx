@@ -1,11 +1,9 @@
-import {
-  Box,
-  Button,
-  Typography,
-  Container,
-  Paper,
-  IconButton,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";

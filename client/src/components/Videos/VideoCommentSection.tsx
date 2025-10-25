@@ -1,4 +1,7 @@
-import { Box, Typography, Stack, Divider } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
 import useAuth from "../../hooks/useAuth";
 import useMode from "../../hooks/useMode";
 import useFetchCommentsOnVideo from "../../hooks/data-fetching/useFetchCommentsOnVideo";

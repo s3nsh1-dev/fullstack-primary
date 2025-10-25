@@ -1,5 +1,7 @@
 import React from "react";
-import { Box, Typography, Avatar } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
 import useFetchWatchHistory from "../hooks/data-fetching/useFetchWatchHistory";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 import NotLoggedIn from "./NotLoggedIn";

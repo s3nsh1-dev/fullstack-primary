@@ -16,7 +16,7 @@ import useMode from "../../hooks/useMode";
 import { Link } from "react-router-dom";
 import { sideBarList, sideBarSecondaryList } from "../../constants/constants";
 import type { SidebarOptionType } from "../../constants/genericTypes";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import useAuth from "../../hooks/useAuth";
 
 const sideBarIconList = [

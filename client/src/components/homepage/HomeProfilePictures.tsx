@@ -1,6 +1,7 @@
 import React from "react";
 import useMode from "../../hooks/useMode";
-import { Box, IconButton } from "@mui/material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import { backgroundColor } from "../../constants/uiConstants";
 

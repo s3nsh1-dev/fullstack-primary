@@ -1,4 +1,8 @@
-import { Box, Typography, Paper, Chip, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import useMode from "../../hooks/useMode";
 
 const RelatedVideos = () => {

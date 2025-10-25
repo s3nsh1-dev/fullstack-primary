@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import lightModeLogo from "../../assets/site_logo_white_croppedVersion.png";
 import darkModeLogo from "../../assets/site_logo_black_croppedVersion.png";
 import useMode from "../../hooks/useMode";

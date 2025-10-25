@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import "../../css/text/flicker-text.css";
 
 const ContentNotAvailable = ({ text }: { text: string }) => {

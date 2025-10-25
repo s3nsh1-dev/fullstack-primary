@@ -1,5 +1,9 @@
 import React from "react";
-import { Box, Typography, Divider, Button, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import HomeProfilePictures from "./HomeProfilePictures";
 import { formatCount } from "../../utilities/helperFncForStats";

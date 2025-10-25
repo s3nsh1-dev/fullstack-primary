@@ -1,14 +1,12 @@
 import React from "react";
 import useMode from "../../hooks/useMode";
-import {
-  Typography,
-  Paper,
-  Stack,
-  IconButton,
-  Divider,
-  Button,
-  Box,
-} from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import ThumbUpOutlined from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlined from "@mui/icons-material/ThumbDownOutlined";
 import ShareOutlined from "@mui/icons-material/ShareOutlined";

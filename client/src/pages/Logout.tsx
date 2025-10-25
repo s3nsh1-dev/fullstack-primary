@@ -3,7 +3,8 @@ import {
   FormBox,
 } from "../components/ui-components/StyledComponents";
 import useMode from "../hooks/useMode";
-import { Typography, Box } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import useLogout from "../hooks/data-fetching/useLogout";
 import useAuth from "../hooks/useAuth";
 import type { FC } from "react";

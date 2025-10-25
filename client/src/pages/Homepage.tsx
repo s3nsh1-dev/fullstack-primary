@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import useFetchHomepageDetails from "../hooks/data-fetching/useFetchHomepageDetails";
 import { useParams, Outlet } from "react-router-dom";
 import SubHomepage from "../components/homepage/SubHomepage";

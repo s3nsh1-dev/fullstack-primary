@@ -1,13 +1,11 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Avatar,
-  Box,
-  Chip,
-} from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import {
   formatViews,
   formatDuration,

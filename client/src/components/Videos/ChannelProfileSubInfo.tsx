@@ -1,6 +1,10 @@
 import React from "react";
 import { formatCount } from "../../utilities/helperFncForStats";
-import { Stack, Avatar, Typography, Box, Button } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import useToggleSubscription from "../../hooks/data-fetching/useToggleSubscription";
 import useAuth from "../../hooks/useAuth";
 

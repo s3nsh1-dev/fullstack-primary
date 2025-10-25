@@ -1,6 +1,8 @@
 import React from "react";
 import type { VideoType } from "../../constants/dataTypes";
-import { Box, IconButton, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import useMode from "../../hooks/useMode";

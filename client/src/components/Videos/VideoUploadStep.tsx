@@ -1,12 +1,10 @@
 import React from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Stack,
-  IconButton,
-  Chip,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
 import VideoLibrary from "@mui/icons-material/VideoLibrary";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Close from "@mui/icons-material/Close";

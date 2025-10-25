@@ -1,4 +1,4 @@
-import type { ButtonProps } from "@mui/material";
+import type { ButtonProps } from "@mui/material/Button";
 
 export interface CustomButtonProps extends ButtonProps {
   text?: string;

@@ -1,14 +1,12 @@
 import { useState, useRef } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Stack,
-  IconButton,
-  Stepper,
-  Step,
-  StepLabel,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
 import Close from "@mui/icons-material/Close";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import ArrowForward from "@mui/icons-material/ArrowForward";

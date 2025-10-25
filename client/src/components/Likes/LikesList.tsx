@@ -6,7 +6,7 @@ import type {
   Tweet,
 } from "../../hooks/data-fetching/useFetchLikedContent";
 import ShowMyLikesOnTweet from "./ShowMyLikesOnTweet";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import ShowMyLikesOnComment from "./ShowMyLikesOnComment";
 import ShowMyLikesOnVideo from "./ShowMyLikesOnVideo";
 

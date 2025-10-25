@@ -1,5 +1,8 @@
 import React from "react";
-import { Card, Typography, Avatar, Box } from "@mui/material";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import type { UserSearchResult } from "../../hooks/searching/useSearchUserQuery";
 import { getTimeAgo } from "../../utilities/helperFncForStats";
