@@ -1,10 +1,9 @@
 import { useState } from "react";
 import Logout from "../../pages/Logout";
 import FormModal from "../others/FormModal";
-// import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { BoxCenter } from "../ui-components/StyledComponents";
-import { IconButton } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 
 const LoginLogout = () => {
   const [open, setOpen] = useState(false);

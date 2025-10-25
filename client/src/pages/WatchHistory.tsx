@@ -1,9 +1,12 @@
 import React from "react";
-import { Box, Typography, Avatar } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
 import useFetchWatchHistory from "../hooks/data-fetching/useFetchWatchHistory";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 import NotLoggedIn from "./NotLoggedIn";
 import useAuth from "../hooks/useAuth";
+import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 
 const WatchHistory: React.FC = () => {
   const { data, isLoading, isError } = useFetchWatchHistory();
@@ -29,10 +32,8 @@ const WatchHistory: React.FC = () => {
     );
 
   return (
-    <Box p={2}>
-      <Typography variant="h5" mb={2}>
-        Watch History
-      </Typography>
+    <Box p={1}>
+      <HomeTabTitles text="Watch History" icon={<></>} />
       <Box sx={sx1}>
         {videos.map((video) => (
           <Box key={video._id} sx={sx2}>

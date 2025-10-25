@@ -1,6 +1,9 @@
 import React from "react";
 import type { LikedItem } from "../../hooks/data-fetching/useFetchLikedContent";
-import { Box, Card, Typography, CardContent } from "@mui/material";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
 import ContentProfileHeader from "../Tweets/ContentProfileHeader";
 import ShowLikeOwner from "./ShowLikeOwner";
 import TwitterIcon from "@mui/icons-material/Twitter";

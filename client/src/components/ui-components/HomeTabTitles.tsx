@@ -1,4 +1,6 @@
-import { Box, Typography, Divider } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
 import type { FC } from "react";
 
 const HomeTabTitles: FC<HomeTabTitlesProps> = ({ text, icon }) => {
@@ -9,6 +11,7 @@ const HomeTabTitles: FC<HomeTabTitlesProps> = ({ text, icon }) => {
         alignItems: "center",
         mb: 2,
         gap: 1,
+        whiteSpace: "nowrap",
       }}
     >
       {icon}

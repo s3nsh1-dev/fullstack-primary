@@ -6,7 +6,18 @@ const Settings = () => {
   const { user, loading } = useAuth();
   if (!user && !loading) return <NotLoggedIn />;
 
-  return <div>Settings for idk what</div>;
+  return (
+    <div>
+      Settings:
+      <ol style={{ listStyleType: "decimal", paddingLeft: "20px" }}>
+        <li>Update fullname</li>
+        <li>Update username but live checking that username exist or not</li>
+        <li>Update password</li>
+        <li>Update email</li>
+        <li>Delete account</li>
+      </ol>
+    </div>
+  );
 };
 
 export default Settings;

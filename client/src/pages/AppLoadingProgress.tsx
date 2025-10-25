@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import useMode from "../hooks/useMode";
 import { backgroundColor } from "../constants/uiConstants";
 import "../css/div/pageLoadingCubeAnimation.css";

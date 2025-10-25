@@ -1,5 +1,6 @@
 import React from "react";
-import { FormControl, FormLabel } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import useMode from "../../hooks/useMode";
 import { buttonColor } from "../../constants/uiConstants";
 

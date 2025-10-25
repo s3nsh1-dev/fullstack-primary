@@ -10,7 +10,7 @@ const useFetchUserChannelProfile = ({
   adminId: string;
 }) => {
   return useQuery({
-    queryKey: ["userChannelProfile", username],
+    queryKey: ["userChannelProfile", username, adminId],
     queryFn: async () => {
       const response = await fetch(
         `${URL}/users/channel/${username}?adminId=${adminId}`,

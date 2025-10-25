@@ -1,8 +1,11 @@
 import React from "react";
-import { Typography, Paper, Chip, Stack } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import useMode from "../../hooks/useMode";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
-import { Visibility } from "@mui/icons-material";
+import Visibility from "@mui/icons-material/Visibility";
 import {
   formatDate,
   formatViews,

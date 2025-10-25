@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 import IndividualTweet from "../Tweets/IndividualTweet";
 import useFetchUserTweets from "../../hooks/data-fetching/useFetchUserTweets";
 import { useOutletContext } from "react-router-dom";

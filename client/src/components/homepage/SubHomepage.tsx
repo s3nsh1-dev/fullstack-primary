@@ -4,7 +4,7 @@ import useMode from "../../hooks/useMode";
 import { StyledButton } from "../../components/ui-components/StyledComponents";
 import { buttonColor } from "../../constants/uiConstants";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import { NavLink, useLocation } from "react-router-dom";
 
 const SubHomepage: React.FC<SubHomepageProps> = ({ username }) => {

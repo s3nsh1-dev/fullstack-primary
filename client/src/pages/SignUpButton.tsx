@@ -4,7 +4,9 @@ import FormModal from "../components/others/FormModal";
 import RegisterForm from "../components/RegisterForm";
 import useMode from "../hooks/useMode";
 import { BoxCenter } from "../components/ui-components/StyledComponents";
-import { Box, Button, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import Login from "./Login";
 
 const SignUpButton = () => {

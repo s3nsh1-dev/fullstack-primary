@@ -1,16 +1,14 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Modal,
-  TextField,
-  Typography,
-  IconButton,
-  Stack,
-  Avatar,
-  Fade,
-  Paper,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Fade from "@mui/material/Fade";
+import Paper from "@mui/material/Paper";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ImageIcon from "@mui/icons-material/Image";

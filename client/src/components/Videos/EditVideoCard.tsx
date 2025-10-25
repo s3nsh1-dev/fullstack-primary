@@ -1,5 +1,9 @@
 import React from "react";
-import { Box, IconButton, Typography, Divider, Card } from "@mui/material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import Card from "@mui/material/Card";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import IOSTypeSwitch from "../ui-components/IOSTypeSwitch";

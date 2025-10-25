@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import { useTheme } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import type { ChildrenProps } from "../../constants/genericTypes";
 import useMode from "../../hooks/useMode";
 import { backgroundColor } from "../../constants/uiConstants";

@@ -1,8 +1,12 @@
-import { Box, Typography, Avatar, IconButton } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
 import useAuth from "../../hooks/useAuth";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { useTheme, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const ShowLikeOwner = ({ timestamp }: { timestamp: string }) => {
   const theme = useTheme();

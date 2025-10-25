@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Stack, Avatar, Box, TextField, Button } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import useAddCommentOnVideo from "../../hooks/data-fetching/useAddCommentOnVideo";
 import { useQueryClient } from "@tanstack/react-query";
 

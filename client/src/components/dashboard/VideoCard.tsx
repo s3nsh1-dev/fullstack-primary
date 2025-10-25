@@ -1,14 +1,13 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Box,
-  Typography,
-  IconButton,
-  Chip,
-} from "@mui/material";
-import { PlayArrow, Visibility } from "@mui/icons-material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
+import Visibility from "@mui/icons-material/Visibility";
+import PlayArrow from "@mui/icons-material/PlayArrow";
 import { formatDuration } from "../../utilities/helperFncForStats";
 import type { VideoItem } from "../../hooks/data-fetching/useFetchFeed";
 import UserHeader from "./UserHeader";
@@ -23,7 +22,7 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
 
   return (
     <Card sx={sxValue} elevation={10}>
-      <CardContent>
+      <CardContent sx={sxV2}>
         <UserHeader
           owner={video.owner}
           createdAt={video.createdAt}
@@ -43,6 +42,7 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
             sx={{
               borderRadius: 1,
               backgroundColor: "grey.900",
+              height: 150,
             }}
           />
           <Box
@@ -112,9 +112,14 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
 export default VideoCard;
 
 const sxValue = {
-  maxWidth: 600,
   width: "100%",
-  //   boxShadow: 1,
   "&:hover": { boxShadow: 3 },
   transition: "box-shadow 0.3s",
+};
+
+const sxV2 = {
+  "&:last-child": {
+    paddingBottom: "10px",
+  },
+  padding: "10px",
 };

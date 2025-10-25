@@ -11,7 +11,6 @@ const Dashboard = () => {
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <div> SITE IS FACING SOME INTERNAL ISSUES</div>;
   if (!data) return <CircularProgressCenter size={80} />;
-
   return (
     <Masonry
       columns={{ xs: 1, sm: 2, md: 3, xl: 4 }}

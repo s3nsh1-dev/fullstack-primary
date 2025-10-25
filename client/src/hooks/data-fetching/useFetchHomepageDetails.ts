@@ -8,8 +8,9 @@ const useFetchHomepageDetails = ({
   userId: string;
 }) => {
   return useQuery({
-    queryKey: ["homepage", username],
+    queryKey: ["homepage", username, userId],
     queryFn: async () => {
+      console.log("homepage API");
       const response = await fetch(
         `${
           import.meta.env.VITE_SERVER_URL

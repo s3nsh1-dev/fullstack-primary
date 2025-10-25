@@ -1,12 +1,10 @@
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Box,
-  Typography,
-  IconButton,
-  Modal,
-} from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Modal from "@mui/material/Modal";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";

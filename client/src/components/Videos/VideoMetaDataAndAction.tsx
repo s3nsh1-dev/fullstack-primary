@@ -1,20 +1,16 @@
 import React from "react";
 import useMode from "../../hooks/useMode";
-import {
-  Typography,
-  Paper,
-  Stack,
-  IconButton,
-  Divider,
-  Button,
-  Box,
-} from "@mui/material";
-import {
-  ThumbUpOutlined,
-  ThumbDownOutlined,
-  ShareOutlined,
-  MoreHoriz,
-} from "@mui/icons-material";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import ThumbUpOutlined from "@mui/icons-material/ThumbUpOutlined";
+import ThumbDownOutlined from "@mui/icons-material/ThumbDownOutlined";
+import ShareOutlined from "@mui/icons-material/ShareOutlined";
+import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
 import ChannelProfileSubInfo from "./ChannelProfileSubInfo";
 import useToggleLikeOnVideo from "../../hooks/data-fetching/useToggleLikeOnVideo";
@@ -41,7 +37,6 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
     isLoading,
     isError,
   } = useFetchUserChannelProfile({ username, adminId: user?.user?._id || "" });
-  console.log("channelInfo", channelInfo);
 
   if (!data) return null;
   if (isLoading) return <CircularProgressCenter />;

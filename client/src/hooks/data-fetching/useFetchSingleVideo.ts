@@ -10,10 +10,9 @@ const useFetchSingleVideo = ({
   userId: string;
 }) => {
   return useQuery({
-    queryKey: ["singleVideo", videoId],
+    queryKey: ["singleVideo", videoId, userId],
     queryFn: async () => {
       const link = `${URL}/videos/${videoId}?userId=${userId}`;
-      console.log("link with no userid", link);
       const response = await fetch(link, {
         credentials: "include",
         method: "GET",

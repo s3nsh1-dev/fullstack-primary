@@ -1,11 +1,9 @@
 import React from "react";
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  Stack,
-  Typography,
-} from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardContent from "@mui/material/CardContent";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import ContentProfileHeader from "./ContentProfileHeader";
 import RepliesProfileActions from "./RepliesProfileActions";
 import useAuth from "../../hooks/useAuth";

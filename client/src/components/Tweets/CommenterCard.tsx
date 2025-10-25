@@ -1,11 +1,9 @@
 import React from "react";
-import {
-  Card,
-  CardActionArea,
-  Stack,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import Stack from "@mui/material/Stack";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 import ContentProfileHeader from "./ContentProfileHeader";
 import CommenterProfileActions from "./CommenterProfileActions";
 import useMode from "../../hooks/useMode";

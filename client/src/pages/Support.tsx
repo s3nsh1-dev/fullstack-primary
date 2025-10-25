@@ -1,14 +1,13 @@
-import {
-  Typography,
-  Box,
-  Paper,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 
 const Support = () => {
+  console.log("Support");
   return (
     <Box
       sx={{
@@ -17,7 +16,7 @@ const Support = () => {
         overflowY: "auto",
       }}
     >
-      <Paper elevation={2} sx={{ p: "3%" }}>
+      <Paper elevation={2} sx={{ p: "3%", border: "1px solid purple" }}>
         <Typography variant="h3" component="h1" gutterBottom fontWeight={700}>
           Terms and Conditions
         </Typography>

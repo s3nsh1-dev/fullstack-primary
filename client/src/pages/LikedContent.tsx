@@ -6,6 +6,7 @@ import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 import NotLoggedIn from "./NotLoggedIn";
+import Box from "@mui/material/Box";
 
 const LikedContent = () => {
   const { user, loading } = useAuth();
@@ -19,7 +20,7 @@ const LikedContent = () => {
   if (!data) return <ContentNotAvailable text="No Liked Content" />;
 
   return (
-    <div>
+    <Box p={1}>
       <HomeTabTitles
         text="Liked Content"
         icon={
@@ -29,7 +30,7 @@ const LikedContent = () => {
         }
       />
       <LikesList data={data} />
-    </div>
+    </Box>
   );
 };
 

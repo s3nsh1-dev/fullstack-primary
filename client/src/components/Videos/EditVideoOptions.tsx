@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
 import useAuth from "../../hooks/useAuth";
 import EditVideoCard from "./EditVideoCard";

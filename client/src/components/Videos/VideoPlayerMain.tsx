@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import useMode from "../../hooks/useMode";
-import { Paper } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import { useVideoViewTracker } from "../../hooks/data-fetching/useVideoViewTracker";
 import type { SingleVideoType } from "../../hooks/data-fetching/useFetchSingleVideo";
 

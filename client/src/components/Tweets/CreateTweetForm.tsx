@@ -1,5 +1,8 @@
 import React from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import useCreateTweet from "../../hooks/data-fetching/useCreateTweet";
 import { useQueryClient } from "@tanstack/react-query";

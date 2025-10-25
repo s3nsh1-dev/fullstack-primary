@@ -1,7 +1,7 @@
 import useFetchSingleTweet from "../hooks/data-fetching/useFetchSingleTweet";
 import IndividualTweet from "../components/Tweets/IndividualTweet";
 import { useParams } from "react-router-dom";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 

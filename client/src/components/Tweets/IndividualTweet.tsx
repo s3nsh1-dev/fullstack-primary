@@ -1,14 +1,12 @@
 import React from "react";
 import ContentProfileHeader from "./ContentProfileHeader";
 import TweetProfileActions from "./TweetProfileActions";
-import {
-  Box,
-  Card,
-  CardActionArea,
-  Stack,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import Stack from "@mui/material/Stack";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 import type { TweetType } from "../../hooks/data-fetching/useFetchUserTweets";
 import {
   style1,

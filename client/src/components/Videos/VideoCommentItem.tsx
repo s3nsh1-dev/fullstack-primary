@@ -1,17 +1,13 @@
 import React from "react";
-import {
-  Stack,
-  Avatar,
-  Box,
-  Typography,
-  IconButton,
-  Button,
-} from "@mui/material";
-import {
-  ThumbUpOutlined,
-  ThumbDownOutlined,
-  MoreVert,
-} from "@mui/icons-material";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
+import ThumbUpOutlined from "@mui/icons-material/ThumbUpOutlined";
+import ThumbDownOutlined from "@mui/icons-material/ThumbDownOutlined";
+import MoreVert from "@mui/icons-material/MoreVert";
 import useToggleLikeOnComment from "../../hooks/data-fetching/useToggleLikeOnComment";
 import useAuth from "../../hooks/useAuth";
 

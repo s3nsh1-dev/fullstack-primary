@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import IndividualVideoUI from "../Videos/IndividualVideoUI";
 import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
 import { useOutletContext } from "react-router-dom";
