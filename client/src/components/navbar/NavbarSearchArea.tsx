@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   SearchIconWrapper,
@@ -6,10 +6,11 @@ import {
   Search,
 } from "../ui-components/NavbarStyledComponents";
 import { useNavigate } from "react-router-dom";
+import useGlobalSearch from "../../hooks/useGlobalSearch";
 
 const NavbarSearchArea = () => {
   const [text, setText] = useState("");
-  const searchRef = useRef(null);
+  const searchRef = useGlobalSearch();
   const navigate = useNavigate();
   return (
     <Search>
@@ -17,7 +18,7 @@ const NavbarSearchArea = () => {
         <SearchIcon />
       </SearchIconWrapper>
       <StyledInputBase
-        ref={searchRef}
+        inputRef={searchRef}
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
         value={text}
@@ -31,6 +32,7 @@ const NavbarSearchArea = () => {
           // after searching how to remove the focus form the search bar ?
         }}
       />
+      {/* <input type="text" ref={searchRef} /> */}
     </Search>
   );
 };

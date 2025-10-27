@@ -3,7 +3,7 @@ import React from "react";
 import type { ChildrenProps } from "../constants/genericTypes";
 
 const SearchContextProvider: React.FC<ChildrenProps> = ({ children }) => {
-  const searchRef = React.useRef<HTMLInputElement>(null);
+  const searchRef = React.useRef<HTMLInputElement>(null!);
   return (
     <searchContext.Provider value={{ searchRef }}>
       {children}
