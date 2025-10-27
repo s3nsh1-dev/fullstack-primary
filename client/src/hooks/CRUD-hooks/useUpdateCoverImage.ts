@@ -5,7 +5,7 @@ const useUpdateCoverImage = () => {
     mutationKey: ["updateAvatar"],
     mutationFn: async (newFile: FormData) => {
       const response = await fetch(`${URL}/users/cover`, {
-        method: "POST",
+        method: "PATCH",
         credentials: "include",
         body: newFile,
       });
