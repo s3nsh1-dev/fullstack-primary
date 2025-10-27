@@ -101,10 +101,7 @@ const ChangeProfileImage: React.FC<PropType> = ({
       return;
     }
 
-    const imageForm = new FormData();
-    imageForm.append("picture", selectedFile);
-
-    submitRequest(imageForm);
+    submitRequest(selectedFile);
   };
   return (
     <Dialog
@@ -299,5 +296,5 @@ type PropType = {
   onClose: () => void;
   currentImage: string;
   loading: boolean;
-  submitRequest: (value: FormData) => void;
+  submitRequest: (value: File) => void;
 };

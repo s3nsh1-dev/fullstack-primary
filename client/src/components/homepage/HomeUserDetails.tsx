@@ -49,6 +49,8 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
       <HomeProfilePictures
         coverImage={data.user?.coverImage}
         avatar={data.user?.avatar}
+        username={data?.user?.username}
+        userId={data?.user?._id}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}

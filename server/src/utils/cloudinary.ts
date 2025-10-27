@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import env from "./dotenvHelper";
 import { promises as fs } from "fs";
+import deleteLocalFile from "./deleteLocalFile";
 
 /**
  * We can see the CLOUDINARY info like
@@ -13,11 +14,15 @@ cloudinary.config({
   api_secret: env.CLOUDINARY_API_SECRET,
 });
 
-const uploadOnCloudinary = async (localFilePath: string) => {
+const uploadOnCloudinary = async (
+  localFilePath: string,
+  folderName: string = "general"
+) => {
   try {
     if (!localFilePath) return null;
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
+      folder: folderName,
     });
     // This is fine if deletion success/failure doesn’t affect the next step.
     // File deletion is handled in the background by the OS (non-blocking I/O),
@@ -34,6 +39,8 @@ const uploadOnCloudinary = async (localFilePath: string) => {
       console.log("FAILED: ISSUE IN FILE DELETION", error);
     });
     // console.log("ERROR WHILE UPLOADING TO CLOUDINARY: ", error);
+  } finally {
+    deleteLocalFile(localFilePath);
   }
 };
 
