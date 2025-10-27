@@ -8,11 +8,15 @@ import FormModal from "../others/FormModal";
 import useUpdateAvatar from "../../hooks/CRUD-hooks/useUpdateAvatar";
 import useUpdateCoverImage from "../../hooks/CRUD-hooks/useUpdateCoverImage";
 import ChangeProfileImage from "./ChangeProfileImage";
+import { useQueryClient } from "@tanstack/react-query";
 
 const HomeProfilePictures: React.FC<HomeProfilePicturesProps> = ({
   coverImage,
   avatar,
+  username,
+  userId,
 }) => {
+  const queryClient = useQueryClient();
   const { mode } = useMode();
   const sx2 = {
     width: "100%",
@@ -65,17 +69,29 @@ const HomeProfilePictures: React.FC<HomeProfilePicturesProps> = ({
   const { mutate: changeCover, isPending: loadingCover } =
     useUpdateCoverImage();
 
-  const handleSubmitAvatar = (value: FormData) => {
-    changeAvatar(value, {
+  const handleSubmitAvatar = (value: File) => {
+    const imageForm = new FormData();
+    imageForm.append("avatar", value);
+
+    changeAvatar(imageForm, {
       onSuccess: () => {
         setAvatarModal(false);
+        queryClient.invalidateQueries({
+          queryKey: ["homepage", username, userId],
+        });
       },
     });
   };
-  const handleSubmitCover = (value: FormData) => {
-    changeCover(value, {
+  const handleSubmitCover = (value: File) => {
+    const imageForm = new FormData();
+    imageForm.append("coverImage", value);
+
+    changeCover(imageForm, {
       onSuccess: () => {
         setCoverModal(false);
+        queryClient.invalidateQueries({
+          queryKey: ["homepage", username, userId],
+        });
       },
     });
   };
@@ -134,6 +150,8 @@ export default HomeProfilePictures;
 type HomeProfilePicturesProps = {
   coverImage: string;
   avatar: string;
+  username: string;
+  userId: string;
 };
 
 const sx1 = {
