@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import env from "./dotenvHelper";
 import { promises as fs } from "fs";
+import deleteLocalFile from "./deleteLocalFile";
 
 /**
  * We can see the CLOUDINARY info like
@@ -34,6 +35,8 @@ const uploadOnCloudinary = async (localFilePath: string) => {
       console.log("FAILED: ISSUE IN FILE DELETION", error);
     });
     // console.log("ERROR WHILE UPLOADING TO CLOUDINARY: ", error);
+  } finally {
+    deleteLocalFile(localFilePath);
   }
 };
 
