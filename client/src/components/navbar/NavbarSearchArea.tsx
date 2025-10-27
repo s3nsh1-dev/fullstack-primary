@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   SearchIconWrapper,
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const NavbarSearchArea = () => {
   const [text, setText] = useState("");
+  const searchRef = useRef(null);
   const navigate = useNavigate();
   return (
     <Search>
@@ -16,6 +17,7 @@ const NavbarSearchArea = () => {
         <SearchIcon />
       </SearchIconWrapper>
       <StyledInputBase
+        ref={searchRef}
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
         value={text}
