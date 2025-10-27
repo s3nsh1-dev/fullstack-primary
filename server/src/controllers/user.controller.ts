@@ -2,24 +2,16 @@ import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import jwt from "jsonwebtoken";
 import env from "../utils/dotenvHelper";
-import deleteLocalFile from "../utils/deleteLocalFile";
 import { asyncHandler } from "../utils/asyncHandler";
 import { User } from "../models/user.model";
 import { uploadOnCloudinary } from "../utils/cloudinary";
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import { UserStaleType } from "../constants/ModelTypes";
 import { httpOptions as options } from "../constants";
 import { isValidObjectId } from "mongoose";
 import { toObjectId } from "../utils/convertToObjectId";
 
 const registerUser = asyncHandler(async (req, res) => {
-  /**
-   * Take user input <text inputs>
-   * Check if user left any input empty
-   * Check for existing user in the database
-   * Take files from user <images in this case>
-   */
-
   const { fullname, email, username, password } = req.body;
   if (
     [fullname, email, username, password].some((field) => field.trim() === "")
@@ -299,9 +291,10 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-  if (!req.file) {
-    throw new ApiError(400, "AVATAR FILE IS REQUIRED");
-  }
+  if (!req.user || !req.user._id)
+    throw new ApiError(401, "USER NOT AUTHENTICATED");
+  if (!req.file) throw new ApiError(400, "AVATAR FILE IS REQUIRED");
+
   const avatarLocalPath: string = req.file.path;
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
@@ -309,11 +302,6 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(404, "UPLOAD FAILED ON CLOUDINARY: AVATAR");
   }
 
-  deleteLocalFile(avatarLocalPath);
-
-  if (!req.user || !req.user._id) {
-    throw new ApiError(401, "USER NOT AUTHENTICATED");
-  }
   const updatedUser = await User.findById(req.user._id).select(
     "-password -refreshToken"
   );
@@ -346,9 +334,6 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   if (!coverImage || !coverImage.url) {
     throw new ApiError(400, "UPLOAD FAILED ON CLOUDINARY: COVER IMAGE");
   }
-
-  // cleanup local file after upload (success or fail)
-  deleteLocalFile(coverImageLocalPath);
 
   if (!req?.user || !req.user?._id) {
     throw new ApiError(401, "USER NOT AUTHENTICATED");
@@ -487,6 +472,11 @@ const fetchUserById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { user }, "USER FETCHED SUCCESSFULLY"));
 });
 
+const showAdminThePassword = asyncHandler(async (req, res) => {
+  if (!req.user || !req.user._id)
+    throw new ApiError(401, "UNAUTHENTICATED USER");
+});
+
 export {
   registerUser,
   loginUser,
@@ -499,4 +489,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   fetchUserById,
+  showAdminThePassword,
 };
