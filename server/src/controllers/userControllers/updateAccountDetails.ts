@@ -4,11 +4,17 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
 
 export const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { email, fullname } = req.body;
+  const {
+    name,
+    content,
+  }: { name: "email" | "fullname" | "username"; content: string } = req.body;
 
-  if (!email && !fullname) {
+  if (!name || !content) {
     throw new ApiError(400, "EMAIL OR NAME IS REQUIRED");
   }
+  // type NameType = "email" | "fullname" | "username";
+  // if (typeof name !== NameType) {
+  // }
 
   if (!req.user || !req.user._id) {
     throw new ApiError(401, "USER NOT AUTHENTICATED");
@@ -17,13 +23,11 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
   const user = await User.findByIdAndUpdate(
     req?.user._id,
     {
-      $set: { fullname, email },
+      $set: { [name]: content },
     },
     { new: true }
   ).select("-password ");
-  if (!user) {
-    throw new ApiError(404, "USER NOT FOUND");
-  }
+  if (!user) throw new ApiError(404, "USER NOT FOUND");
 
   return res
     .status(200)
