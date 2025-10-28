@@ -25,7 +25,7 @@ export default async function serverMain() {
 
     // Start server
     const server = app.listen(PORT, () =>
-      console.log(`🚀 Server running on http://localhost:${PORT}`)
+      console.info(`🚀 Server running on http://localhost:${PORT}`)
     );
 
     // Handle server errors
@@ -40,20 +40,17 @@ export default async function serverMain() {
     await mongodbConnect()
       .then(() => {
         app.listen(PORT, () => {
-          console.log(`⚙️  SERVER LIVE ON: http://localhost:${PORT}`);
+          console.info(`⚙️  SERVER LIVE ON: http://localhost:${PORT}`);
         });
         app.on("error", () => {
           throw new Error("ERROR WHILE CONNECTING DATABASE");
         });
       })
       .catch((error) => {
-        console.log("MONGODB CONNECTION ERROR: ", error);
-      })
-      .finally(() => {
-        // console.log("🚀 < PERMANENTLY RUNNING CODE >");
+        console.error("MONGODB CONNECTION ERROR: ", error);
       });
   } catch (error) {
-    console.log("❌  SERVER ERROR: ", error);
+    console.error("❌  SERVER ERROR: ", error);
   }
 }
 

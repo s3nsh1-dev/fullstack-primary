@@ -8,8 +8,6 @@ const useAuth = () => {
     throw new Error("AuthContextProvider not wrapped correctly");
   const { user, login, logout, loading } = contextValue;
 
-  console.log("hook");
-
   return { user, login, logout, loading };
 };
 export default useAuth;

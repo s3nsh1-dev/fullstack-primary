@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import useFetchHomepageDetails from "../hooks/data-fetching/useFetchHomepageDetails";
 import { useParams, Outlet } from "react-router-dom";
@@ -12,17 +11,11 @@ const Homepage = () => {
   const { user, loading } = useAuth();
   const { username } = useParams();
   const sessionUser = user?.user?._id || "";
-  console.log("session user filled", user);
   const { data, isLoading, isError } = useFetchHomepageDetails({
     username: username || "",
     userId: user?.user?._id || "",
   });
 
-  useEffect(() => {
-    console.log("homepage changed something");
-  }, [user, loading, data, isLoading, isError]);
-
-  console.log(user, loading, data, isLoading, isError);
   if (!user && !loading && sessionUser === "" && username === "undefined")
     return <NotLoggedIn />;
   if (isLoading) return <LoadingAnimation />;

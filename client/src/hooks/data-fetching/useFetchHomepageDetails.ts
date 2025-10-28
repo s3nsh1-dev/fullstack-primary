@@ -10,7 +10,6 @@ const useFetchHomepageDetails = ({
   return useQuery({
     queryKey: ["homepage", username, userId],
     queryFn: async () => {
-      console.log("homepage API");
       const response = await fetch(
         `${
           import.meta.env.VITE_SERVER_URL

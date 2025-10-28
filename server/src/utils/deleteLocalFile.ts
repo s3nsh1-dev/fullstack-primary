@@ -8,7 +8,6 @@ const deleteLocalFile = (filePath: string) => {
   try {
     if (filePath && fs.existsSync(filePath)) {
       fs.unlinkSync(path.resolve(filePath)); // remove the file
-      console.log(`🗑️ Deleted local file: ${filePath}`);
     }
   } catch (error) {
     console.error(`❌ Failed to delete local file: ${filePath}`, error);
