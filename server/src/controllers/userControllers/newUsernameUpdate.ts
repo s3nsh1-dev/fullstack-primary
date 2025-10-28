@@ -12,10 +12,13 @@ const newUsernameUpdate = asyncHandler(async (req, res) => {
     req.user._id,
     { $set: { username } },
     { new: true }
-  );
+  ).select("username fullname email");
+
   if (!user) throw new ApiError(404, "USER NOT FOUND");
   return res
     .status(200)
-    .json(new ApiResponse(200, { user }, "USERNAME SUCCESSFULLY UPDATED"));
+    .json(
+      new ApiResponse(200, { update: user }, "USERNAME SUCCESSFULLY UPDATED")
+    );
 });
 export { newUsernameUpdate };
