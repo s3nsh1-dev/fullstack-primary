@@ -12,6 +12,7 @@ import {
   getUserChannelProfile,
   fetchUserById,
   usernameAvailability,
+  newUsernameUpdate,
 } from "../controllers/user.controller";
 import {
   addToWatchHistory,
@@ -47,6 +48,7 @@ userRouter.route("/channel/:username").get(getUserChannelProfile);
 userRouter.route("/history").get(verifyJWT, getWatchHistory);
 userRouter.route("/history/:videoId").post(addToWatchHistory);
 userRouter.route("/check-username").get(verifyJWT, usernameAvailability);
+userRouter.route("/update/username").patch(verifyJWT, newUsernameUpdate);
 
 export default userRouter;
 

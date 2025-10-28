@@ -2,9 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 
 const useUpdateUsername = () => {
   return useMutation({
-    mutationKey: [],
+    mutationKey: ["update-username"],
     mutationFn: async (username: string) => {
-      const response = await fetch(`${URL}/users/`, {
+      const response = await fetch(`${URL}/users/update/username`, {
         credentials: "include",
         method: "PATCH",
         headers: {
