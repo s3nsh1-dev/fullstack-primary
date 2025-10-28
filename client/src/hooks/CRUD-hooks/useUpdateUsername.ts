@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 
-const useCheckAndUpdateUsername = () => {
+const useUpdateUsername = () => {
   return useMutation({
-    mutationKey: ["changeUsername"],
+    mutationKey: [],
     mutationFn: async (username: string) => {
-      const response = await fetch(`${URL}/users/update/username`, {
+      const response = await fetch(`${URL}/users/`, {
         credentials: "include",
         method: "PATCH",
         headers: {
@@ -12,13 +12,13 @@ const useCheckAndUpdateUsername = () => {
         },
         body: JSON.stringify({ username }),
       });
-      if (!response) throw new Error("ERROR WHILE SENDING USERNAME REQUEST");
-      const data = response.json();
+      if (!response) throw new Error("UPDATING USERNAME RAN INTO ERROR");
+      const data = await response.json();
       return data;
     },
   });
 };
 
-export default useCheckAndUpdateUsername;
+export default useUpdateUsername;
 
 const URL = import.meta.env.VITE_SERVER_URL;
