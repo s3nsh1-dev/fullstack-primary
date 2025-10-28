@@ -29,10 +29,9 @@ const NavbarSearchArea = () => {
           if (e.key === "Enter" && text.trim()) {
             navigate(`/search?q=${encodeURIComponent(text.trim())}`);
           }
-          // after searching how to remove the focus form the search bar ?
+          // after searching implement how to remove the focus form the search bar
         }}
       />
-      {/* <input type="text" ref={searchRef} /> */}
     </Search>
   );
 };
