@@ -1,0 +1,68 @@
+import ApiError from "../../utils/ApiError";
+import ApiResponse from "../../utils/ApiResponse";
+import { asyncHandler } from "../../utils/asyncHandler";
+import { User } from "../../models/user.model";
+import { uploadOnCloudinary } from "../../utils/cloudinary";
+
+export const registerUser = asyncHandler(async (req, res) => {
+  const { fullname, email, username, password } = req.body;
+  if (
+    [fullname, email, username, password].some((field) => field.trim() === "")
+  ) {
+    throw new ApiError(400, "INCOMPLETE INPUT FIELDS BY USER");
+  }
+  const exitedUser = await User.findOne({
+    $or: [{ username, email }],
+  });
+  if (exitedUser) throw new ApiError(409, "DUPLICATE DATA: USERNAME OR EMAIL");
+
+  // read about this type casting
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+  const avatarLocalPath: string = files.avatar[0]?.path;
+  if (!avatarLocalPath) {
+    throw new ApiError(404, "UPLOAD FAILED ON MULTER: AVATAR");
+  }
+  const checkAvatarCloudinaryUpload = await uploadOnCloudinary(avatarLocalPath);
+
+  let coverImagePath: string = "";
+  if (
+    req.files &&
+    Array.isArray(files.coverImage) &&
+    files.coverImage.length > 0
+  ) {
+    coverImagePath = files.coverImage[0]?.path;
+  }
+
+  const checkCoverImageCloudinaryUpload =
+    await uploadOnCloudinary(coverImagePath);
+
+  if (
+    [checkAvatarCloudinaryUpload, checkCoverImageCloudinaryUpload].some(
+      (item) => !item
+    )
+  ) {
+    throw new ApiError(
+      404,
+      "UPLOAD FAILED ON CLOUDINARY: COVER_IMAGE OR AVATAR"
+    );
+  }
+
+  const userEntry = await User.create({
+    fullname,
+    avatar: checkAvatarCloudinaryUpload?.url,
+    coverImage: checkCoverImageCloudinaryUpload?.url,
+    email,
+    password,
+    username: username?.toLowerCase(),
+  });
+  const createdUser = await User.findById(userEntry?._id).select(
+    "-password -refreshToken"
+  );
+  if (!createdUser) {
+    throw new ApiError(500, "SOMETHING WENT WRONG WHILE REGISTERING USER");
+  }
+  return res
+    .status(201)
+    .json(new ApiResponse(200, createdUser, "USER REGISTERED SUCCESSFULLY"));
+});

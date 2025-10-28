@@ -1,17 +1,4 @@
-import { Routes, Route } from "react-router-dom";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
-import { getTheme } from "./utilities/muiThemeController";
-import useAuth from "./hooks/useAuth";
-import useMode from "./hooks/useMode";
-import { lazy } from "react";
-//components and pages
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import Navbar from "./pages/Navbar";
-import AppLoadingProgress from "./pages/AppLoadingProgress";
-import ErrorBoundary from "./components/ui-components/ErrorBoundary";
+import { lazy, useEffect } from "react";
 // Replace direct imports with lazy ones
 const Test = lazy(() => import("./pages/Test"));
 const Homepage = lazy(() => import("./pages/Homepage"));
@@ -34,11 +21,40 @@ const EditVideoOptions = lazy(
   () => import("./components/Videos/EditVideoOptions")
 );
 const SearchPage = lazy(() => import("./pages/SearchPage"));
+//components and pages
+import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
+import Navbar from "./pages/Navbar";
+import AppLoadingProgress from "./pages/AppLoadingProgress";
+import ErrorBoundary from "./components/ui-components/ErrorBoundary";
+
+import { Routes, Route } from "react-router-dom";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import { getTheme } from "./utilities/muiThemeController";
+import useAuth from "./hooks/useAuth";
+import useMode from "./hooks/useMode";
+import useGlobalSearch from "./hooks/useGlobalSearch";
+
 function App() {
   const { mode } = useMode();
   const { loading } = useAuth();
-  if (loading) return <AppLoadingProgress />;
+  const searchRef = useGlobalSearch();
+  useEffect(() => {
+    const handleCTRL_k = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (searchRef?.current) {
+          searchRef.current.focus();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleCTRL_k);
+    return () => window.removeEventListener("keydown", handleCTRL_k);
+  }, [searchRef]);
 
+  if (loading) return <AppLoadingProgress />;
   return (
     <ThemeProvider theme={getTheme(mode)}>
       <CssBaseline />

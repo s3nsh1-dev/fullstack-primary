@@ -11,6 +11,7 @@ import {
   updateUserCoverImage,
   getUserChannelProfile,
   fetchUserById,
+  updateUserUsername,
 } from "../controllers/user.controller";
 import {
   addToWatchHistory,
@@ -45,6 +46,7 @@ userRouter
 userRouter.route("/channel/:username").get(getUserChannelProfile);
 userRouter.route("/history").get(verifyJWT, getWatchHistory);
 userRouter.route("/history/:videoId").post(addToWatchHistory);
+userRouter.route("/update/username").patch(verifyJWT, updateUserUsername);
 
 export default userRouter;
 
