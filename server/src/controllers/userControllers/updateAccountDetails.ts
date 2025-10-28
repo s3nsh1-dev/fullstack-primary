@@ -3,22 +3,17 @@ import ApiResponse from "../../utils/ApiResponse";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
 
+type NameType = "email" | "fullname";
+const validNames: NameType[] = ["email", "fullname"];
+
 export const updateAccountDetails = asyncHandler(async (req, res) => {
-  const {
-    name,
-    content,
-  }: { name: "email" | "fullname" | "username"; content: string } = req.body;
+  const { name, content }: { name: NameType; content: string } = req.body;
 
-  if (!name || !content) {
-    throw new ApiError(400, "EMAIL OR NAME IS REQUIRED");
-  }
-  // type NameType = "email" | "fullname" | "username";
-  // if (typeof name !== NameType) {
-  // }
-
-  if (!req.user || !req.user._id) {
+  if (!name || !content) throw new ApiError(400, "EMAIL OR NAME IS REQUIRED");
+  if (!validNames.includes(name as NameType))
+    throw new ApiError(400, "INCORRECT PROPERTY NAME");
+  if (!req.user || !req.user._id)
     throw new ApiError(401, "USER NOT AUTHENTICATED");
-  }
 
   const user = await User.findByIdAndUpdate(
     req?.user._id,
@@ -26,7 +21,7 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
       $set: { [name]: content },
     },
     { new: true }
-  ).select("-password ");
+  ).select("username fullname email avatar coverImage");
   if (!user) throw new ApiError(404, "USER NOT FOUND");
 
   return res
