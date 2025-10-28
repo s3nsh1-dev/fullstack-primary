@@ -19,7 +19,7 @@ const NavbarSearchArea = () => {
       </SearchIconWrapper>
       <StyledInputBase
         inputRef={searchRef}
-        placeholder="Search…"
+        placeholder="CTRL + K"
         inputProps={{ "aria-label": "search" }}
         value={text}
         onChange={(e) => {
