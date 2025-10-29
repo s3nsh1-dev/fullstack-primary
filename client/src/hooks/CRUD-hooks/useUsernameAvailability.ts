@@ -21,6 +21,7 @@ const useUsernameAvailability = (input: string) => {
 export default useUsernameAvailability;
 
 const fetchAvailability = async (debounced: string, signal: AbortSignal) => {
+  if (!regEx.test(debounced)) return false;
   const response: ApiResponse = await axios({
     method: "get",
     url: `${URL}/users/check-username?inp=${encodeURIComponent(debounced)}`,
@@ -28,7 +29,7 @@ const fetchAvailability = async (debounced: string, signal: AbortSignal) => {
     signal,
   });
   if (!response) throw new Error("CHECKING USERNAME FAILED");
-  console.log("axios response", response);
+  console.log(response);
   return response.data.data.available;
 };
 
@@ -44,3 +45,5 @@ type UsernameAvailabilityResponse = {
 };
 
 type ApiResponse = AxiosResponse<UsernameAvailabilityResponse>;
+
+const regEx: RegExp = /^(?!.*\.\.)(?!.*\.$)[a-zA-Z0-9._]{3,20}$/;
