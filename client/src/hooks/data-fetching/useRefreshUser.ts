@@ -5,7 +5,6 @@ const useRefreshUser = () => {
   return useMutation({
     mutationKey: ["currentUser"],
     mutationFn: async () => {
-      console.log("refreshing user API");
       const response = await fetch(
         `${import.meta.env.VITE_SERVER_URL}/users/refresh-token`,
         {

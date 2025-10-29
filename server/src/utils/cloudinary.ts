@@ -24,21 +24,14 @@ const uploadOnCloudinary = async (
       resource_type: "auto",
       folder: folderName,
     });
-    // This is fine if deletion success/failure doesn’t affect the next step.
-    // File deletion is handled in the background by the OS (non-blocking I/O),
-    // so the Node.js event loop remains free to handle other tasks.
     fs.unlink(localFilePath).catch((error) => {
-      console.log("SUCCESS: ISSUE IN FILE DELETION", error);
+      console.info("SUCCESS: ISSUE IN FILE DELETION", error);
     });
-
-    // console.log("LEARN CLOUDINARY RESPONSE: ", response);
     return response;
   } catch (error) {
-    // await make sure to delete then proceed
     await fs.unlink(localFilePath).catch((error) => {
-      console.log("FAILED: ISSUE IN FILE DELETION", error);
+      console.info("FAILED: ISSUE IN FILE DELETION", error);
     });
-    // console.log("ERROR WHILE UPLOADING TO CLOUDINARY: ", error);
   } finally {
     deleteLocalFile(localFilePath);
   }

@@ -9,7 +9,8 @@ import { getUserChannelProfile } from "./userControllers/getUserChannelProfile";
 import { fetchUserById } from "./userControllers/fetchUserById";
 import { updateUserAvatar } from "./userControllers/updateUserAvatar";
 import { updateUserCoverImage } from "./userControllers/updateUserCoverImage";
-import { updateUserUsername } from "./userControllers/updateUserUsername";
+import { usernameAvailability } from "./userControllers/usernameAvailability";
+import { newUsernameUpdate } from "./userControllers/newUsernameUpdate";
 
 export {
   registerUser,
@@ -23,5 +24,6 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   fetchUserById,
-  updateUserUsername,
+  usernameAvailability,
+  newUsernameUpdate,
 };

@@ -5,7 +5,6 @@ const URL = import.meta.env.VITE_SERVER_URL;
 const useLogout = () => {
   return useMutation({
     mutationFn: async (authToken: string) => {
-      console.log("useLogout API");
       const response = await fetch(`${URL}/users/logout`, {
         method: "POST",
         credentials: "include",

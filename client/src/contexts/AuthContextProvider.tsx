@@ -17,7 +17,6 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({ children }) => {
   );
   const logout = useCallback(() => setUser(null), []);
   const callRefreshToken = useRefreshUser();
-  console.log("Provider", user, loading);
 
   useEffect(() => {
     callRefreshToken.mutate(undefined, {

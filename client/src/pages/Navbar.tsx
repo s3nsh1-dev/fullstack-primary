@@ -33,8 +33,6 @@ const Navbar = () => {
     setOpen(false);
   }, [isMobile, notMobileButCollapsed]);
 
-  console.log("Navbar");
-
   return (
     <>
       <>
