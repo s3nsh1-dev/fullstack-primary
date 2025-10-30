@@ -4,9 +4,9 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
 
 export const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { name, content }: { name: NameType; content: string } = req.body;
+  const { name, content } = req.body as Record<"name" | "content", string>;
 
-  if (!name || !content) throw new ApiError(400, "EMAIL OR NAME IS REQUIRED");
+  if (!name || !content) throw new ApiError(400, "RE-ENTER VALUES AND CONTENT");
   if (!validNames.includes(name as NameType))
     throw new ApiError(400, "INCORRECT PROPERTY NAME");
   if (!req.user || !req.user._id)
