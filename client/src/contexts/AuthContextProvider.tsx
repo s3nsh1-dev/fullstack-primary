@@ -1,41 +1,34 @@
 import authContext from "./authContext";
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import type { ChildrenProps } from "../constants/genericTypes";
 import type { UserLoginAuthDataType } from "../constants/dataTypes";
-import useRefreshUser from "../hooks/data-fetching/useRefreshUser";
+import { useRefreshUser } from "../hooks/data-fetching/useRefreshUser";
 
 const AuthContextProvider: React.FC<ChildrenProps> = ({ children }) => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<UserLoginAuthDataType | null>(null);
-  // const login = (userData: UserLoginAuthDataType) => setUser(userData);
-  const login = useCallback(
-    (userData: UserLoginAuthDataType) =>
-      setUser((prev) =>
-        prev?.user?._id === userData?.user?._id ? prev : userData
-      ),
-    []
-  );
-  const logout = useCallback(() => setUser(null), []);
-  const callRefreshToken = useRefreshUser();
+  const { data: user, isLoading, isError } = useRefreshUser();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    callRefreshToken.mutate(undefined, {
-      onSuccess: (data) => {
-        setUser((prev) => {
-          return prev?.user?._id === data?.user?._id ? prev : data;
-        });
-      },
-      onError: () => {
-        setUser(null);
-      },
-      onSettled: () => {
-        setLoading(false);
-      },
-    });
-  }, []);
+  const login = useCallback(
+    (userData: UserLoginAuthDataType) => {
+      queryClient.setQueryData(["currentUser"], userData);
+    },
+    [queryClient]
+  );
+
+  const logout = useCallback(() => {
+    queryClient.removeQueries({ queryKey: ["currentUser"] });
+  }, [queryClient]);
 
   return (
-    <authContext.Provider value={{ user, login, logout, loading }}>
+    <authContext.Provider
+      value={{
+        user: isError ? null : user ?? null,
+        login,
+        logout,
+        loading: isLoading,
+      }}
+    >
       {children}
     </authContext.Provider>
   );

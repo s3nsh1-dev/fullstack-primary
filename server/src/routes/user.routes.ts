@@ -34,7 +34,7 @@ userRouter.route("/login").post(loginUser);
 userRouter.route("/profile/:userId").get(fetchUserById);
 //secured routes
 userRouter.route("/logout").post(verifyJWT, logoutUser);
-userRouter.route("/refresh-token").post(refreshAccessToken);
+userRouter.route("/refresh-token").get(refreshAccessToken);
 userRouter.route("/change-password").post(verifyJWT, changeCurrentPassword);
 userRouter.route("/current-user").get(verifyJWT, getCurrentUser);
 userRouter.route("/update-account").patch(verifyJWT, updateAccountDetails);
