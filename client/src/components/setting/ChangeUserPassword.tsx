@@ -2,33 +2,39 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import useChangeUserPassword from "../../hooks/CRUD-hooks/useChangeUserPassword";
 import { SettingInput } from "../ui-components/TextStyledComponents";
 import ShowInfoMessage from "./ShowInfoMessage";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const ChangeUserPassword = () => {
   const [passwords, setPasswords] =
     React.useState<CredentialsType>(resetPassword);
-  const {
-    mutate: changePassword,
-    isSuccess,
-    isError,
-  } = useChangeUserPassword();
-  const handleSubmit =
-    (e: React.FormEvent<HTMLFormElement>) =>
-    ({ currentPassword, newPassword }: CredentialsType) => {
-      e.preventDefault();
-      console.log(currentPassword, newPassword);
-      changePassword({ currentPassword, newPassword });
-    };
+  const { mutate: changePassword, data, isError } = useChangeUserPassword();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (
+      passwords.currentPassword.length < 1 ||
+      passwords.newPassword.length < 1
+    ) {
+      alert("EMPTY PASSWORD FIELDS");
+      setPasswords(resetPassword);
+      return;
+    }
+    changePassword(passwords, {
+      onSuccess: () => setPasswords(resetPassword),
+      onError: (error) => console.log(error),
+    });
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setPasswords((prev) => {
-      return { ...prev, [name]: value };
+      return { ...prev, [name]: value.trim() };
     });
   };
   return (
@@ -39,12 +45,14 @@ const ChangeUserPassword = () => {
           value={passwords.currentPassword}
           onChange={handleChange}
           placeholder="Enter old password"
+          type="password"
         />
         <SettingInput
           name="newPassword"
           value={passwords.newPassword}
           onChange={(e) => handleChange(e)}
           placeholder="Enter new password"
+          type="password"
         />
         <Button
           type="submit"
@@ -62,7 +70,7 @@ const ChangeUserPassword = () => {
           color="error"
         />
       )}
-      {isSuccess && (
+      {data && (
         <ShowInfoMessage
           icon={<CheckCircleOutlineIcon fontSize="small" color="success" />}
           text={successMessage}
@@ -89,5 +97,3 @@ const sxButton = {
   padding: 0,
   px: 1,
 };
-
-// Damn
