@@ -2,11 +2,11 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import useChangeUserPassword from "../../hooks/CRUD-hooks/useChangeUserPassword";
 import { SettingInput } from "../ui-components/TextStyledComponents";
 import ShowInfoMessage from "./ShowInfoMessage";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const ChangeUserPassword = () => {
   const [passwords, setPasswords] =

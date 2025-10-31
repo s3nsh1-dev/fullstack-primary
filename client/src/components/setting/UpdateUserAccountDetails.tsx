@@ -3,6 +3,9 @@ import Button from "@mui/material/Button";
 import useUpdateAccountDetails from "../../hooks/CRUD-hooks/useUpdateAccountDetails";
 import { useState } from "react";
 import { SettingInput } from "../ui-components/TextStyledComponents";
+import ShowInfoMessage from "./ShowInfoMessage";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const UpdateUserAccountDetails = () => {
   const { mutate: updateDetails } = useUpdateAccountDetails();
@@ -29,6 +32,7 @@ const UpdateUserAccountDetails = () => {
       },
     });
   };
+
   const handleSubmitFullname = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (fullname.content.length < 1) {
@@ -45,6 +49,7 @@ const UpdateUserAccountDetails = () => {
       },
     });
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -70,6 +75,20 @@ const UpdateUserAccountDetails = () => {
         />
         <Button type="submit">Submit</Button>
       </Box>
+      {emailError && (
+        <ShowInfoMessage
+          icon={<ErrorOutlineIcon color="error" fontSize="small" />}
+          text={errorMessage}
+          color="error"
+        />
+      )}
+      {emailSuccess && (
+        <ShowInfoMessage
+          icon={<CheckCircleOutlineIcon fontSize="small" color="success" />}
+          text="Email Updated"
+          color="success"
+        />
+      )}
       <Box component={"form"} onSubmit={handleSubmitFullname}>
         <SettingInput
           onChange={handleChange}
@@ -78,6 +97,20 @@ const UpdateUserAccountDetails = () => {
         />
         <Button type="submit">Submit</Button>
       </Box>
+      {fullnameError && (
+        <ShowInfoMessage
+          icon={<ErrorOutlineIcon color="error" fontSize="small" />}
+          text={errorMessage}
+          color="error"
+        />
+      )}
+      {fullnameSuccess && (
+        <ShowInfoMessage
+          icon={<CheckCircleOutlineIcon fontSize="small" color="success" />}
+          text="Fullname Updated"
+          color="success"
+        />
+      )}
     </Box>
   );
 };
@@ -95,3 +128,4 @@ type BasicDetailType = {
   name: string;
   content: string;
 };
+const errorMessage = "Something went wrong";
