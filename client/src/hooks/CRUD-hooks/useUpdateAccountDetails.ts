@@ -1,14 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-const useUpdateUserFullname = () => {
+const useUpdateAccountDetails = () => {
   return useMutation({
     mutationKey: ["change-fullname"],
     mutationFn: (newValue: newAccountDetails) => updateAccountDetails(newValue),
   });
 };
 
-export default useUpdateUserFullname;
+export default useUpdateAccountDetails;
 
 const updateAccountDetails = async (newValue: newAccountDetails) => {
   const { data } = await axios.patch<ApiResponse>(
