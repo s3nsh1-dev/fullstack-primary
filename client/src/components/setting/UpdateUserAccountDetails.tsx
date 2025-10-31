@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import UpdateAccountFieldForm from "./UpdateAccountFieldForm";
 const UpdateUserAccountDetails = () => {
   return (
-    <Box>
+    <Stack direction="column" gap={1}>
       <UpdateAccountFieldForm
         initialValue={resetEmail}
         successMessage="Email updated successfully"
@@ -11,7 +11,7 @@ const UpdateUserAccountDetails = () => {
         initialValue={resetFullname}
         successMessage="Fullname updated successfully"
       />
-    </Box>
+    </Stack>
   );
 };
 

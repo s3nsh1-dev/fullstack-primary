@@ -57,13 +57,20 @@ const UpdateAccountFieldForm = ({
   };
 
   return (
-    <Stack component="form" onSubmit={handleSubmit} gap={0.5}>
+    <Stack
+      direction="row"
+      component="form"
+      onSubmit={handleSubmit}
+      gap={0.5}
+      alignItems={"center"}
+    >
       <SettingInput
         onChange={handleChange}
         name={fieldState.name}
         value={fieldState.content}
         placeholder={`Update ${fieldState.name}`}
         disabled={isPending}
+        fullWidth
       />
       <Button
         type="submit"
@@ -104,4 +111,6 @@ const errorMessage = "Something went wrong";
 const sxBtn = {
   padding: 0,
   px: 1,
+  height: "34px",
+  width: "80px",
 };
