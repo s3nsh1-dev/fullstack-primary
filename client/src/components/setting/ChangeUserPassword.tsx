@@ -89,5 +89,3 @@ const sxButton = {
   padding: 0,
   px: 1,
 };
-
-// Damn

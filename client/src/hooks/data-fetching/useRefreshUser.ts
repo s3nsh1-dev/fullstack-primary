@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { UserLoginResponseType } from "../../constants/responseTypes";
 
-const URL = import.meta.env.VITE_SERVER_URL;
-
 export const useRefreshUser = () => {
   return useQuery({
     queryKey: ["currentUser"],
@@ -20,3 +18,5 @@ export const useRefreshUser = () => {
     retry: false,
   });
 };
+
+const URL = import.meta.env.VITE_SERVER_URL;
