@@ -5,7 +5,12 @@ import { User } from "../../models/user.model";
 
 export const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword }: ResponseBodyType = req.body;
-  if (!currentPassword || !newPassword)
+  if (
+    !currentPassword ||
+    !newPassword ||
+    currentPassword.length < 1 ||
+    newPassword.length < 1
+  )
     throw new ApiError(400, " CURRENT PASSWORD AND NEW PASSWORD ARE REQUIRED");
 
   if (!req.user || !req.user._id)
