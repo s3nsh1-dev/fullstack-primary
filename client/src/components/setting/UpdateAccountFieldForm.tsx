@@ -4,13 +4,9 @@ import { SettingInput } from "../ui-components/TextStyledComponents";
 import ShowInfoMessage from "./ShowInfoMessage";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
-type UpdateFieldProps = {
-  initialValue: BasicDetailType;
-  successMessage: string;
-};
 
 // This component is the one you will loop or duplicate in the main file
 const UpdateAccountFieldForm = ({
@@ -19,6 +15,7 @@ const UpdateAccountFieldForm = ({
 }: UpdateFieldProps) => {
   // 1. Use a single state object for the field value
   const [fieldState, setFieldState] = useState(initialValue);
+  const [showInfo, setShowInfo] = useState(true);
 
   // 2. Import the mutation hook and destructure the built-in status flags
   const {
@@ -43,8 +40,9 @@ const UpdateAccountFieldForm = ({
     updateDetails(fieldState, {
       onSuccess: () => {
         // Keep the input content for UX, or clear it if needed
-        // setFieldState(initialValue);
+        setFieldState(initialValue);
       },
+      onSettled: () => setShowInfo(false),
     });
   };
 
@@ -53,17 +51,17 @@ const UpdateAccountFieldForm = ({
   ) => {
     // Reset the success/error state when the user starts typing again
     reset();
-    setFieldState((prev) => ({ ...prev, content: e.target.value.trim() }));
+    setFieldState((prev) => ({ ...prev, content: e.target.value }));
   };
 
   return (
-    <>
+    <Stack direction={"column"} height={55} gap={0.5}>
       <Stack
         direction="row"
         component="form"
         onSubmit={handleSubmit}
-        gap={0.5}
         alignItems={"center"}
+        gap={0.5}
       >
         <SettingInput
           onChange={handleChange}
@@ -85,22 +83,36 @@ const UpdateAccountFieldForm = ({
         </Button>
       </Stack>
 
+      <Stack>
+        {showInfo ? (
+          <ShowInfoMessage
+            icon={<InfoOutlineIcon fontSize="small" color="info" />}
+            text="Email guide"
+            color="info"
+          />
+        ) : (
+          <>
+            {isError && (
+              <ShowInfoMessage
+                icon={<ErrorOutlineIcon color="error" fontSize="small" />}
+                text={errorMessage}
+                color="error"
+              />
+            )}
+            {isSuccess && (
+              <ShowInfoMessage
+                icon={
+                  <CheckCircleOutlineIcon fontSize="small" color="success" />
+                }
+                text={successMessage}
+                color="success"
+              />
+            )}
+          </>
+        )}
+      </Stack>
       {/* 3. Use React Query's built-in flags for messages */}
-      {isError && (
-        <ShowInfoMessage
-          icon={<ErrorOutlineIcon color="error" fontSize="small" />}
-          text={errorMessage}
-          color="error"
-        />
-      )}
-      {isSuccess && (
-        <ShowInfoMessage
-          icon={<CheckCircleOutlineIcon fontSize="small" color="success" />}
-          text={successMessage}
-          color="success"
-        />
-      )}
-    </>
+    </Stack>
   );
 };
 
@@ -116,4 +128,9 @@ const sxBtn = {
   px: 1,
   height: "36px",
   width: "80px",
+};
+
+type UpdateFieldProps = {
+  initialValue: BasicDetailType;
+  successMessage: string;
 };

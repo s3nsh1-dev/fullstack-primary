@@ -39,3 +39,16 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
 
 type NameType = "email" | "fullname";
 const validNames: NameType[] = ["email", "fullname"];
+
+const cleanEmail = (email: string) => {};
+const cleanFullnameOptimal = (fullname: string) => {
+  return fullname
+    .trim() // 1. Remove leading/trailing spaces ONCE
+    .split(/\s+/) // 2. Split by one or more whitespace characters
+    .filter(Boolean) // 3. Filter out any remaining empty strings
+    .map((word) => {
+      // 4. Robust capitalization: capitalize first letter, lowercase the rest
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" "); // 5. Join back into a single string
+};
