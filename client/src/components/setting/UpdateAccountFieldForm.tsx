@@ -57,30 +57,33 @@ const UpdateAccountFieldForm = ({
   };
 
   return (
-    <Stack
-      direction="row"
-      component="form"
-      onSubmit={handleSubmit}
-      gap={0.5}
-      alignItems={"center"}
-    >
-      <SettingInput
-        onChange={handleChange}
-        name={fieldState.name}
-        value={fieldState.content}
-        placeholder={`Update ${fieldState.name}`}
-        disabled={isPending}
-        fullWidth
-      />
-      <Button
-        type="submit"
-        color="secondary"
-        variant="contained"
-        disabled={isPending}
-        sx={sxBtn}
+    <>
+      <Stack
+        direction="row"
+        component="form"
+        onSubmit={handleSubmit}
+        gap={0.5}
+        alignItems={"center"}
       >
-        {isPending ? "Updating..." : "Save"}
-      </Button>
+        <SettingInput
+          onChange={handleChange}
+          name={fieldState.name}
+          value={fieldState.content}
+          placeholder={`Update ${fieldState.name}`}
+          disabled={isPending}
+          fullWidth
+        />
+
+        <Button
+          type="submit"
+          color="secondary"
+          variant="contained"
+          disabled={fieldState.content.length < 1 || isPending}
+          sx={sxBtn}
+        >
+          {isPending ? "Updating..." : "Save"}
+        </Button>
+      </Stack>
 
       {/* 3. Use React Query's built-in flags for messages */}
       {isError && (
@@ -97,7 +100,7 @@ const UpdateAccountFieldForm = ({
           color="success"
         />
       )}
-    </Stack>
+    </>
   );
 };
 
@@ -111,6 +114,6 @@ const errorMessage = "Something went wrong";
 const sxBtn = {
   padding: 0,
   px: 1,
-  height: "34px",
+  height: "36px",
   width: "80px",
 };
