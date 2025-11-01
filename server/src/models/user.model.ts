@@ -45,11 +45,17 @@ const schema = {
   avatarPublicId: { type: String },
   CoverImagePublicId: { type: String },
   isDeactivated: { type: Boolean, default: false },
+  isAdmin: { type: Boolean, default: false },
+  isSuspended: { type: Boolean, default: false },
+  suspensionStart: { type: Date, default: null },
+  suspensionEnd: { type: Date, default: null },
+  suspensionReason: { type: String, default: "" },
+  suspendedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // admin ID
 };
 
 const userSchema = new mongoose.Schema(schema, { timestamps: true });
 
-// we want this to refer to Mongoose Document
+// want this to refer to Mongoose Document
 async function passwordMiddlewareEncryption(
   this: UserThisType,
   next: nextType
