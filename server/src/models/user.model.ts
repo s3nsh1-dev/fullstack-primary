@@ -26,13 +26,8 @@ const schema = {
     trim: true,
     index: true,
   },
-  avatar: {
-    type: String, // cloudinary url
-    required: true,
-  },
-  coverImage: {
-    type: String,
-  },
+  avatar: { type: String },
+  coverImage: { type: String },
   watchHistory: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +42,9 @@ const schema = {
     type: String,
     default: "",
   },
+  avatarPublicId: { type: String },
+  CoverImagePublicId: { type: String },
+  isDeactivated: { type: Boolean, default: false },
 };
 
 const userSchema = new mongoose.Schema(schema, { timestamps: true });
