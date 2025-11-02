@@ -8,16 +8,14 @@ import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
-// This component is the one you will loop or duplicate in the main file
 const UpdateAccountFieldForm = ({
   initialValue,
   successMessage,
+  guide,
 }: UpdateFieldProps) => {
-  // 1. Use a single state object for the field value
   const [fieldState, setFieldState] = useState(initialValue);
   const [showInfo, setShowInfo] = useState(true);
 
-  // 2. Import the mutation hook and destructure the built-in status flags
   const {
     mutate: updateDetails,
     isPending,
@@ -29,19 +27,11 @@ const UpdateAccountFieldForm = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (fieldState.content.length < 1) {
-      // Use a visual indicator instead of 'alert'
       alert(`Please enter a valid ${fieldState.name}`);
       return;
     }
-
-    // Reset status before a new mutation to clear old messages
-    reset();
-
     updateDetails(fieldState, {
-      onSuccess: () => {
-        // Keep the input content for UX, or clear it if needed
-        setFieldState(initialValue);
-      },
+      onSuccess: () => setFieldState(initialValue),
       onSettled: () => setShowInfo(false),
     });
   };
@@ -49,8 +39,8 @@ const UpdateAccountFieldForm = ({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    // Reset the success/error state when the user starts typing again
-    reset();
+    if (isSuccess || isError) reset();
+    if (!showInfo) setShowInfo(true);
     setFieldState((prev) => ({ ...prev, content: e.target.value }));
   };
 
@@ -87,7 +77,7 @@ const UpdateAccountFieldForm = ({
         {showInfo ? (
           <ShowInfoMessage
             icon={<InfoOutlineIcon fontSize="small" color="info" />}
-            text="Email guide"
+            text={guide}
             color="info"
           />
         ) : (
@@ -111,7 +101,6 @@ const UpdateAccountFieldForm = ({
           </>
         )}
       </Stack>
-      {/* 3. Use React Query's built-in flags for messages */}
     </Stack>
   );
 };
@@ -133,4 +122,5 @@ const sxBtn = {
 type UpdateFieldProps = {
   initialValue: BasicDetailType;
   successMessage: string;
+  guide: string;
 };
