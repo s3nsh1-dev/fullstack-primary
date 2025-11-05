@@ -32,7 +32,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
 
-  const tweets = await Tweet.find({ content: userId });
+  const tweets = await Tweet.find({ owner: userId });
   if (!tweets) throw new ApiError(404, "TWEETS NOT FOUND TO DELETE");
 
   const videos = await Video.find({ owner: userId });
@@ -53,27 +53,25 @@ const deleteUser = asyncHandler(async (req, res) => {
   const subbedTo = await Subscription.find({ subscriber: userId });
   if (!subbedTo) throw new ApiError(404, "NOT SUBBED TO ANYONE");
 
-  const user = await User.find({ _id: userId });
+  const user = await User.findOne({ _id: userId });
   if (!user) throw new ApiError(404, "USER NOT FOUND");
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        {
-          tweets,
-          videos,
-          playlist,
-          likes,
-          comments,
-          subscribers,
-          subbedTo,
-          user,
-        },
-        "USER DELETED FROM THE DATABASE"
-      )
-    );
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        tweets,
+        videos,
+        playlist,
+        likes,
+        comments,
+        subscribers,
+        subbedTo,
+        user,
+      },
+      "USER DELETED FROM THE DATABASE"
+    )
+  );
 });
 
 export { deleteUser };

@@ -11,6 +11,7 @@ import { updateUserAvatar } from "./userControllers/updateUserAvatar";
 import { updateUserCoverImage } from "./userControllers/updateUserCoverImage";
 import { usernameAvailability } from "./userControllers/usernameAvailability";
 import { newUsernameUpdate } from "./userControllers/newUsernameUpdate";
+import { deleteUser } from "./userControllers/deleteUser";
 
 export {
   registerUser,
@@ -26,4 +27,5 @@ export {
   fetchUserById,
   usernameAvailability,
   newUsernameUpdate,
+  deleteUser,
 };
