@@ -1,10 +1,12 @@
-import { useState } from "react";
 import Button from "@mui/material/Button";
 import BasicModal from "../ui-components/BasicModal";
+import DeleteUserPopup from "./DeleteUserPopup";
+import { useState } from "react";
 
 const DeleteUser = () => {
   const [open, setOpen] = useState<boolean>(false);
   const handleToggle = () => setOpen((prev) => !prev);
+  const handleDelete = () => {};
 
   return (
     <>
@@ -19,7 +21,7 @@ const DeleteUser = () => {
 
       {open && (
         <BasicModal open={open} onClose={() => setOpen(false)}>
-          This is warning before deactivating accounts
+          <DeleteUserPopup onClose={handleDelete} handleDelete={handleDelete} />
         </BasicModal>
       )}
     </>
