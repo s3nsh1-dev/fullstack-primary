@@ -1,13 +1,27 @@
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import BasicModal from "../ui-components/BasicModal";
+import { useState } from "react";
 
 const DeactivateUser = () => {
+  const [open, setOpen] = useState<boolean>(false);
+  const handleToggle = () => setOpen((prev) => !prev);
+
   return (
-    <Box>
-      <Button variant="contained" color="warning" fullWidth>
+    <>
+      <Button
+        variant="contained"
+        color="warning"
+        fullWidth
+        onClick={handleToggle}
+      >
         Deactivate Account
       </Button>
-    </Box>
+      {open && (
+        <BasicModal open={open} onClose={() => setOpen(false)}>
+          This is warning before deactivating accounts
+        </BasicModal>
+      )}
+    </>
   );
 };
 
