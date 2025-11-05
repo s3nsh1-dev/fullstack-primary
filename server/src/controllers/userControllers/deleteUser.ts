@@ -14,10 +14,10 @@ import { isValidObjectId } from "mongoose";
 
 /**
  * delete tweets
- * delete likes on videos/comment/tweets
- * delete comments on comments/videos/tweets
  * delete videos
  * delete playlists
+ * delete likes on videos/comment/tweets
+ * delete comments on comments/videos/tweets
  * delete list of channels i have subbed to
  * delete list of subscriber i have
  * delete user
