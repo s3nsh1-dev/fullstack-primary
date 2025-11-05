@@ -7,7 +7,6 @@ const DeactivateUser = () => {
   const [open, setOpen] = useState<boolean>(false);
   const handleToggle = () => setOpen((prev) => !prev);
   const handleClose = () => setOpen(false);
-  const handleDeactivate = () => {};
 
   return (
     <>
@@ -21,10 +20,7 @@ const DeactivateUser = () => {
       </Button>
       {open && (
         <BasicModal open={open} onClose={handleClose}>
-          <DeactivatePopup
-            onClose={handleClose}
-            handleDeactivate={handleDeactivate}
-          />
+          <DeactivatePopup onClose={handleClose} />
         </BasicModal>
       )}
     </>

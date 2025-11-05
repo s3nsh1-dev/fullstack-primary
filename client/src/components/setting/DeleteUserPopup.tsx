@@ -2,8 +2,13 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import useDeleteUser from "../../hooks/CRUD-hooks/useDeleteUser";
 
-const DeleteUserPopup: React.FC<PropTypes> = ({ onClose, handleDelete }) => {
+const DeleteUserPopup: React.FC<PropTypes> = ({ onClose }) => {
+  const { mutate: deleteUser } = useDeleteUser();
+  const handleDelete = () => {
+    deleteUser();
+  };
   return (
     <>
       <Typography variant="h6" component="h2">
@@ -28,6 +33,5 @@ const DeleteUserPopup: React.FC<PropTypes> = ({ onClose, handleDelete }) => {
 export default DeleteUserPopup;
 
 type PropTypes = {
-  handleDelete: () => void;
   onClose: () => void;
 };

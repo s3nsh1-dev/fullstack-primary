@@ -2,11 +2,14 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import useDeactivateUser from "../../hooks/CRUD-hooks/useDeactivateUser";
 
-const DeactivatePopup: React.FC<PropTypes> = ({
-  onClose,
-  handleDeactivate,
-}) => {
+const DeactivatePopup: React.FC<PropTypes> = ({ onClose }) => {
+  const { mutate: deactivateUser } = useDeactivateUser();
+  const handleDeactivate = () => {
+    deactivateUser();
+  };
+
   return (
     <>
       <Typography variant="h6" component="h2">
@@ -39,5 +42,4 @@ export default DeactivatePopup;
 
 type PropTypes = {
   onClose: () => void;
-  handleDeactivate: () => void;
 };

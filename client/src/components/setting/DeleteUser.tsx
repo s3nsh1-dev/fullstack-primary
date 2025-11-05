@@ -6,7 +6,7 @@ import { useState } from "react";
 const DeleteUser = () => {
   const [open, setOpen] = useState<boolean>(false);
   const handleToggle = () => setOpen((prev) => !prev);
-  const handleDelete = () => {};
+  const handleDelete = () => setOpen(false);
 
   return (
     <>
@@ -21,7 +21,7 @@ const DeleteUser = () => {
 
       {open && (
         <BasicModal open={open} onClose={() => setOpen(false)}>
-          <DeleteUserPopup onClose={handleDelete} handleDelete={handleDelete} />
+          <DeleteUserPopup onClose={handleDelete} />
         </BasicModal>
       )}
     </>

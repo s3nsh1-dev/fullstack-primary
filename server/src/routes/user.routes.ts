@@ -50,7 +50,8 @@ userRouter.route("/history").get(verifyJWT, getWatchHistory);
 userRouter.route("/history/:videoId").post(addToWatchHistory);
 userRouter.route("/check-username").get(verifyJWT, usernameAvailability);
 userRouter.route("/update/username").patch(verifyJWT, newUsernameUpdate);
-userRouter.route("/delete").post(verifyJWT, deleteUser);
+userRouter.route("/delete-user").post(verifyJWT, deleteUser);
+userRouter.route("/deactivate-user").post(verifyJWT, deleteUser);
 
 export default userRouter;
 
