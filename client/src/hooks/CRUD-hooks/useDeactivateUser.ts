@@ -5,7 +5,9 @@ const useDeactivateUser = () => {
   return useMutation({
     mutationKey: ["deactivate-user"],
     mutationFn: async () => {
-      const { data } = await axios.post(`${URL}/users/deactivate-user`, {
+      const { data } = await axios({
+        url: `${URL}/users/deactivate-user`,
+        method: "post",
         withCredentials: true,
       });
       if (!data) throw new Error("ERROR IN REQUEST TO DEACTIVATE USER");

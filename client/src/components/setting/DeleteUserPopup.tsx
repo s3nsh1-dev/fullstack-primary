@@ -7,8 +7,10 @@ import useDeleteUser from "../../hooks/CRUD-hooks/useDeleteUser";
 const DeleteUserPopup: React.FC<PropTypes> = ({ onClose }) => {
   const { mutate: deleteUser } = useDeleteUser();
   const handleDelete = () => {
-    deleteUser();
-    onClose();
+    deleteUser(undefined, {
+      onSuccess: (data) => console.log(data),
+      onSettled: () => onClose(),
+    });
   };
   return (
     <>

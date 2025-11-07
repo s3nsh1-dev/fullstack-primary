@@ -7,8 +7,10 @@ import useDeactivateUser from "../../hooks/CRUD-hooks/useDeactivateUser";
 const DeactivatePopup: React.FC<PropTypes> = ({ onClose }) => {
   const { mutate: deactivateUser } = useDeactivateUser();
   const handleDeactivate = () => {
-    deactivateUser();
-    onClose();
+    deactivateUser(undefined, {
+      onSuccess: (data) => console.log(data),
+      onSettled: () => onClose(),
+    });
   };
 
   return (

@@ -26,7 +26,7 @@ import { isValidObjectId } from "mongoose";
  */
 
 const deleteUser = asyncHandler(async (req, res) => {
-  if (!req?.user || !req?.user?._id)
+  if (!req.user || !req.user?._id)
     throw new ApiError(401, "UNAUTHENTICATED REQUEST");
 
   const userId = req.user._id;
