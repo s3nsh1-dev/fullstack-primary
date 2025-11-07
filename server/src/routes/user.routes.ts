@@ -14,6 +14,7 @@ import {
   usernameAvailability,
   newUsernameUpdate,
   deleteUser,
+  updateUsersWithPublicId,
 } from "../controllers/user.controller";
 import {
   addToWatchHistory,
@@ -52,6 +53,8 @@ userRouter.route("/check-username").get(verifyJWT, usernameAvailability);
 userRouter.route("/update/username").patch(verifyJWT, newUsernameUpdate);
 userRouter.route("/delete-user").post(verifyJWT, deleteUser);
 userRouter.route("/deactivate-user").post(verifyJWT, deleteUser);
+//controller test route
+userRouter.route("/test").get(updateUsersWithPublicId);
 
 export default userRouter;
 
