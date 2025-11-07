@@ -8,6 +8,7 @@ const DeleteUserPopup: React.FC<PropTypes> = ({ onClose }) => {
   const { mutate: deleteUser } = useDeleteUser();
   const handleDelete = () => {
     deleteUser();
+    onClose();
   };
   return (
     <>
