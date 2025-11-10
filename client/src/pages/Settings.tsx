@@ -4,7 +4,7 @@ import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import Typography from "@mui/material/Typography";
 import ChangeUsername from "../components/setting/ChangeUsername";
 import ChangeUserPassword from "../components/setting/ChangeUserPassword";
@@ -13,9 +13,27 @@ import AdvanceSettings from "../components/setting/AdvanceSettings";
 
 const Settings = () => {
   const theme = useTheme();
-  const [viewOptions, setViewOptions] = useState<ViewOptionsType>(InitialView);
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const handleChangeOption = (option: string) => {};
+  const [viewOptions, setViewOptions] = useState<ViewOptionsType>(initialView);
+  const optionsButtons = optionButtonLabels.map((option) => {
+    return (
+      <Typography
+        key={option.name}
+        onClick={() => setViewOptions(getResetView(option.name))}
+        sx={{ cursor: "pointer" }}
+      >
+        {option.label}
+      </Typography>
+    );
+  });
+  const renderOptionComponent = viewOptions.map((options) => {
+    return (
+      <Fragment key={options.name}>
+        {options.flag && options.component}
+      </Fragment>
+    );
+  });
+
   return (
     <Stack p={1} gap={1}>
       <HomeTabTitles text="Settings" icon={<SettingsOutlinedIcon />} />
@@ -23,23 +41,8 @@ const Settings = () => {
         <Box>This is Mobile View</Box>
       ) : (
         <Stack direction="row">
-          <Stack gap={1}>
-            <Typography
-              onClick={() => handleChangeOption("accountDetails")}
-              sx={{ cursor: "pointer" }}
-            >
-              Account Details
-            </Typography>
-            <Typography>Username</Typography>
-            <Typography>Password</Typography>
-            <Typography>Advance</Typography>
-          </Stack>
-          <Box>
-            <UpdateUserAccountDetails />
-            <ChangeUsername />
-            <ChangeUserPassword />
-            <AdvanceSettings />
-          </Box>
+          <Stack gap={1}>{optionsButtons}</Stack>
+          <Box>{renderOptionComponent}</Box>
         </Stack>
       )}
     </Stack>
@@ -48,11 +51,31 @@ const Settings = () => {
 
 export default Settings;
 
-const InitialView = {
-  accountDetails: { flag: true, component: <UpdateUserAccountDetails /> },
-  username: { flag: false, component: <ChangeUsername /> },
-  password: { flag: false, component: <ChangeUserPassword /> },
-  advance: { flag: false, component: <AdvanceSettings /> },
+const getResetView = (optionName: string) => {
+  return initialView.map((item) => {
+    if (item.name === optionName) {
+      return { ...item, flag: true };
+    } else {
+      return { ...item, flag: false };
+    }
+  });
 };
 
-type ViewOptionsType = typeof InitialView;
+const initialView = [
+  {
+    name: "accountDetails",
+    flag: false,
+    component: <UpdateUserAccountDetails />,
+  },
+  { name: "username", flag: false, component: <ChangeUsername /> },
+  { name: "password", flag: false, component: <ChangeUserPassword /> },
+  { name: "advance", flag: true, component: <AdvanceSettings /> },
+];
+const optionButtonLabels = [
+  { name: "accountDetails", label: "Account Details" },
+  { name: "username", label: "Username" },
+  { name: "password", label: "Password" },
+  { name: "advance", label: "Advance" },
+];
+
+type ViewOptionsType = typeof initialView;
