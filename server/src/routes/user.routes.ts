@@ -14,7 +14,8 @@ import {
   usernameAvailability,
   newUsernameUpdate,
   deleteUser,
-  updateUsersWithPublicId,
+  // updateUsersWithPublicId,
+  deactivateUser,
 } from "../controllers/user.controller";
 import {
   addToWatchHistory,
@@ -52,9 +53,9 @@ userRouter.route("/history/:videoId").post(addToWatchHistory);
 userRouter.route("/check-username").get(verifyJWT, usernameAvailability);
 userRouter.route("/update/username").patch(verifyJWT, newUsernameUpdate);
 userRouter.route("/delete-user").post(verifyJWT, deleteUser);
-userRouter.route("/deactivate-user").post(verifyJWT, deleteUser);
+userRouter.route("/deactivate-user").post(verifyJWT, deactivateUser);
 //controller test route
-userRouter.route("/test").get(updateUsersWithPublicId);
+// userRouter.route("/test").get(updateUsersWithPublicId);
 
 export default userRouter;
 

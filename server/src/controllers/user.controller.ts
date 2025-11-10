@@ -12,7 +12,8 @@ import { updateUserCoverImage } from "./userControllers/updateUserCoverImage";
 import { usernameAvailability } from "./userControllers/usernameAvailability";
 import { newUsernameUpdate } from "./userControllers/newUsernameUpdate";
 import { deleteUser } from "./userControllers/deleteUser";
-import { updateUsersWithPublicId } from "./userControllers/updateUsersWithPublicId";
+// import { updateUsersWithPublicId } from "./userControllers/updateUsersWithPublicId";
+import { deactivateUser } from "./userControllers/deactivateUser";
 
 export {
   registerUser,
@@ -29,5 +30,6 @@ export {
   usernameAvailability,
   newUsernameUpdate,
   deleteUser,
-  updateUsersWithPublicId,
+  // updateUsersWithPublicId,
+  deactivateUser,
 };

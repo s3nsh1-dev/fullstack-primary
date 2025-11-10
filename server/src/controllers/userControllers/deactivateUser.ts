@@ -1,0 +1,3 @@
+const deactivateUser = () => {};
+
+export { deactivateUser };
