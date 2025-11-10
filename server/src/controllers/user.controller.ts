@@ -14,6 +14,7 @@ import { newUsernameUpdate } from "./userControllers/newUsernameUpdate";
 import { deleteUser } from "./userControllers/deleteUser";
 // import { updateUsersWithPublicId } from "./userControllers/updateUsersWithPublicId";
 import { deactivateUser } from "./userControllers/deactivateUser";
+import { reactivateUser } from "./userControllers/reactivateUser";
 
 export {
   registerUser,
@@ -32,4 +33,5 @@ export {
   deleteUser,
   // updateUsersWithPublicId,
   deactivateUser,
+  reactivateUser,
 };

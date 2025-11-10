@@ -1,9 +1,9 @@
+import { asyncHandler } from "../../utils/asyncHandler";
 import ApiError from "../../utils/ApiError";
 import ApiResponse from "../../utils/ApiResponse";
 import { User } from "../../models/user.model";
-import { asyncHandler } from "../../utils/asyncHandler";
 
-const deactivateUser = asyncHandler(async (req, res) => {
+const reactivateUser = asyncHandler(async (req, res) => {
   if (!req?.user || !req?.user?._id) {
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");
   }
@@ -11,7 +11,7 @@ const deactivateUser = asyncHandler(async (req, res) => {
 
   const currentUser = await User.findByIdAndUpdate(
     userId,
-    { $set: { isDeactivated: true } },
+    { $set: { isDeactivated: false } },
     { new: true }
   );
   if (!currentUser) {
@@ -20,7 +20,7 @@ const deactivateUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { deactivated: true }, "USER DEACTIVATED"));
+    .json(new ApiResponse(200, { deactivated: false }, "USER DEACTIVATED"));
 });
 
-export { deactivateUser };
+export { reactivateUser };
