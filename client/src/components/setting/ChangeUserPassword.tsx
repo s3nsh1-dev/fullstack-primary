@@ -2,12 +2,12 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import useChangeUserPassword from "../../hooks/CRUD-hooks/useChangeUserPassword";
 import { SettingInput } from "../ui-components/TextStyledComponents";
 import ShowInfoMessage from "./ShowInfoMessage";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 const ChangeUserPassword = () => {
   const [passwords, setPasswords] =
     React.useState<CredentialsType>(resetPassword);
@@ -39,7 +39,14 @@ const ChangeUserPassword = () => {
   };
   return (
     <Box>
-      <Stack component={"form"} onSubmit={handleSubmit} gap={0.5} mb={1}>
+      <Typography gutterBottom>
+        Your password is
+        <Typography component="span" fontWeight="bold" color="success">
+          &nbsp;encrypted&nbsp;
+        </Typography>
+        to maintain high security.
+      </Typography>
+      <Stack component={"form"} onSubmit={handleSubmit} gap={1} mb={1}>
         <SettingInput
           name="currentPassword"
           value={passwords.currentPassword}

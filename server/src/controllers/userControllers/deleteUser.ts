@@ -32,54 +32,43 @@ const deleteUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
 
-  const tweets = await Tweet.find({ owner: userId });
-  const delTweets = await Tweet.deleteMany({ owner: userId });
-  if (!tweets) throw new ApiError(404, "TWEETS NOT FOUND TO DELETE");
+  if (0) {
+    const tweets = await Tweet.find({ owner: userId });
+    const delTweets = await Tweet.deleteMany({ owner: userId });
+    if (!tweets) throw new ApiError(404, "TWEETS NOT FOUND TO DELETE");
 
-  const videos = await Video.find({ owner: userId });
-  const delVideos = await Video.deleteMany({ owner: userId });
-  if (!videos) throw new ApiError(404, "VIDEOS NOT FOUND");
+    const videos = await Video.find({ owner: userId });
+    const delVideos = await Video.deleteMany({ owner: userId });
+    if (!videos) throw new ApiError(404, "VIDEOS NOT FOUND");
 
-  const playlist = await Playlist.find({ owner: userId });
-  const delPlaylists = await Playlist.deleteMany({ owner: userId });
-  if (!playlist) throw new ApiError(404, "PLAYLIST NOT FOUND");
+    const playlist = await Playlist.find({ owner: userId });
+    const delPlaylists = await Playlist.deleteMany({ owner: userId });
+    if (!playlist) throw new ApiError(404, "PLAYLIST NOT FOUND");
 
-  const likes = await Like.find({ likedBy: userId });
-  const delLikes = await Like.deleteMany({ likedBy: userId });
-  if (!likes) throw new ApiError(404, "LIKES NOT FOUND");
+    const likes = await Like.find({ likedBy: userId });
+    const delLikes = await Like.deleteMany({ likedBy: userId });
+    if (!likes) throw new ApiError(404, "LIKES NOT FOUND");
 
-  const comments = await Comment.find({ owner: userId });
-  const delComments = await Comment.deleteMany({ owner: userId });
-  if (!comments) throw new ApiError(404, "COMMENTS NOT FOUND");
+    const comments = await Comment.find({ owner: userId });
+    const delComments = await Comment.deleteMany({ owner: userId });
+    if (!comments) throw new ApiError(404, "COMMENTS NOT FOUND");
 
-  const subscribers = await Subscription.find({ channel: userId });
-  const delSubscribers = await Subscription.deleteMany({ channel: userId });
-  if (!subscribers) throw new ApiError(404, "NO SUBSCRIBERS FOUND");
+    const subscribers = await Subscription.find({ channel: userId });
+    const delSubscribers = await Subscription.deleteMany({ channel: userId });
+    if (!subscribers) throw new ApiError(404, "NO SUBSCRIBERS FOUND");
 
-  const subbedTo = await Subscription.find({ subscriber: userId });
-  const delSubbedTo = await Subscription.deleteMany({ subscriber: userId });
-  if (!subbedTo) throw new ApiError(404, "NOT SUBBED TO ANYONE");
+    const subbedTo = await Subscription.find({ subscriber: userId });
+    const delSubbedTo = await Subscription.deleteMany({ subscriber: userId });
+    if (!subbedTo) throw new ApiError(404, "NOT SUBBED TO ANYONE");
 
-  const user = await User.findOne({ _id: userId });
-  const delUser = await User.findOneAndDelete(userId);
-  if (!user) throw new ApiError(404, "USER NOT FOUND");
+    const user = await User.findOne({ _id: userId });
+    const delUser = await User.findOneAndDelete(userId);
+    if (!user) throw new ApiError(404, "USER NOT FOUND");
+  }
 
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        tweets,
-        videos,
-        playlist,
-        likes,
-        comments,
-        subscribers,
-        subbedTo,
-        user,
-      },
-      "USER DELETED FROM THE DATABASE"
-    )
-  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "USER DELETED FROM THE DATABASE"));
 });
 
 export { deleteUser };

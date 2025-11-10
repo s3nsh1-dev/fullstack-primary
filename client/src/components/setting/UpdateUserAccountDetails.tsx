@@ -1,8 +1,17 @@
 import Stack from "@mui/material/Stack";
 import UpdateAccountFieldForm from "./UpdateAccountFieldForm";
+import Typography from "@mui/material/Typography";
+
 const UpdateUserAccountDetails = () => {
   return (
     <Stack direction="column" gap={1}>
+      <Typography>
+        Please
+        <Typography component="span" fontWeight="bold" color="info">
+          &nbsp;recheck&nbsp;
+        </Typography>
+        information before commit changes.
+      </Typography>
       <UpdateAccountFieldForm
         initialValue={resetEmail}
         successMessage="Email updated successfully"

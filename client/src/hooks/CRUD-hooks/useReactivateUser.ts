@@ -1,23 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-const useDeactivateUser = () => {
+const useReactivateUser = () => {
   return useMutation({
-    mutationKey: ["deactivate-user"],
+    mutationKey: ["reactivate-user"],
     mutationFn: async () => {
       const { data } = await axios<ApiResponse>({
-        url: `${URL}/users/deactivate-user`,
+        url: `${URL}/users/reactivate-user`,
         method: "patch",
         withCredentials: true,
       });
-      if (!data) throw new Error("ERROR IN REQUEST TO DEACTIVATE USER");
+      if (!data) throw new Error("ERROR IN REQUEST TO REACTIVATE USER");
       const result = data.data;
       return result;
     },
   });
 };
 
-export default useDeactivateUser;
+export default useReactivateUser;
 
 const URL = import.meta.env.VITE_SERVER_URL;
 

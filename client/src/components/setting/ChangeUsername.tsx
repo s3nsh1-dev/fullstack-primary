@@ -3,6 +3,7 @@ import useUsernameAvailability from "../../hooks/CRUD-hooks/useUsernameAvailabil
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import useUpdateUsername from "../../hooks/CRUD-hooks/useUpdateUsername";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -51,6 +52,14 @@ const ChangeUsername = () => {
   };
   return (
     <Box>
+      <Typography gutterBottom>
+        Our
+        <Typography component="span" fontWeight="bold" color="error">
+          &nbsp;LIVE&nbsp;
+        </Typography>
+        update feature will help you with unique names.
+      </Typography>
+
       <Stack component={"form"} onSubmit={handleSubmit} gap={0.5}>
         <Box sx={sx1}>
           <SettingInput
