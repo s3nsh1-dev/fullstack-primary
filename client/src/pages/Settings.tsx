@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -16,14 +16,14 @@ import useMode from "../hooks/useMode";
 
 const Settings = () => {
   const { mode } = useMode();
+  const theme = useTheme();
   const grid2Style = {
     p: 2,
     borderRadius: 2,
-    border: "2px solid gray",
-    height: `40vh`,
+    border: `2px solid ${theme.palette.divider}`,
+    minHeight: `40vh`,
     backgroundColor: mode ? "#feffb63a" : "#39393968",
   };
-  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [viewOptions, setViewOptions] = useState<ViewOptionsType>(initialView);
   const optionsButtons = optionButtonLabels.map((option) => {
@@ -37,13 +37,7 @@ const Settings = () => {
       </Box>
     );
   });
-  const renderOptionComponent = viewOptions.map((options) => {
-    return (
-      <Fragment key={options.name}>
-        {options.flag && options.component}
-      </Fragment>
-    );
-  });
+  const activeComponent = viewOptions.find((option) => option.flag)?.component;
 
   return (
     <Stack p={1} gap={1}>
@@ -56,7 +50,7 @@ const Settings = () => {
             {optionsButtons}
           </Grid>
           <Grid size={8} sx={grid2Style}>
-            {renderOptionComponent}
+            {activeComponent}
           </Grid>
         </Grid>
       )}
