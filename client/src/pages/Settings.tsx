@@ -4,6 +4,10 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -13,6 +17,8 @@ import ChangeUserPassword from "../components/setting/ChangeUserPassword";
 import UpdateUserAccountDetails from "../components/setting/UpdateUserAccountDetails";
 import AdvanceSettings from "../components/setting/AdvanceSettings";
 import useMode from "../hooks/useMode";
+import NotLoggedIn from "./NotLoggedIn";
+import useAuth from "../hooks/useAuth";
 
 const Settings = () => {
   const { mode } = useMode();
@@ -25,25 +31,56 @@ const Settings = () => {
     backgroundColor: mode ? "#feffb63a" : "#39393968",
   };
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const [viewOptions, setViewOptions] = useState<ViewOptionsType>(initialView);
+  const [selectValue, setSelectValue] = useState("basicDetails");
+
+  const { user, loading } = useAuth();
+  if (!user && !loading) return <NotLoggedIn />;
+
+  const handleChange = (event: SelectChangeEvent) => {
+    const value = event.target.value;
+    setSelectValue(value);
+    setViewOptions(getResetView(value));
+  };
+
+  const handleOptionClick = (optionName: string) => {
+    setViewOptions(getResetView(optionName));
+    setSelectValue(optionName);
+  };
+
   const optionsButtons = optionButtonLabels.map((option) => {
     return (
-      <Box
-        key={option.name}
-        onClick={() => setViewOptions(getResetView(option.name))}
-      >
+      <Box key={option.name} onClick={() => handleOptionClick(option.name)}>
         <Typography sx={typoStyle}>{option.label}</Typography>
         <Divider orientation="horizontal" flexItem />
       </Box>
     );
   });
+
+  const renderOptions = optionButtonLabels.map((option) => {
+    return (
+      <MenuItem key={option.name} value={option.name}>
+        {option.label}
+      </MenuItem>
+    );
+  });
+
   const activeComponent = viewOptions.find((option) => option.flag)?.component;
 
   return (
     <Stack p={1} gap={1}>
       <HomeTabTitles text="Settings" icon={<SettingsOutlinedIcon />} />
       {isMobile ? (
-        <Box>This is Mobile View</Box>
+        <Stack gap={5}>
+          <FormControl fullWidth>
+            <Select value={selectValue} onChange={handleChange}>
+              {renderOptions}
+            </Select>
+            <FormHelperText>Change account settings</FormHelperText>
+          </FormControl>
+          <Box sx={grid2Style}>{activeComponent}</Box>
+        </Stack>
       ) : (
         <Grid container columns={12}>
           <Grid size={4} sx={grid1Style}>
@@ -73,12 +110,12 @@ const getResetView = (optionName: string) => {
 const initialView = [
   {
     name: "basicDetails",
-    flag: false,
+    flag: true,
     component: <UpdateUserAccountDetails />,
   },
   { name: "username", flag: false, component: <ChangeUsername /> },
   { name: "password", flag: false, component: <ChangeUserPassword /> },
-  { name: "advance", flag: true, component: <AdvanceSettings /> },
+  { name: "advance", flag: false, component: <AdvanceSettings /> },
 ];
 const optionButtonLabels = [
   { name: "basicDetails", label: "Basic Details" },
