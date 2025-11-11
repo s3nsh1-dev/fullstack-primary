@@ -45,7 +45,7 @@ const UpdateAccountFieldForm = ({
   };
 
   return (
-    <Stack direction={"column"} height={55} gap={0.5}>
+    <Stack direction={"column"} minHeight={55} gap={0.5}>
       <Stack
         direction="row"
         component="form"
