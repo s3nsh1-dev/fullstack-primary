@@ -72,12 +72,6 @@ const RelatedVideos = () => {
 
   return (
     <Box sx={{ width: { xs: "100%", lg: 400 } }}>
-      <Typography
-        variant="h6"
-        sx={{ color: theme.text, mb: 2, fontWeight: 600 }}
-      >
-        Related Videos
-      </Typography>
       <Stack spacing={1}>
         {relatedVideos.map((video) => (
           <Paper

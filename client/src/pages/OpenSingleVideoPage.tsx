@@ -106,7 +106,16 @@ const OpenSingleVideoPage = () => {
             </Box>
             <VideoCommentSection />
           </Box>
-          <RelatedVideos />
+          <Box>
+            <Typography
+              variant="h6"
+              sx={{ color: theme.text, mb: 2, fontWeight: 600 }}
+            >
+              Related Videos
+            </Typography>
+            <RelatedVideos />
+            <RelatedVideos />
+          </Box>
         </Box>
       </Box>
     </Box>
