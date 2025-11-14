@@ -5,7 +5,7 @@ import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 
 const getFeed = asyncHandler(async (req, res) => {
-  const FEED_LIMIT = 20;
+  const FEED_LIMIT = 30;
 
   const [videos, tweets] = await Promise.all([
     Video.find({ isPublished: true })
