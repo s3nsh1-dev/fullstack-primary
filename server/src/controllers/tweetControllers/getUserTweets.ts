@@ -14,8 +14,15 @@ const getUserTweets = asyncHandler(async (req, res) => {
   if (!isValidObjectId(userId)) {
     throw new ApiError(400, "INVALID USER_ID");
   }
-  if (page <= 0 || limit <= 0 || Number.isNaN(page) || Number.isNaN(limit)) {
-    throw new ApiError(404, "INVALID PAGINATION PARAMETER");
+  if (
+    !page ||
+    !limit ||
+    page < 1 ||
+    limit < 1 ||
+    Number.isNaN(page) ||
+    Number.isNaN(limit)
+  ) {
+    throw new ApiError(400, "INVALID PAGINATION PARAMETER");
   }
 
   const skip = (page - 1) * limit;
