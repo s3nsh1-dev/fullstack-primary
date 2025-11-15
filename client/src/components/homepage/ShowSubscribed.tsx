@@ -1,18 +1,25 @@
+import { useState, type FC } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Pagination from "@mui/material/Pagination";
 import SubscriberCard from "../subscribers/SubscriberCard";
 import useFetchUserSubscribers from "../../hooks/data-fetching/useFetchUserSubscribers";
 import { useOutletContext } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import LoadingAnimation from "../ui-components/LoadingAnimation";
 
-const ShowSubscribed = () => {
+const ShowSubscribed: FC<PropType> = ({ pageLimit }) => {
   const outletContext = useOutletContext<OutletContextType | undefined>();
   const { user } = useAuth();
+  const [page, setPage] = useState<number>(1);
 
   const effectiveUserId = outletContext?.userId ?? user?.user?._id ?? "";
 
-  const { data, isLoading, isError } = useFetchUserSubscribers(effectiveUserId);
+  const { data, isLoading, isError } = useFetchUserSubscribers({
+    userId: effectiveUserId,
+    page,
+    limit: pageLimit,
+  });
 
   if (isError) return <div>...Encountered Error</div>;
   if (isLoading) return <LoadingAnimation />;
@@ -31,15 +38,34 @@ const ShowSubscribed = () => {
     );
   });
 
+  const handlePagination = (value: number) => setPage(value);
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 1,
-      }}
-    >
-      {renderSubscriberList}
+    <Box>
+      <Typography variant="caption" color="textSecondary">
+        Subscriber Count: {data.totalSubscribers}
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+        }}
+      >
+        {renderSubscriberList}
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "center" }} pt={1}>
+        <Pagination
+          variant="outlined"
+          shape="rounded"
+          color="secondary"
+          count={data.totalPages}
+          page={data.currentPage}
+          onChange={(_, value) => handlePagination(value)}
+          showFirstButton
+          showLastButton
+        />
+      </Box>
     </Box>
   );
 };
@@ -48,4 +74,8 @@ export default ShowSubscribed;
 
 type OutletContextType = {
   userId: string;
+};
+
+type PropType = {
+  pageLimit: number;
 };

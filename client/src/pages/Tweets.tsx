@@ -36,7 +36,7 @@ const Tweets = () => {
             </Divider>
           </DividerRoot>
         </Box>
-        <ShowTweets interaction={true} />
+        <ShowTweets interaction={true} pageLimit={6} />
       </Box>
       {openModal && (
         <FormModal toggleModal={() => setOpenModal(false)} open={openModal}>
@@ -52,6 +52,5 @@ export default Tweets;
 const sxValue = {
   display: "flex",
   alignItems: "center",
-  mb: 2,
   gap: 1,
 };

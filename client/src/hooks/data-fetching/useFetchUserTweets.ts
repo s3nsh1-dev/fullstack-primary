@@ -1,54 +1,56 @@
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-const useFetchUserTweets = (user_ID: string) => {
+const useFetchUserTweets = ({ userId, page, limit }: ParamTypes) => {
   return useQuery({
-    queryKey: ["userTweets", user_ID],
+    queryKey: ["userTweets", userId, page, limit],
     queryFn: async () => {
-      const response = await fetch(`${URL}/tweets/user/${user_ID}`, {
-        method: "GET",
-        credentials: "include",
+      const { data } = await axios<TweetApiResponse>({
+        url: `${URL}/tweets/user/${userId}?page=${page}&limit=${limit}`,
+        method: "get",
+        withCredentials: true,
       });
-      if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
-      const data: UserTweetsAPIResponse = await response.json();
-      const result = data.data.tweets;
-      return result;
+      return data.data;
     },
-    enabled: !!user_ID, // only fetch if user._id exists
+    enabled: !!userId, // only fetch if user._id exists
   });
 };
 export default useFetchUserTweets;
 
-interface UserTweetsAPIResponse {
-  statusCode: number;
-  data: {
-    tweets: {
-      _id: string;
-      content: string;
-      owner: MinimalUserType; // MinimalUserType Id reference
-      createdAt: string;
-      updatedAt: string;
-      isLiked: boolean;
-    }[];
-  };
-  message: string;
-  success: boolean;
+interface TweetOwner {
+  _id: string;
+  username: string;
+  fullname: string;
+  avatar: string;
 }
 
 export interface TweetType {
   _id: string;
   content: string;
-  owner: MinimalUserType; // MinimalUserType Id reference
+  owner: TweetOwner;
   createdAt: string;
   updatedAt: string;
+  isLiked: boolean;
 }
 
-export interface MinimalUserType {
-  _id: string;
-  avatar: string;
-  fullname?: string;
-  username?: string;
-  coverImage?: string;
-  email?: string;
+interface PaginationData {
+  tweets: TweetType[];
+  totalTweets: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
 }
+
+interface TweetApiResponse {
+  statusCode: number;
+  data: PaginationData;
+  message: string;
+  success: boolean;
+}
+type ParamTypes = {
+  userId: string;
+  page: number;
+  limit: number;
+};

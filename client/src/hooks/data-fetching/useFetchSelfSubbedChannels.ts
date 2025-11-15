@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import type { UserLoginResponseType } from "../../constants/responseTypes";
 
-const useFetchSubscribers = (userId: string) => {
+const useFetchSelfSubbedChannels = (userId: string) => {
   return useQuery({
     queryKey: ["subscriberCount", userId],
     queryFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/subscriptions/c/${userId}`
+        `${import.meta.env.VITE_SERVER_URL}/subscriptions/u/${userId}`
       );
       if (!response.ok)
         throw new Error("ERROR WHILE FETCHING SUBSCRIBER COUNT");
@@ -16,4 +16,4 @@ const useFetchSubscribers = (userId: string) => {
   });
 };
 
-export default useFetchSubscribers;
+export default useFetchSelfSubbedChannels;

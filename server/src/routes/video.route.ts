@@ -4,7 +4,7 @@ import {
   getAllVideos,
   getVideoById,
   publishAVideo,
-  togglePublishStatus,
+  toggleVideoPublishStatus,
   updateVideo,
 } from "../controllers/video.controller";
 import verifyJWT from "../middleware/auth.middleware";
@@ -37,7 +37,7 @@ videoRouter
 
 videoRouter
   .route("/toggle/publish/:videoId")
-  .patch(verifyJWT, togglePublishStatus);
+  .patch(verifyJWT, toggleVideoPublishStatus);
 
 // videoRouter.route("/:videoId/:userId?").get(getVideoById);
 videoRouter.route("/:videoId").get(getVideoById);
