@@ -52,6 +52,5 @@ export default Tweets;
 const sxValue = {
   display: "flex",
   alignItems: "center",
-  mb: 2,
   gap: 1,
 };

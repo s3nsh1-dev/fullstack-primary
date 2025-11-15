@@ -24,7 +24,7 @@ const Subscribers = () => {
           gap: 1,
         }}
       >
-        <ShowSubscribed />
+        <ShowSubscribed pageLimit={8} />
       </Box>
     </Box>
   );

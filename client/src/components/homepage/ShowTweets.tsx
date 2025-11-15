@@ -1,5 +1,7 @@
 import React from "react";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import IndividualTweet from "../Tweets/IndividualTweet";
 import Pagination from "@mui/material/Pagination";
 import useFetchUserTweets from "../../hooks/data-fetching/useFetchUserTweets";
@@ -40,8 +42,11 @@ const ShowTweets: React.FC<ShowTweetType> = ({ interaction, pageLimit }) => {
   });
 
   return (
-    <Stack spacing={1}>
-      {renderTweets}
+    <Box>
+      <Typography variant="caption" color="textSecondary">
+        Total Tweets: {data.totalTweets}
+      </Typography>
+      <Stack spacing={1}>{renderTweets}</Stack>
       <Stack alignItems={"center"} pt={2}>
         <Pagination
           shape="rounded"
@@ -54,7 +59,7 @@ const ShowTweets: React.FC<ShowTweetType> = ({ interaction, pageLimit }) => {
           showLastButton
         />
       </Stack>
-    </Stack>
+    </Box>
   );
 };
 

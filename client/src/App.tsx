@@ -83,7 +83,10 @@ function App() {
                 <Route index element={<ShowVideos />} />
                 <Route path="videos" element={<ShowVideos />} />
                 <Route path="playlists" element={<ShowPlaylists />} />
-                <Route path="subscribers" element={<ShowSubscribed />} />
+                <Route
+                  path="subscribers"
+                  element={<ShowSubscribed pageLimit={4} />}
+                />
                 <Route
                   path="tweets"
                   element={<ShowTweets interaction={false} pageLimit={3} />}
