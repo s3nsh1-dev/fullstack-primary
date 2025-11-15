@@ -8,7 +8,6 @@ const DeactivatePopup: React.FC<PropTypes> = ({ onClose }) => {
   const { mutate: deactivateUser } = useDeactivateUser();
   const handleDeactivate = () => {
     deactivateUser(undefined, {
-      onSuccess: (data) => console.log(data),
       onSettled: () => onClose(),
     });
   };

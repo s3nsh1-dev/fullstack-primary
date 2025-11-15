@@ -73,15 +73,18 @@ function App() {
               {/* Nested tabs*/}
               <Route path="/my-videos">
                 <Route index element={<MyVideos />} />
-                <Route path="edit" element={<EditVideoOptions />} />
+                <Route
+                  path="edit"
+                  element={<EditVideoOptions pageLimit={7} />}
+                />
               </Route>
               <Route path="/tweets">
                 <Route index element={<Tweets />} />
                 <Route path=":tweetId" element={<OpenSingleTweetPage />} />
               </Route>
               <Route path="/:username" element={<Homepage />}>
-                <Route index element={<ShowVideos />} />
-                <Route path="videos" element={<ShowVideos />} />
+                <Route index element={<ShowVideos pageLimit={5} />} />
+                <Route path="videos" element={<ShowVideos pageLimit={5} />} />
                 <Route path="playlists" element={<ShowPlaylists />} />
                 <Route
                   path="subscribers"

@@ -69,7 +69,7 @@ const MyVideos = () => {
             </Divider>
           </DividerRoot>
         </Box>
-        <ShowVideos />
+        <ShowVideos pageLimit={10} />
       </Box>
       {openModal && (
         <FormModal toggleModal={toggleModal} open={openModal}>

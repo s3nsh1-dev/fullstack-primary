@@ -7,8 +7,10 @@ import ApiResponse from "../../utils/ApiResponse";
 const getAllVideos = asyncHandler(async (req, res) => {
   // TODO: Extract and cast query params safely
 
-  const { userId, page, limit, query, sortBy, sortType } =
-    req.query as RequestQueryType;
+  const { query, sortBy, sortType } = req.query as RequestQueryType;
+  const userId = String(req.query.userId);
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 5;
 
   if (
     !page ||
@@ -20,13 +22,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "INVALID PAGINATION PARAMETER");
   }
-  if (!isValidObjectId(userId)) {
-    throw new ApiError(400, "INVALID USER_ID");
+  if (!userId || !isValidObjectId(userId)) {
+    throw new ApiError(400, "VALID USER_ID IS REQUIRED");
   }
 
-  // const matchStage: Record<string, any> = { isPublished: true };
   const matchStage: Record<string, any> = {};
-
+  matchStage.owner = new mongoose.Types.ObjectId(userId);
+  matchStage.isPublished = true;
   if (query) {
     matchStage.$or = [
       { title: { $regex: query, $options: "i" } },
@@ -34,13 +36,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
     ];
   }
 
-  if (userId) {
-    matchStage.owner = new mongoose.Types.ObjectId(userId);
-  }
   // Sorting
   const sortStage: Record<string, 1 | -1> = {};
-
-  const sortField = sortBy && sortBy.length > 0 ? sortBy : "createdAt";
+  const sortField = sortBy || "createdAt";
   sortStage[sortField] = sortType === "asc" ? 1 : -1;
 
   const videoList = await Video.aggregate([
@@ -96,10 +94,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 export { getAllVideos };
 
 type RequestQueryType = {
-  page?: number;
-  limit?: number;
   query?: string;
   sortBy?: string;
   sortType?: string;
-  userId?: string;
 };
