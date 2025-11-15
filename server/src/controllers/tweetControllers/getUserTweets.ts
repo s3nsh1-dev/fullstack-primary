@@ -5,74 +5,6 @@ import ApiError from "../../utils/ApiError";
 import ApiResponse from "../../utils/ApiResponse";
 import { toObjectId } from "../../utils/convertToObjectId";
 
-// const getUserTweets = asyncHandler(async (req, res) => {
-//   /**
-//    * MY INITIAL THOUGHT PROCESS
-//    * TO GET PAGINATION WE NEED PAGINATION AGGREGATION FROM MONGODB
-//    * THEN WE NEED THE LIMIT OF CONTENT WE WANT TO SHOW PER PAGE
-//    * THEN THE PAGE NUMBER TO KNOW FROM WHERE TO START FETCHING THE CONTENT
-//    */
-
-//   const { userId } = req.params;
-
-//   if (!isValidObjectId(userId)) throw new ApiError(400, "INVALID USER_ID");
-
-//   const foo = await Tweet.aggregate([
-//     { $match: { owner: toObjectId(userId) } },
-//     {
-//       $lookup: {
-//         from: "users",
-//         localField: "owner",
-//         foreignField: "_id",
-//         as: "owner",
-//         pipeline: [{ $project: { username: 1, fullname: 1, avatar: 1 } }],
-//       },
-//     },
-//     {
-//       $lookup: {
-//         from: "likes",
-//         let: { tweetId: "$_id" }, // this is tweet_id fetched during execution
-//         as: "likedDetails",
-//         pipeline: [
-//           {
-//             $match: {
-//               $expr: {
-//                 $and: [
-//                   { $eq: ["$tweet", "$$tweetId"] },
-//                   { $eq: ["$likedBy", toObjectId(userId)] },
-//                 ],
-//               },
-//             },
-//           },
-//           { $limit: 1 },
-//         ],
-//       },
-//     },
-//     {
-//       $addFields: {
-//         isLiked: {
-//           $cond: [{ $gt: [{ $size: "$likedDetails" }, 0] }, true, false],
-//         },
-//       },
-//     },
-
-//     { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
-//     {
-//       $project: {
-//         content: 1,
-//         owner: 1,
-//         createdAt: 1,
-//         updatedAt: 1,
-//         isLiked: 1,
-//       },
-//     },
-//   ]);
-
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, { tweets: foo }, "USER TWEETS RETRIEVED"));
-// });
-
 const getUserTweets = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const page = Number(req.query.page);
@@ -82,7 +14,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
   if (!isValidObjectId(userId)) {
     throw new ApiError(400, "INVALID USER_ID");
   }
-  if (!page || !limit || Number.isNaN(page) || Number.isNaN(limit)) {
+  if (page <= 0 || limit <= 0 || Number.isNaN(page) || Number.isNaN(limit)) {
     throw new ApiError(404, "INVALID PAGINATION PARAMETER");
   }
 

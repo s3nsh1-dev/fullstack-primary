@@ -86,7 +86,7 @@ function App() {
                 <Route path="subscribers" element={<ShowSubscribed />} />
                 <Route
                   path="tweets"
-                  element={<ShowTweets interaction={false} />}
+                  element={<ShowTweets interaction={false} pageLimit={3} />}
                 />
               </Route>
               <Route path="/videos">

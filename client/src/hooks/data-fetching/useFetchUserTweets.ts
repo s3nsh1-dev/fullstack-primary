@@ -5,7 +5,7 @@ const URL = import.meta.env.VITE_SERVER_URL;
 
 const useFetchUserTweets = ({ userId, page, limit }: ParamTypes) => {
   return useQuery({
-    queryKey: ["userTweets", userId],
+    queryKey: ["userTweets", userId, page, limit],
     queryFn: async () => {
       const { data } = await axios<TweetApiResponse>({
         url: `${URL}/tweets/user/${userId}?page=${page}&limit=${limit}`,
@@ -26,7 +26,7 @@ interface TweetOwner {
   avatar: string;
 }
 
-interface UserTweet {
+export interface TweetType {
   _id: string;
   content: string;
   owner: TweetOwner;
@@ -36,7 +36,7 @@ interface UserTweet {
 }
 
 interface PaginationData {
-  tweets: UserTweet[];
+  tweets: TweetType[];
   totalTweets: number;
   totalPages: number;
   currentPage: number;
