@@ -18,7 +18,6 @@ const changePassword = async (updatedCredentials: CredentialsType) => {
       updatedCredentials,
       { withCredentials: true }
     );
-    console.log("changing");
     return data;
   } catch (error) {
     throw new Error(`PASSWORD CHANGING REQUEST FAILED: ${error}`);

@@ -25,7 +25,7 @@ const ChangeUserPassword = () => {
     }
     changePassword(passwords, {
       onSuccess: () => setPasswords(resetPassword),
-      onError: (error) => console.log(error),
+      onError: (error) => console.error(error),
     });
   };
 

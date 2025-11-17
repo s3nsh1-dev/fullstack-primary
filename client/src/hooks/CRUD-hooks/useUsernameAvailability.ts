@@ -29,7 +29,6 @@ const fetchAvailability = async (debounced: string, signal: AbortSignal) => {
     signal,
   });
   if (!response) throw new Error("CHECKING USERNAME FAILED");
-  console.log(response);
   return response.data.data.available;
 };
 

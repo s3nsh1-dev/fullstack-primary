@@ -17,7 +17,6 @@ const deleteCloudinaryFileBasedOnPublicId = async (mediaPublicId: string) => {
         resource_type: resourceType,
       })
       .catch(() => null);
-    console.log(result);
     return result;
   } catch (error) {
     console.error("Error deleting file from Cloudinary:", error);

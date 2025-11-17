@@ -31,7 +31,7 @@ const URL = import.meta.env.VITE_SERVER_URL;
 
 interface ApiResponse {
   statusCode: number;
-  data: string[]; // array of video IDs
+  data: boolean;
   message: string;
   success: boolean;
 }

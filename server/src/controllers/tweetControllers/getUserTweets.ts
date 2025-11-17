@@ -9,7 +9,6 @@ const getUserTweets = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const page = Number(req.query.page);
   const limit = Number(req.query.limit);
-  console.log(page, limit);
 
   if (!isValidObjectId(userId)) {
     throw new ApiError(400, "INVALID USER_ID");
