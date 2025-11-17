@@ -20,6 +20,8 @@ const WatchHistory: React.FC = () => {
       </Typography>
     );
 
+  // pagination is coming
+
   if (isLoading) return <LoadingAnimation />;
 
   const videos = data?.watchHistory?.slice(0, 20) || [];
