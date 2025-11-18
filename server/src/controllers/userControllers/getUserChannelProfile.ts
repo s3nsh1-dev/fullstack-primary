@@ -6,15 +6,16 @@ import { isValidObjectId } from "mongoose";
 import { toObjectId } from "../../utils/convertToObjectId";
 
 export const getUserChannelProfile = asyncHandler(async (req, res) => {
-  const { username } = req.params;
-  const { adminId } = req.query;
-  if (!username || !username?.trim()) {
-    throw new ApiError(400, "USERNAME NOT FOUND");
+  const username = req.params.username as string;
+  const adminId = req.query.adminId as string;
+
+  if (!username || !adminId || !username.trim() || !isValidObjectId(adminId)) {
+    throw new ApiError(404, "INVALID QUERY PARAMETER");
   }
 
   const channel = await User.aggregate([
     {
-      $match: { username: username?.toLowerCase() },
+      $match: { username: username.trim() },
     },
     {
       $lookup: {
@@ -83,6 +84,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
       },
     },
   ]);
+
   if (!channel || channel.length === 0) {
     throw new ApiError(400, "CHANNEL DOES NOT EXIST");
   }

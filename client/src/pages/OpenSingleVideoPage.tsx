@@ -17,7 +17,6 @@ import useAuth from "../hooks/useAuth";
 
 const OpenSingleVideoPage = () => {
   const { user } = useAuth();
-  const userId = user?.user?._id || "";
   const queryClient = useQueryClient();
   const { videoId } = useParams();
   const { mode } = useMode();
@@ -28,19 +27,27 @@ const OpenSingleVideoPage = () => {
       videoId: videoId || "",
       userId: user?.user?._id || "",
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoId]);
-
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
-  }, [queryClient]);
+  }, [videoId, updateWatchHistory, user?.user._id]);
 
   const { data, isLoading } = useFetchSingleVideo({
     videoId: videoId || "",
-    userId,
+    userId: user?.user?._id || "",
   });
 
-  // ❌ REMOVED - Don't increment view here!
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["get-watch-history"] });
+    // queryClient in dependency mean nothing as it is constant for all the app instances
+  }, [queryClient]);
+
+  useEffect(() => {
+    return () => {
+      queryClient.refetchQueries({
+        queryKey: ["singleVideo", videoId, user?.user?._id],
+      });
+    };
+  }, [queryClient, videoId, user]);
+
+  // Don't increment view here!
   // The useVideoViewTracker hook in VideoPlayerMain handles this automatically
 
   if (isLoading) return <LoadingAnimation />;

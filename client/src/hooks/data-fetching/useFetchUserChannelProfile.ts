@@ -1,7 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 
-const URL = import.meta.env.VITE_SERVER_URL;
-
 const useFetchUserChannelProfile = ({
   username,
   adminId,
@@ -22,11 +20,11 @@ const useFetchUserChannelProfile = ({
       if (!response.ok)
         throw new Error("ERROR WHILE FETCHING USER CHANNEL PROFILE");
       const data: UserChannelResponse = await response.json();
-      // if (!data) throw new Error("ERROR WHILE FETCHING USER CHANNEL PROFILE");
       const result = data?.data?.data ?? null;
       return result;
     },
     enabled: !!username,
+    refetchOnMount: true,
   });
 };
 export default useFetchUserChannelProfile;
@@ -53,3 +51,5 @@ export interface UserChannelResponse {
   message: string;
   success: boolean;
 }
+
+const URL = import.meta.env.VITE_SERVER_URL;

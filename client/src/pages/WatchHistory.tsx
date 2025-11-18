@@ -1,16 +1,24 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
 import useFetchWatchHistory from "../hooks/data-fetching/useFetchWatchHistory";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 import NotLoggedIn from "./NotLoggedIn";
 import useAuth from "../hooks/useAuth";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
+import WatchHistoryCard from "../components/watchHistory/WatchHistoryCard";
 
 const WatchHistory: React.FC = () => {
-  const { data, isLoading, isError } = useFetchWatchHistory();
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useFetchWatchHistory({ limit: LIMIT });
   const { user, loading } = useAuth();
+  const endDivRef = React.useRef<HTMLDivElement>(null);
 
   if (!user && !loading) return <NotLoggedIn />;
   if (isError)
@@ -19,67 +27,41 @@ const WatchHistory: React.FC = () => {
         Error fetching watch history
       </Typography>
     );
-
-  // pagination is coming
-
   if (isLoading) return <LoadingAnimation />;
+  if (!data?.pages || data.pages.length === 0) {
+    return <Typography>No Watch History Available</Typography>;
+  }
+  const items = data?.pages?.flatMap((page) => page.data) ?? [];
 
-  const videos = data?.watchHistory?.slice(0, 20) || [];
-
-  if (videos.length === 0)
-    return (
-      <Typography color="textSecondary" textAlign="center" mt={4}>
-        No watch history available
-      </Typography>
-    );
+  const renderHistoryCard = items.map((video) => (
+    <WatchHistoryCard key={video._id} video={video} />
+  ));
 
   return (
-    <Box p={1}>
-      <HomeTabTitles text="Watch History" icon={<></>} />
-      <Box sx={sx1}>
-        {videos.map((video) => (
-          <Box key={video._id} sx={sx2}>
-            <Box
-              component="img"
-              src={video.thumbnail}
-              alt={video.title}
-              sx={sx3}
-            />
-
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="subtitle1" sx={sx4}>
-                {video.title || "Untitled Video"}
-              </Typography>
-
-              <Box sx={sx5}>
-                <Avatar
-                  src={video.owner?.avatar}
-                  alt={video.owner?.fullname}
-                  sx={{ width: 24, height: 24 }}
-                />
-                <Typography variant="body2" color="textSecondary" sx={sx6}>
-                  {video.owner?.fullname || "Unknown User"}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  sx={{ whiteSpace: "nowrap" }}
-                >
-                  • {video.duration?.toFixed(2)}s
-                </Typography>
-              </Box>
-              <Typography variant="body2" color="textSecondary" sx={sx7}>
-                {video.description || "No description"}
-              </Typography>
-            </Box>
-          </Box>
-        ))}
+    <>
+      <Box p={1}>
+        <HomeTabTitles text="Watch History" icon={<></>} />
+        <Box sx={sx1}>{renderHistoryCard}</Box>
       </Box>
-    </Box>
+      <Box ref={endDivRef}></Box>
+      {hasNextPage ? (
+        <Box textAlign="center" mt={3}>
+          <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+            {isFetchingNextPage ? "Loading..." : "Load More"}
+          </button>
+        </Box>
+      ) : (
+        <Typography variant="caption" color="textSecondary" pl={2}>
+          {data.pages[0].totalHistory} entries
+        </Typography>
+      )}
+    </>
   );
 };
 
 export default WatchHistory;
+
+const LIMIT = 8;
 
 const sx1 = {
   display: "flex",
@@ -88,48 +70,4 @@ const sx1 = {
   gap: 2,
   overflowY: "auto",
   p: 0.5,
-};
-
-const sx2 = {
-  display: "flex",
-  alignItems: "center",
-  gap: 2,
-  p: 1,
-  borderRadius: 2,
-  boxShadow: 4,
-  backgroundColor: "background.paper",
-  transition: "transform 0.2s",
-  overflow: "hidden",
-  width: "100%",
-  "&:hover": { transform: "scale(0.95)" },
-};
-const sx3 = {
-  width: 120,
-  height: 70,
-  objectFit: "cover",
-  borderRadius: 1,
-  flexShrink: 0,
-};
-
-const sx4 = {
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  fontWeight: 600,
-};
-
-const sx5 = { display: "flex", alignItems: "center", gap: 1, mt: 0.5 };
-
-const sx6 = {
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-};
-
-const sx7 = {
-  display: "-webkit-box",
-  WebkitLineClamp: 2,
-  WebkitBoxOrient: "vertical",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
 };
