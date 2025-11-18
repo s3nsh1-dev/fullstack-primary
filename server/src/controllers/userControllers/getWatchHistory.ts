@@ -125,14 +125,20 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 
   const result = agg[0] || { videos: [], total: 0 };
 
+  const totalHistory = result.total;
+  const totalPage = Math.ceil(totalHistory / limit);
+
   return res.json(
     new ApiResponse(
       200,
       {
-        total: result.total,
-        page,
-        limit,
         data: result.videos,
+        totalHistory,
+        totalPage,
+        hasNextPage: page < totalPage,
+        hasPreviousPage: page > 1,
+        currentPage: page,
+        limit,
       },
       "WATCH HISTORY PAGINATED SUCCESSFULLY"
     )

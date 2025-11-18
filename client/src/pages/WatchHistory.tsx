@@ -9,7 +9,9 @@ import useAuth from "../hooks/useAuth";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 
 const WatchHistory: React.FC = () => {
-  const { data, isLoading, isError } = useFetchWatchHistory();
+  const [page, setPage] = React.useState<number>(1);
+  const endDivRef = React.useRef<HTMLDivElement>(null);
+  const { data, isLoading, isError } = useFetchWatchHistory({ page, limit: 8 });
   const { user, loading } = useAuth();
 
   if (!user && !loading) return <NotLoggedIn />;
@@ -19,63 +21,57 @@ const WatchHistory: React.FC = () => {
         Error fetching watch history
       </Typography>
     );
-
-  // pagination is coming
-
   if (isLoading) return <LoadingAnimation />;
-
-  const videos = data?.watchHistory?.slice(0, 20) || [];
-
-  if (videos.length === 0)
-    return (
-      <Typography color="textSecondary" textAlign="center" mt={4}>
-        No watch history available
-      </Typography>
-    );
+  if (!data?.data || data.data.length === 0) {
+    return <Typography>No Watch History Available</Typography>;
+  }
 
   return (
-    <Box p={1}>
-      <HomeTabTitles text="Watch History" icon={<></>} />
-      <Box sx={sx1}>
-        {videos.map((video) => (
-          <Box key={video._id} sx={sx2}>
-            <Box
-              component="img"
-              src={video.thumbnail}
-              alt={video.title}
-              sx={sx3}
-            />
+    <>
+      <Box p={1}>
+        <HomeTabTitles text="Watch History" icon={<></>} />
+        <Box sx={sx1}>
+          {data?.data?.map((video) => (
+            <Box key={video._id} sx={sx2}>
+              <Box
+                component="img"
+                src={video.thumbnail}
+                alt={video.title}
+                sx={sx3}
+              />
 
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="subtitle1" sx={sx4}>
-                {video.title || "Untitled Video"}
-              </Typography>
-
-              <Box sx={sx5}>
-                <Avatar
-                  src={video.owner?.avatar}
-                  alt={video.owner?.fullname}
-                  sx={{ width: 24, height: 24 }}
-                />
-                <Typography variant="body2" color="textSecondary" sx={sx6}>
-                  {video.owner?.fullname || "Unknown User"}
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="subtitle1" sx={sx4}>
+                  {video.title || "Untitled Video"}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  sx={{ whiteSpace: "nowrap" }}
-                >
-                  • {video.duration?.toFixed(2)}s
+
+                <Box sx={sx5}>
+                  <Avatar
+                    src={video.owner?.avatar}
+                    alt={video.owner?.fullname}
+                    sx={{ width: 24, height: 24 }}
+                  />
+                  <Typography variant="body2" color="textSecondary" sx={sx6}>
+                    {video.owner?.fullname || "Unknown User"}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ whiteSpace: "nowrap" }}
+                  >
+                    • {video.duration?.toFixed(2)}s
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="textSecondary" sx={sx7}>
+                  {video.description || "No description"}
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary" sx={sx7}>
-                {video.description || "No description"}
-              </Typography>
             </Box>
-          </Box>
-        ))}
+          ))}
+        </Box>
       </Box>
-    </Box>
+      <Box ref={endDivRef}></Box>
+    </>
   );
 };
 
