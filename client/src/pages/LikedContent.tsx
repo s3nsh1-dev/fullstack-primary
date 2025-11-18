@@ -10,9 +10,10 @@ import Box from "@mui/material/Box";
 
 const LikedContent = () => {
   const { user, loading } = useAuth();
-  const { data, isLoading, isError } = useFetchLikedContent(
-    user?.user?._id || "INVALID_USER_ID"
-  );
+  const { data, isLoading, isError } = useFetchLikedContent({
+    userId: user?.user?._id || "INVALID_USER_ID",
+    limit: LIMIT,
+  });
 
   if (!user && !loading) return <NotLoggedIn />;
   if (isLoading) return <LoadingAnimation />;
@@ -35,3 +36,5 @@ const LikedContent = () => {
 };
 
 export default LikedContent;
+
+const LIMIT = 10;
