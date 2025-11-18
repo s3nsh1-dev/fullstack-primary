@@ -1,18 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const useFetchWatchHistory = ({ page, limit }: HookParams) => {
-  return useQuery({
-    queryKey: ["get-watch-history", page, limit],
-    queryFn: async () => {
+const useFetchWatchHistory = ({ limit }: HookParams) => {
+  return useInfiniteQuery({
+    queryKey: ["watch-history", limit],
+    queryFn: async ({ pageParam = 1 }) => {
       const { data } = await axios<WatchHistoryApiResponse>({
-        url: `${URL}/users/history?page=${page}&limit=${limit}`,
+        url: `${URL}/users/history?page=${pageParam}&limit=${limit}`,
         method: "get",
         withCredentials: true,
       });
       return data.data;
     },
-    enabled: Boolean(page && limit),
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined;
+    },
+    getPreviousPageParam: (firstPage) => {
+      return firstPage.hasPreviousPage ? firstPage.currentPage - 1 : undefined;
+    },
+    initialPageParam: 1,
   });
 };
 
@@ -20,7 +26,7 @@ export default useFetchWatchHistory;
 
 const URL = import.meta.env.VITE_SERVER_URL;
 
-interface VideoOwner {
+export interface VideoOwner {
   _id: string;
   username: string;
   fullname: string;
@@ -28,7 +34,7 @@ interface VideoOwner {
   coverImage: string;
 }
 
-interface WatchHistoryVideo {
+export interface WatchHistoryVideo {
   _id: string;
   title: string;
   description: string;
@@ -42,7 +48,7 @@ interface WatchHistoryVideo {
   owner: VideoOwner;
 }
 
-interface WatchHistoryPaginationData {
+export interface WatchHistoryPaginationData {
   data: WatchHistoryVideo[]; // The array name remains 'data'
   totalHistory: number; // Renamed from 'total'
   totalPage: number; // Renamed from 'totalPages'
@@ -60,6 +66,5 @@ interface WatchHistoryApiResponse {
 }
 
 type HookParams = {
-  page: number;
   limit: number;
 };
