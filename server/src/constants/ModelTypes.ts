@@ -6,7 +6,7 @@ export interface UserThisType extends Document {
   fullname: string;
   avatar: string;
   coverImage?: string;
-  watchHistory?: mongoose.Types.ObjectId;
+  watchHistory?: mongoose.Types.ObjectId[];
   password: string;
   refreshToken?: string;
 
@@ -25,7 +25,7 @@ export type UserStaleType = {
   fullname: string;
   avatar: string;
   coverImage?: string;
-  watchHistory?: mongoose.Types.ObjectId;
+  watchHistory?: mongoose.Types.ObjectId[];
   password?: string;
   refreshToken?: string;
 };
