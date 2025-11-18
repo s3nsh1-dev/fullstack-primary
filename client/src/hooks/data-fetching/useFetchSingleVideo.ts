@@ -21,6 +21,11 @@ const useFetchSingleVideo = ({
       const data: ApiResponse = await response.json();
       return data.data;
     },
+    enabled: !!videoId,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
   });
 };
 
