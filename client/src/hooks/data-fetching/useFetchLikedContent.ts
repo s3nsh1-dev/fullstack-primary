@@ -8,12 +8,19 @@ const useFetchLikedContent = ({ userId, limit }: HookParams) => {
       const { data } = await axios({
         url: `${URL}/likes/content/${userId}?page=${pageParam}&limit=${limit}`,
         method: "get",
-        withCredentials: "",
+        withCredentials: true,
       });
       return data;
     },
-    getNextPageParam: (lastpage) => {},
-    getPreviousPageParam: (firstpage) => {},
+    getNextPageParam: (lastPage) => {
+      if (lastPage.data.hasNextPage) {
+        return lastPage.data.page + 1;
+      }
+      return undefined;
+    },
+    getPreviousPageParam: (_, allPages) => {
+      return undefined;
+    },
     initialPageParam: 1,
   });
 };
