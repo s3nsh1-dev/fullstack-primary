@@ -1,82 +1,82 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-const useFetchLikedContent = (user_ID: string) => {
-  return useQuery({
-    queryKey: ["likedContent", user_ID],
-    queryFn: async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/likes/content/${user_ID}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-      if (!response.ok) throw new Error("ERROR WHILE FETCHING LIKED CONTENT");
-      const data: LikedContentResponse = await response.json();
-      const result = data.data.liked;
-      return result;
+const useFetchLikedContent = ({ userId, limit }: HookParams) => {
+  return useInfiniteQuery({
+    queryKey: ["likedContent", userId],
+    queryFn: async ({ pageParam }: FuncParams) => {
+      const { data } = await axios<ApiResponse>({
+        url: `${URL}/likes/content/${userId}?page=${pageParam}&limit=${limit}`,
+        method: "get",
+        withCredentials: true,
+      });
+      return data.data;
     },
-    enabled: !!user_ID, // only fetch if user._id exists
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined;
+    },
+    getPreviousPageParam: (firstPage) => {
+      return firstPage.hasPrevPage ? firstPage.currentPage - 1 : undefined;
+    },
+    initialPageParam: 1,
   });
 };
 
 export default useFetchLikedContent;
 
-// User type (owner of content)
-interface User {
+const URL = import.meta.env.VITE_SERVER_URL;
+
+type HookParams = {
+  userId: string;
+  limit: number;
+};
+
+type FuncParams = { pageParam: number };
+
+interface ContentOwner {
   _id: string;
   username: string;
   fullname: string;
   avatar: string;
 }
 
-// Tweet type
-export interface Tweet {
+interface LikedTweetContent {
   _id: string;
   content: string;
-  owner: User;
+  owner: ContentOwner;
   updatedAt: string;
 }
 
-// Comment type
-export interface Comment {
+interface LikedCommentContent {
   _id: string;
   content: string;
-  tweet?: string; // Reference to tweet (if comment is on a tweet)
-  comment?: string; // Reference to parent comment (if this is a reply)
-  video?: string; // Reference to video (if comment is on a video)
-  owner: User;
+  comment: string;
+  owner: ContentOwner;
   updatedAt: string;
 }
 
-// Video type
-export interface Video {
+type LikedContent = {
   _id: string;
-  owner: User;
-  videoFile: string;
-  thumbnail: string;
-  title: string;
-  description: string;
-  updatedAt: string;
-}
-
-// Like item type (each item in the liked array)
-export interface LikedItem {
-  _id: string;
-  tweet?: Tweet; // Present if user liked a tweet
-  comment?: Comment; // Present if user liked a comment
-  video?: Video; // Present if user liked a video
   likedBy: string;
   updatedAt: string;
+} & (
+  | { tweet: LikedTweetContent; comment?: never }
+  | { comment: LikedCommentContent; tweet?: never }
+);
+
+interface LikedPaginationData {
+  liked: LikedContent[];
+  totalDocs: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+  hasNextPage: boolean;
+  hasPrevPage?: boolean;
 }
 
-// Main response type
-interface LikedContentResponse {
+interface ApiResponse {
   statusCode: number;
-  data: {
-    liked: LikedItem[];
-    total: number;
-  };
+  data: LikedPaginationData;
   message: string;
   success: boolean;
 }
