@@ -46,7 +46,7 @@ const LikedContent = () => {
       <Typography variant="caption" color="textSecondary">
         Liked Content {data.pages[0].totalDocs}
       </Typography>
-      <LikesList data={data.pages[0].liked} />
+      <LikesList data={data.pages.flatMap((page) => page.liked)} />
       <Box
         sx={{
           display: "flex",
