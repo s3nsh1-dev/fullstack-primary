@@ -1,4 +1,5 @@
 import useFetchLikedContent from "../hooks/data-fetching/useFetchLikedContent";
+import useIntersectionObserver from "../hooks/useIntersectionObserver";
 import useAuth from "../hooks/useAuth";
 import LikesList from "../components/Likes/LikesList";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
@@ -7,7 +8,6 @@ import ContentNotAvailable from "../components/others/ContentNotAvailable";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 import NotLoggedIn from "./NotLoggedIn";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 
@@ -25,13 +25,13 @@ const LikedContent = () => {
     limit: LIMIT,
   });
 
+  const observerTarget = useIntersectionObserver(fetchNextPage, !!hasNextPage);
+
   if (!user && !loading) return <NotLoggedIn />;
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data || data.pages.length === 0)
     return <ContentNotAvailable text="No Liked Content" />;
-
-  console.log("see", data.pages[0].liked);
 
   return (
     <Box p={1}>
@@ -56,27 +56,8 @@ const LikedContent = () => {
           mt: 2,
         }}
       >
-        {isFetchingNextPage ? (
-          <CircularProgressCenter size={20} />
-        ) : (
-          <>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage}
-            >
-              Load More
-            </Button>
-          </>
-        )}
-        {hasNextPage ? (
-          <></>
-        ) : (
-          <Typography variant="caption" color="textSecondary">
-            All {data.pages[0].totalPages} pages loaded
-          </Typography>
-        )}
+        {isFetchingNextPage && <CircularProgressCenter size={20} />}
+        <div ref={observerTarget} />
       </Box>
     </Box>
   );
@@ -84,4 +65,4 @@ const LikedContent = () => {
 
 export default LikedContent;
 
-const LIMIT = 2;
+const LIMIT = 7;
