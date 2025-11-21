@@ -7,6 +7,7 @@ import NotLoggedIn from "./NotLoggedIn";
 import useAuth from "../hooks/useAuth";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import WatchHistoryCard from "../components/watchHistory/WatchHistoryCard";
+import { Button } from "@mui/material";
 
 const WatchHistory: React.FC = () => {
   const {
@@ -44,17 +45,28 @@ const WatchHistory: React.FC = () => {
         <Box sx={sx1}>{renderHistoryCard}</Box>
       </Box>
       <Box ref={endDivRef}></Box>
-      {hasNextPage ? (
-        <Box textAlign="center" mt={3}>
-          <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-            {isFetchingNextPage ? "Loading..." : "Load More"}
-          </button>
-        </Box>
-      ) : (
-        <Typography variant="caption" color="textSecondary" pl={2}>
-          {data.pages[0].totalHistory} entries
-        </Typography>
-      )}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 2,
+        }}
+      >
+        <Button
+          onClick={() => fetchNextPage()}
+          variant="contained"
+          color="secondary"
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {isFetchingNextPage ? "Loading..." : "Load More"}
+        </Button>
+        {!hasNextPage && (
+          <Typography variant="caption" color="textSecondary" p={1}>
+            {data.pages[0].totalHistory} entries
+          </Typography>
+        )}
+      </Box>
     </>
   );
 };

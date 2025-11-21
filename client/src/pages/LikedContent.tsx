@@ -44,7 +44,7 @@ const LikedContent = () => {
         }
       />
       <Typography variant="caption" color="textSecondary">
-        Liked Content {data.pages[0].totalDocs}
+        Liked Content: {data.pages[0].totalDocs}
       </Typography>
       <LikesList data={data.pages.flatMap((page) => page.liked)} />
       <Box
@@ -53,12 +53,16 @@ const LikedContent = () => {
           flexDirection: "column",
           alignItems: "center",
           gap: 2,
-          mt: 2,
         }}
       >
         {isFetchingNextPage && <CircularProgressCenter size={20} />}
-        <div ref={observerTarget} />
+        {!hasNextPage && (
+          <Typography variant="caption" color="textSecondary" p={1}>
+            {data.pages[0].totalDocs} entries . The End
+          </Typography>
+        )}
       </Box>
+      <div ref={observerTarget} />
     </Box>
   );
 };
