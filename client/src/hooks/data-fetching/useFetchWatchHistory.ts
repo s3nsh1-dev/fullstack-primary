@@ -4,7 +4,7 @@ import axios from "axios";
 const useFetchWatchHistory = ({ limit }: HookParams) => {
   return useInfiniteQuery({
     queryKey: ["watch-history", limit],
-    queryFn: async ({ pageParam = 1 }) => {
+    queryFn: async ({ pageParam }) => {
       const { data } = await axios<WatchHistoryApiResponse>({
         url: `${URL}/users/history?page=${pageParam}&limit=${limit}`,
         method: "get",

@@ -4,22 +4,19 @@ import axios from "axios";
 const useFetchLikedContent = ({ userId, limit }: HookParams) => {
   return useInfiniteQuery({
     queryKey: ["likedContent", userId],
-    queryFn: async ({ pageParam = 1 }: FuncParams) => {
-      const { data } = await axios({
+    queryFn: async ({ pageParam }: FuncParams) => {
+      const { data } = await axios<ApiResponse>({
         url: `${URL}/likes/content/${userId}?page=${pageParam}&limit=${limit}`,
         method: "get",
         withCredentials: true,
       });
-      return data;
+      return data.data;
     },
     getNextPageParam: (lastPage) => {
-      if (lastPage.data.hasNextPage) {
-        return lastPage.data.page + 1;
-      }
-      return undefined;
+      return lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined;
     },
-    getPreviousPageParam: (_, allPages) => {
-      return undefined;
+    getPreviousPageParam: (firstPage) => {
+      return firstPage.hasPrevPage ? firstPage.currentPage - 1 : undefined;
     },
     initialPageParam: 1,
   });
@@ -35,3 +32,51 @@ type HookParams = {
 };
 
 type FuncParams = { pageParam: number };
+
+interface ContentOwner {
+  _id: string;
+  username: string;
+  fullname: string;
+  avatar: string;
+}
+
+interface LikedTweetContent {
+  _id: string;
+  content: string;
+  owner: ContentOwner;
+  updatedAt: string;
+}
+
+interface LikedCommentContent {
+  _id: string;
+  content: string;
+  comment: string;
+  owner: ContentOwner;
+  updatedAt: string;
+}
+
+type LikedContent = {
+  _id: string;
+  likedBy: string;
+  updatedAt: string;
+} & (
+  | { tweet: LikedTweetContent; comment?: never }
+  | { comment: LikedCommentContent; tweet?: never }
+);
+
+interface LikedPaginationData {
+  liked: LikedContent[];
+  totalDocs: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+  hasNextPage: boolean;
+  hasPrevPage?: boolean;
+}
+
+interface ApiResponse {
+  statusCode: number;
+  data: LikedPaginationData;
+  message: string;
+  success: boolean;
+}

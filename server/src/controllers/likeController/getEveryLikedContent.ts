@@ -16,6 +16,7 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
   const totalDocs = await Like.countDocuments({ likedBy: userId });
   const totalPages = Math.ceil(totalDocs / limit);
   const hasNextPage = page < totalPages;
+  const hasPreviousPage = page > 1;
 
   const liked = await Like.find({ likedBy: userId })
     .populate({
@@ -45,9 +46,10 @@ const getEveryLikedContent = asyncHandler(async (req, res) => {
         liked,
         totalDocs,
         totalPages,
-        page,
+        currentPage: page,
         limit,
         hasNextPage,
+        hasPreviousPage,
       },
       "USER LIKED CONTENT FETCHED SUCCESSFULLY"
     )
