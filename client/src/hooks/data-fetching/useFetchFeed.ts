@@ -1,17 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-const useFetchFeed = () => {
-  return useQuery({
-    queryKey: ["feed"],
-    queryFn: async () => {
-      const response = await fetch(`${URL}/feeds`, {
-        // credentials: "include",
-        method: "GET",
+const useFetchFeed = (limit: number) => {
+  return useInfiniteQuery({
+    queryKey: ["feed", limit],
+    queryFn: async ({ pageParam = 1 }) => {
+      const { data } = await axios<ApiResponse>({
+        url: `${URL}/feeds?page=${pageParam}&limit=${limit}`,
+        method: "get",
       });
-      if (!response.ok) throw new Error("ERROR WHILE FETCHING FEED");
-      const data: FeedResponse = await response.json();
-      return data.data.feed;
+      return data.data;
     },
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined;
+    },
+    initialPageParam: 1,
     staleTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
@@ -20,19 +23,25 @@ const useFetchFeed = () => {
 export default useFetchFeed;
 
 const URL = import.meta.env.VITE_SERVER_URL;
-
-// Type for the user/owner object
-export type Owner = {
+interface ContentOwner {
   _id: string;
   username: string;
   fullname: string;
   avatar: string;
-};
+}
 
-// Type for a video feed item
-export type VideoItem = {
+export interface TweetItem {
   _id: string;
-  owner: Owner;
+  content: string;
+  owner: ContentOwner;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface VideoItem {
+  _id: string;
+  owner: ContentOwner;
   videoFile: string;
   videoPublicId: string;
   thumbnail: string;
@@ -45,31 +54,20 @@ export type VideoItem = {
   createdAt: string;
   updatedAt: string;
   __v: number;
-};
+}
 
-// Type for a tweet feed item
-export type TweetItem = {
-  _id: string;
-  content: string;
-  owner: Owner;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-};
+type FeedItem = TweetItem | VideoItem;
 
-// Type for any feed item (video or tweet)
-type FeedItem = VideoItem | TweetItem;
-
-// Type for the feed data
-type FeedData = {
+interface FeedPaginationData {
   feed: FeedItem[];
-  length: number;
-};
-
-// Type for the full API response
-type FeedResponse = {
+  feedLen: number;
+  currentPage: number;
+  limit: number;
+  hasNextPage: boolean;
+}
+interface ApiResponse {
   statusCode: number;
-  data: FeedData;
+  data: FeedPaginationData;
   message: string;
   success: boolean;
-};
+}
