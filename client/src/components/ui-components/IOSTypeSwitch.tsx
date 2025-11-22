@@ -4,21 +4,10 @@ import { useState } from "react";
 import useTogglePublishVideo from "../../hooks/data-fetching/useTogglePublishVideo";
 import { useQueryClient } from "@tanstack/react-query";
 
-const IOSTypeSwitch: React.FC<{
-  video: {
-    _id: string;
-    videoFile: string;
-    thumbnail: string;
-    title: string;
-    description: string;
-    duration: number;
-    createdAt: string;
-    isPublished: boolean;
-    views: number;
-    owner: string;
-  };
-  isPublished: boolean;
-}> = ({ video, isPublished }) => {
+const IOSTypeSwitch: React.FC<IOSTypeSwitchProps> = ({
+  video,
+  isPublished,
+}) => {
   const queryClient = useQueryClient();
   const [selected, setSelected] = useState(isPublished);
   const { mutate: togglePublish, isPending } = useTogglePublishVideo();
@@ -27,7 +16,7 @@ const IOSTypeSwitch: React.FC<{
     togglePublish(video?._id, {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["fetchVideos", video?.owner],
+          queryKey: ["fetchVideosWithoutRestriction", EDIT_PAGE_CARD_LIMIT],
         });
         queryClient.invalidateQueries({ queryKey: ["feed"] });
       },
@@ -45,6 +34,8 @@ const IOSTypeSwitch: React.FC<{
 };
 
 export default IOSTypeSwitch;
+
+const EDIT_PAGE_CARD_LIMIT = 7;
 
 const IOSSwitch = styled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -103,3 +94,19 @@ const IOSSwitch = styled((props: SwitchProps) => (
     }),
   },
 }));
+
+type IOSTypeSwitchProps = {
+  video: {
+    _id: string;
+    videoFile: string;
+    thumbnail: string;
+    title: string;
+    description: string;
+    duration: number;
+    createdAt: string;
+    isPublished: boolean;
+    views: number;
+    owner: string;
+  };
+  isPublished: boolean;
+};

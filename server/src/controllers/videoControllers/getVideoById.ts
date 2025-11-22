@@ -9,7 +9,7 @@ const getVideoById = asyncHandler(async (req, res) => {
   //TODO: get video by id
   const { videoId } = req.params;
   const { userId } = req.query;
-  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID USER_ID");
+  if (!isValidObjectId(videoId)) throw new ApiError(400, "INVALID VIDEO_ID");
 
   const fetchedVideo = await Video.findById(videoId).populate(
     "owner",

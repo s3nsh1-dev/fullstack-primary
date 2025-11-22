@@ -1,16 +1,13 @@
 import { useState, type FC } from "react";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
-import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
-import useAuth from "../../hooks/useAuth";
 import EditVideoCard from "./EditVideoCard";
 import LoadingAnimation from "../ui-components/LoadingAnimation";
+import useFetchVideosWithoutRestriction from "../../hooks/CRUD-hooks/useFetchVideosWithoutRestriction";
 
 const EditVideoOptions: FC<PropTypes> = ({ pageLimit }) => {
-  const { user } = useAuth();
   const [page, setPage] = useState<number>(1);
-  const { data, isLoading, isError } = useFetchUserVideos({
-    userId: user?.user._id || "",
+  const { data, isLoading, isError } = useFetchVideosWithoutRestriction({
     page,
     limit: pageLimit,
   });

@@ -6,6 +6,7 @@ import {
   publishAVideo,
   toggleVideoPublishStatus,
   updateVideo,
+  getAllVideosWithoutRestriction,
 } from "../controllers/video.controller";
 import verifyJWT from "../middleware/auth.middleware";
 import { multerUpload } from "../middleware/multer.middleware";
@@ -31,15 +32,17 @@ videoRouter
   );
 
 videoRouter
-  .route("/:videoId")
-  .delete(verifyJWT, deleteVideo)
-  .patch(verifyJWT, multerUpload.single("thumbnail"), updateVideo);
+  .route("/w/restriction")
+  .get(verifyJWT, getAllVideosWithoutRestriction);
 
 videoRouter
   .route("/toggle/publish/:videoId")
   .patch(verifyJWT, toggleVideoPublishStatus);
 
-// videoRouter.route("/:videoId/:userId?").get(getVideoById);
-videoRouter.route("/:videoId").get(getVideoById);
+videoRouter
+  .route("/:videoId")
+  .delete(verifyJWT, deleteVideo)
+  .patch(verifyJWT, multerUpload.single("thumbnail"), updateVideo)
+  .get(getVideoById);
 
 export default videoRouter;

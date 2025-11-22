@@ -1,44 +1,89 @@
 import { asyncHandler } from "../utils/asyncHandler";
 import { Video } from "../models/video.model";
 import { Tweet } from "../models/tweet.model";
-import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 
 const getFeed = asyncHandler(async (req, res) => {
-  const FEED_LIMIT = 30;
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 30;
+
+  const contentLimit = Math.ceil(limit / 2);
+  const skip = (page - 1) * contentLimit;
 
   const [videos, tweets] = await Promise.all([
-    Video.find({ isPublished: true })
-      .populate({ path: "owner", select: "username fullname avatar" })
-      .limit(FEED_LIMIT),
-    Tweet.find()
-      .populate({ path: "owner", select: "username fullname avatar" })
-      .limit(FEED_LIMIT),
+    Video.aggregate([
+      { $match: { isPublished: true } },
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: contentLimit },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+          pipeline: [
+            { $match: { isDeactivated: false, isSuspended: false } },
+            {
+              $project: {
+                username: 1,
+                fullname: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
+      },
+      { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+      { $match: { owner: { $exists: true, $ne: null } } },
+    ]),
+    Tweet.aggregate([
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: contentLimit },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+          pipeline: [
+            { $match: { isDeactivated: false, isSuspended: false } },
+            {
+              $project: {
+                username: 1,
+                fullname: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
+      },
+      { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+      { $match: { owner: { $exists: true, $ne: null } } },
+    ]),
   ]);
-  if (!videos.length && !tweets.length)
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { videos: [], tweets: [], feed: [] },
-          "No content yet"
-        )
-      );
 
   const feed = [...videos, ...tweets].sort(
-    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { feed, length: feed.length },
-        "Fetched feed successfully"
-      )
-    );
+  const hasNextPage =
+    videos.length === contentLimit || tweets.length === contentLimit;
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        feed,
+        feedLen: feed.length,
+        currentPage: page,
+        limit,
+        hasNextPage,
+      },
+      "Fetched feed successfully"
+    )
+  );
 });
 
 export { getFeed };
