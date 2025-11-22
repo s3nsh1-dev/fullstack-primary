@@ -8,11 +8,12 @@ import { toObjectId } from "../utils/convertToObjectId";
 import { isValidObjectId } from "mongoose";
 
 const searchingText = asyncHandler(async (req, res) => {
-  const { searchText } = req.params;
-  const { userId } = req.query;
+  const searchText = String(req.params.searchText);
+  const userId = String(req.query.userId);
 
-  if (!searchText || searchText.trim().length < 1)
+  if (!searchText || searchText.trim().length < 1) {
     throw new ApiError(400, "Search text must be at least 1 character long");
+  }
 
   const escaped = searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const regex = new RegExp(escaped, "i");
@@ -21,8 +22,26 @@ const searchingText = asyncHandler(async (req, res) => {
   const [searchUser, searchVideo, searchTweet] = await Promise.all([
     User.find({
       $or: [{ username: regex }, { fullname: regex }],
+      isDeactivated: false,
+      isSuspended: false,
     }).select("username fullname avatar email createdAt"),
-    Video.find({ title: regex }).populate("owner", "username fullname avatar"),
+    Video.aggregate([
+      { $match: { title: regex, isPublished: true } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+          pipeline: [
+            { $match: { isDeactivated: false, isSuspended: false } },
+            { $project: { username: 1, fullname: 1, avatar: 1 } },
+          ],
+        },
+      },
+      { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+      { $match: { owner: { $exists: true, $ne: null } } },
+    ]),
     Tweet.aggregate([
       { $match: { content: regex } },
       {
@@ -31,9 +50,14 @@ const searchingText = asyncHandler(async (req, res) => {
           localField: "owner",
           foreignField: "_id",
           as: "owner",
-          pipeline: [{ $project: { username: 1, fullname: 1, avatar: 1 } }],
+          pipeline: [
+            { $match: { isDeactivated: false, isSuspended: false } },
+            { $project: { username: 1, fullname: 1, avatar: 1 } },
+          ],
         },
       },
+      { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+      { $match: { owner: { $exists: true, $ne: null } } },
       {
         $lookup: {
           from: "likes",
@@ -45,7 +69,14 @@ const searchingText = asyncHandler(async (req, res) => {
                 $expr: {
                   $and: [
                     { $eq: ["$tweet", "$$tweetId"] },
-                    { $eq: ["$likedBy", toObjectId(userId as string)] },
+                    {
+                      $eq: [
+                        "$likedBy",
+                        isValidObjectId(userId)
+                          ? toObjectId(userId as string)
+                          : null,
+                      ],
+                    },
                   ],
                 },
               },
@@ -63,7 +94,6 @@ const searchingText = asyncHandler(async (req, res) => {
         },
       },
 
-      { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
       {
         $project: {
           content: 1,
