@@ -4,6 +4,7 @@ import { updateVideo } from "./videoControllers/updateVideo";
 import { toggleVideoPublishStatus } from "./videoControllers/toggleVideoPublishStatus";
 import { deleteVideo } from "./videoControllers/deleteVideo";
 import { getVideoById } from "./videoControllers/getVideoById";
+import { getAllVideosWithoutRestriction } from "./videoControllers/getAllVideosWithoutRestriction";
 
 export {
   getAllVideos,
@@ -11,5 +12,6 @@ export {
   getVideoById,
   updateVideo,
   deleteVideo,
+  getAllVideosWithoutRestriction,
   toggleVideoPublishStatus,
 };
