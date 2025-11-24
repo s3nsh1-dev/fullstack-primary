@@ -32,6 +32,15 @@ export const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "USER PASSWORD IS INCORRECT");
   }
 
+  if (matchedUser.isSuspended) {
+    throw new ApiError(403, "USER ACCOUNT IS SUSPENDED");
+  }
+
+  if (matchedUser.isDeactivated) {
+    matchedUser.isDeactivated = false;
+    await matchedUser.save({ validateBeforeSave: false });
+  }
+
   const matchedUserId: string = String(matchedUser._id);
   const { newAccessToken, newRefreshToken } =
     await generateAccessAndRefreshTokens(matchedUserId);

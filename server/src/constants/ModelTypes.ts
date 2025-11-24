@@ -9,6 +9,13 @@ export interface UserThisType extends Document {
   watchHistory?: mongoose.Types.ObjectId[];
   password: string;
   refreshToken?: string;
+  isDeactivated: boolean;
+  isAdmin: boolean;
+  isSuspended: boolean;
+  suspensionStart?: Date;
+  suspensionEnd?: Date;
+  suspensionReason?: string;
+  suspendedBy?: mongoose.Types.ObjectId;
 
   isPasswordCorrect(password: string): Promise<boolean>;
   generateAccessToken(): Promise<string>;
@@ -28,6 +35,13 @@ export type UserStaleType = {
   watchHistory?: mongoose.Types.ObjectId[];
   password?: string;
   refreshToken?: string;
+  isDeactivated: boolean;
+  isAdmin: boolean;
+  isSuspended: boolean;
+  suspensionStart?: Date;
+  suspensionEnd?: Date;
+  suspensionReason?: string;
+  suspendedBy?: mongoose.Types.ObjectId;
 };
 
 export type Stats = {

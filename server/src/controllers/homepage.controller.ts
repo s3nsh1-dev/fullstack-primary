@@ -13,7 +13,9 @@ const getDetailsForHomepage = asyncHandler(async (req, res) => {
   if (!username) throw new ApiError(400, "INVALID USERNAME");
 
   const user = await User.aggregate([
-    { $match: { username: username } },
+    {
+      $match: { username: username, isDeactivated: false, isSuspended: false },
+    },
     {
       // final API look
       $project: {

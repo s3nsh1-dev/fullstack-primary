@@ -14,8 +14,39 @@ const useLogin = () => {
         },
         body: JSON.stringify(credentials),
       });
-      if (!response.ok)
-        throw new Error("ERROR WHILE FETCHING USER LOGIN DETAILS");
+      if (!response.ok) {
+        let errorMessage = "Something went wrong. Please try again.";
+
+        try {
+          const errorData = await response.json();
+          if (errorData.message) {
+            throw new Error(errorData.message);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+
+        switch (response.status) {
+          case 404:
+            errorMessage = "USER DOES NOT EXIST";
+            break;
+          case 401:
+            errorMessage = "USER PASSWORD IS INCORRECT";
+            break;
+          case 403:
+            errorMessage = "USER ACCOUNT IS SUSPENDED";
+            break;
+          case 400:
+            errorMessage = "INVALID CREDENTIALS";
+            break;
+          case 500:
+            errorMessage = "SERVER ERROR. PLEASE TRY AGAIN LATER.";
+            break;
+          default:
+            errorMessage = `Login Failed (${response.status})`;
+        }
+        throw new Error(errorMessage);
+      }
       const data: UserLoginResponseType = await response.json();
       const user = data.data;
       return user;

@@ -2,6 +2,7 @@ import ApiError from "../../utils/ApiError";
 import ApiResponse from "../../utils/ApiResponse";
 import { User } from "../../models/user.model";
 import { asyncHandler } from "../../utils/asyncHandler";
+import { httpOptions as options } from "../../constants";
 
 const deactivateUser = asyncHandler(async (req, res) => {
   if (!req?.user || !req?.user?._id) {
@@ -20,6 +21,8 @@ const deactivateUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, { deactivated: true }, "USER DEACTIVATED"));
 });
 
