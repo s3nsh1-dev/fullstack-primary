@@ -20,12 +20,17 @@ const useFetchHomepageDetails = ({
         }
       );
       if (!response.ok)
-        throw new Error("ERROR WHILE FETCHING SUBSCRIBER COUNT");
+        throw new Error("ERROR WHILE FETCHING HOMEPAGE DETAILS");
       const data: ApiResponse = await response.json();
       const result = data.data;
       return result;
     },
     enabled: !!username, // only fetch if user._id exists
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
   });
 };
 export default useFetchHomepageDetails;

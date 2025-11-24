@@ -11,7 +11,7 @@ const Homepage = () => {
   const { user, loading } = useAuth();
   const { username } = useParams();
   const sessionUser = user?.user?._id || "";
-  const { data, isLoading, isError } = useFetchHomepageDetails({
+  const { data, isLoading, isError, error } = useFetchHomepageDetails({
     username: username || "",
     userId: user?.user?._id || "",
   });
@@ -19,7 +19,10 @@ const Homepage = () => {
   if (!user && !loading && sessionUser === "" && username === "undefined")
     return <NotLoggedIn />;
   if (isLoading) return <LoadingAnimation />;
-  if (isError) return <div>...Encountered Error</div>;
+  if (isError) {
+    const errorMessage = error?.message || "Encountered Error";
+    return <div>{errorMessage}</div>;
+  }
   if (!data) return <div>....No Homepage Info</div>;
 
   return (

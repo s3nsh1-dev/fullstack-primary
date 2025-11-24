@@ -15,7 +15,11 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
 
   const channel = await User.aggregate([
     {
-      $match: { username: username.trim() },
+      $match: {
+        username: username.trim(),
+        isDeactivated: { $ne: true },
+        isSuspended: { $ne: true },
+      },
     },
     {
       $lookup: {
