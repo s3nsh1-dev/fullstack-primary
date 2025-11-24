@@ -1,5 +1,6 @@
 import { useState, type FC } from "react";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import useLogin from "../hooks/data-fetching/useLogin";
 import FormTitle from "../components/ui-components/FormTitle";
 import FormControlThemed from "../components/others/FormControlThemed";
@@ -15,13 +16,11 @@ import {
 import useAuth from "../hooks/useAuth";
 import useMode from "../hooks/useMode";
 
-type LogInProps = {
-  toggleOpen: () => void;
-};
 const Login: FC<LogInProps> = ({ toggleOpen }) => {
   const { mode } = useMode();
   const loginMutate = useLogin();
   const { login } = useAuth();
+  const [error, setError] = useState<string | null>(null);
   const resetCredentials: LoginCredentialType = {
     username: "",
     password: "",
@@ -29,14 +28,19 @@ const Login: FC<LogInProps> = ({ toggleOpen }) => {
   const [userCred, setUserCred] =
     useState<LoginCredentialType>(resetCredentials);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setError(null);
     loginMutate.mutate(userCred, {
       onSuccess: (data: UserLoginAuthDataType) => {
         login(data);
         toggleOpen();
+        setUserCred(resetCredentials);
+      },
+      onError: (err: Error) => {
+        setError(err.message);
       },
     });
-    setUserCred(resetCredentials);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,11 +87,22 @@ const Login: FC<LogInProps> = ({ toggleOpen }) => {
           required
         />
       </FormControlThemed>
-      <ContainedButton mode={mode} type="submit" onClick={handleSubmit}>
-        Submit
+
+      {error && (
+        <Box sx={{ color: "error.main", textAlign: "center", mt: 1 }}>
+          <Typography variant="body2">{error}</Typography>
+        </Box>
+      )}
+
+      <ContainedButton mode={mode} type="submit">
+        {loginMutate.isPending ? "Logging in..." : "Submit"}
       </ContainedButton>
     </Box>
   );
 };
 
 export default Login;
+
+type LogInProps = {
+  toggleOpen: () => void;
+};
