@@ -17,19 +17,15 @@ const useLogin = () => {
       if (!response.ok) {
         let errorMessage = "Something went wrong. Please try again.";
 
-        // Prioritize JSON message from backend if available
         try {
           const errorData = await response.json();
           if (errorData.message) {
-            // If backend sends a specific message, use it (it matches your controller logic)
-            // Controller sends: "USER DOES NOT EXIST", "USER PASSWORD IS INCORRECT", "USER ACCOUNT IS SUSPENDED"
             throw new Error(errorData.message);
           }
-        } catch {
-          // If JSON parsing fails, fall back to status code mapping
+        } catch (error) {
+          console.error(error);
         }
 
-        // Fallback mapping based on status code if JSON parsing failed or no message
         switch (response.status) {
           case 404:
             errorMessage = "USER DOES NOT EXIST";

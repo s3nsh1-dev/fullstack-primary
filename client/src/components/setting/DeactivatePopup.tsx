@@ -3,11 +3,14 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import useDeactivateUser from "../../hooks/CRUD-hooks/useDeactivateUser";
+import useAuth from "../../hooks/useAuth";
 
 const DeactivatePopup: React.FC<PropTypes> = ({ onClose }) => {
   const { mutate: deactivateUser } = useDeactivateUser();
+  const { logout } = useAuth();
   const handleDeactivate = () => {
     deactivateUser(undefined, {
+      onSuccess: () => logout(),
       onSettled: () => onClose(),
     });
   };

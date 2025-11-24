@@ -12,12 +12,15 @@ const AuthContextProvider: React.FC<ChildrenProps> = ({ children }) => {
   const login = useCallback(
     (userData: UserLoginAuthDataType) => {
       queryClient.setQueryData(["currentUser"], userData);
+      queryClient.invalidateQueries({ queryKey: ["feed", 30] });
     },
     [queryClient]
   );
 
   const logout = useCallback(() => {
-    queryClient.removeQueries({ queryKey: ["currentUser"] });
+    queryClient.setQueryData(["currentUser"], null);
+    queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    queryClient.invalidateQueries({ queryKey: ["feed", 30] });
   }, [queryClient]);
 
   return (
