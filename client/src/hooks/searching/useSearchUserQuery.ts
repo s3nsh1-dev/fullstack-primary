@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 const useSearchUserQuery = (searchText: string) => {
+  console.log("searchedAgain");
   return useQuery({
     queryKey: ["searchQuery", searchText],
     queryFn: async () => {
@@ -13,6 +14,11 @@ const useSearchUserQuery = (searchText: string) => {
     },
     enabled: !!searchText,
     staleTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
   });
 };
 

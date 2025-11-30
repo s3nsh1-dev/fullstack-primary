@@ -14,6 +14,15 @@ import ShuffleSearchResult from "./ShuffleSearchResult";
 const SearchContentList: React.FC<PropType> = ({ searchList }) => {
   const [selectedButton, setSelectedButton] = React.useState("All");
 
+  const merge = React.useMemo(
+    () =>
+      shuffleAndMerge(
+        searchList?.user || [],
+        searchList?.video || [],
+        searchList?.tweet || []
+      ),
+    [searchList]
+  );
   const handleButtonClick = (value: string) => {
     setSelectedButton(value);
   };
@@ -21,13 +30,7 @@ const SearchContentList: React.FC<PropType> = ({ searchList }) => {
   const renderContent = () => {
     switch (selectedButton) {
       case "All":
-        return (
-          <ShuffleSearchResult
-            users={searchList?.user}
-            videos={searchList?.video}
-            tweets={searchList?.tweet}
-          />
-        );
+        return <ShuffleSearchResult result={merge} />;
       case "Accounts":
         return <SearchResultUser users={searchList?.user} />;
       case "Videos":
@@ -73,3 +76,20 @@ const buttonSx = {
   height: `30px`,
   fontSize: `12px`,
 };
+
+function shuffleAndMerge(
+  a: UserSearchResult[],
+  b: VideoSearchResult[],
+  c: TweetSearchResult[]
+): MergeArrayType[] {
+  const merged = [...a, ...b, ...c];
+
+  for (let i = merged.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [merged[i], merged[j]] = [merged[j], merged[i]];
+  }
+
+  return merged;
+}
+
+type MergeArrayType = UserSearchResult | VideoSearchResult | TweetSearchResult;

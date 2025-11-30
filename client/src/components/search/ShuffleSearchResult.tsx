@@ -10,8 +10,7 @@ import { VideoSearchCard } from "./VideoSearchCard";
 import IndividualTweet from "../Tweets/IndividualTweet";
 import { useNavigate } from "react-router-dom";
 
-const ShuffleSearchResult: React.FC<PropType> = ({ users, videos, tweets }) => {
-  const merge = shuffleAndMerge(users, videos, tweets);
+const ShuffleSearchResult: React.FC<PropType> = ({ result }) => {
   const navigate = useNavigate();
 
   const navigateToUserPage = (username: string) => {
@@ -22,7 +21,7 @@ const ShuffleSearchResult: React.FC<PropType> = ({ users, videos, tweets }) => {
     navigate(`/videos/${videoId}`);
   };
 
-  const renderMerge = merge.map((item: MergeArrayType) => {
+  const renderMerge = result.map((item: MergeArrayType) => {
     if ("username" in item) {
       return (
         <UserSearchCard
@@ -62,24 +61,6 @@ const ShuffleSearchResult: React.FC<PropType> = ({ users, videos, tweets }) => {
 export default ShuffleSearchResult;
 
 type PropType = {
-  users: UserSearchResult[];
-  videos: VideoSearchResult[];
-  tweets: TweetSearchResult[];
+  result: MergeArrayType[];
 };
-
-function shuffleAndMerge(
-  a: UserSearchResult[],
-  b: VideoSearchResult[],
-  c: TweetSearchResult[]
-): MergeArrayType[] {
-  const merged = [...a, ...b, ...c];
-
-  for (let i = merged.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [merged[i], merged[j]] = [merged[j], merged[i]];
-  }
-
-  return merged;
-}
-
 type MergeArrayType = UserSearchResult | VideoSearchResult | TweetSearchResult;
