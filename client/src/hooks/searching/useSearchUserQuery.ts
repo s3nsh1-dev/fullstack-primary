@@ -13,6 +13,11 @@ const useSearchUserQuery = (searchText: string) => {
     },
     enabled: !!searchText,
     staleTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
   });
 };
 

@@ -328,7 +328,7 @@ const Support = () => {
             being a part of the PlayTube community!
           </Typography>
           <Typography fontWeight={"bold"} color="warning.main" variant="body1">
-            Everything here is in this clause is AI generated.
+            Everything in this clause is AI generated.
           </Typography>
         </Box>
 

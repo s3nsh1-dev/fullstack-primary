@@ -5,10 +5,10 @@ import Typography from "@mui/material/Typography";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { formatDate } from "../../utilities/helperFncForStats";
-import type { Owner } from "../../hooks/data-fetching/useFetchFeed";
+import type { ContentOwner } from "../../hooks/data-fetching/useFetchFeed";
 
 const UserHeader: React.FC<{
-  owner: Owner;
+  owner: ContentOwner;
   createdAt: string;
   isTweet: boolean;
 }> = ({ owner, createdAt, isTweet }) => {

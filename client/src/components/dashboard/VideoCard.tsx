@@ -28,67 +28,36 @@ const VideoCard: React.FC<{ video: VideoItem }> = ({ video }) => {
           createdAt={video.createdAt}
           isTweet={false}
         />
-
         <Box
-          position="relative"
-          sx={{ cursor: "pointer" }}
+          sx={{ position: "relative", cursor: "pointer" }}
           onClick={handleCardClick}
         >
           <CardMedia
             component="img"
-            height="300"
             image={video.thumbnail}
             alt={video.title}
-            sx={{
-              borderRadius: 1,
-              backgroundColor: "grey.900",
-              height: 150,
-            }}
+            sx={mediaStyle}
           />
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              backgroundColor: "rgba(0,0,0,0.3)",
-              borderRadius: 1,
-              "&:hover": {
-                backgroundColor: "rgba(0,0,0,0.5)",
-              },
-            }}
-          >
-            <IconButton
-              sx={{
-                backgroundColor: "rgba(255,255,255,0.9)",
-                "&:hover": { backgroundColor: "white" },
-              }}
-            >
+          <Box sx={playButtonStyle}>
+            <IconButton sx={playIconStyle}>
               <PlayArrow sx={{ fontSize: 40 }} color="secondary" />
             </IconButton>
           </Box>
           <Chip
             label={formatDuration(video.duration)}
             size="small"
-            sx={{
-              position: "absolute",
-              bottom: 8,
-              right: 8,
-              backgroundColor: "rgba(0,0,0,0.8)",
-              color: "white",
-              fontWeight: 600,
-            }}
+            sx={durationChipStyle}
           />
         </Box>
         <Box mt={2}>
-          <Typography variant="h6" fontWeight={600} gutterBottom>
+          <Typography variant="body1" fontWeight={600} gutterBottom>
             {video.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
+          <Typography
+            variant="subtitle1"
+            color="text.secondary"
+            sx={descriptionStyle}
+          >
             {video.description}
           </Typography>
 
@@ -122,4 +91,50 @@ const sxV2 = {
     paddingBottom: "10px",
   },
   padding: "10px",
+};
+
+const descriptionStyle = {
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  display: "-webkit-box",
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: "vertical",
+  fontSize: 14,
+  mb: 1,
+};
+
+const playButtonStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "rgba(0,0,0,0.3)",
+  borderRadius: 1,
+  "&:hover": {
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+};
+
+const durationChipStyle = {
+  position: "absolute",
+  bottom: 8,
+  right: 8,
+  backgroundColor: "rgba(0,0,0,0.8)",
+  color: "white",
+  fontWeight: 600,
+};
+
+const mediaStyle = {
+  borderRadius: 1,
+  backgroundColor: "grey.900",
+  height: 150,
+};
+
+const playIconStyle = {
+  backgroundColor: "rgba(255,255,255,0.9)",
+  "&:hover": { backgroundColor: "white" },
 };
