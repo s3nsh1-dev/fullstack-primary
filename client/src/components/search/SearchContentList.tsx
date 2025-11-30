@@ -7,14 +7,61 @@ import type {
 import SearchResultTweet from "./SearchResultTweet";
 import SearchResultVideos from "./SearchResultVideos";
 import SearchResultUser from "./SearchResultUser";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 const SearchContentList: React.FC<PropType> = ({ searchList }) => {
+  const [selectedButton, setSelectedButton] = React.useState("All");
+
+  const handleButtonClick = (value: string) => {
+    setSelectedButton(value);
+  };
+
+  const renderContent = () => {
+    switch (selectedButton) {
+      case "All":
+        return (
+          <Stack gap={1}>
+            {searchList?.user?.length > 0 && (
+              <SearchResultUser users={searchList.user} />
+            )}
+            {searchList?.video?.length > 0 && (
+              <SearchResultVideos videos={searchList.video} />
+            )}
+            {searchList?.tweet?.length > 0 && (
+              <SearchResultTweet tweets={searchList.tweet} />
+            )}
+          </Stack>
+        );
+      case "Accounts":
+        return <SearchResultUser users={searchList?.user} />;
+      case "Videos":
+        return <SearchResultVideos videos={searchList?.video} />;
+      case "Tweets":
+        return <SearchResultTweet tweets={searchList?.tweet} />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <>
-      <SearchResultUser users={searchList?.user} />
-      <SearchResultTweet tweets={searchList?.tweet} />
-      <SearchResultVideos videos={searchList?.video} />
-    </>
+    <Box>
+      <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
+        {["All", "Accounts", "Videos", "Tweets"].map((item) => (
+          <Button
+            key={item}
+            variant={selectedButton === item ? "contained" : "outlined"}
+            color="secondary"
+            sx={buttonSx}
+            onClick={() => handleButtonClick(item)}
+          >
+            {item}
+          </Button>
+        ))}
+      </Box>
+      {renderContent()}
+    </Box>
   );
 };
 
@@ -26,4 +73,9 @@ type PropType = {
     video: VideoSearchResult[];
     tweet: TweetSearchResult[];
   };
+};
+
+const buttonSx = {
+  height: `30px`,
+  fontSize: `12px`,
 };

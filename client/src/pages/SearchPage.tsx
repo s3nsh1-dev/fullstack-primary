@@ -17,7 +17,14 @@ const SearchPage = () => {
 
   return (
     <div style={{ margin: "0px 10px" }}>
-      <Typography py={1}>result for: {searchText}</Typography>
+      <Typography
+        variant="caption"
+        color="textSecondary"
+        py={1}
+        sx={{ display: "flex", justifyContent: "center", paddingBottom: 0 }}
+      >
+        result for: {searchText}
+      </Typography>
       <SearchContentList searchList={data?.data} />
     </div>
   );
