@@ -20,8 +20,11 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
   const videoLocalPath: string = files.videoFile[0].path;
   const thumbnailLocalPath: string = files.thumbnail[0].path;
-  const uploadedVideo = await uploadOnCloudinary(videoLocalPath);
-  const uploadedThumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+  const uploadedVideo = await uploadOnCloudinary(videoLocalPath, "videos");
+  const uploadedThumbnail = await uploadOnCloudinary(
+    thumbnailLocalPath,
+    "videos-thumbnails"
+  );
 
   if (!uploadedVideo || !uploadedThumbnail) {
     await deleteFromCloudinary(uploadedVideo?.public_id);
