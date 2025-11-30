@@ -23,7 +23,7 @@ const useFetchFeed = (limit: number) => {
 export default useFetchFeed;
 
 const URL = import.meta.env.VITE_SERVER_URL;
-interface ContentOwner {
+export interface ContentOwner {
   _id: string;
   username: string;
   fullname: string;

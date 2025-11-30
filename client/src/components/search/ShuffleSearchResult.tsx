@@ -8,15 +8,42 @@ import type {
 import { UserSearchCard } from "./UserSearchCard";
 import { VideoSearchCard } from "./VideoSearchCard";
 import IndividualTweet from "../Tweets/IndividualTweet";
+import { useNavigate } from "react-router-dom";
 
 const ShuffleSearchResult: React.FC<PropType> = ({ users, videos, tweets }) => {
   const merge = shuffleAndMerge(users, videos, tweets);
+  const navigate = useNavigate();
+
+  const navigateToUserPage = (username: string) => {
+    navigate(`/${username}`);
+  };
+
+  const navigateToVideoPage = (videoId: string) => {
+    navigate(`/videos/${videoId}`);
+  };
+
   const renderMerge = merge.map((item: MergeArrayType) => {
     if ("username" in item) {
-      return <UserSearchCard key={item._id} user={item} />;
+      return (
+        <UserSearchCard
+          key={item._id}
+          user={item}
+          onClick={() => {
+            navigateToUserPage(item.username);
+          }}
+        />
+      );
     }
     if ("videoFile" in item) {
-      return <VideoSearchCard key={item._id} video={item} />;
+      return (
+        <VideoSearchCard
+          key={item._id}
+          video={item}
+          onClick={() => {
+            navigateToVideoPage(item._id);
+          }}
+        />
+      );
     }
     if ("isLiked" in item) {
       return (

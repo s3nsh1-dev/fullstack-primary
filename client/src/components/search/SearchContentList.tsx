@@ -28,19 +28,6 @@ const SearchContentList: React.FC<PropType> = ({ searchList }) => {
             tweets={searchList?.tweet}
           />
         );
-      // return (
-      //   <Stack gap={1}>
-      //     {searchList?.user?.length > 0 && (
-      //       <SearchResultUser users={searchList.user} />
-      //     )}
-      //     {searchList?.video?.length > 0 && (
-      //       <SearchResultVideos videos={searchList.video} />
-      //     )}
-      //     {searchList?.tweet?.length > 0 && (
-      //       <SearchResultTweet tweets={searchList.tweet} />
-      //     )}
-      //   </Stack>
-      // );
       case "Accounts":
         return <SearchResultUser users={searchList?.user} />;
       case "Videos":
@@ -54,7 +41,7 @@ const SearchContentList: React.FC<PropType> = ({ searchList }) => {
 
   return (
     <Box>
-      <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
+      <Box sx={{ display: "flex", gap: 1, mb: 1, flexWrap: "wrap" }}>
         {["All", "Accounts", "Videos", "Tweets"].map((item) => (
           <Button
             key={item}

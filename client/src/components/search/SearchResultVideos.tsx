@@ -22,6 +22,7 @@ const SearchResultVideos: React.FC<PropType> = ({ videos }) => {
       key={video._id}
       video={video}
       onClick={() => {
+        console.log("navigating to video page", video.title);
         navigate(`/videos/${video?._id}`);
       }}
     />
