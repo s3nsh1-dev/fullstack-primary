@@ -21,7 +21,12 @@ const SearchPage = () => {
         variant="caption"
         color="textSecondary"
         py={1}
-        sx={{ display: "flex", justifyContent: "center", paddingBottom: 0 }}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          paddingBottom: 0,
+          fontFamily: "monospace",
+        }}
       >
         result for: {searchText}
       </Typography>
