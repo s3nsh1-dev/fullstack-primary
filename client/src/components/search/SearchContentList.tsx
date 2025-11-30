@@ -9,7 +9,7 @@ import SearchResultVideos from "./SearchResultVideos";
 import SearchResultUser from "./SearchResultUser";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
+import ShuffleSearchResult from "./ShuffleSearchResult";
 
 const SearchContentList: React.FC<PropType> = ({ searchList }) => {
   const [selectedButton, setSelectedButton] = React.useState("All");
@@ -22,18 +22,25 @@ const SearchContentList: React.FC<PropType> = ({ searchList }) => {
     switch (selectedButton) {
       case "All":
         return (
-          <Stack gap={1}>
-            {searchList?.user?.length > 0 && (
-              <SearchResultUser users={searchList.user} />
-            )}
-            {searchList?.video?.length > 0 && (
-              <SearchResultVideos videos={searchList.video} />
-            )}
-            {searchList?.tweet?.length > 0 && (
-              <SearchResultTweet tweets={searchList.tweet} />
-            )}
-          </Stack>
+          <ShuffleSearchResult
+            users={searchList?.user}
+            videos={searchList?.video}
+            tweets={searchList?.tweet}
+          />
         );
+      // return (
+      //   <Stack gap={1}>
+      //     {searchList?.user?.length > 0 && (
+      //       <SearchResultUser users={searchList.user} />
+      //     )}
+      //     {searchList?.video?.length > 0 && (
+      //       <SearchResultVideos videos={searchList.video} />
+      //     )}
+      //     {searchList?.tweet?.length > 0 && (
+      //       <SearchResultTweet tweets={searchList.tweet} />
+      //     )}
+      //   </Stack>
+      // );
       case "Accounts":
         return <SearchResultUser users={searchList?.user} />;
       case "Videos":
