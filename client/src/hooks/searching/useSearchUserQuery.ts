@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
 const useSearchUserQuery = (searchText: string) => {
-  console.log("searchedAgain");
   return useQuery({
     queryKey: ["searchQuery", searchText],
     queryFn: async () => {
