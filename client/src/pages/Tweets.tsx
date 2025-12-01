@@ -24,7 +24,10 @@ const Tweets = () => {
     <>
       <Box p={1}>
         <Box sx={sxValue}>
-          <HomeTabTitles text="Tweets" icon={<ChatBubbleOutlineIcon />} />
+          <HomeTabTitles
+            text="Tweets"
+            icon={<ChatBubbleOutlineIcon color="secondary" />}
+          />
           <DividerRoot>
             <Divider textAlign="right">
               <Typography fontWeight={"bold"}>

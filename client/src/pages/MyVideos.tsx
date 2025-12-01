@@ -41,7 +41,10 @@ const MyVideos = () => {
     <>
       <Box p={1}>
         <Box sx={sxValue}>
-          <HomeTabTitles text="My Videos" icon={<PlayCircleOutlineIcon />} />
+          <HomeTabTitles
+            text="My Videos"
+            icon={<PlayCircleOutlineIcon color="secondary" />}
+          />
           <DividerRoot>
             <Divider textAlign="right">
               <Box
@@ -51,16 +54,27 @@ const MyVideos = () => {
                   alignItems: "center",
                 }}
               >
-                <Button onClick={toggleModal} color="inherit">
+                <Button
+                  onClick={toggleModal}
+                  color="success"
+                  variant="contained"
+                >
                   <VideoCallIcon />
                   &nbsp; Upload
                 </Button>
-                <Typography variant="body2">•••••</Typography>
+                <Typography
+                  variant="caption"
+                  px={1}
+                  sx={{ color: "#494949c9" }}
+                >
+                  •••••
+                </Typography>
                 <Button
                   onClick={() => {
                     navigate("/my-videos/edit");
                   }}
-                  color="inherit"
+                  color="info"
+                  variant="contained"
                 >
                   <MovieEditIcon />
                   &nbsp; Edit
