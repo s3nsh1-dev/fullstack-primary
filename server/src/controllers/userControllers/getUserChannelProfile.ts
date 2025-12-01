@@ -9,7 +9,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
   const username = req.params.username as string;
   const adminId = req.query.adminId as string;
 
-  if (!username || !adminId || !username.trim() || !isValidObjectId(adminId)) {
+  if (!username || !username.trim()) {
     throw new ApiError(404, "INVALID QUERY PARAMETER");
   }
 
