@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
@@ -7,17 +7,19 @@ import useFetchUserVideos from "../../hooks/data-fetching/useFetchUserVideos";
 import { useOutletContext } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import LoadingAnimation from "../ui-components/LoadingAnimation";
+import { useSearchParams } from "react-router-dom";
 
 const ShowVideos: FC<PropTypes> = ({ pageLimit }) => {
   // Safe optional access: may be undefined if not inside an Outlet
   const outletContext = useOutletContext<OutletContextType | undefined>();
   const { user } = useAuth();
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = searchParams.get("page") || 1;
   // Prefer outlet userId if present; otherwise fallback to logged-in user
   const effectiveUserId = outletContext?.userId ?? user?.user?._id ?? "";
   const { data, isLoading, isError } = useFetchUserVideos({
     userId: effectiveUserId,
-    page,
+    page: Number(currentPage),
     limit: pageLimit,
   });
 
@@ -31,7 +33,11 @@ const ShowVideos: FC<PropTypes> = ({ pageLimit }) => {
     return <IndividualVideoUI video={video} key={video._id} />;
   });
 
-  const handlePagination = (value: number) => setPage(value);
+  const handlePagination = (value: number) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", value.toString());
+    setSearchParams(newParams);
+  };
 
   return (
     <>

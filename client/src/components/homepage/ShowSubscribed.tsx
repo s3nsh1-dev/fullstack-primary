@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
@@ -7,17 +7,19 @@ import useFetchUserSubscribers from "../../hooks/data-fetching/useFetchUserSubsc
 import { useOutletContext } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import LoadingAnimation from "../ui-components/LoadingAnimation";
+import { useSearchParams } from "react-router-dom";
 
 const ShowSubscribed: FC<PropType> = ({ pageLimit }) => {
   const outletContext = useOutletContext<OutletContextType | undefined>();
   const { user } = useAuth();
-  const [page, setPage] = useState<number>(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = searchParams.get("page") || 1;
 
   const effectiveUserId = outletContext?.userId ?? user?.user?._id ?? "";
 
   const { data, isLoading, isError } = useFetchUserSubscribers({
     userId: effectiveUserId,
-    page,
+    page: Number(currentPage),
     limit: pageLimit,
   });
 
@@ -38,7 +40,11 @@ const ShowSubscribed: FC<PropType> = ({ pageLimit }) => {
     );
   });
 
-  const handlePagination = (value: number) => setPage(value);
+  const handlePagination = (value: number) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", value.toString());
+    setSearchParams(newParams);
+  };
 
   return (
     <Box>
