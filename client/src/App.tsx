@@ -26,7 +26,6 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Navbar from "./pages/Navbar";
 import AppLoadingProgress from "./pages/AppLoadingProgress";
-import ErrorBoundary from "./components/ui-components/ErrorBoundary";
 
 import { Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -58,53 +57,48 @@ function App() {
   return (
     <ThemeProvider theme={getTheme(mode)}>
       <CssBaseline />
-      <ErrorBoundary>
-        <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
-          <Routes>
-            {/* routes with Navbar */}
-            <Route element={<Navbar />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/liked-content" element={<LikedContent />} />
-              <Route path="/setting" element={<Settings />} />
-              <Route path="/subscribers" element={<Subscribers />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/history" element={<WatchHistory />} />
-              <Route path="/search" element={<SearchPage />} />
-              {/* Nested tabs*/}
-              <Route path="/my-videos">
-                <Route index element={<MyVideos />} />
-                <Route
-                  path="edit"
-                  element={<EditVideoOptions pageLimit={7} />}
-                />
-              </Route>
-              <Route path="/tweets">
-                <Route index element={<Tweets />} />
-                <Route path=":tweetId" element={<OpenSingleTweetPage />} />
-              </Route>
-              <Route path="/:username" element={<Homepage />}>
-                <Route index element={<ShowVideos pageLimit={5} />} />
-                <Route path="videos" element={<ShowVideos pageLimit={5} />} />
-                <Route path="playlists" element={<ShowPlaylists />} />
-                <Route
-                  path="subscribers"
-                  element={<ShowSubscribed pageLimit={4} />}
-                />
-                <Route
-                  path="tweets"
-                  element={<ShowTweets interaction={false} pageLimit={3} />}
-                />
-              </Route>
-              <Route path="/videos">
-                <Route path=":videoId" element={<OpenSingleVideoPage />} />
-              </Route>
+      <Box sx={{ mt: (theme) => `${theme.mixins.toolbar.minHeight}px` }}>
+        <Routes>
+          {/* routes with Navbar */}
+          <Route element={<Navbar />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/liked-content" element={<LikedContent />} />
+            <Route path="/setting" element={<Settings />} />
+            <Route path="/subscribers" element={<Subscribers />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/history" element={<WatchHistory />} />
+            <Route path="/search" element={<SearchPage />} />
+            {/* Nested tabs*/}
+            <Route path="/my-videos">
+              <Route index element={<MyVideos />} />
+              <Route path="edit" element={<EditVideoOptions pageLimit={7} />} />
             </Route>
-            {/* routes without Navbar */}
-            <Route path="/test" element={<Test />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Box>
-      </ErrorBoundary>
+            <Route path="/tweets">
+              <Route index element={<Tweets />} />
+              <Route path=":tweetId" element={<OpenSingleTweetPage />} />
+            </Route>
+            <Route path="/:username" element={<Homepage />}>
+              <Route index element={<ShowVideos pageLimit={5} />} />
+              <Route path="videos" element={<ShowVideos pageLimit={5} />} />
+              <Route path="playlists" element={<ShowPlaylists />} />
+              <Route
+                path="subscribers"
+                element={<ShowSubscribed pageLimit={4} />}
+              />
+              <Route
+                path="tweets"
+                element={<ShowTweets interaction={false} pageLimit={3} />}
+              />
+            </Route>
+            <Route path="/videos">
+              <Route path=":videoId" element={<OpenSingleVideoPage />} />
+            </Route>
+          </Route>
+          {/* routes without Navbar */}
+          <Route path="/test" element={<Test />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Box>
     </ThemeProvider>
   );
 }

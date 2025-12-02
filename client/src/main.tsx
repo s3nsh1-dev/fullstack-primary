@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 import SearchContextProvider from "./contexts/SearchContextProvider.tsx";
+import ErrorBoundary from "./components/ui-components/ErrorBoundary.tsx";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +17,9 @@ createRoot(document.getElementById("root")!).render(
       <ModeContextProvider>
         <BrowserRouter>
           <SearchContextProvider>
-            <App />
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
           </SearchContextProvider>
         </BrowserRouter>
       </ModeContextProvider>

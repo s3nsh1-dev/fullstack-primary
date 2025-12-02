@@ -30,17 +30,7 @@ class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <Box
-          sx={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-            gap: 2,
-            p: 3,
-          }}
-        >
+        <Box sx={sx}>
           <ErrorOutlineIcon sx={{ fontSize: 80, color: "error.main" }} />
           <Typography variant="h4" fontWeight={600}>
             Oops! Something went wrong
@@ -60,3 +50,13 @@ class ErrorBoundary extends Component<Props, State> {
 }
 
 export default ErrorBoundary;
+
+const sx = {
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexDirection: "column",
+  gap: 2,
+  p: 3,
+};
