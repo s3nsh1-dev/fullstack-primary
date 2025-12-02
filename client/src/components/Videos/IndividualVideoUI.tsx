@@ -7,6 +7,7 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import useMode from "../../hooks/useMode";
 import { useNavigate } from "react-router-dom";
+import { formatDuration, formatViews } from "../../utilities/helperFncForStats";
 
 const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
     <Box
       key={video._id}
       sx={{
-        width: 300,
+        width: 400,
         borderRadius: 1,
         boxShadow: 5,
         // border: "1px solid purple",
@@ -99,16 +100,16 @@ const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
             {video.description}
           </Typography>
         </Box>
-        <Typography
-          variant="caption"
-          color="textSecondary"
-          display="block"
-          // mt={1}
-        >
-          {video.duration.toFixed(2)} min | {video.views} views |{" "}
-          {video.isPublished ? "Published" : "Draft"} | Created{" "}
-          {convertISOIntoLocalTime(video.createdAt || "").toLocaleString()}
-        </Typography>
+        <Box sx={{ display: "flex", gap: 0, flexDirection: "column" }}>
+          <Typography variant="caption" color="textSecondary">
+            {formatDuration(video.duration)} min |{" "}
+            {formatViews(video.views || 0)} views |{" "}
+            {video.isPublished ? "Published" : "Draft"}
+          </Typography>
+          <Typography variant="caption" color="textSecondary">
+            {convertISOIntoLocalTime(video.createdAt || "").toLocaleString()}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

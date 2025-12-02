@@ -78,8 +78,8 @@ function App() {
               <Route path=":tweetId" element={<OpenSingleTweetPage />} />
             </Route>
             <Route path="/:username" element={<Homepage />}>
-              <Route index element={<ShowVideos pageLimit={5} />} />
-              <Route path="videos" element={<ShowVideos pageLimit={5} />} />
+              <Route index element={<ShowVideos pageLimit={8} />} />
+              <Route path="videos" element={<ShowVideos pageLimit={8} />} />
               <Route path="playlists" element={<ShowPlaylists />} />
               <Route
                 path="subscribers"
@@ -87,7 +87,7 @@ function App() {
               />
               <Route
                 path="tweets"
-                element={<ShowTweets interaction={false} pageLimit={3} />}
+                element={<ShowTweets interaction={false} pageLimit={5} />}
               />
             </Route>
             <Route path="/videos">
