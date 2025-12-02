@@ -1,14 +1,17 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import EditVideoCard from "./EditVideoCard";
 import LoadingAnimation from "../ui-components/LoadingAnimation";
 import useFetchVideosWithoutRestriction from "../../hooks/CRUD-hooks/useFetchVideosWithoutRestriction";
+import { useSearchParams } from "react-router-dom";
 
 const EditVideoOptions: FC<PropTypes> = ({ pageLimit }) => {
-  const [page, setPage] = useState<number>(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = searchParams.get("page") || 1;
+
   const { data, isLoading, isError } = useFetchVideosWithoutRestriction({
-    page,
+    page: Number(currentPage),
     limit: pageLimit,
   });
   if (isError) return <div>...Encountered Error</div>;
@@ -20,7 +23,11 @@ const EditVideoOptions: FC<PropTypes> = ({ pageLimit }) => {
     return <EditVideoCard key={video._id} video={video} />;
   });
 
-  const handlePagination = (value: number) => setPage(value);
+  const handlePagination = (value: number) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", value.toString());
+    setSearchParams(newParams);
+  };
 
   return (
     <>

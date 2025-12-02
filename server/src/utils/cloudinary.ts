@@ -32,8 +32,6 @@ const uploadOnCloudinary = async (
     await fs.unlink(localFilePath).catch((error) => {
       console.info("FAILED: ISSUE IN FILE DELETION", error);
     });
-  } finally {
-    deleteLocalFile(localFilePath);
   }
 };
 
