@@ -8,6 +8,7 @@ import useAuth from "../hooks/useAuth";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import WatchHistoryCard from "../components/watchHistory/WatchHistoryCard";
 import { Button } from "@mui/material";
+import HistoryIcon from "@mui/icons-material/History";
 
 const WatchHistory: React.FC = () => {
   const {
@@ -41,7 +42,10 @@ const WatchHistory: React.FC = () => {
   return (
     <>
       <Box p={1}>
-        <HomeTabTitles text="Watch History" icon={<></>} />
+        <HomeTabTitles
+          text="Watch History"
+          icon={<HistoryIcon color="secondary" />}
+        />
         <Box sx={sx1}>{renderHistoryCard}</Box>
       </Box>
       <Box ref={endDivRef}></Box>

@@ -37,11 +37,7 @@ const LikedContent = () => {
     <Box p={1}>
       <HomeTabTitles
         text="Liked Content"
-        icon={
-          <FavoriteBorderOutlinedIcon
-            sx={{ fontSize: 28, color: "primary.main" }}
-          />
-        }
+        icon={<FavoriteBorderOutlinedIcon color="secondary" />}
       />
       <Typography variant="caption" color="textSecondary">
         Liked Content: {data.pages[0].totalDocs}

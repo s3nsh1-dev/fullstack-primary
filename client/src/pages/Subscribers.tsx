@@ -13,9 +13,7 @@ const Subscribers = () => {
     <Box p={1}>
       <HomeTabTitles
         text="Subscribers"
-        icon={
-          <PeopleAltOutlinedIcon sx={{ fontSize: 28, color: "primary.main" }} />
-        }
+        icon={<PeopleAltOutlinedIcon color="secondary" />}
       />
       <Box
         sx={{

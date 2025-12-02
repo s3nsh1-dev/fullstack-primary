@@ -18,7 +18,9 @@ const EditVideoCard: React.FC<EditVideoCardProps> = ({ video }) => {
   return (
     <>
       <Card sx={sxCard} elevation={4}>
-        <EditVideoCardVideoFace video={video} />
+        <Box sx={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
+          <EditVideoCardVideoFace video={video} />
+        </Box>
         <Box sx={sxV1}>
           <IconButton
             sx={sxV2}
@@ -89,7 +91,7 @@ type EditVideoCardProps = {
     title: string;
     description: string;
     duration: number;
-    createdAt: string; // ISO date string
+    createdAt: string;
     isPublished: boolean;
     views: number;
     owner: string;
@@ -100,12 +102,15 @@ const sxV1 = {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-evenly",
-  margin: { xs: "5px auto", md: "auto 10px auto auto" },
+  margin: { xs: "10px auto", md: "auto 10px auto 2%" },
   border: "1px solid grey",
-  width: 330,
+  minWidth: 330,
+  maxWidth: 330,
   height: 50,
-  borderRadius: 10,
-  backgroundColor: "rgba(128, 128, 128, 0.2)", // light, subtle grey
+  borderRadius: "5px",
+  backgroundColor: "rgba(128, 128, 128, 0.2)",
+  flexShrink: 0, // Prevent shrinking in flex layout
+  flexGrow: 0, // Prevent growing in flex layout
 };
 
 const sxV2 = {

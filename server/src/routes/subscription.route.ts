@@ -7,12 +7,12 @@ import {
 import verifyJWT from "../middleware/auth.middleware";
 
 const subscriptionRouter = Router();
-subscriptionRouter.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
+// subscriptionRouter.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
 
 subscriptionRouter
   .route("/c/:channelId")
   .get(getUserChannelSubscribersCount)
-  .post(toggleSubscription);
+  .post(verifyJWT, toggleSubscription);
 
 subscriptionRouter.route("/u/:subscriberId").get(getSubscribedChannels);
 

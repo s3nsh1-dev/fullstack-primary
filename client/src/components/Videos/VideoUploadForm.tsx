@@ -110,9 +110,9 @@ const VideoUploadForm = ({
       onSubmit(formData);
     }
 
-    setTimeout(() => {
-      setIsUploading(false);
-    }, 3500);
+    // setTimeout(() => {
+    //   setIsUploading(false);
+    // }, 3500);
   };
 
   const handleCancel = () => {
@@ -229,7 +229,7 @@ const VideoUploadForm = ({
           variant="contained"
           endIcon={activeStep !== steps.length - 1 ? <ArrowForward /> : null}
           sx={{
-            bgcolor: theme.primaryBg,
+            bgcolor: isUploading ? "green" : theme.primaryBg,
             color: "#fff",
             textTransform: "none",
             fontWeight: 600,

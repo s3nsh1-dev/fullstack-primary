@@ -70,7 +70,10 @@ const Settings = () => {
 
   return (
     <Stack p={1} gap={1}>
-      <HomeTabTitles text="Settings" icon={<SettingsOutlinedIcon />} />
+      <HomeTabTitles
+        text="Settings"
+        icon={<SettingsOutlinedIcon color="secondary" />}
+      />
       {isMobile ? (
         <Stack gap={5}>
           <FormControl fullWidth>
