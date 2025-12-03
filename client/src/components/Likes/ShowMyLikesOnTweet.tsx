@@ -1,5 +1,5 @@
 import React from "react";
-import type { LikedItem } from "../../hooks/data-fetching/useFetchLikedContent";
+import type { ILikedContent } from "../../hooks/data-fetching/useFetchLikedContent";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
@@ -8,7 +8,7 @@ import ContentProfileHeader from "../Tweets/ContentProfileHeader";
 import ShowLikeOwner from "./ShowLikeOwner";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
-const ShowMyLikesOnTweet: React.FC<{ item: LikedItem }> = ({ item }) => {
+const ShowMyLikesOnTweet: React.FC<{ item: ILikedContent }> = ({ item }) => {
   return (
     <Card sx={style1} elevation={4}>
       <Box

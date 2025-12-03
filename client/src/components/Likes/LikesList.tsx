@@ -1,9 +1,9 @@
 import React from "react";
 import type {
-  LikedItem,
-  Video,
-  LikedCommentContent,
-  LikedTweetContent,
+  ILikedContent,
+  IVideo,
+  IComment,
+  ITweet,
 } from "../../hooks/data-fetching/useFetchLikedContent";
 import ShowMyLikesOnTweet from "./ShowMyLikesOnTweet";
 import Box from "@mui/material/Box";
@@ -31,21 +31,23 @@ const LikesList: React.FC<LikesListProps> = ({ data }) => {
 export default LikesList;
 
 type LikesListProps = {
-  data: LikedItem[];
+  data: ILikedContent[];
 };
 
 const isLikeTweet = (
-  item: LikedItem
-): item is LikedItem & { tweet: LikedTweetContent } => {
+  item: ILikedContent
+): item is ILikedContent & { tweet: ITweet } => {
   return item.tweet !== undefined;
 };
 
-const isLikeVideo = (item: LikedItem): item is LikedItem & { video: Video } => {
+const isLikeVideo = (
+  item: ILikedContent
+): item is ILikedContent & { video: IVideo } => {
   return item.video !== undefined;
 };
 
 const isLikeComment = (
-  item: LikedItem
-): item is LikedItem & { comment: LikedCommentContent } => {
+  item: ILikedContent
+): item is ILikedContent & { comment: IComment } => {
   return item.comment !== undefined;
 };
