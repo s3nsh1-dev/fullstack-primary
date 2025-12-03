@@ -33,21 +33,21 @@ type HookParams = {
 
 type FuncParams = { pageParam: number };
 
-interface ContentOwner {
+export interface ContentOwner {
   _id: string;
   username: string;
   fullname: string;
   avatar: string;
 }
 
-interface LikedTweetContent {
+export interface LikedTweetContent {
   _id: string;
   content: string;
   owner: ContentOwner;
   updatedAt: string;
 }
 
-interface LikedCommentContent {
+export interface LikedCommentContent {
   _id: string;
   content: string;
   comment: string;
@@ -55,7 +55,7 @@ interface LikedCommentContent {
   updatedAt: string;
 }
 
-type LikedContent = {
+export type LikedContent = {
   _id: string;
   likedBy: string;
   updatedAt: string;
@@ -64,7 +64,7 @@ type LikedContent = {
   | { comment: LikedCommentContent; tweet?: never }
 );
 
-interface LikedPaginationData {
+export interface LikedPaginationData {
   liked: LikedContent[];
   totalDocs: number;
   totalPages: number;
