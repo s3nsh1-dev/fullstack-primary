@@ -14,6 +14,7 @@ import VideoUploadStep from "./VideoUploadStep";
 import DetailsStep from "./DetailsStep";
 import DescriptionStep from "./DescriptionStep";
 import useMode from "../../hooks/useMode";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const VideoUploadForm = ({
   onSubmit,
@@ -241,6 +242,8 @@ const VideoUploadForm = ({
             },
           }}
         >
+          {isUploading && <CircularProgress size={15} color="secondary" />}{" "}
+          &nbsp;
           {isUploading
             ? "Uploading..."
             : activeStep === steps.length - 1
