@@ -41,7 +41,7 @@ const ShowMyLikesOnVideo: React.FC<ShowMyLikesOnVideoProps> = ({
 export default ShowMyLikesOnVideo;
 
 type ShowMyLikesOnVideoProps = {
-  item: LikedItem;
+  item: any;
   link: string | undefined;
 };
 

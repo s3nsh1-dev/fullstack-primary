@@ -1,5 +1,5 @@
 import React from "react";
-import type { LikedItem } from "../../hooks/data-fetching/useFetchLikedContent";
+import type { LikedContent } from "../../hooks/data-fetching/useFetchLikedContent";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -56,6 +56,6 @@ const style5 = {
 const style6 = { mt: "5px", overflow: "hidden", textOverflow: "ellipsis" };
 
 type ShowMyLikesOnCommentProps = {
-  item: LikedItem;
+  item: LikedContent;
   link: string | undefined;
 };
