@@ -24,6 +24,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
 }) => {
   const [showComments, setShowComments] = React.useState(false);
   const { user } = useAuth();
+  // console.log(tweet, isLiked);
 
   const handleShowComments = () => {
     setShowComments(!showComments);
