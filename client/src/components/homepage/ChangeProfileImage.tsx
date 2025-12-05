@@ -111,7 +111,7 @@ const ChangeProfileImage: React.FC<PropType> = ({
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: 3,
+          borderRadius: "5px",
           backgroundImage: "none",
         },
       }}
@@ -138,15 +138,15 @@ const ChangeProfileImage: React.FC<PropType> = ({
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ pt: 3, pb: 2 }}>
+      <DialogContent sx={{ pt: 2, pb: 2 }}>
         <form onSubmit={handleSubmit}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1, py: 2 }}>
             {/* Preview Section */}
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
-                mb: 2,
+                // mb: 2,
               }}
             >
               <Box sx={{ position: "relative" }}>
@@ -247,7 +247,7 @@ const ChangeProfileImage: React.FC<PropType> = ({
               sx={{
                 display: "flex",
                 gap: 2,
-                justifyContent: "flex-end",
+                justifyContent: "space-between",
                 pt: 2,
                 borderTop: "1px solid",
                 borderColor: "divider",
