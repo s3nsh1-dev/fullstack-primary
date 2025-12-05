@@ -12,9 +12,6 @@ const fetchTweet = asyncHandler(async (req, res) => {
   const { tweetId } = req.params;
   const userId = req.query.userId; // optional userId to check like status
 
-  console.log("userId:", userId);
-  console.log("tweetId:", tweetId);
-
   if (!isValidObjectId(tweetId)) throw new ApiError(400, "INVALID TWEET_ID");
 
   const tweet = await Tweet.findById(tweetId).populate({

@@ -9,12 +9,10 @@ import useAuth from "../hooks/useAuth";
 const OpenSingleTweetPage = () => {
   const { tweetId } = useParams<{ tweetId: string }>(); // fetch param from URL
   const { user } = useAuth();
-  console.log(user);
   const { data, isLoading } = useFetchSingleTweet({
     tweetId: tweetId || "",
     userId: user?.user?._id || "",
   });
-  console.log(data);
   if (isLoading) return <LoadingAnimation />;
   if (!data) return <ContentNotAvailable text="Tweet Not Available" />;
 

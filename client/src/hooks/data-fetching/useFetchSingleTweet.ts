@@ -16,7 +16,6 @@ const useFetchSingleTweet = ({ tweetId, userId }: ParamTypes) => {
       );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING TWEET");
       const data: UserTweetsAPIResponse = await response.json();
-      console.log(data);
       const result = data?.data;
       return result;
     },
