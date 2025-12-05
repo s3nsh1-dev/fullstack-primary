@@ -23,7 +23,6 @@ const ShowTweets: React.FC<ShowTweetType> = ({ interaction, pageLimit }) => {
     page: Number(currentPage),
     limit: pageLimit || 4,
   });
-
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <div>...Encountered Error</div>;
   if (!data || data?.tweets?.length === 0) return <div>No Tweets</div>;

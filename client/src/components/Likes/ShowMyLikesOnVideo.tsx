@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
-import type { LikedItem } from "../../hooks/data-fetching/useFetchLikedContent";
+import type { ILikedContent } from "../../hooks/data-fetching/useFetchLikedContent";
 import ContentProfileHeader from "../Tweets/ContentProfileHeader";
 import ShowLikeOwner from "./ShowLikeOwner";
 import VideoAccordion from "./VideoAccordion";
@@ -41,7 +41,7 @@ const ShowMyLikesOnVideo: React.FC<ShowMyLikesOnVideoProps> = ({
 export default ShowMyLikesOnVideo;
 
 type ShowMyLikesOnVideoProps = {
-  item: LikedItem;
+  item: ILikedContent;
   link: string | undefined;
 };
 
