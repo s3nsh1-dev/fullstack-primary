@@ -8,7 +8,6 @@ import ShowLikeOwner from "./ShowLikeOwner";
 import VideoAccordion from "./VideoAccordion";
 
 const ShowMyLikesOnVideo: React.FC<ShowMyLikesOnVideoProps> = ({ item }) => {
-  console.log(item);
   return (
     <Card sx={style1} elevation={4}>
       <Box

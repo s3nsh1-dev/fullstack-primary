@@ -20,7 +20,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
   const videoLocalPath: string = files.videoFile[0].path;
   const thumbnailLocalPath: string = files.thumbnail[0].path;
-  const uploadedVideo = await uploadOnCloudinary(videoLocalPath, "videos-fake");
+  const uploadedVideo = await uploadOnCloudinary(videoLocalPath, "videos");
   const uploadedThumbnail = await uploadOnCloudinary(
     thumbnailLocalPath,
     "videos-thumbnails"
