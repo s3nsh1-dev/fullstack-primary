@@ -10,7 +10,11 @@ const fetchTweet = asyncHandler(async (req, res) => {
   //TODO: get tweet
 
   const { tweetId } = req.params;
-  const { userId } = req.query; // optional userId to check like status
+  const userId = req.query.userId; // optional userId to check like status
+
+  console.log("userId:", userId);
+  console.log("tweetId:", tweetId);
+
   if (!isValidObjectId(tweetId)) throw new ApiError(400, "INVALID TWEET_ID");
 
   const tweet = await Tweet.findById(tweetId).populate({
@@ -31,7 +35,11 @@ const fetchTweet = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { tweet, isLiked }, "TWEET RETRIEVED SUCCESSFULLY")
+      new ApiResponse(
+        200,
+        { tweet, isLiked },
+        "TWEET RETRIEVED LLLLLLLLl SUCCESSFULLY"
+      )
     );
 });
 
