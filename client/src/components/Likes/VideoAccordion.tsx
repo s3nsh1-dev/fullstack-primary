@@ -4,13 +4,11 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import Modal from "@mui/material/Modal";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
+import { useNavigate } from "react-router-dom";
 
 interface LikedItem {
   _id: string;
@@ -35,8 +33,7 @@ interface User {
 }
 
 export default function VideoAccordion({ item }: { item: LikedItem }) {
-  const [open, setOpen] = useState(false);
-
+  const navigate = useNavigate();
   return (
     <>
       {/* Accordion */}
@@ -114,7 +111,7 @@ export default function VideoAccordion({ item }: { item: LikedItem }) {
                 }}
               />
               <IconButton
-                onClick={() => setOpen(true)}
+                onClick={() => navigate(`/videos/${item.video?._id}`)}
                 sx={{
                   position: "absolute",
                   top: "50%",
@@ -169,50 +166,6 @@ export default function VideoAccordion({ item }: { item: LikedItem }) {
           </Box>
         </AccordionDetails>
       </Accordion>
-
-      {/* Modal Video Player */}
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "50%",
-            bgcolor: "black",
-            boxShadow: 24,
-            borderRadius: 2,
-            outline: "none",
-          }}
-        >
-          {/* Close Button */}
-          <IconButton
-            onClick={() => setOpen(false)}
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              color: "white",
-              zIndex: 2,
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-
-          {/* Video */}
-          <video
-            src={item.video?.videoFile}
-            controls
-            autoPlay
-            style={{
-              width: "100%",
-              height: "auto",
-              borderRadius: "8px",
-              display: "block",
-            }}
-          />
-        </Box>
-      </Modal>
     </>
   );
 }

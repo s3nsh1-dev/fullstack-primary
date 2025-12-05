@@ -7,10 +7,16 @@ import CardContent from "@mui/material/CardContent";
 import ContentProfileHeader from "../Tweets/ContentProfileHeader";
 import ShowLikeOwner from "./ShowLikeOwner";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { useNavigate } from "react-router-dom";
 
 const ShowMyLikesOnTweet: React.FC<{ item: ILikedContent }> = ({ item }) => {
+  const navigate = useNavigate();
   return (
-    <Card sx={style1} elevation={4}>
+    <Card
+      sx={style1}
+      elevation={4}
+      onClick={() => navigate(`/tweets/${item.tweet?._id}`)}
+    >
       <Box
         sx={{
           display: "flex",
@@ -24,6 +30,7 @@ const ShowMyLikesOnTweet: React.FC<{ item: ILikedContent }> = ({ item }) => {
           fullname={item.tweet?.owner.fullname || "content-fullname"}
           username={item.tweet?.owner.username || "content-username"}
           createdAt={item.tweet?.updatedAt || "tweet-timestamp"}
+          type="invalid-place"
         />
         <ShowLikeOwner timestamp={item.updatedAt} />
       </Box>
@@ -39,7 +46,11 @@ const ShowMyLikesOnTweet: React.FC<{ item: ILikedContent }> = ({ item }) => {
 
 export default ShowMyLikesOnTweet;
 
-const style1 = { padding: "10px", backgroundColor: "#7685bfff" };
+const style1 = {
+  padding: "10px",
+  backgroundColor: "#7685bfff",
+  cursor: "pointer",
+};
 
 const style5 = {
   p: 0, // shorthand for padding: 0

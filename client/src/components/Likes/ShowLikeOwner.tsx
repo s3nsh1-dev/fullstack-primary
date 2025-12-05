@@ -4,7 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import useAuth from "../../hooks/useAuth";
 import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -17,14 +17,18 @@ const ShowLikeOwner = ({ timestamp }: { timestamp: string }) => {
       {!isMobile ? (
         <></>
       ) : (
-        <Box>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "end",
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton>
-              <ThumbUpIcon fontSize="small" color="primary" />
+              <ThumbsUpDownIcon fontSize="small" color="primary" />
             </IconButton>
-            <Typography sx={{ mr: 1 }} variant="caption" color="textSecondary">
-              by
-            </Typography>
             <Avatar
               src={user?.user?.avatar}
               alt="my-avatar"
