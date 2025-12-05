@@ -44,6 +44,7 @@ const IndividualTweet: React.FC<IndividualTweetProps> = ({
               style2={style2}
               username={tweet.owner.username || "fake-username"}
               createdAt={tweet.createdAt}
+              type="tweet"
             />
             <CardContent sx={style5}>
               <Typography variant="body1" color="textPrimary" sx={style6}>
