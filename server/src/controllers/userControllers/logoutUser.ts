@@ -23,7 +23,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .cookie("accessToken", "", { ...options, maxAge: 0 })
+    .cookie("refreshToken", "", { ...options, maxAge: 0 })
     .json(new ApiResponse(200, { loggedIn: false }, "User logged Out"));
 });

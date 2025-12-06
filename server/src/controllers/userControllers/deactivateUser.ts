@@ -21,8 +21,8 @@ const deactivateUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .cookie("accessToken", "", { ...options, maxAge: 0 })
+    .cookie("refreshToken", "", { ...options, maxAge: 0 })
     .json(new ApiResponse(200, { deactivated: true }, "USER DEACTIVATED"));
 });
 

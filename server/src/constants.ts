@@ -5,8 +5,9 @@ export const DB_NAME = "videotube_database";
 // so that cookies are not modifiable in frontend
 export const httpOptions: CookieOptions = {
   httpOnly: true,
-  secure: false,
+  secure: false, // Set to true in production
   sameSite: "lax",
+  path: "/",
   // sameSite: "none",
   /*
   for production
