@@ -45,10 +45,13 @@ app.use(
 
 //  I GUESS, SOME SITES TAKE PDF LESS THAN 50KB CAN BE SET BY THIS TYPE OF SYNTAX + MULER package
 // TAKE DATA FROM URL
+
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 // THE PLACE WHERE WE ARE KEEPING PUBLIC ACCESS ANYONE CAN USE IT <WE STORE IT HERE> SIMILAR TO THE PUBLIC > TEMP FOLDER WE ALREADY HAVE
+
 app.use(express.static("public"));
 // PERFORM CRUD OPERATION IN USER BROWSER LIKE ACCESS AND SETTING COOKIES FOR USER
+
 app.use(cookieParser());
 
 //routes declaration

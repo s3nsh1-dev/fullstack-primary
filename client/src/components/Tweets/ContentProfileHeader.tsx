@@ -5,6 +5,7 @@ import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import type React from "react";
 import { style3, style4 } from "../../constants/tweets.constants";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import CommentIcon from "@mui/icons-material/Comment";
 import { Box } from "@mui/material";
 
 const ContentProfileHeader: React.FC<ContentProfileCardProps> = ({
@@ -13,6 +14,7 @@ const ContentProfileHeader: React.FC<ContentProfileCardProps> = ({
   fullname,
   username,
   createdAt,
+  type,
 }) => {
   return (
     <Box sx={contSx}>
@@ -43,7 +45,8 @@ const ContentProfileHeader: React.FC<ContentProfileCardProps> = ({
           </Stack>
         </Stack>
       </Stack>
-      <TwitterIcon color="primary" fontSize="small" />
+      {type === "tweet" && <TwitterIcon color="primary" fontSize="small" />}
+      {type === "comment" && <CommentIcon color="inherit" fontSize="small" />}
     </Box>
   );
 };
@@ -56,6 +59,7 @@ type ContentProfileCardProps = {
   username: string;
   createdAt: string;
   style2: object;
+  type: string;
 };
 
 const contSx = {

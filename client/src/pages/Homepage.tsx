@@ -6,6 +6,7 @@ import HomeUserDetails from "../components/homepage/HomeUserDetails";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
 import useAuth from "../hooks/useAuth";
 import NotLoggedIn from "./NotLoggedIn";
+import { Page404 } from "../components/others/Page404";
 
 const Homepage = () => {
   const { user, loading } = useAuth();
@@ -21,7 +22,7 @@ const Homepage = () => {
   if (isLoading) return <LoadingAnimation />;
   if (isError) {
     const errorMessage = error?.message || "Encountered Error";
-    return <div>{errorMessage}</div>;
+    return <Page404 errorMessage={errorMessage} />;
   }
   if (!data) return <div>....No Homepage Info</div>;
 

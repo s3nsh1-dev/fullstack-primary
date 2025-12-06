@@ -12,11 +12,11 @@ import ShowMyLikesOnVideo from "./ShowMyLikesOnVideo";
 
 const LikesList: React.FC<LikesListProps> = ({ data }) => {
   const renderAll = data.map((item) => {
-    const link = item.comment?.tweet ?? item.comment?.video;
+    const link: SharableLinkType = undefined;
     if (isLikeTweet(item))
       return <ShowMyLikesOnTweet key={item._id} item={item} />;
     if (isLikeVideo(item))
-      return <ShowMyLikesOnVideo key={item._id} item={item} link={link} />;
+      return <ShowMyLikesOnVideo key={item._id} item={item} />;
     if (isLikeComment(item))
       return <ShowMyLikesOnComment key={item._id} item={item} link={link} />;
   });
@@ -51,3 +51,5 @@ const isLikeComment = (
 ): item is ILikedContent & { comment: IComment } => {
   return item.comment !== undefined;
 };
+
+type SharableLinkType = { title: string; url: string } | undefined;

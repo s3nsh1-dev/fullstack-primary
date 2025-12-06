@@ -19,11 +19,15 @@ const deactivateUser = asyncHandler(async (req, res) => {
     throw new ApiError(404, "USER NOT FOUND");
   }
 
-  return res
-    .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
-    .json(new ApiResponse(200, { deactivated: true }, "USER DEACTIVATED"));
+  return (
+    res
+      .status(200)
+      // .cookie("accessToken", "", { ...options, maxAge: 0 })
+      // .cookie("refreshToken", "", { ...options, maxAge: 0 })
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .json(new ApiResponse(200, { deactivated: true }, "USER DEACTIVATED"))
+  );
 });
 
 export { deactivateUser };

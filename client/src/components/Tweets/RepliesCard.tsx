@@ -31,6 +31,7 @@ const RepliesCard: React.FC<RepliesCardProps> = ({
             style2={{}}
             username={reply.owner.username || "fake-username"}
             createdAt={reply.createdAt}
+            type="comment"
           />
           <CardContent sx={style5}>
             <Typography variant="body1" color="textPrimary" sx={style6}>

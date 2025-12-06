@@ -35,6 +35,7 @@ const CommenterCard: React.FC<CommenterCardProps> = ({
             style2={{}}
             username={comment.owner.username || "fake-username"}
             createdAt={comment.createdAt}
+            type="comment"
           />
           <CardContent sx={style5}>
             <Typography variant="body1" color="textPrimary" sx={style6}>

@@ -27,10 +27,15 @@ const ShowMyLikesOnComment: React.FC<ShowMyLikesOnCommentProps> = ({
           fullname={item.comment?.owner.fullname || "content-fullname"}
           username={item.comment?.owner.username || "content-username"}
           createdAt={item.comment?.updatedAt || "tweet-timestamp"}
+          type="invalid-place"
         />
         <ShowLikeOwner timestamp={item.updatedAt} />
       </Box>
-      {link && <Typography>link</Typography>}
+      {link?.url && (
+        <Box component={"a"} href={link?.url} target="_blank">
+          {link?.title}
+        </Box>
+      )}
       <CardContent sx={style5}>
         <CommentIcon fontSize="small" sx={{ mr: 1 }} />
         <Typography variant="body1" color="textPrimary" sx={style6}>
@@ -57,5 +62,5 @@ const style6 = { mt: "5px", overflow: "hidden", textOverflow: "ellipsis" };
 
 type ShowMyLikesOnCommentProps = {
   item: ILikedContent;
-  link: string | undefined;
+  link?: { title: string; url: string } | undefined;
 };
