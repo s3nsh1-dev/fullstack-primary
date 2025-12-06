@@ -18,8 +18,9 @@ const Logout: FC<LogoutProps> = ({ toggleOpen }) => {
   const { mode } = useMode();
   const { user, logout } = useAuth();
   const logoutMutate = useLogout();
-  const handleSubmit = () => {
-    logoutMutate.mutate(user?.accessToken || "INVALID ACCESS TOKEN", {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    logoutMutate.mutate(user?.accessToken || "", {
       onSuccess: () => {
         logout();
         toggleOpen();
@@ -27,7 +28,12 @@ const Logout: FC<LogoutProps> = ({ toggleOpen }) => {
     });
   };
   return (
-    <FormBox component="form" onSubmit={handleSubmit}>
+    <FormBox
+      component="form"
+      onSubmit={(event) =>
+        handleSubmit(event as unknown as React.FormEvent<HTMLFormElement>)
+      }
+    >
       <CloseToggleIcon toggleOpen={toggleOpen} />
       <Box sx={{ textAlign: "center" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>

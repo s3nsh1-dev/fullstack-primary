@@ -11,19 +11,17 @@ export const logoutUser = asyncHandler(async (req, res) => {
   }
   await User.findByIdAndUpdate(
     req.user._id,
-    {
-      $unset: {
-        refreshToken: 1, // this removes the field from document
-      },
-    },
-    {
-      new: true,
-    }
+    { $unset: { refreshToken: 1 } },
+    { new: true }
   );
 
-  return res
-    .status(200)
-    .cookie("accessToken", "", { ...options, maxAge: 0 })
-    .cookie("refreshToken", "", { ...options, maxAge: 0 })
-    .json(new ApiResponse(200, { loggedIn: false }, "User logged Out"));
+  return (
+    res
+      .status(200)
+      // .cookie("accessToken", "", { ...options, maxAge: 0 })
+      // .cookie("refreshToken", "", { ...options, maxAge: 0 })
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .json(new ApiResponse(200, { loggedIn: false }, "User logged Out"))
+  );
 });
