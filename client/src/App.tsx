@@ -1,4 +1,13 @@
 import { lazy, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import { getTheme } from "./utilities/muiThemeController";
+import useAuth from "./hooks/useAuth";
+import useMode from "./hooks/useMode";
+import useGlobalSearch from "./hooks/useGlobalSearch";
+
 // Replace direct imports with lazy ones
 const Test = lazy(() => import("./pages/Test"));
 const Homepage = lazy(() => import("./pages/Homepage"));
@@ -26,15 +35,6 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Navbar from "./pages/Navbar";
 import AppLoadingProgress from "./pages/AppLoadingProgress";
-
-import { Routes, Route } from "react-router-dom";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
-import { getTheme } from "./utilities/muiThemeController";
-import useAuth from "./hooks/useAuth";
-import useMode from "./hooks/useMode";
-import useGlobalSearch from "./hooks/useGlobalSearch";
 
 function App() {
   const { mode } = useMode();
