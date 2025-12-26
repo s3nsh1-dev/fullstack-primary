@@ -36,27 +36,36 @@ const DrawerContents = ({
             open={open}
             content={sideBarIconList[index]}
             name={text.name}
+            isDisabled={false}
           />
         ))}
       </List>
 
       <List>
-        {sideBarSecondaryList.map((text, index) => (
-          <ShowLinerButtons
-            key={text.id}
-            linkTo={text.path}
-            closeDrawer={closeDrawer}
-            open={open}
-            content={secondaryIconList[index]}
-            name={text.name}
-          />
-        ))}
+        {sideBarSecondaryList.map((text, index) => {
+          console.log(text);
+          return (
+            <ShowLinerButtons
+              key={text.id}
+              linkTo={text.path}
+              closeDrawer={closeDrawer}
+              open={open}
+              content={secondaryIconList[index]}
+              name={text.name}
+              isDisabled={
+                user ? false : text.name === "Messages" ? true : false
+              }
+            />
+          );
+        })}
       </List>
     </>
   );
 };
 
 export default DrawerContents;
+
+const secondaryIconList = [<SendIcon />, <HelpOutlineIcon />, <SettingsIcon />];
 
 const sideBarIconList = [
   <HomeIcon />,
@@ -66,4 +75,3 @@ const sideBarIconList = [
   <TwitterIcon />,
   <PeopleOutlineIcon />,
 ];
-const secondaryIconList = [<SendIcon />, <HelpOutlineIcon />, <SettingsIcon />];
