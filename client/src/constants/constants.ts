@@ -34,6 +34,7 @@ export const sideBarList: SidebarOptionType[] = [
 ];
 
 export const sideBarSecondaryList: SidebarOptionType[] = [
+  { id: 2, path: "/messages", name: "Messages" },
   { id: 0, path: "/support", name: "Support" },
   { id: 1, path: "/setting", name: "Setting" },
 ];
