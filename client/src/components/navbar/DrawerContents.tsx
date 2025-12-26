@@ -8,6 +8,7 @@ import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SendIcon from "@mui/icons-material/Send";
+import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import { sideBarList, sideBarSecondaryList } from "../../constants/constants";
 import type { SidebarOptionType } from "../../constants/genericTypes";
 import useAuth from "../../hooks/useAuth";
@@ -74,4 +75,5 @@ const sideBarIconList = [
   <VideocamIcon />,
   <TwitterIcon />,
   <PeopleOutlineIcon />,
+  <PlaylistPlayIcon />,
 ];
