@@ -3,9 +3,10 @@ import CircularProgressCenter from "../components/ui-components/CircularProgress
 import FeedItem from "../components/dashboard/FeedItem";
 import Masonry from "@mui/lab/Masonry";
 import LoadingAnimation from "../components/ui-components/LoadingAnimation";
-import Button from "@mui/material/Button";
+// import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import useIntersectionObserver from "../hooks/useIntersectionObserver";
 
 const Dashboard = () => {
   const {
@@ -16,6 +17,8 @@ const Dashboard = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useFetchFeed(30);
+
+  const observerTarget = useIntersectionObserver(fetchNextPage, !!hasNextPage);
 
   if (isLoading) return <LoadingAnimation />;
   if (isError) return <Box> SITE IS FACING SOME INTERNAL ISSUES</Box>;
@@ -30,17 +33,18 @@ const Dashboard = () => {
       <Masonry columns={responsiveColumns} spacing={2} sx={masonryStyle}>
         {renderFeeds}
       </Masonry>
+      <div ref={observerTarget}></div>
       <Box sx={contStyle}>
         {isFetchingNextPage && <CircularProgressCenter size={50} />}
         {/* change the button to infinite scroll when enough content in database */}
-        <Button
+        {/* <Button
           onClick={() => fetchNextPage()}
           variant="contained"
           color="primary"
           disabled={isFetchingNextPage || !hasNextPage}
         >
           {isFetchingNextPage ? "Loading..." : "Load More"}
-        </Button>
+        </Button> */}
         {!hasNextPage && (
           <Typography variant="caption" color="textSecondary">
             You reached THE END of your feed

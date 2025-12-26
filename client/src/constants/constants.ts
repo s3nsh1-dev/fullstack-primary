@@ -31,9 +31,15 @@ export const sideBarList: SidebarOptionType[] = [
     path: "/subscribers",
     name: "Subscribers",
   },
+  {
+    id: 6,
+    path: "/playlists",
+    name: "Playlists",
+  },
 ];
 
 export const sideBarSecondaryList: SidebarOptionType[] = [
+  { id: 2, path: "/messages", name: "Messages" },
   { id: 0, path: "/support", name: "Support" },
   { id: 1, path: "/setting", name: "Setting" },
 ];

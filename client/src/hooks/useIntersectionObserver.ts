@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 const useIntersectionObserver = (
-  callback: () => void,
+  fetchNextPage: () => void,
   hasNextPage: boolean
 ) => {
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -10,21 +10,21 @@ const useIntersectionObserver = (
     const element = observerTarget.current;
     if (!element) return;
 
-    const observer = new IntersectionObserver(
+    const observerAPI = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
-          callback();
+          fetchNextPage();
         }
       },
       { threshold: 1.0 }
     );
 
-    observer.observe(element);
+    observerAPI.observe(element);
 
     return () => {
-      if (element) observer.unobserve(element);
+      if (element) observerAPI.unobserve(element);
     };
-  }, [callback, hasNextPage]);
+  }, [fetchNextPage, hasNextPage]);
 
   return observerTarget;
 };

@@ -30,6 +30,11 @@ const EditVideoOptions = lazy(
   () => import("./components/Videos/EditVideoOptions")
 );
 const SearchPage = lazy(() => import("./pages/SearchPage"));
+const Messages = lazy(() => import("./pages/Messages"));
+const Playlist = lazy(() => import("./pages/Playlist"));
+const SinglePlaylist = lazy(
+  () => import("./components/playlist/SinglePlaylist")
+);
 //components and pages
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -68,6 +73,12 @@ function App() {
             <Route path="/support" element={<Support />} />
             <Route path="/history" element={<WatchHistory />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/playlists">
+              <Route index element={<Playlist />} />
+              <Route path=":playlistId" element={<SinglePlaylist />} />
+            </Route>
+
             {/* Nested tabs*/}
             <Route path="/my-videos">
               <Route index element={<MyVideos />} />

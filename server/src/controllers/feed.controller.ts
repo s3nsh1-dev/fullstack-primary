@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { Video } from "../models/video.model";
 import { Tweet } from "../models/tweet.model";
 import ApiResponse from "../utils/ApiResponse";
+import { shuffle } from "../utils/algorithms";
 
 const getFeed = asyncHandler(async (req, res) => {
   const page = Number(req.query.page) || 1;
@@ -13,7 +14,12 @@ const getFeed = asyncHandler(async (req, res) => {
   const [videos, tweets] = await Promise.all([
     Video.aggregate([
       { $match: { isPublished: true } },
-      { $sort: { createdAt: -1 } },
+      // { $sort: { createdAt: -1 } },
+      {
+        $sort: {
+          createdAt: Math.floor((Math.random() * 10) % 2) == 0 ? 1 : -1,
+        },
+      },
       { $skip: skip },
       { $limit: contentLimit },
       {
@@ -38,7 +44,12 @@ const getFeed = asyncHandler(async (req, res) => {
       { $match: { owner: { $exists: true, $ne: null } } },
     ]),
     Tweet.aggregate([
-      { $sort: { createdAt: -1 } },
+      // { $sort: { createdAt: -1 } },
+      {
+        $sort: {
+          createdAt: Math.floor((Math.random() * 10) % 2) == 0 ? 1 : -1,
+        },
+      },
       { $skip: skip },
       { $limit: contentLimit },
       {
@@ -64,9 +75,7 @@ const getFeed = asyncHandler(async (req, res) => {
     ]),
   ]);
 
-  const feed = [...videos, ...tweets].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+  const feed = shuffle([...shuffle(videos), ...shuffle(tweets)]);
 
   const hasNextPage =
     videos.length === contentLimit || tweets.length === contentLimit;
