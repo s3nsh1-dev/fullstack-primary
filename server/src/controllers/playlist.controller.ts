@@ -138,18 +138,14 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         ],
       },
     },
-    {
-      $addFields: {
-        ownerDetails: { $first: "$ownerDetails" },
-      },
-    },
+    { $unwind: { path: "$owner" } },
     {
       $project: {
         _id: 1,
         name: 1,
         description: 1,
         videos: 1,
-        ownerDetails: 1,
+        owner: 1,
       },
     },
   ]);
@@ -278,22 +274,38 @@ const updatePlaylist = asyncHandler(async (req, res) => {
 
   const { playlistId } = req.params;
   if (!isValidObjectId(playlistId))
-    throw new ApiError(400, "INVALID PLAYLIST_ID");
-  const { name, description } = req.body;
-  if (!name || !description || name.length < 1 || description.length < 1)
-    throw new ApiError(404, "INPUT FIELD MISSING");
-  if (!req.user || !req.user._id)
-    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+    throw new ApiError(404, "INVALID PLAYLIST_ID");
+
+  const name =
+    typeof req.body.name === "string" ? req.body.name.trim() : undefined;
+
+  const description =
+    typeof req.body.description === "string"
+      ? req.body.description.trim()
+      : undefined;
+
+  if (name === undefined && description === undefined)
+    throw new ApiError(404, "NO VALID FIELDS PROVIDED");
+
+  if (!req?.user || !req?.user?._id)
+    throw new ApiError(401, "UNAUTHENTICATED REQUEST");
+
+  const updatePayload: Record<string, string> = {};
+
+  if (name !== undefined) updatePayload.name = name;
+  if (description !== undefined) updatePayload.description = description;
+
+  if (!Object.keys(updatePayload).length)
+    throw new ApiError(404, "NO FIELDS TO UPDATE");
 
   const playlist = await Playlist.findOneAndUpdate(
     { _id: playlistId, owner: req.user._id },
-    {
-      $set: { name, description },
-    },
-    { new: true, runValidators: true }
-  ).populate("owner", "_id fullname avatar");
+    { $set: updatePayload },
+    { new: true }
+  ).populate("owner", "_id username fullname avatar");
 
-  if (!playlist) throw new ApiError(400, "PLAYLIST NOT UPDATED");
+  if (!playlist)
+    throw new ApiError(403, "USER NOT AUTHORIZED OR PLAYLIST NOT FOUND");
 
   return res
     .status(200)
