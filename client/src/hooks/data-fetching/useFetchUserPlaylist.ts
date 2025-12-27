@@ -41,7 +41,7 @@ interface Video {
   updatedAt: string; // ISO date string
 }
 
-interface Playlist {
+export interface Playlist {
   _id: string;
   name: string;
   description: string;
