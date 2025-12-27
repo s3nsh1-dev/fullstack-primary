@@ -5,8 +5,7 @@ import Typography from "@mui/material/Typography";
 import SinglePlaylist from "../components/playlist/SinglePlaylist";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import CircularProgress from "@mui/material/CircularProgress";
-import Stack from "@mui/material/Stack";
+import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
 
 const Playlist = () => {
   const { user, loading } = useAuth();
@@ -17,45 +16,11 @@ const Playlist = () => {
 
   if (!user && !loading) return <NotLoggedIn />;
 
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "60vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography variant="h6" color="error" align="center">
-          Error loading playlists. Please try again later.
-        </Typography>
-      </Container>
-    );
-  }
-
-  if (!data || data.playlists?.length === 0) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Stack spacing={2} alignItems="center">
-          <Typography variant="h5" color="textSecondary">
-            No Playlists Yet
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Create your first playlist to organize your videos
-          </Typography>
-        </Stack>
-      </Container>
-    );
-  }
+  if (isError)
+    return <Typography color="error">...Encountered Error</Typography>;
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (!data || data.playlists?.length === 0)
+    return <Typography color="textSecondary">No Playlists</Typography>;
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
