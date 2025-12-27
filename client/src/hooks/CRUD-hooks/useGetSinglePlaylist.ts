@@ -18,7 +18,7 @@ const callApi = async (playlistId: string) => {
   if (data.success) {
     return data.data.playlist;
   }
-  return data;
+  return data.data.playlist;
 };
 
 export interface PlaylistOwner {

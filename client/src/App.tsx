@@ -32,8 +32,8 @@ const EditVideoOptions = lazy(
 const SearchPage = lazy(() => import("./pages/SearchPage"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Playlist = lazy(() => import("./pages/Playlist"));
-const SinglePlaylist = lazy(
-  () => import("./components/playlist/SinglePlaylist")
+const OpenPlaylistIndividually = lazy(
+  () => import("./components/playlist/OpenPlaylistIndividually")
 );
 //components and pages
 import Dashboard from "./pages/Dashboard";
@@ -76,7 +76,10 @@ function App() {
             <Route path="/messages" element={<Messages />} />
             <Route path="/playlists">
               <Route index element={<Playlist />} />
-              <Route path=":playlistId" element={<SinglePlaylist />} />
+              <Route
+                path=":playlistId"
+                element={<OpenPlaylistIndividually />}
+              />
             </Route>
 
             {/* Nested tabs*/}

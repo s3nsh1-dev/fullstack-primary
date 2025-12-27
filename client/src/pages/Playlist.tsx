@@ -73,18 +73,7 @@ const Playlist = () => {
       </Box>
 
       {/* Playlists Grid */}
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "repeat(1, 1fr)",
-            sm: "repeat(2, 1fr)",
-            md: "repeat(3, 1fr)",
-            lg: "repeat(4, 1fr)",
-          },
-          gap: 3,
-        }}
-      >
+      <Box sx={gridPlaylistContainer}>
         {data.playlists.map((playlist) => (
           <SinglePlaylist key={playlist._id} playlist={playlist} />
         ))}
@@ -94,3 +83,14 @@ const Playlist = () => {
 };
 
 export default Playlist;
+
+const gridPlaylistContainer = {
+  display: "grid",
+  gridTemplateColumns: {
+    xs: "repeat(1, 1fr)",
+    sm: "repeat(2, 1fr)",
+    md: "repeat(3, 1fr)",
+    lg: "repeat(4, 1fr)",
+  },
+  gap: 3,
+};

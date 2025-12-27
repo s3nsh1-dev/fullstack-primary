@@ -43,11 +43,7 @@ const SinglePlaylist: FC<PropTypes> = ({ playlist }) => {
             variant="h6"
             fontWeight={700}
             sx={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
+              ...responsiveText,
               lineHeight: 1.3,
             }}
           >
@@ -59,14 +55,7 @@ const SinglePlaylist: FC<PropTypes> = ({ playlist }) => {
             <Typography
               variant="body2"
               color="text.secondary"
-              sx={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                lineHeight: 1.5,
-              }}
+              sx={{ ...responsiveText, lineHeight: 1.5 }}
             >
               {playlist.description}
             </Typography>
@@ -186,3 +175,10 @@ const ContentSection = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
 }));
+const responsiveText = {
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  display: "-webkit-box",
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: "vertical",
+};
