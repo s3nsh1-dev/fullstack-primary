@@ -1,14 +1,11 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
 import useFetchUserPlaylist from "../../hooks/data-fetching/useFetchUserPlaylist";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import { useOutletContext } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import SinglePlaylist from "../playlist/SinglePlaylist";
+import { Container } from "@mui/material";
 
 const ShowPlaylists = () => {
   const outletContext = useOutletContext<OutletContextType | undefined>();
@@ -24,69 +21,36 @@ const ShowPlaylists = () => {
     return <Typography color="textSecondary">No Playlists</Typography>;
 
   return (
-    <Stack spacing={1}>
-      {data?.playlists?.map((playlist) => (
-        <Card
-          key={playlist._id}
-          variant="outlined"
-          sx={{ borderRadius: "10px" }}
-        >
-          <CardContent sx={{ p: 2 }}>
-            {/* Playlist Info */}
-            <Typography variant="h6" color="textPrimary" gutterBottom>
-              {playlist.name}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" gutterBottom>
-              {playlist.description}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="textSecondary"
-              display="block"
-              mb={2}
-            >
-              Created{" "}
-              {convertISOIntoLocalTime(playlist.createdAt).toLocaleString()}
-            </Typography>
+    <Container maxWidth="xl" sx={{ py: 4 }}>
+      {/* Page Header */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" fontWeight={700} gutterBottom>
+          Your Playlists
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          {data.playlists.length}{" "}
+          {data.playlists.length === 1 ? "playlist" : "playlists"}
+        </Typography>
+      </Box>
 
-            {/* Videos List */}
-            <Stack direction="row" flexWrap="wrap" spacing={2}>
-              {playlist?.videos?.map((video) => (
-                <Card
-                  key={video._id}
-                  variant="outlined"
-                  sx={{
-                    display: "flex",
-                    p: 1,
-                    width: 250,
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar
-                    variant="square"
-                    src={video.thumbnail}
-                    alt={video.title}
-                    sx={{ width: 80, height: 50, mr: 1 }}
-                  />
-                  <Box>
-                    <Typography variant="subtitle2" noWrap>
-                      {video.title}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      color="textSecondary"
-                      display="block"
-                    >
-                      {video.duration.toFixed(2)} min | {video.views} views
-                    </Typography>
-                  </Box>
-                </Card>
-              ))}
-            </Stack>
-          </CardContent>
-        </Card>
-      ))}
-    </Stack>
+      {/* Playlists Grid */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(3, 1fr)",
+            lg: "repeat(4, 1fr)",
+          },
+          gap: 3,
+        }}
+      >
+        {data.playlists.map((playlist) => (
+          <SinglePlaylist key={playlist._id} playlist={playlist} />
+        ))}
+      </Box>
+    </Container>
   );
 };
 

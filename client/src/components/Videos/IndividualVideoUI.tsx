@@ -13,63 +13,17 @@ const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
   const navigate = useNavigate();
   const { mode } = useMode();
   return (
-    <Box
-      key={video._id}
-      sx={{
-        width: 400,
-        borderRadius: 1,
-        boxShadow: 5,
-        // border: "1px solid purple",
-        backgroundColor: "background.paper",
-        overflow: "hidden",
-        "&:hover": { boxShadow: 3 },
-      }}
-    >
+    <Box key={video._id} sx={sx1}>
       {/* Thumbnail with Play Icon */}
       <Box sx={{ position: "relative", cursor: "pointer" }}>
-        <Box
-          component="img"
-          src={video.thumbnail}
-          alt={video.title}
-          sx={{
-            width: "100%",
-            height: 160,
-            objectFit: "cover",
-            display: "block",
-            borderRadius: 1,
-          }}
-        />
+        <Box component="img" src={video.thumbnail} alt={video.title} sx={sx2} />
 
         {/* Semi-transparent overlay */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.2)",
-            borderRadius: 1,
-          }}
-        />
+        <Box sx={sx3} />
 
         {/* Play Button */}
         <IconButton
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            fontSize: 90,
-            backgroundColor: "transparent",
-            transform: "translate(-50%, -50%)",
-            color: "rgba(255,255,255,0.3)",
-            transition: "all 0.2s ease",
-            "&:hover": {
-              transform: "translate(-50%, -50%) scale(1.2)",
-              color: "rgba(255,255,255,0.7)",
-              backgroundColor: "transparent",
-            },
-          }}
+          sx={sx4}
           onClick={() => {
             navigate(`/videos/${video._id}`);
           }}
@@ -116,3 +70,46 @@ const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
 };
 
 export default IndividualVideoUI;
+
+const sx1 = {
+  width: 400,
+  borderRadius: 1,
+  boxShadow: 5,
+  // border: "1px solid purple",
+  backgroundColor: "background.paper",
+  overflow: "hidden",
+  "&:hover": { boxShadow: 3 },
+};
+
+const sx2 = {
+  width: "100%",
+  height: 160,
+  objectFit: "cover",
+  display: "block",
+  borderRadius: 1,
+};
+const sx3 = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0,0,0,0.2)",
+  borderRadius: 1,
+};
+
+const sx4 = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  fontSize: 90,
+  backgroundColor: "transparent",
+  transform: "translate(-50%, -50%)",
+  color: "rgba(255,255,255,0.3)",
+  transition: "all 0.2s ease",
+  "&:hover": {
+    transform: "translate(-50%, -50%) scale(1.2)",
+    color: "rgba(255,255,255,0.7)",
+    backgroundColor: "transparent",
+  },
+};

@@ -9,14 +9,14 @@ import { isOwner } from "../utils/checkIsOwner";
 const createPlaylist = asyncHandler(async (req, res) => {
   //TODO: create playlist
 
-  const { name, description } = req.body;
-  if (!name || !description || name.length < 1 || description.length < 1)
-    throw new ApiError(404, "INPUT FIELD MISSING");
+  const { name } = req.body;
+  const description = req.body.description || "";
+  if (!name || name.length < 1) throw new ApiError(404, "INPUT FIELD MISSING");
 
   if (!req.user || !req.user._id)
-    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+    throw new ApiError(401, "UNAUTHENTICATED REQUEST");
   if (!isValidObjectId(req.user._id))
-    throw new ApiError(400, "INVALID USER_ID");
+    throw new ApiError(404, "INVALID USER_ID");
 
   const createPlaylist = await Playlist.create({
     name,
@@ -24,7 +24,8 @@ const createPlaylist = asyncHandler(async (req, res) => {
     videos: [],
     owner: req.user._id as string,
   });
-  if (!createPlaylist) throw new ApiError(400, "PLAYLIST NOT CREATED");
+
+  if (!createPlaylist) throw new ApiError(404, "PLAYLIST NOT CREATED");
 
   return res
     .status(200)
@@ -138,7 +139,51 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         ],
       },
     },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "videos",
+        pipeline: [
+          { $match: { isPublished: true } },
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    fullname: 1,
+                    avatar: 1,
+                    username: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $project: {
+              title: 1,
+              description: 1,
+              thumbnail: 1,
+              videoFile: 1,
+              duration: 1,
+              views: 1,
+              isPublished: 1,
+              updatedAt: 1,
+              owner: 1,
+            },
+          },
+          { $unwind: { path: "$owner" } },
+        ],
+      },
+    },
     { $unwind: { path: "$owner" } },
+    { $unwind: { path: "$videos" } },
     {
       $project: {
         _id: 1,
@@ -166,39 +211,28 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   // TODO: add video to playlist + check owner + same video can not be added twice
 
   const { playlistId, videoId } = req.params;
+
   if (!isValidObjectId(playlistId) || !isValidObjectId(videoId))
-    throw new ApiError(400, "INVALID PLAYLIST_ID OR VIDEO_ID");
+    throw new ApiError(404, "INVALID PLAYLIST_ID OR VIDEO_ID");
 
   if (!req.user || !req.user._id)
-    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+    throw new ApiError(401, "UNAUTHENTICATED REQUEST");
 
-  const playlist = await Playlist.findOne({ _id: playlistId });
-  if (!playlist) throw new ApiError(400, "PLAYLIST NOT FOUND");
+  const updatedPlaylist = await Playlist.findOneAndUpdate(
+    { _id: playlistId, owner: req.user._id },
+    { $addToSet: { videos: videoId } },
+    { new: true, runValidators: true }
+  ).populate("owner", "_id username fullname avatar");
 
-  if (!isOwner(playlist.owner, req.user._id.toString())) {
-    throw new ApiError(400, "USER NOT AUTHORIZED TO MAKE CHANGES");
-  }
-
-  const checkVideo = playlist.videos.includes(videoId);
-  if (checkVideo) {
-    return res
-      .status(200)
-      .json(new ApiResponse(200, {}, "VIDEO ALREADY EXIST"));
-  }
-
-  playlist.videos.push(videoId);
-  const updatedPlaylist = await playlist.save({ validateModifiedOnly: true });
-  const populatedPlaylist = await updatedPlaylist.populate(
-    "owner",
-    "_id fullname avatar"
-  );
+  if (!updatedPlaylist)
+    throw new ApiError(404, "PLAYLIST NOT FOUND OR USER NOT AUTHORIZED");
 
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        { playlist: populatedPlaylist },
+        { playlist: updatedPlaylist },
         "VIDEO ADDED TO PLAYLIST"
       )
     );
@@ -208,38 +242,27 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   // TODO: remove video from playlist + check owner
 
   const { playlistId, videoId } = req.params;
+
   if (!isValidObjectId(playlistId) || !isValidObjectId(videoId))
     throw new ApiError(400, "INVALID PLAYLIST_ID OR VIDEO_ID");
 
-  if (!req.user || !req.user._id)
-    throw new ApiError(400, "UNAUTHENTICATED REQUEST");
+  if (!req?.user || !req?.user?._id)
+    throw new ApiError(401, "UNAUTHENTICATED REQUEST");
 
-  const playlist = await Playlist.findById(playlistId);
-  if (!playlist) throw new ApiError(404, "NO PLAYLIST FOUND");
-
-  if (!isOwner(playlist.owner, req.user._id.toString()))
-    throw new ApiError(400, "USER NOT AUTHORIZED TO MAKE CHANGES");
-
-  const checkVideo = playlist.videos.includes(videoId);
-  if (!checkVideo)
-    throw new ApiError(400, "VIDEO DOES NOT EXIST INSIDE PLAYLIST");
-
-  const updatedPlaylist = await Playlist.findByIdAndUpdate(
-    playlistId,
-    { $pull: { videos: videoId } }, // remove videoId from array
-    { new: true, runValidators: true }
-  ).populate("owner", "_id fullname avatar");
-  if (!updatedPlaylist) throw new ApiError(400, "PLAYLIST NOT UPDATED");
+  const playlist = await Playlist.findOneAndUpdate(
+    {
+      _id: playlistId,
+      owner: req.user._id,
+    },
+    { $pull: { videos: videoId } },
+    { new: true }
+  ).populate("owner", "_id username fullname avatar");
+  if (!playlist)
+    throw new ApiError(404, "PLAYLIST NOT FOUND OR USER NOT AUTHORIZED");
 
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { playlist: updatedPlaylist },
-        "VIDEO REMOVED FROM PLAYLIST"
-      )
-    );
+    .json(new ApiResponse(200, { playlist }, "VIDEO REMOVED FROM PLAYLIST"));
 });
 
 const deletePlaylist = asyncHandler(async (req, res) => {
@@ -252,7 +275,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
   if (!req.user || !req.user._id)
     throw new ApiError(400, "UNAUTHENTICATED REQUEST");
 
-  const deletedPlaylist = await Playlist.findOneAndDelete({
+  const deletedPlaylist = await Playlist.deleteOne({
     _id: playlistId,
     owner: req.user._id,
   });
@@ -273,17 +296,16 @@ const updatePlaylist = asyncHandler(async (req, res) => {
   //TODO: update playlist + check owner
 
   const { playlistId } = req.params;
+  if (!playlistId) throw new ApiError(404, "PLAYLIST_ID NOT PROVIDED");
   if (!isValidObjectId(playlistId))
     throw new ApiError(404, "INVALID PLAYLIST_ID");
 
   const name =
     typeof req.body.name === "string" ? req.body.name.trim() : undefined;
-
   const description =
     typeof req.body.description === "string"
       ? req.body.description.trim()
       : undefined;
-
   if (name === undefined && description === undefined)
     throw new ApiError(404, "NO VALID FIELDS PROVIDED");
 

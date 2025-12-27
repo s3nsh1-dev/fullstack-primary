@@ -44,7 +44,6 @@ const DrawerContents = ({
 
       <List>
         {sideBarSecondaryList.map((text, index) => {
-          console.log(text);
           return (
             <ShowLinerButtons
               key={text.id}
