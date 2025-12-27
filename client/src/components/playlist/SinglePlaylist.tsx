@@ -5,14 +5,20 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const SinglePlaylist: FC<PropTypes> = ({ playlist }) => {
+  const navigate = useNavigate();
   const videoCount = playlist.videos?.length || 0;
   const firstVideoThumbnail = playlist.videos?.[0]?.thumbnail || "";
   const hasVideos = videoCount > 0;
 
+  const onClick = () => {
+    navigate(`/playlists/${playlist._id}`);
+  };
+
   return (
-    <PlaylistCard>
+    <PlaylistCard onClick={onClick}>
       {/* Thumbnail Section with Overlay */}
       <ThumbnailContainer>
         {hasVideos ? (

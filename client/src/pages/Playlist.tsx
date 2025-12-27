@@ -15,8 +15,6 @@ const Playlist = () => {
     user?.user?._id || ""
   );
 
-  console.log(data);
-
   if (!user && !loading) return <NotLoggedIn />;
 
   if (isLoading) {
