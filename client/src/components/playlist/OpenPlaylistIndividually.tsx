@@ -7,10 +7,20 @@ import { useTheme } from "@mui/material/styles";
 import ShowPlaylistHeader from "./ShowPlaylistHeader";
 import ShowPlaylistVideoList from "./ShowPlaylistVideoList";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const OpenPlaylistIndividually = () => {
   const { playlistId } = useParams();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.up(1070));
+
+  const contentWrapperSx = {
+    display: "flex",
+    flexDirection: isMobile ? "row" : "column",
+    gap: { xs: 3, md: 4 },
+    maxWidth: "1600px",
+    mx: "auto",
+  };
 
   const { data, isLoading, isError } = useGetSinglePlaylist(playlistId || "");
   const { user } = useAuth();
@@ -29,14 +39,11 @@ const OpenPlaylistIndividually = () => {
       }}
     >
       <Box sx={contentWrapperSx}>
-        {/* Left Sidebar - Playlist Info */}
         <ShowPlaylistHeader
           playlist={data}
           videos={data?.videos || []}
           isOwner={isOwner}
         />
-
-        {/* Right Content - Video List */}
         <ShowPlaylistVideoList videos={data?.videos || []} />
       </Box>
     </Box>
@@ -48,12 +55,4 @@ export default OpenPlaylistIndividually;
 const pageContainerSx = {
   minHeight: "calc(100vh - 64px)", // Adjust based on navbar height
   p: { xs: 2, md: 4 },
-};
-
-const contentWrapperSx = {
-  display: "flex",
-  flexDirection: { xs: "column", md: "row" },
-  gap: { xs: 3, md: 4 },
-  maxWidth: "1600px",
-  mx: "auto",
 };

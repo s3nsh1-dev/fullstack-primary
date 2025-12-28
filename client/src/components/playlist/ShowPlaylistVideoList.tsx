@@ -2,17 +2,16 @@ import type { FC, CSSProperties } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTheme } from "@mui/material/styles";
-import type { Theme } from "@mui/material/styles";
+import type { Theme, SxProps } from "@mui/material/styles";
 import {
   formatCount,
   formatDuration,
   formatDate,
 } from "../../utilities/helperFncForStats";
 import type { PlaylistVideo } from "../../hooks/CRUD-hooks/useGetSinglePlaylist";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const ShowPlaylistVideoList: FC<PropTypes> = ({ videos }) => {
   if (!videos || videos.length === 0) {
@@ -30,8 +29,34 @@ const ShowPlaylistVideoList: FC<PropTypes> = ({ videos }) => {
 };
 
 const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
-  console.log(video);
   const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up(1070));
+
+  const videoItemSx = (theme: Theme): SxProps<Theme> => ({
+    display: "flex",
+    gap: 2,
+    p: 1.5,
+    mb: 1,
+    borderRadius: "12px",
+    cursor: "pointer",
+    alignItems: "stretch",
+    border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
+    transition: "all 0.2s ease-in-out",
+    "&:hover": {
+      borderColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.action.hover,
+      transform: "translateY(-2px)",
+      boxShadow: theme.shadows[2],
+      "& .more-btn": { opacity: 1 },
+    },
+    flexDirection: "row",
+    [theme.breakpoints.down(550)]: {
+      flexDirection: "column",
+    },
+  });
+
+  console.log(theme.breakpoints.down(550));
 
   return (
     <Box
@@ -39,9 +64,11 @@ const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
         ...videoItemSx(theme),
       }}
     >
-      <Typography variant="body2" color="text.secondary" sx={videoIndexSx}>
-        {index}
-      </Typography>
+      {isDesktop && (
+        <Typography variant="body2" color="text.secondary" sx={videoIndexSx}>
+          {index}
+        </Typography>
+      )}
 
       <Box sx={videoThumbnailContainerSx}>
         <img
@@ -84,15 +111,13 @@ const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
           <Typography variant="body2" color="text.secondary">
             • {formatCount(video.views)} views
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            • {formatDate(video.updatedAt)}
-          </Typography>
+          {useMediaQuery(theme.breakpoints.up(550)) && (
+            <Typography variant="body2" color="text.secondary">
+              • {formatDate(video.updatedAt)}
+            </Typography>
+          )}
         </Stack>
       </Box>
-
-      <IconButton className="more-btn" sx={moreBtnSx} size="small">
-        <MoreVertIcon />
-      </IconButton>
     </Box>
   );
 };
@@ -104,41 +129,20 @@ const videoListContainerSx = {
   minWidth: 0,
 };
 
-const videoItemSx = (theme: Theme) => ({
-  display: "flex",
-  gap: 2,
-  p: 1.5,
-  mb: 1,
-  borderRadius: "12px",
-  cursor: "pointer",
-  alignItems: "stretch", // Ensure children stretch to full height
-  border: `1px solid ${theme.palette.divider}`,
-  backgroundColor: theme.palette.background.paper,
-  transition: "all 0.2s ease-in-out",
-  "&:hover": {
-    borderColor: theme.palette.primary.main,
-    backgroundColor: theme.palette.action.hover,
-    transform: "translateY(-2px)",
-    boxShadow: theme.shadows[2],
-    "& .more-btn": { opacity: 1 },
-  },
-});
-
 const videoIndexSx = {
   display: "flex",
   alignItems: "center",
   minWidth: "24px",
-  alignSelf: "center", // Keep index centered vertically relative to row height roughly, or remove for top align
+  alignSelf: "center",
 };
 
 const videoThumbnailContainerSx = {
   position: "relative",
-  width: "180px", // Slightly wider for better presence
+  width: "180px",
   minWidth: "180px",
   borderRadius: "8px",
   overflow: "hidden",
   flexShrink: 0,
-  // Let the height be determined by the flex stretch
 };
 
 const thumbnailImgStyle: CSSProperties = {
@@ -178,12 +182,6 @@ const videoDescriptionSx = {
   overflow: "hidden",
   textOverflow: "ellipsis",
   mt: 0.5,
-};
-
-const moreBtnSx = {
-  opacity: 0,
-  alignSelf: "flex-start", // align more button to top
-  mt: 1,
 };
 
 interface PropTypes {

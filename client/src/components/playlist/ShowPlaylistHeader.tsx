@@ -21,6 +21,19 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
 }) => {
   const theme = useTheme();
   const playlistThumbnail = videos.length > 0 ? videos[0].thumbnail : "";
+  const sidebarContainerSx = {
+    width: "100%",
+    [theme.breakpoints.up(1070)]: {
+      width: "360px",
+    },
+    flexShrink: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+    // position: { md: "sticky" },
+    top: { md: "84px" },
+    // height: { md: "calc(100vh - 100px)" },
+  };
 
   return (
     <Box sx={sidebarContainerSx}>
@@ -143,16 +156,6 @@ const PlaylistCoverBox = styled(Box)(({ theme }) => ({
 }));
 
 // Static Styles
-const sidebarContainerSx = {
-  width: { xs: "100%", md: "360px" },
-  flexShrink: 0,
-  display: "flex",
-  flexDirection: "column",
-  gap: 2,
-  position: { md: "sticky" },
-  top: { md: "84px" },
-  height: { md: "calc(100vh - 100px)" },
-};
 
 const thumbnailImgStyle: React.CSSProperties = {
   width: "100%",
