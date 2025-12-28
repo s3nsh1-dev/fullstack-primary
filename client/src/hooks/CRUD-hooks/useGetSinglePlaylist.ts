@@ -6,7 +6,6 @@ const useGetSinglePlaylist = (playlistId: string) => {
     queryKey: ["playlist", playlistId],
     queryFn: async () => {
       const data = await callApi(playlistId);
-      console.log("hitting", data);
       return data;
     },
   });
@@ -40,7 +39,7 @@ export interface PlaylistVideo {
   duration: number;
   views: number;
   isPublished: boolean;
-  createdAt: string;
+  updatedAt: string;
 }
 interface PlaylistOwner {
   _id: string;

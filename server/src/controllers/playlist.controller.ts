@@ -4,7 +4,6 @@ import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { toObjectId } from "../utils/convertToObjectId";
-import { isOwner } from "../utils/checkIsOwner";
 
 const createPlaylist = asyncHandler(async (req, res) => {
   //TODO: create playlist
@@ -183,7 +182,6 @@ const getPlaylistById = asyncHandler(async (req, res) => {
       },
     },
     { $unwind: { path: "$owner" } },
-    { $unwind: { path: "$videos" } },
     {
       $project: {
         _id: 1,

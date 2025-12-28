@@ -46,7 +46,7 @@ const ShowTweets: React.FC<ShowTweetType> = ({ interaction, pageLimit }) => {
 
   return (
     <Box>
-      <Typography variant="caption" color="textSecondary">
+      <Typography pb={1} fontSize={13} color="textSecondary">
         Total Tweets: {data.totalTweets}
       </Typography>
       <Stack spacing={1}>{renderTweets}</Stack>

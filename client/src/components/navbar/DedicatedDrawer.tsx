@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import Drawer from "@mui/material/Drawer";
+import { OverlayDrawer } from "../ui-components/NavbarStyledComponents";
 import DrawerContents from "./DrawerContents";
 
 type DedicatedDrawerProps = {
@@ -14,9 +14,9 @@ const DedicatedDrawer: FC<DedicatedDrawerProps> = ({
   closeDrawer,
 }) => {
   return (
-    <Drawer open={open} onClose={toggleDrawer} role="presentation">
+    <OverlayDrawer open={open} onClose={toggleDrawer} role="presentation">
       <DrawerContents open={open} closeDrawer={closeDrawer} />
-    </Drawer>
+    </OverlayDrawer>
   );
 };
 

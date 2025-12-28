@@ -21,10 +21,22 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
 }) => {
   const theme = useTheme();
   const playlistThumbnail = videos.length > 0 ? videos[0].thumbnail : "";
+  const sidebarContainerSx = {
+    width: "100%",
+    [theme.breakpoints.up(1070)]: {
+      width: "360px",
+    },
+    flexShrink: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+    // position: { md: "sticky" },
+    top: { md: "84px" },
+    // height: { md: "calc(100vh - 100px)" },
+  };
 
   return (
     <Box sx={sidebarContainerSx}>
-      {/* Thumbnail Styling - Glassmorphic / Gradient */}
       <PlaylistCoverBox>
         {playlistThumbnail ? (
           <img
@@ -38,7 +50,6 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
           </Box>
         )}
 
-        {/* Overlay Gradient at Bottom */}
         <Box sx={overlayGradientSx} />
       </PlaylistCoverBox>
 
@@ -59,7 +70,6 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
           </Typography>
         </Stack>
 
-        {/* Action Buttons */}
         <Stack direction="row" spacing={1}>
           <Button
             variant="contained"
@@ -81,6 +91,7 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
                 backgroundColor: "rgba(255,255,255,0.1)",
               },
             }}
+            disabled
           >
             Shuffle
           </Button>
@@ -94,7 +105,6 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
           {playlist.description}
         </Typography>
 
-        {/* Owner CRUD Buttons */}
         {isOwner && (
           <Box sx={managePlaylistContainerSx}>
             <Typography
@@ -146,16 +156,6 @@ const PlaylistCoverBox = styled(Box)(({ theme }) => ({
 }));
 
 // Static Styles
-const sidebarContainerSx = {
-  width: { xs: "100%", md: "360px" },
-  flexShrink: 0,
-  display: "flex",
-  flexDirection: "column",
-  gap: 2,
-  position: { md: "sticky" },
-  top: { md: "84px" },
-  height: { md: "calc(100vh - 100px)" },
-};
 
 const thumbnailImgStyle: React.CSSProperties = {
   width: "100%",

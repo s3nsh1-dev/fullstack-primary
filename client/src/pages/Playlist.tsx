@@ -1,15 +1,25 @@
+import { useState } from "react";
 import NotLoggedIn from "./NotLoggedIn";
 import useAuth from "../hooks/useAuth";
 import useFetchUserPlaylist from "../hooks/data-fetching/useFetchUserPlaylist";
 import Typography from "@mui/material/Typography";
-import SinglePlaylist from "../components/playlist/SinglePlaylist";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import CircularProgress from "@mui/material/CircularProgress";
-import Stack from "@mui/material/Stack";
+import CircularProgressCenter from "../components/ui-components/CircularProgressCenter";
+import IconButton from "@mui/material/IconButton";
+import Divider from "@mui/material/Divider";
+import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { DividerRoot } from "../components/ui-components/StyledComponents";
+import HomeTabTitles from "../components/ui-components/HomeTabTitles";
+import PlaylistContainer from "../components/playlist/PlaylistContainer";
+import CreatePlaylistModal from "../components/playlist/CreatePlaylistModal";
+import Modal from "@mui/material/Modal";
 
 const Playlist = () => {
   const { user, loading } = useAuth();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const handleOpenModal = () => setOpenModal((prev) => !prev);
+  const handleCloseModal = () => setOpenModal(false);
 
   const { data, isLoading, isError } = useFetchUserPlaylist(
     user?.user?._id || ""
@@ -17,78 +27,55 @@ const Playlist = () => {
 
   if (!user && !loading) return <NotLoggedIn />;
 
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "60vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography variant="h6" color="error" align="center">
-          Error loading playlists. Please try again later.
-        </Typography>
-      </Container>
-    );
-  }
-
-  if (!data || data.playlists?.length === 0) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Stack spacing={2} alignItems="center">
-          <Typography variant="h5" color="textSecondary">
-            No Playlists Yet
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Create your first playlist to organize your videos
-          </Typography>
-        </Stack>
-      </Container>
-    );
-  }
+  if (isError)
+    return <Typography color="error">...Encountered Error</Typography>;
+  if (isLoading) return <CircularProgressCenter size={20} />;
+  if (!data || data.playlists?.length === 0)
+    return <Typography color="textSecondary">No Playlists</Typography>;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Page Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          Your Playlists
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          {data.playlists.length}{" "}
-          {data.playlists.length === 1 ? "playlist" : "playlists"}
-        </Typography>
+    <>
+      <Box p={2}>
+        <Box sx={sxValue}>
+          <HomeTabTitles
+            text="Playlist"
+            icon={<PlaylistPlayIcon color="secondary" />}
+          />
+          <DividerRoot>
+            <Divider textAlign="right">
+              <Typography fontWeight={"bold"}>
+                <IconButton onClick={handleOpenModal}>
+                  <AddCircleIcon fontSize="large" color="success" />
+                </IconButton>
+                Create
+              </Typography>
+            </Divider>
+          </DividerRoot>
+        </Box>
+        <PlaylistContainer
+          data={data}
+          isLoading={isLoading}
+          isError={isError}
+        />
       </Box>
-
-      {/* Playlists Grid */}
-      <Box sx={gridPlaylistContainer}>
-        {data.playlists.map((playlist) => (
-          <SinglePlaylist key={playlist._id} playlist={playlist} />
-        ))}
-      </Box>
-    </Container>
+      {openModal && (
+        <Modal
+          open={openModal}
+          onClose={handleCloseModal}
+          aria-labelledby="form-modal"
+          aria-describedby="modal-to-display-playlist-panel"
+        >
+          <CreatePlaylistModal />
+        </Modal>
+      )}
+    </>
   );
 };
 
 export default Playlist;
 
-const gridPlaylistContainer = {
-  display: "grid",
-  gridTemplateColumns: {
-    xs: "repeat(1, 1fr)",
-    sm: "repeat(2, 1fr)",
-    md: "repeat(3, 1fr)",
-    lg: "repeat(4, 1fr)",
-  },
-  gap: 3,
+const sxValue = {
+  display: "flex",
+  alignItems: "center",
+  gap: 1,
 };

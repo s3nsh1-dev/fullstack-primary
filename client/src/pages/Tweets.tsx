@@ -16,13 +16,13 @@ import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 const Tweets = () => {
   const { user, loading } = useAuth();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
+  const handleOpenModal = () => setOpenModal((prev) => !prev);
 
   if (!user && !loading) return <NotLoggedIn />;
-  const handleOpenModal = () => setOpenModal((prev) => !prev);
 
   return (
     <>
-      <Box p={1}>
+      <Box p={2}>
         <Box sx={sxValue}>
           <HomeTabTitles
             text="Tweets"

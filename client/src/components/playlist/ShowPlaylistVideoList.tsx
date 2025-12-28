@@ -1,61 +1,54 @@
-import React from "react";
+import type { FC, CSSProperties } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Avatar from "@mui/material/Avatar";
 import { useTheme } from "@mui/material/styles";
-import convertISOIntoLocalTime from "../../utilities/convertISOIntoLocalTime";
+import type { Theme, SxProps } from "@mui/material/styles";
+import {
+  formatCount,
+  formatDuration,
+  formatDate,
+} from "../../utilities/helperFncForStats";
 import type { PlaylistVideo } from "../../hooks/CRUD-hooks/useGetSinglePlaylist";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useNavigate } from "react-router-dom";
 
-const ShowPlaylistVideoList: React.FC<ShowPlaylistVideoListProps> = ({
-  videos,
-}) => {
+const ShowPlaylistVideoList: FC<PropTypes> = ({ videos }) => {
+  if (!videos || videos.length === 0) {
+    return <Typography color="textSecondary">No Videos to show</Typography>;
+  }
+  const renderVideoItem = videos.map((video, index) => (
+    <VideoItem key={video._id || index} index={index + 1} video={video} />
+  ));
+
   return (
     <Box sx={videoListContainerSx}>
-      {videos.length === 0 ? (
-        <Box sx={emptyVideosSx}>
-          <Typography variant="body1" color="text.secondary">
-            This playlist has no videos.
-          </Typography>
-        </Box>
-      ) : (
-        <Stack spacing={1}>
-          {videos.map((video, index) => (
-            <VideoItem
-              key={video._id || index}
-              index={index + 1}
-              video={video}
-            />
-          ))}
-        </Stack>
-      )}
+      <Stack spacing={1}>{renderVideoItem}</Stack>
     </Box>
   );
 };
 
-const VideoItem = ({
-  video,
-  index,
-}: {
-  video: PlaylistVideo;
-  index: number;
-}) => {
+const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const isDesktop = useMediaQuery(theme.breakpoints.up(1070));
 
+  const handleVideoClick = () => {
+    navigate(`/videos/${video._id}`);
+  };
   return (
     <Box
       sx={{
-        ...videoItemSx,
-        "&:hover": {
-          backgroundColor: theme.palette.action.hover,
-          "& .more-btn": { opacity: 1 },
-        },
+        ...videoItemSx(theme),
       }}
+      onClick={handleVideoClick}
     >
-      <Typography variant="body2" color="text.secondary" sx={videoIndexSx}>
-        {index}
-      </Typography>
+      {isDesktop && (
+        <Typography variant="body2" color="text.secondary" sx={videoIndexSx}>
+          {index}
+        </Typography>
+      )}
 
       <Box sx={videoThumbnailContainerSx}>
         <img
@@ -67,77 +60,73 @@ const VideoItem = ({
       </Box>
 
       <Box sx={videoInfoSx}>
-        <Typography
-          variant="subtitle1"
-          fontWeight={600}
-          noWrap
-          sx={videoTitleSx}
-        >
-          {video.title}
-        </Typography>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Box>
+          <Typography
+            variant="subtitle1"
+            fontWeight={600}
+            noWrap
+            sx={videoTitleSx}
+          >
+            {video.title}
+          </Typography>
+
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={videoDescriptionSx}
+          >
+            {video.description}
+          </Typography>
+        </Box>
+
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+          <Avatar
+            src={video.owner.avatar}
+            alt={video.owner.fullname}
+            sx={{ width: 24, height: 24 }}
+          />
           <Typography variant="body2" color="text.secondary" noWrap>
             {video?.owner?.fullname}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            • {video.views} views
+            • {formatCount(video.views)} views
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            • {convertISOIntoLocalTime(video.createdAt)}
-          </Typography>
+          {useMediaQuery(theme.breakpoints.up(550)) && (
+            <Typography variant="body2" color="text.secondary">
+              • {formatDate(video.updatedAt)}
+            </Typography>
+          )}
         </Stack>
       </Box>
-
-      <IconButton className="more-btn" sx={moreBtnSx} size="small">
-        <MoreVertIcon />
-      </IconButton>
     </Box>
   );
 };
 
-const formatDuration = (seconds: number) => {
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-};
-
 export default ShowPlaylistVideoList;
 
-// Static Styles
 const videoListContainerSx = {
   flex: 1,
   minWidth: 0,
-};
-
-const emptyVideosSx = {
-  textAlign: "center",
-  py: 10,
-};
-
-const videoItemSx = {
-  display: "flex",
-  gap: 2,
-  p: 1,
-  borderRadius: 3,
-  cursor: "pointer",
 };
 
 const videoIndexSx = {
   display: "flex",
   alignItems: "center",
   minWidth: "24px",
+  alignSelf: "center",
 };
 
 const videoThumbnailContainerSx = {
   position: "relative",
-  width: "160px",
-  minWidth: "160px",
-  height: "90px",
-  borderRadius: 2,
+  width: "180px",
+  minWidth: "180px",
+  height: "101px", // 180 * 9/16
+  borderRadius: "8px",
   overflow: "hidden",
+  flexShrink: 0,
 };
 
-const thumbnailImgStyle: React.CSSProperties = {
+const thumbnailImgStyle: CSSProperties = {
   width: "100%",
   height: "100%",
   objectFit: "cover",
@@ -159,7 +148,7 @@ const videoInfoSx = {
   minWidth: 0,
   display: "flex",
   flexDirection: "column",
-  justifyContent: "center",
+  justifyContent: "space-between",
 };
 
 const videoTitleSx = {
@@ -167,11 +156,44 @@ const videoTitleSx = {
   mb: 0.5,
 };
 
-const moreBtnSx = {
-  opacity: 0,
-  alignSelf: "center",
+const videoDescriptionSx = {
+  display: "-webkit-box",
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: "vertical",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  mt: 0.5,
 };
 
-interface ShowPlaylistVideoListProps {
+const videoItemSx = (theme: Theme): SxProps<Theme> => ({
+  display: "flex",
+  gap: 2,
+  p: 1.5,
+  mb: 1,
+  borderRadius: "12px",
+  cursor: "pointer",
+  alignItems: "stretch",
+  border: `1px solid ${theme.palette.divider}`,
+  backgroundColor: theme.palette.background.paper,
+  transition: "all 0.2s ease-in-out",
+  "&:hover": {
+    borderColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.action.hover,
+    transform: "translateY(-2px)",
+    boxShadow: theme.shadows[2],
+    "& .more-btn": { opacity: 1 },
+  },
+  flexDirection: "row",
+  [theme.breakpoints.down(550)]: {
+    flexDirection: "column",
+  },
+});
+
+interface PropTypes {
   videos: PlaylistVideo[];
+}
+
+interface VideoItemProps {
+  video: PlaylistVideo;
+  index: number;
 }

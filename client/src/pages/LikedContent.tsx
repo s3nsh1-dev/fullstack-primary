@@ -34,12 +34,12 @@ const LikedContent = () => {
     return <ContentNotAvailable text="No Liked Content" />;
 
   return (
-    <Box p={1}>
+    <Box p={2}>
       <HomeTabTitles
         text="Liked Content"
         icon={<FavoriteBorderOutlinedIcon color="secondary" />}
       />
-      <Typography variant="caption" color="textSecondary">
+      <Typography pb={1} fontSize={13} color="textSecondary">
         Liked Content: {data.pages[0].totalDocs}
       </Typography>
       <LikesList data={data.pages.flatMap((page) => page.liked)} />

@@ -52,6 +52,9 @@ export const closedMixin = (theme: Theme): CSSObject => ({
   // }),
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
+  backgroundColor:
+    theme.palette.mode === "dark" ? "#000" : theme.palette.background.paper,
+  backgroundImage: "none",
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
@@ -82,6 +85,15 @@ export const RespDrawer = styled(MuiDrawer, {
   ],
 }));
 
+export const OverlayDrawer = styled(MuiDrawer)(({ theme }) => ({
+  "& .MuiDrawer-paper": {
+    backgroundColor:
+      theme.palette.mode === "dark" ? "#000" : theme.palette.background.paper,
+    backgroundImage: "none",
+    width: drawerWidth,
+  },
+}));
+
 export const Main = styled("main", {
   shouldForwardProp: (prop) => prop !== "open",
 })<{
@@ -100,11 +112,9 @@ export const Main = styled("main", {
   // }),
 
   ...(open && {
-    // transition: theme.transitions.create("margin", {
-    //   easing: theme.transitions.easing.easeOut,
-    //   duration: theme.transitions.duration.enteringScreen,
-    // }),
-    marginLeft: drawerWidth, // expanded drawer width
+    [theme.breakpoints.up(1313)]: {
+      marginLeft: drawerWidth, // expanded drawer width only for desktop
+    },
   }),
 }));
 
