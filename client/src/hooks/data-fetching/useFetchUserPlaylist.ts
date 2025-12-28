@@ -51,7 +51,7 @@ export interface Playlist {
   updatedAt: string; // ISO date string
 }
 
-interface PlaylistData {
+export interface PlaylistData {
   playlists: Playlist[];
   length: number;
 }

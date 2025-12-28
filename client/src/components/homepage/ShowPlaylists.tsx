@@ -1,10 +1,9 @@
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import useFetchUserPlaylist from "../../hooks/data-fetching/useFetchUserPlaylist";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import { useOutletContext } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import SinglePlaylist from "../playlist/SinglePlaylist";
+import PlaylistContainer from "../playlist/PlaylistContainer";
 
 const ShowPlaylists = () => {
   const outletContext = useOutletContext<OutletContextType | undefined>();
@@ -18,17 +17,8 @@ const ShowPlaylists = () => {
   if (!data || data.playlists?.length === 0)
     return <Typography color="textSecondary">No Playlists</Typography>;
 
-  const renderPlaylist = data.playlists.map((playlist) => (
-    <SinglePlaylist key={playlist._id} playlist={playlist} />
-  ));
-
   return (
-    <Box>
-      <Typography color="textSecondary" pb={1} fontSize={13}>
-        Total Playlists: {data?.playlists?.length}
-      </Typography>
-      <Box sx={{ ...gridPlaylistContainer }}>{renderPlaylist}</Box>
-    </Box>
+    <PlaylistContainer data={data} isLoading={isLoading} isError={isError} />
   );
 };
 
@@ -36,15 +26,4 @@ export default ShowPlaylists;
 
 type OutletContextType = {
   userId: string;
-};
-
-const gridPlaylistContainer = {
-  display: "grid",
-  gridTemplateColumns: {
-    xs: "repeat(1, 1fr)",
-    sm: "repeat(2, 1fr)",
-    md: "repeat(3, 1fr)",
-    lg: "repeat(4, 1fr)",
-  },
-  gap: 2,
 };
