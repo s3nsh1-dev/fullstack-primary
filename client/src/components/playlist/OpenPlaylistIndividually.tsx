@@ -18,8 +18,7 @@ const OpenPlaylistIndividually = () => {
   if (isError)
     return <Typography color="error">...Encountered Error</Typography>;
   if (isLoading) return <CircularProgressCenter size={20} />;
-  if (!data || data.videos?.length === 0)
-    return <Typography color="textSecondary">No Playlists</Typography>;
+  if (!data) return <Typography color="textSecondary">No Playlists</Typography>;
   const isOwner = user?.user?._id === data?.owner?._id;
 
   return (

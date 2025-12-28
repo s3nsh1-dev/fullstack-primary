@@ -9,8 +9,8 @@ import { useTheme } from "@mui/material/styles";
 import type { Theme } from "@mui/material/styles";
 import {
   formatCount,
-  getTimeAgo,
   formatDuration,
+  formatDate,
 } from "../../utilities/helperFncForStats";
 import type { PlaylistVideo } from "../../hooks/CRUD-hooks/useGetSinglePlaylist";
 
@@ -30,6 +30,7 @@ const ShowPlaylistVideoList: FC<PropTypes> = ({ videos }) => {
 };
 
 const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
+  console.log(video);
   const theme = useTheme();
 
   return (
@@ -52,22 +53,24 @@ const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
       </Box>
 
       <Box sx={videoInfoSx}>
-        <Typography
-          variant="subtitle1"
-          fontWeight={600}
-          noWrap
-          sx={videoTitleSx}
-        >
-          {video.title}
-        </Typography>
+        <Box>
+          <Typography
+            variant="subtitle1"
+            fontWeight={600}
+            noWrap
+            sx={videoTitleSx}
+          >
+            {video.title}
+          </Typography>
 
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={videoDescriptionSx}
-        >
-          {video.description}
-        </Typography>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={videoDescriptionSx}
+          >
+            {video.description}
+          </Typography>
+        </Box>
 
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
           <Avatar
@@ -82,7 +85,7 @@ const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
             • {formatCount(video.views)} views
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            • {getTimeAgo(video.createdAt)}
+            • {formatDate(video.updatedAt)}
           </Typography>
         </Stack>
       </Box>
@@ -160,7 +163,7 @@ const videoInfoSx = {
   minWidth: 0,
   display: "flex",
   flexDirection: "column",
-  justifyContent: "flex-start", // Align content to top
+  justifyContent: "space-between",
 };
 
 const videoTitleSx = {

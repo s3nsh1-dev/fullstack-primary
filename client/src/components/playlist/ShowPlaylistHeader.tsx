@@ -24,7 +24,6 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
 
   return (
     <Box sx={sidebarContainerSx}>
-      {/* Thumbnail Styling - Glassmorphic / Gradient */}
       <PlaylistCoverBox>
         {playlistThumbnail ? (
           <img
@@ -38,7 +37,6 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
           </Box>
         )}
 
-        {/* Overlay Gradient at Bottom */}
         <Box sx={overlayGradientSx} />
       </PlaylistCoverBox>
 
@@ -59,7 +57,6 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
           </Typography>
         </Stack>
 
-        {/* Action Buttons */}
         <Stack direction="row" spacing={1}>
           <Button
             variant="contained"
@@ -81,6 +78,7 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
                 backgroundColor: "rgba(255,255,255,0.1)",
               },
             }}
+            disabled
           >
             Shuffle
           </Button>
@@ -94,7 +92,6 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
           {playlist.description}
         </Typography>
 
-        {/* Owner CRUD Buttons */}
         {isOwner && (
           <Box sx={managePlaylistContainerSx}>
             <Typography
