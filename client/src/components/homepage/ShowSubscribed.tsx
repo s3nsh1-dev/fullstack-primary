@@ -48,7 +48,7 @@ const ShowSubscribed: FC<PropType> = ({ pageLimit }) => {
 
   return (
     <Box>
-      <Typography variant="caption" color="textSecondary">
+      <Typography pb={1} fontSize={13} color="textSecondary">
         Subscriber Count: {data.totalSubscribers}
       </Typography>
       <Box

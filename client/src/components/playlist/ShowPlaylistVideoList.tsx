@@ -12,6 +12,7 @@ import {
 } from "../../utilities/helperFncForStats";
 import type { PlaylistVideo } from "../../hooks/CRUD-hooks/useGetSinglePlaylist";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useNavigate } from "react-router-dom";
 
 const ShowPlaylistVideoList: FC<PropTypes> = ({ videos }) => {
   if (!videos || videos.length === 0) {
@@ -30,39 +31,18 @@ const ShowPlaylistVideoList: FC<PropTypes> = ({ videos }) => {
 
 const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const isDesktop = useMediaQuery(theme.breakpoints.up(1070));
 
-  const videoItemSx = (theme: Theme): SxProps<Theme> => ({
-    display: "flex",
-    gap: 2,
-    p: 1.5,
-    mb: 1,
-    borderRadius: "12px",
-    cursor: "pointer",
-    alignItems: "stretch",
-    border: `1px solid ${theme.palette.divider}`,
-    backgroundColor: theme.palette.background.paper,
-    transition: "all 0.2s ease-in-out",
-    "&:hover": {
-      borderColor: theme.palette.primary.main,
-      backgroundColor: theme.palette.action.hover,
-      transform: "translateY(-2px)",
-      boxShadow: theme.shadows[2],
-      "& .more-btn": { opacity: 1 },
-    },
-    flexDirection: "row",
-    [theme.breakpoints.down(550)]: {
-      flexDirection: "column",
-    },
-  });
-
-  console.log(theme.breakpoints.down(550));
-
+  const handleVideoClick = () => {
+    navigate(`/videos/${video._id}`);
+  };
   return (
     <Box
       sx={{
         ...videoItemSx(theme),
       }}
+      onClick={handleVideoClick}
     >
       {isDesktop && (
         <Typography variant="body2" color="text.secondary" sx={videoIndexSx}>
@@ -183,6 +163,30 @@ const videoDescriptionSx = {
   textOverflow: "ellipsis",
   mt: 0.5,
 };
+
+const videoItemSx = (theme: Theme): SxProps<Theme> => ({
+  display: "flex",
+  gap: 2,
+  p: 1.5,
+  mb: 1,
+  borderRadius: "12px",
+  cursor: "pointer",
+  alignItems: "stretch",
+  border: `1px solid ${theme.palette.divider}`,
+  backgroundColor: theme.palette.background.paper,
+  transition: "all 0.2s ease-in-out",
+  "&:hover": {
+    borderColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.action.hover,
+    transform: "translateY(-2px)",
+    boxShadow: theme.shadows[2],
+    "& .more-btn": { opacity: 1 },
+  },
+  flexDirection: "row",
+  [theme.breakpoints.down(550)]: {
+    flexDirection: "column",
+  },
+});
 
 interface PropTypes {
   videos: PlaylistVideo[];

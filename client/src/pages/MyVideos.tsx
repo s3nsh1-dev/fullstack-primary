@@ -39,7 +39,7 @@ const MyVideos = () => {
 
   return (
     <>
-      <Box p={1}>
+      <Box p={2}>
         <Box sx={sxValue}>
           <HomeTabTitles
             text="My Videos"

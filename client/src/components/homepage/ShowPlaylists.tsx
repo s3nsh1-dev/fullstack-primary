@@ -5,12 +5,10 @@ import CircularProgressCenter from "../ui-components/CircularProgressCenter";
 import { useOutletContext } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import SinglePlaylist from "../playlist/SinglePlaylist";
-import { Container } from "@mui/material";
 
 const ShowPlaylists = () => {
   const outletContext = useOutletContext<OutletContextType | undefined>();
   const { user } = useAuth();
-
   const effectiveUserId = outletContext?.userId ?? user?.user?._id ?? "";
 
   const { data, isLoading, isError } = useFetchUserPlaylist(effectiveUserId);
@@ -20,37 +18,17 @@ const ShowPlaylists = () => {
   if (!data || data.playlists?.length === 0)
     return <Typography color="textSecondary">No Playlists</Typography>;
 
-  return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Page Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          Your Playlists
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          {data.playlists.length}{" "}
-          {data.playlists.length === 1 ? "playlist" : "playlists"}
-        </Typography>
-      </Box>
+  const renderPlaylist = data.playlists.map((playlist) => (
+    <SinglePlaylist key={playlist._id} playlist={playlist} />
+  ));
 
-      {/* Playlists Grid */}
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "repeat(1, 1fr)",
-            sm: "repeat(2, 1fr)",
-            md: "repeat(3, 1fr)",
-            lg: "repeat(4, 1fr)",
-          },
-          gap: 3,
-        }}
-      >
-        {data.playlists.map((playlist) => (
-          <SinglePlaylist key={playlist._id} playlist={playlist} />
-        ))}
-      </Box>
-    </Container>
+  return (
+    <Box>
+      <Typography color="textSecondary" pb={1} fontSize={13}>
+        Total Playlists: {data?.playlists?.length}
+      </Typography>
+      <Box sx={{ ...gridPlaylistContainer }}>{renderPlaylist}</Box>
+    </Box>
   );
 };
 
@@ -58,4 +36,15 @@ export default ShowPlaylists;
 
 type OutletContextType = {
   userId: string;
+};
+
+const gridPlaylistContainer = {
+  display: "grid",
+  gridTemplateColumns: {
+    xs: "repeat(1, 1fr)",
+    sm: "repeat(2, 1fr)",
+    md: "repeat(3, 1fr)",
+    lg: "repeat(4, 1fr)",
+  },
+  gap: 2,
 };

@@ -41,7 +41,7 @@ const WatchHistory: React.FC = () => {
 
   return (
     <>
-      <Box p={1}>
+      <Box p={2}>
         <HomeTabTitles
           text="Watch History"
           icon={<HistoryIcon color="secondary" />}

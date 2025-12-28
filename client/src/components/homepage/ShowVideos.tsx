@@ -41,7 +41,7 @@ const ShowVideos: FC<PropTypes> = ({ pageLimit }) => {
 
   return (
     <>
-      <Typography variant="caption" color="textSecondary">
+      <Typography pb={1} fontSize={13} color="textSecondary">
         Total Videos: {data.totalVideos}
       </Typography>
       <Box

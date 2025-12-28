@@ -10,7 +10,7 @@ const Subscribers = () => {
   if (!user && !loading) return <NotLoggedIn />;
 
   return (
-    <Box p={1}>
+    <Box p={2}>
       <HomeTabTitles
         text="Subscribers"
         icon={<PeopleAltOutlinedIcon color="secondary" />}
