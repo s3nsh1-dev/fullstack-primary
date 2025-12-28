@@ -44,16 +44,7 @@ const ShowVideos: FC<PropTypes> = ({ pageLimit }) => {
       <Typography pb={1} fontSize={13} color="textSecondary">
         Total Videos: {data.totalVideos}
       </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: "12px",
-        }}
-      >
-        {renderVideoList}
-      </Box>
+      <Box sx={gridPlaylistContainer}>{renderVideoList}</Box>
       <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
         <Pagination
           color="secondary"
@@ -77,4 +68,15 @@ type OutletContextType = {
 
 type PropTypes = {
   pageLimit: number;
+};
+
+const gridPlaylistContainer = {
+  display: "grid",
+  gridTemplateColumns: {
+    xs: "repeat(1, 1fr)",
+    sm: "repeat(2, 1fr)",
+    md: "repeat(3, 1fr)",
+    lg: "repeat(4, 1fr)",
+  },
+  gap: 2,
 };

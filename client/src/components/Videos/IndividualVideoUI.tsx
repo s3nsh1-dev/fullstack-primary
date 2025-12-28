@@ -36,7 +36,7 @@ const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
       </Box>
 
       {/* Video info */}
-      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 3 }}>
+      <Box sx={{ p: 1, display: "flex", flexDirection: "column", gap: 2 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0 }}>
           <Typography variant="h6" noWrap fontWeight="bold">
             {video.title}
@@ -72,18 +72,20 @@ const IndividualVideoUI: React.FC<{ video: VideoType }> = ({ video }) => {
 export default IndividualVideoUI;
 
 const sx1 = {
-  width: 400,
+  width: "100%",
+  flexGrow: 1,
+  height: "100%",
   borderRadius: 1,
-  boxShadow: 5,
+  boxShadow: 2,
   // border: "1px solid purple",
   backgroundColor: "background.paper",
   overflow: "hidden",
-  "&:hover": { boxShadow: 3 },
+  "&:hover": { boxShadow: 5 },
 };
 
 const sx2 = {
   width: "100%",
-  height: 160,
+  height: 200,
   objectFit: "cover",
   display: "block",
   borderRadius: 1,

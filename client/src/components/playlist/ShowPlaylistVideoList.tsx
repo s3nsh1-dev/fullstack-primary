@@ -120,6 +120,7 @@ const videoThumbnailContainerSx = {
   position: "relative",
   width: "180px",
   minWidth: "180px",
+  height: "101px", // 180 * 9/16
   borderRadius: "8px",
   overflow: "hidden",
   flexShrink: 0,
