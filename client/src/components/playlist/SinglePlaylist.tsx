@@ -19,7 +19,6 @@ const SinglePlaylist: FC<PropTypes> = ({ playlist }) => {
 
   return (
     <PlaylistCard onClick={onClick}>
-      {/* Thumbnail Section with Overlay */}
       <ThumbnailContainer>
         {hasVideos ? (
           <ThumbnailImage src={firstVideoThumbnail} alt={playlist.name} />
@@ -29,10 +28,8 @@ const SinglePlaylist: FC<PropTypes> = ({ playlist }) => {
           </EmptyThumbnail>
         )}
 
-        {/* Gradient Overlay */}
         <GradientOverlay />
 
-        {/* Video Count Badge */}
         <VideoCountBadge>
           <PlaylistPlayIcon sx={{ fontSize: 20, mr: 0.5 }} />
           <Typography variant="body2" fontWeight={600}>
@@ -41,10 +38,8 @@ const SinglePlaylist: FC<PropTypes> = ({ playlist }) => {
         </VideoCountBadge>
       </ThumbnailContainer>
 
-      {/* Content Section */}
       <ContentSection>
         <Stack spacing={1}>
-          {/* Title */}
           <Typography
             variant="h6"
             fontWeight={700}
@@ -56,7 +51,6 @@ const SinglePlaylist: FC<PropTypes> = ({ playlist }) => {
             {playlist.name}
           </Typography>
 
-          {/* Description */}
           {playlist.description && (
             <Typography
               variant="body2"
@@ -67,7 +61,6 @@ const SinglePlaylist: FC<PropTypes> = ({ playlist }) => {
             </Typography>
           )}
 
-          {/* Metadata */}
           <Typography variant="caption" color="text.secondary">
             {hasVideos ? "View full playlist" : "No videos yet"}
           </Typography>

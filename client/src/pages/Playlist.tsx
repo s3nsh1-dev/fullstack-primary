@@ -27,12 +27,6 @@ const Playlist = () => {
 
   if (!user && !loading) return <NotLoggedIn />;
 
-  if (isError)
-    return <Typography color="error">...Encountered Error</Typography>;
-  if (isLoading) return <CircularProgressCenter size={20} />;
-  if (!data || data.playlists?.length === 0)
-    return <Typography color="textSecondary">No Playlists</Typography>;
-
   return (
     <>
       <Box p={2}>
@@ -52,11 +46,20 @@ const Playlist = () => {
             </Divider>
           </DividerRoot>
         </Box>
-        <PlaylistContainer
-          data={data}
-          isLoading={isLoading}
-          isError={isError}
-        />
+
+        {isError && <Typography color="error">...Encountered Error</Typography>}
+        {isLoading && <CircularProgressCenter size={20} />}
+        {!isLoading && !isError && (!data || data.playlists?.length === 0) && (
+          <Typography color="textSecondary">No Playlists</Typography>
+        )}
+
+        {!isLoading && !isError && data && data.playlists?.length > 0 && (
+          <PlaylistContainer
+            data={data}
+            isLoading={isLoading}
+            isError={isError}
+          />
+        )}
       </Box>
       {openModal && (
         <Modal
@@ -65,7 +68,7 @@ const Playlist = () => {
           aria-labelledby="form-modal"
           aria-describedby="modal-to-display-playlist-panel"
         >
-          <CreatePlaylistModal />
+          <CreatePlaylistModal handleClose={handleCloseModal} />
         </Modal>
       )}
     </>

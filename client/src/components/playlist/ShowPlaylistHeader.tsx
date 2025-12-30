@@ -30,9 +30,7 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
     display: "flex",
     flexDirection: "column",
     gap: 2,
-    // position: { md: "sticky" },
     top: { md: "84px" },
-    // height: { md: "calc(100vh - 100px)" },
   };
 
   return (
@@ -143,7 +141,6 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
 
 export default ShowPlaylistHeader;
 
-// Styled Components
 const PlaylistCoverBox = styled(Box)(({ theme }) => ({
   position: "relative",
   width: "100%",
@@ -154,8 +151,6 @@ const PlaylistCoverBox = styled(Box)(({ theme }) => ({
     "linear-gradient(135deg, rgba(80,80,80,1) 0%, rgba(30,30,30,1) 100%)",
   boxShadow: theme.shadows[10],
 }));
-
-// Static Styles
 
 const thumbnailImgStyle: React.CSSProperties = {
   width: "100%",

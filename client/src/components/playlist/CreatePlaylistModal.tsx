@@ -1,7 +1,83 @@
+import { useState } from "react";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import useCreatePlaylist from "../../hooks/CRUD-hooks/useCreatePlaylist";
 
-const CreatePlaylistModal = () => {
-  return <Box sx={style}>CreatePlaylistModal</Box>;
+interface CreatePlaylistModalProps {
+  handleClose: () => void;
+}
+
+const CreatePlaylistModal = ({ handleClose }: CreatePlaylistModalProps) => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+
+  const { mutate, isPending } = useCreatePlaylist();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+
+    mutate(
+      { name, description },
+      {
+        onSuccess: () => {
+          handleClose();
+          setName("");
+          setDescription("");
+        },
+      }
+    );
+  };
+
+  return (
+    <Box sx={style}>
+      <Typography variant="h6" component="h2" mb={2}>
+        Create New Playlist
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={3}>
+          <TextField
+            label="Name"
+            variant="outlined"
+            fullWidth
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            label="Description"
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleClose}
+              disabled={isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={isPending}
+            >
+              {isPending ? "Creating..." : "Create"}
+            </Button>
+          </Stack>
+        </Stack>
+      </form>
+    </Box>
+  );
 };
 
 export default CreatePlaylistModal;
@@ -10,7 +86,11 @@ const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
-  width: 500,
   transform: "translate(-50%, -50%)",
+  width: 400,
   bgcolor: "background.paper",
-};
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: 2,
+} as const;

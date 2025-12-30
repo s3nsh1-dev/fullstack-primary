@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const useFetchUserPlaylist = (user_ID: string) => {
   return useQuery({
-    queryKey: ["userSubscribers", user_ID],
+    queryKey: ["user-playlists", user_ID],
     queryFn: async () => {
       const response = await fetch(`${URL}/playlists/user/${user_ID}`, {
         method: "GET",
