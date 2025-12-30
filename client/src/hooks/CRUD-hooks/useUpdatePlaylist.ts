@@ -1,11 +1,18 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const useUpdatePlaylist = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update-playlist"],
     mutationFn: async ({ name, description, playlistId }: BodyResponseType) =>
       callApi({ name, description, playlistId }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["user-playlists"] });
+      queryClient.invalidateQueries({
+        queryKey: ["playlist", variables.playlistId],
+      });
+    },
   });
 };
 
@@ -27,7 +34,7 @@ const callApi = async ({ name, description, playlistId }: BodyResponseType) => {
   return data;
 };
 
-const URL = import.meta.env.VITE_BASE_URL;
+const URL = import.meta.env.VITE_SERVER_URL;
 interface PlaylistOwner {
   _id: string;
   username: string;
