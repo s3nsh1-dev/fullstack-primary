@@ -1,17 +1,24 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useDeleteVideoFromPlaylist = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["playlist", "remove-video"],
     mutationFn: async ({ playlistId, videoId }: ResponseParamsType) =>
       callApi({ playlistId, videoId }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["playlist", variables.playlistId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["user-playlists"] });
+    },
   });
 };
 
 export default useDeleteVideoFromPlaylist;
 
-const URL = import.meta.env.VITE_BASE_URL;
+const URL = import.meta.env.VITE_SERVER_URL;
 
 const callApi = async ({ playlistId, videoId }: ResponseParamsType) => {
   const { data } = await axios<ModifyPlaylistVideosResponse>({

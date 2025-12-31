@@ -46,11 +46,11 @@ interface PlaylistWithOwner {
   _id: string;
   name: string;
   description: string;
-  videos: string[]; // Video ObjectIds
-  owner: PlaylistOwner; // Populated reference
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  __v: number; // Mongoose version key
+  videos: string[];
+  owner: PlaylistOwner;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 interface UpdatePlaylistResponseData {

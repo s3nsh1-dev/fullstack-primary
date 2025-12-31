@@ -1,8 +1,11 @@
-import type { FC, CSSProperties } from "react";
+import { useState, type FC, type CSSProperties } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
+import Modal from "@mui/material/Modal";
+import IconButton from "@mui/material/IconButton";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useTheme } from "@mui/material/styles";
 import type { Theme, SxProps } from "@mui/material/styles";
 import {
@@ -13,41 +16,118 @@ import {
 import type { PlaylistVideo } from "../../hooks/CRUD-hooks/useGetSinglePlaylist";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
+import DeleteVideoFromPlaylistModal from "./DeleteVideoFromPlaylistModal";
 
-const ShowPlaylistVideoList: FC<PropTypes> = ({ videos }) => {
+const ShowPlaylistVideoList: FC<PropTypes> = ({
+  videos,
+  playlistId,
+  isOwner,
+}) => {
+  const [selectedVideo, setSelectedVideo] = useState<PlaylistVideo | null>(
+    null
+  );
+
   if (!videos || videos.length === 0) {
     return <Typography color="textSecondary">No Videos to show</Typography>;
   }
+
+  const handleOpenDelete = (video: PlaylistVideo) => {
+    setSelectedVideo(video);
+  };
+
+  const handleCloseDelete = () => {
+    setSelectedVideo(null);
+  };
+
   const renderVideoItem = videos.map((video, index) => (
-    <VideoItem key={video._id || index} index={index + 1} video={video} />
+    <VideoItem
+      key={video._id || index}
+      index={index + 1}
+      video={video}
+      isOwner={isOwner}
+      onDelete={() => handleOpenDelete(video)}
+    />
   ));
 
   return (
     <Box sx={videoListContainerSx}>
       <Stack spacing={1}>{renderVideoItem}</Stack>
+      {selectedVideo && (
+        <Modal open={!!selectedVideo} onClose={handleCloseDelete}>
+          <DeleteVideoFromPlaylistModal
+            handleClose={handleCloseDelete}
+            playlistId={playlistId}
+            videoId={selectedVideo._id}
+            videoTitle={selectedVideo.title}
+          />
+        </Modal>
+      )}
     </Box>
   );
 };
 
-const VideoItem: FC<VideoItemProps> = ({ video, index }) => {
+const VideoItem: FC<VideoItemProps> = ({ video, index, isOwner, onDelete }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const isDesktop = useMediaQuery(theme.breakpoints.up(1070));
 
-  const handleVideoClick = () => {
+  const handleVideoClick = (e: React.MouseEvent) => {
+    // Prevent navigation if delete button was clicked
+    if ((e.target as HTMLElement).closest(".delete-btn")) return;
     navigate(`/videos/${video._id}`);
   };
+
   return (
     <Box
       sx={{
         ...videoItemSx(theme),
       }}
       onClick={handleVideoClick}
+      className="video-item-root"
     >
       {isDesktop && (
-        <Typography variant="body2" color="text.secondary" sx={videoIndexSx}>
-          {index}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            minWidth: "24px",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            className="index-display"
+            sx={
+              isOwner
+                ? {
+                    display: "block",
+                    ".video-item-root:hover &": { display: "none" },
+                  }
+                : { display: "block" }
+            }
+          >
+            {index}
+          </Typography>
+          {isOwner && (
+            <IconButton
+              size="small"
+              className="delete-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+              sx={{
+                display: "none",
+                ".video-item-root:hover &": { display: "flex" },
+                color: "text.secondary",
+                "&:hover": { color: "error.main" },
+              }}
+            >
+              <DeleteOutlineIcon fontSize="small" />
+            </IconButton>
+          )}
+        </Box>
       )}
 
       <Box sx={videoThumbnailContainerSx}>
@@ -107,13 +187,6 @@ export default ShowPlaylistVideoList;
 const videoListContainerSx = {
   flex: 1,
   minWidth: 0,
-};
-
-const videoIndexSx = {
-  display: "flex",
-  alignItems: "center",
-  minWidth: "24px",
-  alignSelf: "center",
 };
 
 const videoThumbnailContainerSx = {
@@ -179,8 +252,6 @@ const videoItemSx = (theme: Theme): SxProps<Theme> => ({
   "&:hover": {
     borderColor: theme.palette.primary.main,
     backgroundColor: theme.palette.action.hover,
-    transform: "translateY(-2px)",
-    boxShadow: theme.shadows[2],
     "& .more-btn": { opacity: 1 },
   },
   flexDirection: "row",
@@ -191,9 +262,13 @@ const videoItemSx = (theme: Theme): SxProps<Theme> => ({
 
 interface PropTypes {
   videos: PlaylistVideo[];
+  playlistId: string;
+  isOwner: boolean;
 }
 
 interface VideoItemProps {
   video: PlaylistVideo;
   index: number;
+  isOwner: boolean;
+  onDelete: () => void;
 }
