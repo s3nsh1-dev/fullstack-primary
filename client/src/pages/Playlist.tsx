@@ -14,18 +14,34 @@ import HomeTabTitles from "../components/ui-components/HomeTabTitles";
 import PlaylistContainer from "../components/playlist/PlaylistContainer";
 import CreatePlaylistModal from "../components/playlist/CreatePlaylistModal";
 import Modal from "@mui/material/Modal";
+import { useSearchParams } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const Playlist = () => {
   const { user, loading } = useAuth();
   const [openModal, setOpenModal] = useState<boolean>(false);
+
   const handleOpenModal = () => setOpenModal((prev) => !prev);
   const handleCloseModal = () => setOpenModal(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = searchParams.get("page") || 1;
 
   const { data, isLoading, isError } = useFetchUserPlaylist({
     userId: user?.user?._id || "",
     limit: LIMIT,
-    page: 1,
+    page: Number(currentPage),
   });
+
+  const handlePagination = (value: number) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", value.toString());
+    setSearchParams(newParams);
+  };
+
+  if (!data || data?.length === 0)
+    return <Typography color="textSecondary">No Playlists</Typography>;
 
   if (!user && !loading) return <NotLoggedIn />;
 
@@ -73,6 +89,18 @@ const Playlist = () => {
           <CreatePlaylistModal handleClose={handleCloseModal} />
         </Modal>
       )}
+      <Stack alignItems={"center"} pt={2}>
+        <Pagination
+          variant="outlined"
+          shape="rounded"
+          color="secondary"
+          count={data.totalPages}
+          page={data.currentPage}
+          onChange={(_, value) => handlePagination(value)}
+          showFirstButton
+          showLastButton
+        />
+      </Stack>
     </>
   );
 };

@@ -88,16 +88,24 @@ const getUserTweets = asyncHandler(async (req, res) => {
   const totalTweets = foo[0]?.totalCount[0]?.count;
   const tweets = foo[0]?.data || [];
   const totalPages = Math.ceil(totalTweets / limit);
+  const hasNextPage = page < totalPages;
+  const havePrevPage = page > 1;
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { tweets, totalTweets, totalPages, currentPage: page, limit },
-        "USER TWEETS RETRIEVED"
-      )
-    );
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        tweets,
+        totalTweets,
+        totalPages,
+        hasNextPage,
+        havePrevPage,
+        currentPage: page,
+        limit,
+      },
+      "USER TWEETS RETRIEVED"
+    )
+  );
 });
 
 export { getUserTweets };

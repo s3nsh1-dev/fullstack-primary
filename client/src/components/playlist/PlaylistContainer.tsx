@@ -8,7 +8,7 @@ const PlaylistContainer = ({ isError, isLoading, data }: PropTypes) => {
   if (isError)
     return <Typography color="error">...Encountered Error</Typography>;
   if (isLoading) return <CircularProgressCenter size={20} />;
-  if (!data || data.playlists?.length === 0)
+  if (!data || data?.length === 0)
     return <Typography color="textSecondary">No Playlists</Typography>;
 
   const renderPlaylist = data.playlists.map((playlist) => (
@@ -17,7 +17,7 @@ const PlaylistContainer = ({ isError, isLoading, data }: PropTypes) => {
   return (
     <>
       <Typography color="textSecondary" pb={1} fontSize={13}>
-        Total Playlists: {data?.playlists?.length}
+        Total Playlists: {data?.length}
       </Typography>
       <Box sx={{ ...gridPlaylistContainer }}>{renderPlaylist}</Box>
     </>

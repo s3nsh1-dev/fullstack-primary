@@ -4,10 +4,10 @@ import axios from "axios";
 const useGetSinglePlaylist = (playlistId: string) => {
   return useQuery({
     queryKey: ["playlist", playlistId],
-    queryFn: async () => {
-      const data = await callApi(playlistId);
-      return data;
-    },
+    queryFn: async () => await callApi(playlistId),
+    enabled: !!playlistId,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 };
 
