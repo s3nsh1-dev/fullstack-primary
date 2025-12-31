@@ -10,7 +10,11 @@ const ShowPlaylists = () => {
   const { user } = useAuth();
   const effectiveUserId = outletContext?.userId ?? user?.user?._id ?? "";
 
-  const { data, isLoading, isError } = useFetchUserPlaylist(effectiveUserId);
+  const { data, isLoading, isError } = useFetchUserPlaylist({
+    userId: effectiveUserId,
+    limit: LIMIT,
+    page: 1,
+  });
 
   if (isError) return <div>...Encountered Error</div>;
   if (isLoading) return <CircularProgressCenter size={20} />;
@@ -27,3 +31,5 @@ export default ShowPlaylists;
 type OutletContextType = {
   userId: string;
 };
+
+const LIMIT = 10;

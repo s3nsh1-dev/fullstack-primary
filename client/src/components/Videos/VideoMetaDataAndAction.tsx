@@ -47,7 +47,11 @@ const VideoMetaDataAndAction: React.FC<VideoMetaDataAndActionProps> = ({
   const openMenu = Boolean(anchorEl);
 
   const { data: userPlaylistsData } =
-    useFetchUserPlaylist(user?.user?._id || "") || {};
+    useFetchUserPlaylist({
+      userId: user?.user?._id || "",
+      limit: LIMIT,
+      page: 1,
+    }) || {};
   const { mutate: addVideoToPlaylist } = useAddVideoToPlaylist();
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -257,3 +261,5 @@ type VideoMetaDataAndActionProps = {
 //   channelSubscribedToCount: number;
 //   isSubscribed: boolean;
 // };
+
+const LIMIT = 10;

@@ -21,9 +21,11 @@ const Playlist = () => {
   const handleOpenModal = () => setOpenModal((prev) => !prev);
   const handleCloseModal = () => setOpenModal(false);
 
-  const { data, isLoading, isError } = useFetchUserPlaylist(
-    user?.user?._id || ""
-  );
+  const { data, isLoading, isError } = useFetchUserPlaylist({
+    userId: user?.user?._id || "",
+    limit: LIMIT,
+    page: 1,
+  });
 
   if (!user && !loading) return <NotLoggedIn />;
 
@@ -82,3 +84,5 @@ const sxValue = {
   alignItems: "center",
   gap: 1,
 };
+
+const LIMIT = 10;

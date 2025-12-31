@@ -1,19 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 
-const useFetchUserPlaylist = (user_ID: string) => {
+const useFetchUserPlaylist = ({ userId, limit, page }: ParamsType) => {
   return useQuery({
-    queryKey: ["user-playlists", user_ID],
+    queryKey: ["user-playlists", userId],
     queryFn: async () => {
-      const response = await fetch(`${URL}/playlists/user/${user_ID}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${URL}/playlists/user/${userId}?limit=${limit}&page=${page}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING USER PLAYLISTS");
       const data: PlaylistResponse = await response.json();
       const result = data.data;
       return result;
     },
-    enabled: !!user_ID, // only fetch if user._id exists
+    enabled: !!userId, // only fetch if user._id exists
   });
 };
 
@@ -62,3 +65,9 @@ interface PlaylistResponse {
   message: string;
   success: boolean;
 }
+
+type ParamsType = {
+  userId: string;
+  limit: number;
+  page: number;
+};
