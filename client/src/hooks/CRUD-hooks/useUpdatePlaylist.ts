@@ -1,11 +1,18 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const useUpdatePlaylist = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update-playlist"],
     mutationFn: async ({ name, description, playlistId }: BodyResponseType) =>
       callApi({ name, description, playlistId }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["user-playlists"] });
+      queryClient.invalidateQueries({
+        queryKey: ["playlist", variables.playlistId],
+      });
+    },
   });
 };
 
@@ -27,7 +34,7 @@ const callApi = async ({ name, description, playlistId }: BodyResponseType) => {
   return data;
 };
 
-const URL = import.meta.env.VITE_BASE_URL;
+const URL = import.meta.env.VITE_SERVER_URL;
 interface PlaylistOwner {
   _id: string;
   username: string;
@@ -39,11 +46,11 @@ interface PlaylistWithOwner {
   _id: string;
   name: string;
   description: string;
-  videos: string[]; // Video ObjectIds
-  owner: PlaylistOwner; // Populated reference
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  __v: number; // Mongoose version key
+  videos: string[];
+  owner: PlaylistOwner;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 interface UpdatePlaylistResponseData {

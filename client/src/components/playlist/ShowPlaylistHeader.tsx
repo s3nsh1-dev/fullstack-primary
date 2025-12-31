@@ -9,10 +9,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import { styled, useTheme } from "@mui/material/styles";
+import Modal from "@mui/material/Modal";
+import EditPlaylistModal from "./EditPlaylistModal";
+import DeletePlaylistModal from "./DeletePlaylistModal";
 import type {
   PlaylistWithVideos,
   PlaylistVideo,
 } from "../../hooks/CRUD-hooks/useGetSinglePlaylist";
+
+interface ShowPlaylistHeaderProps {
+  playlist: PlaylistWithVideos;
+  videos: PlaylistVideo[];
+  isOwner: boolean;
+}
 
 const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
   playlist,
@@ -30,10 +39,17 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
     display: "flex",
     flexDirection: "column",
     gap: 2,
-    // position: { md: "sticky" },
     top: { md: "84px" },
-    // height: { md: "calc(100vh - 100px)" },
   };
+
+  const [openEditModal, setOpenEditModal] = React.useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+
+  const handleOpenEdit = () => setOpenEditModal(true);
+  const handleCloseEdit = () => setOpenEditModal(false);
+
+  const handleOpenDelete = () => setOpenDeleteModal(true);
+  const handleCloseDelete = () => setOpenDeleteModal(false);
 
   return (
     <Box sx={sidebarContainerSx}>
@@ -121,6 +137,7 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
                 variant="text"
                 color="inherit"
                 sx={crudBtnSx}
+                onClick={handleOpenEdit}
               >
                 Edit
               </Button>
@@ -130,6 +147,7 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
                 variant="text"
                 color="error"
                 sx={crudBtnSx}
+                onClick={handleOpenDelete}
               >
                 Delete
               </Button>
@@ -137,13 +155,28 @@ const ShowPlaylistHeader: React.FC<ShowPlaylistHeaderProps> = ({
           </Box>
         )}
       </Stack>
+
+      <Modal open={openEditModal} onClose={handleCloseEdit}>
+        <EditPlaylistModal
+          handleClose={handleCloseEdit}
+          playlistId={playlist._id}
+          existingName={playlist.name}
+          existingDescription={playlist.description}
+        />
+      </Modal>
+
+      <Modal open={openDeleteModal} onClose={handleCloseDelete}>
+        <DeletePlaylistModal
+          handleClose={handleCloseDelete}
+          playlistId={playlist._id}
+          playlistName={playlist.name}
+        />
+      </Modal>
     </Box>
   );
 };
-
 export default ShowPlaylistHeader;
 
-// Styled Components
 const PlaylistCoverBox = styled(Box)(({ theme }) => ({
   position: "relative",
   width: "100%",
@@ -154,8 +187,6 @@ const PlaylistCoverBox = styled(Box)(({ theme }) => ({
     "linear-gradient(135deg, rgba(80,80,80,1) 0%, rgba(30,30,30,1) 100%)",
   boxShadow: theme.shadows[10],
 }));
-
-// Static Styles
 
 const thumbnailImgStyle: React.CSSProperties = {
   width: "100%",

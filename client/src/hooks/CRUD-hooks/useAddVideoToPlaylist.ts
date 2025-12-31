@@ -1,17 +1,24 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const useAddVideoToPlaylist = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["add-video-to-playlist"],
     mutationFn: async ({ playlistId, videoId }: ResponseParamsType) =>
       callApi({ playlistId, videoId }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["user-playlists"] });
+      queryClient.invalidateQueries({
+        queryKey: ["playlist", variables.playlistId],
+      });
+    },
   });
 };
 
 export default useAddVideoToPlaylist;
 
-const URL = import.meta.env.VITE_BASE_URL;
+const URL = import.meta.env.VITE_SERVER_URL;
 
 const callApi = async ({ playlistId, videoId }: ResponseParamsType) => {
   const { data } = await axios<ModifyPlaylistVideosResponse>({

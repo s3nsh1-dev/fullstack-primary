@@ -1,32 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import useCreatePlaylist from "../../hooks/CRUD-hooks/useCreatePlaylist";
+import useUpdatePlaylist from "../../hooks/CRUD-hooks/useUpdatePlaylist";
 
-interface CreatePlaylistModalProps {
+interface EditPlaylistModalProps {
   handleClose: () => void;
+  playlistId: string;
+  existingName: string;
+  existingDescription: string;
 }
 
-const CreatePlaylistModal = ({ handleClose }: CreatePlaylistModalProps) => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+const EditPlaylistModal = ({
+  handleClose,
+  playlistId,
+  existingName,
+  existingDescription,
+}: EditPlaylistModalProps) => {
+  const [name, setName] = useState(existingName);
+  const [description, setDescription] = useState(existingDescription);
 
-  const { mutate, isPending } = useCreatePlaylist();
+  // Sync state if props change (optional transparency if modal re-opens with different props)
+  useEffect(() => {
+    setName(existingName);
+    setDescription(existingDescription);
+  }, [existingName, existingDescription]);
+
+  const { mutate, isPending } = useUpdatePlaylist();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
     mutate(
-      { name, description },
+      { playlistId, name, description },
       {
         onSuccess: () => {
           handleClose();
-          setName("");
-          setDescription("");
         },
       }
     );
@@ -35,7 +47,7 @@ const CreatePlaylistModal = ({ handleClose }: CreatePlaylistModalProps) => {
   return (
     <Box sx={style}>
       <Typography variant="h6" component="h2" mb={2}>
-        Create New Playlist
+        Edit Playlist
       </Typography>
       <form onSubmit={handleSubmit}>
         <Stack spacing={3}>
@@ -71,7 +83,7 @@ const CreatePlaylistModal = ({ handleClose }: CreatePlaylistModalProps) => {
               color="primary"
               disabled={isPending}
             >
-              {isPending ? "Creating..." : "Create"}
+              {isPending ? "Updating..." : "Update"}
             </Button>
           </Stack>
         </Stack>
@@ -80,7 +92,7 @@ const CreatePlaylistModal = ({ handleClose }: CreatePlaylistModalProps) => {
   );
 };
 
-export default CreatePlaylistModal;
+export default EditPlaylistModal;
 
 const style = {
   position: "absolute",

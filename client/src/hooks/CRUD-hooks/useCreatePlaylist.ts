@@ -1,11 +1,15 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useCreatePlaylist = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["create-playlist"],
     mutationFn: async ({ name, description }: BodyResponseType) =>
       callingApi({ name, description }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-playlists"] });
+    },
   });
 };
 

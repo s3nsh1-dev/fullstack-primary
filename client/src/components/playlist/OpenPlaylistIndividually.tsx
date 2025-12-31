@@ -44,7 +44,11 @@ const OpenPlaylistIndividually = () => {
           videos={data?.videos || []}
           isOwner={isOwner}
         />
-        <ShowPlaylistVideoList videos={data?.videos || []} />
+        <ShowPlaylistVideoList
+          videos={data?.videos || []}
+          playlistId={data?._id || ""}
+          isOwner={isOwner}
+        />
       </Box>
     </Box>
   );

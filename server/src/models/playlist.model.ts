@@ -7,7 +7,7 @@ const schema = {
   },
   description: {
     type: String,
-    required: true,
+    // required: true,
   },
   videos: [
     {

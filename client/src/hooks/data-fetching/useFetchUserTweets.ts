@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const URL = import.meta.env.VITE_SERVER_URL;
-
 const useFetchUserTweets = ({ userId, page, limit }: ParamTypes) => {
   return useQuery({
     queryKey: ["userTweets", userId, page, limit],
@@ -14,7 +12,10 @@ const useFetchUserTweets = ({ userId, page, limit }: ParamTypes) => {
       });
       return data.data;
     },
-    enabled: !!userId, // only fetch if user._id exists
+    enabled: !!userId,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
   });
 };
 export default useFetchUserTweets;
@@ -39,6 +40,8 @@ interface PaginationData {
   tweets: TweetType[];
   totalTweets: number;
   totalPages: number;
+  hasNextPage: boolean;
+  havePrevPage: boolean;
   currentPage: number;
   limit: number;
 }
@@ -54,3 +57,5 @@ type ParamTypes = {
   page: number;
   limit: number;
 };
+
+const URL = import.meta.env.VITE_SERVER_URL;

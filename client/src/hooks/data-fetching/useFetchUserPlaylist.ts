@@ -1,19 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 
-const useFetchUserPlaylist = (user_ID: string) => {
+const useFetchUserPlaylist = ({ userId, limit, page }: ParamsType) => {
   return useQuery({
-    queryKey: ["userSubscribers", user_ID],
+    queryKey: ["user-playlists", userId, limit, page],
     queryFn: async () => {
-      const response = await fetch(`${URL}/playlists/user/${user_ID}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${URL}/playlists/user/${userId}?limit=${limit}&page=${page}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (!response.ok) throw new Error("ERROR WHILE FETCHING USER PLAYLISTS");
       const data: PlaylistResponse = await response.json();
-      const result = data.data;
-      return result;
+      return data.data;
     },
-    enabled: !!user_ID, // only fetch if user._id exists
+    enabled: !!userId,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
   });
 };
 
@@ -38,7 +43,7 @@ interface Video {
   duration: number;
   views: number;
   isPublished: boolean;
-  updatedAt: string; // ISO date string
+  updatedAt: string;
 }
 
 export interface Playlist {
@@ -46,14 +51,19 @@ export interface Playlist {
   name: string;
   description: string;
   videos: Video[];
-  owner: string; // just the owner's ID here, not a populated object
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
+  owner: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PlaylistData {
   playlists: Playlist[];
   length: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  havePrevPage: boolean;
+  currentPage: number;
+  limit: number;
 }
 
 interface PlaylistResponse {
@@ -62,3 +72,9 @@ interface PlaylistResponse {
   message: string;
   success: boolean;
 }
+
+type ParamsType = {
+  userId: string;
+  limit: number;
+  page: number;
+};
