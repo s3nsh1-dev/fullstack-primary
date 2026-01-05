@@ -6,8 +6,6 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import { toObjectId } from "../../utils/convertToObjectId";
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
-  //TODO: get user playlists
-
   const { userId } = req.params;
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
@@ -17,53 +15,51 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
   const playlists = await Playlist.aggregate([
     { $match: { owner: toObjectId(String(userId)) } },
     {
-      $lookup: {
-        from: "videos",
-        localField: "videos",
-        foreignField: "_id",
-        as: "videos",
-        pipeline: [
-          {
-            $project: projectVideos,
-          },
+      $facet: {
+        data: [
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
           {
             $lookup: {
-              from: "users",
-              localField: "owner",
+              from: "videos",
+              localField: "videos",
               foreignField: "_id",
-              as: "owner",
+              as: "videos",
               pipeline: [
+                { $project: projectVideos },
                 {
-                  $project: projectOwner,
+                  $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "owner",
+                    pipeline: [{ $project: projectOwner }],
+                  },
+                },
+                {
+                  $unwind: { path: "$owner", preserveNullAndEmptyArrays: true },
                 },
               ],
             },
           },
-          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+          { $project: projectPlaylist },
         ],
-      },
-    },
-    {
-      $project: projectPlaylist,
-    },
-    {
-      $facet: {
-        data: [{ $skip: (page - 1) * limit }, { $limit: limit }],
         total: [{ $count: "total" }],
       },
     },
   ]);
-  const totalPages = Math.ceil(playlists[0].total[0].total / limit);
+
+  const totalDocs = playlists[0].total[0]?.total || 0;
+  const totalPages = Math.ceil(totalDocs / limit);
   const hasNextPage = page < totalPages;
   const havePrevPage = page > 1;
-  if (!playlists) throw new ApiError(400, "NO PLAYLIST FOUND");
 
   return res.status(200).json(
     new ApiResponse(
       200,
       {
         playlists: playlists[0].data,
-        length: playlists[0].total[0].total,
+        length: playlists[0].data.length,
         totalPages,
         hasNextPage,
         havePrevPage,

@@ -26,50 +26,50 @@ const getUserTweets = asyncHandler(async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  const foo: IFooItem[] = await Tweet.aggregate([
+  const tweetsAggregate = await Tweet.aggregate([
     { $match: { owner: toObjectId(userId) } },
-    {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "owner",
-        pipeline: [{ $project: { username: 1, fullname: 1, avatar: 1 } }],
-      },
-    },
-    { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
-    {
-      $lookup: {
-        from: "likes",
-        let: { tweetId: "$_id" }, // this is tweet_id fetched during execution
-        as: "likedDetails",
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  { $eq: ["$tweet", "$$tweetId"] },
-                  { $eq: ["$likedBy", toObjectId(userId)] },
-                ],
-              },
-            },
-          },
-          { $limit: 1 },
-        ],
-      },
-    },
-    {
-      $addFields: {
-        isLiked: {
-          $cond: [{ $gt: [{ $size: "$likedDetails" }, 0] }, true, false],
-        },
-      },
-    },
     {
       $facet: {
         data: [
           { $skip: skip },
           { $limit: limit },
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [{ $project: { username: 1, fullname: 1, avatar: 1 } }],
+            },
+          },
+          { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+          {
+            $lookup: {
+              from: "likes",
+              let: { tweetId: "$_id" }, // this is tweet_id fetched during execution
+              as: "likedDetails",
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$tweet", "$$tweetId"] },
+                        { $eq: ["$likedBy", toObjectId(userId)] },
+                      ],
+                    },
+                  },
+                },
+                { $limit: 1 },
+              ],
+            },
+          },
+          {
+            $addFields: {
+              isLiked: {
+                $cond: [{ $gt: [{ $size: "$likedDetails" }, 0] }, true, false],
+              },
+            },
+          },
           {
             $project: {
               content: 1,
@@ -85,8 +85,8 @@ const getUserTweets = asyncHandler(async (req, res) => {
     },
   ]);
 
-  const totalTweets = foo[0]?.totalCount[0]?.count;
-  const tweets = foo[0]?.data || [];
+  const totalTweets = tweetsAggregate[0].totalCount[0]?.count || 0;
+  const tweets = tweetsAggregate[0].data;
   const totalPages = Math.ceil(totalTweets / limit);
   const hasNextPage = page < totalPages;
   const havePrevPage = page > 1;

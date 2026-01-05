@@ -69,7 +69,7 @@ const Settings = () => {
   const activeComponent = viewOptions.find((option) => option.flag)?.component;
 
   return (
-    <Stack p={1} gap={1}>
+    <Stack p={2} gap={1}>
       <HomeTabTitles
         text="Settings"
         icon={<SettingsOutlinedIcon color="secondary" />}

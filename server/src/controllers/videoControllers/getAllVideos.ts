@@ -69,9 +69,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
     },
   ]);
 
-  const videos = videoList[0]?.data || [];
-  const totalVideos = videoList[0]?.totalCount[0]?.count || 0;
+  const videos = videoList[0].data;
+  const totalVideos = videoList[0].totalCount[0]?.count || 0;
   const totalPages = Math.ceil(totalVideos / limit);
+  const hasNextPage = page < totalPages;
+  const havePrevPage = page > 1;
 
   return res.status(200).json(
     new ApiResponse(
@@ -80,8 +82,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
         videos,
         totalVideos,
         totalPages,
-        hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1,
+        hasNextPage,
+        havePrevPage,
         currentPage: page,
         limit,
       },

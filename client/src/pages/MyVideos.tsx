@@ -1,22 +1,22 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import ShowVideos from "../components/homepage/ShowVideos";
+import VideoCallIcon from "@mui/icons-material/VideoCall";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
-import { DividerRoot } from "../components/ui-components/StyledComponents";
-import VideoCallIcon from "@mui/icons-material/VideoCall";
-import FormModal from "../components/others/FormModal";
-import VideoUploadForm from "../components/Videos/VideoUploadForm";
-import useUploadMyVideo from "../hooks/data-fetching/useUploadMyVideo";
-import MovieEditIcon from "@mui/icons-material/MovieEdit";
-import { useQueryClient } from "@tanstack/react-query";
 import useAuth from "../hooks/useAuth";
 import useMode from "../hooks/useMode";
-import { useNavigate } from "react-router-dom";
-import NotLoggedIn from "./NotLoggedIn";
+import useUploadMyVideo from "../hooks/data-fetching/useUploadMyVideo";
+import { DividerRoot } from "../components/ui-components/StyledComponents";
+import VideoUploadForm from "../components/Videos/VideoUploadForm";
+import FormModal from "../components/others/FormModal";
+import ShowVideos from "../components/homepage/ShowVideos";
 import HomeTabTitles from "../components/ui-components/HomeTabTitles";
+import NotLoggedIn from "./NotLoggedIn";
 
 const MyVideos = () => {
   const { mode } = useMode();
@@ -54,31 +54,29 @@ const MyVideos = () => {
                   alignItems: "center",
                 }}
               >
-                <Button
-                  onClick={toggleModal}
-                  color="success"
-                  variant="contained"
-                >
-                  <VideoCallIcon />
-                  &nbsp; Upload
-                </Button>
+                <Typography fontWeight={"bold"}>
+                  <IconButton onClick={toggleModal}>
+                    <VideoCallIcon fontSize="large" color="success" />
+                  </IconButton>
+                  Upload
+                </Typography>
                 <Typography
                   variant="caption"
                   px={1}
-                  sx={{ color: "#494949c9" }}
+                  sx={{ color: !mode ? "#494949c9" : "#d4d4d4ff" }}
                 >
-                  •••••
+                  -------
                 </Typography>
-                <Button
-                  onClick={() => {
-                    navigate("/my-videos/edit");
-                  }}
-                  color="info"
-                  variant="contained"
-                >
-                  <MovieEditIcon />
-                  &nbsp; Edit
-                </Button>
+                <Typography fontWeight={"bold"}>
+                  <IconButton
+                    onClick={() => {
+                      navigate("/my-videos/edit");
+                    }}
+                  >
+                    <EditNoteIcon fontSize="large" color="info" />
+                  </IconButton>
+                  Edit
+                </Typography>
               </Box>
             </Divider>
           </DividerRoot>
