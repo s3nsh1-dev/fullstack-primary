@@ -21,10 +21,10 @@ const ShowPlaylists = () => {
     page: Number(currentPage),
   });
 
-  if (isError) return <div>...Encountered Error</div>;
   if (isLoading) return <CircularProgressCenter size={20} />;
   if (!data || data?.length === 0)
     return <Typography color="textSecondary">No Playlists</Typography>;
+  if (isError) return <Typography>...Encountered Error</Typography>;
 
   const handlePagination = (value: number) => {
     const newParams = new URLSearchParams(searchParams);

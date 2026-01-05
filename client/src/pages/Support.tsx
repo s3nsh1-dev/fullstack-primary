@@ -44,6 +44,29 @@ const Support = () => {
 
         {/* Section 1 */}
         <Box sx={{ mt: 4 }}>
+          {/* Section 0 */}
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h5" gutterBottom fontWeight={600}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleSendEmail}
+              >
+                Contact Us
+              </Button>
+            </Typography>
+            <Typography textAlign={"justify"} variant="body1" paragraph>
+              If you have any questions about these Terms and Conditions, please
+              contact us at:
+            </Typography>
+            <Typography textAlign={"justify"} variant="body1" paragraph>
+              <strong>Email:</strong> legal@playtube.com
+              <br />
+              <strong>Address:</strong> PlayTube Inc., XYZ Media Street,
+              Varanasi, CA 969696, Germany
+            </Typography>
+          </Box>
+
           <Typography variant="h5" gutterBottom fontWeight={600}>
             1. Acceptance of Terms
           </Typography>
@@ -332,30 +355,6 @@ const Support = () => {
           </Typography>
           <Typography fontWeight={"bold"} color="warning.main" variant="body1">
             Everything in this clause is AI generated.
-          </Typography>
-        </Box>
-
-        {/* Section 14 */}
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" gutterBottom fontWeight={600}>
-            14.{" "}
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleSendEmail}
-            >
-              Contact Us
-            </Button>
-          </Typography>
-          <Typography textAlign={"justify"} variant="body1" paragraph>
-            If you have any questions about these Terms and Conditions, please
-            contact us at:
-          </Typography>
-          <Typography textAlign={"justify"} variant="body1" paragraph>
-            <strong>Email:</strong> legal@playtube.com
-            <br />
-            <strong>Address:</strong> PlayTube Inc., XYZ Media Street, Varanasi,
-            CA 969696, Germany
           </Typography>
         </Box>
 

@@ -16,9 +16,7 @@ const useFetchUserPlaylist = ({ userId, limit, page }: ParamsType) => {
       return data.data;
     },
     enabled: !!userId,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchInterval: false,
+    staleTime: 60 * 60 * 1000,
   });
 };
 
