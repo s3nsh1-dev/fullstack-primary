@@ -5,8 +5,11 @@ import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import Button from "@mui/material/Button";
 
 const Support = () => {
+  const handleSendEmail = () => {};
+
   return (
     <Box
       sx={{
@@ -335,7 +338,14 @@ const Support = () => {
         {/* Section 14 */}
         <Box sx={{ mt: 4 }}>
           <Typography variant="h5" gutterBottom fontWeight={600}>
-            14. Contact Us
+            14.{" "}
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSendEmail}
+            >
+              Contact Us
+            </Button>
           </Typography>
           <Typography textAlign={"justify"} variant="body1" paragraph>
             If you have any questions about these Terms and Conditions, please
