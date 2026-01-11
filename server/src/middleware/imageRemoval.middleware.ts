@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import ApiError from "../utils/ApiError";
+import { logService } from "../services/logger.service";
 
 const deleteCloudinaryFileBasedOnPublicId = async (mediaPublicId: string) => {
   if (!mediaPublicId)
@@ -19,7 +20,7 @@ const deleteCloudinaryFileBasedOnPublicId = async (mediaPublicId: string) => {
       .catch(() => null);
     return result;
   } catch (error) {
-    console.error("Error deleting file from Cloudinary:", error);
+    logService.error("Error deleting file from Cloudinary:", error);
     throw new ApiError(500, "Failed to delete media from Cloudinary");
   }
 };

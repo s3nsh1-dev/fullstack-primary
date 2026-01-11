@@ -15,19 +15,13 @@ import dashboardRouter from "./routes/dashboard.route";
 import HomeRouter from "./routes/homepage.route";
 import feedRouter from "./routes/feed.route";
 import viewRouter from "./routes/view.route";
+import { contactRouter } from "./routes/contact.route";
 import { searchUserTextRouter } from "./routes/searchUserText.route";
+import { requestLogger } from "./middleware/requestLogger.middleware";
 
 const app = express();
 
-/**
- * ABOUT CORS
- * What: Browser rule to control which sites can access your API.
- * Why: Prevent malicious sites from using your API with victim’s credentials.
- * Where: Implemented on backend servers.
- * When: Every time frontend and backend are on different domains/ports.
- * How: Server replies with <Access-Control-Allow-Origin> headers.
- * env.CORS_ORIGIN = string, Array[string1, string2] and function
- */
+// middlewares
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN || "http://localhost:5173", // Vite's default port
@@ -36,23 +30,11 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-// TAKE DATA FROM JSON BODY
-app.use(
-  express.json({
-    limit: "16kb",
-  })
-);
-
-//  I GUESS, SOME SITES TAKE PDF LESS THAN 50KB CAN BE SET BY THIS TYPE OF SYNTAX + MULER package
-// TAKE DATA FROM URL
-
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-// THE PLACE WHERE WE ARE KEEPING PUBLIC ACCESS ANYONE CAN USE IT <WE STORE IT HERE> SIMILAR TO THE PUBLIC > TEMP FOLDER WE ALREADY HAVE
-
+app.use(express.json({ limit: "16kb" }));
 app.use(express.static("public"));
-// PERFORM CRUD OPERATION IN USER BROWSER LIKE ACCESS AND SETTING COOKIES FOR USER
-
 app.use(cookieParser());
+app.use(requestLogger);
 
 //routes declaration
 app.use("/api/v1/users", userRouter);
@@ -68,5 +50,6 @@ app.use("/api/v1/homepage", HomeRouter);
 app.use("/api/v1/feeds", feedRouter);
 app.use("/api/v1/views", viewRouter);
 app.use("/api/v1/search", searchUserTextRouter);
+app.use("/api/v1/contact", contactRouter);
 
 export { app };

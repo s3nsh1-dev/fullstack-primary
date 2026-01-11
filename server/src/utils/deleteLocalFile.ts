@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { logService } from "../services/logger.service";
 
 /**
  * Delete a local file after successful upload to Cloudinary
@@ -10,7 +11,7 @@ const deleteLocalFile = (filePath: string) => {
       fs.unlinkSync(path.resolve(filePath)); // remove the file
     }
   } catch (error) {
-    console.error(`❌ Failed to delete local file: ${filePath}`, error);
+    logService.error(`❌ Failed to delete local file: ${filePath}`, error);
   }
 };
 

@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import env from "./dotenvHelper";
 import { promises as fs } from "fs";
 import deleteLocalFile from "./deleteLocalFile";
+import { logService } from "../services/logger.service";
 
 /**
  * We can see the CLOUDINARY info like
@@ -25,12 +26,12 @@ const uploadOnCloudinary = async (
       folder: folderName,
     });
     fs.unlink(localFilePath).catch((error) => {
-      console.info("SUCCESS: ISSUE IN FILE DELETION", error);
+      logService.info("SUCCESS: ISSUE IN FILE DELETION", error);
     });
     return response;
   } catch (error) {
     await fs.unlink(localFilePath).catch((error) => {
-      console.info("FAILED: ISSUE IN FILE DELETION", error);
+      logService.info("FAILED: ISSUE IN FILE DELETION", error);
     });
   }
 };
