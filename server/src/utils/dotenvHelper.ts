@@ -18,6 +18,15 @@ type EnvVariableType = {
   CLOUDINARY_API_KEY: string;
   CLOUDINARY_API_SECRET: string;
   CLOUDINARY_CLOUD_NAME: string;
+  // configuration for nodemailer and winston
+  GMAIL_SMTP_HOST: string;
+  GMAIL_SMTP_PORT: number;
+  GMAIL_SMTP_SECURE: boolean;
+  GMAIL_PASSWORD: string;
+  GMAIL_AUTH_USER_PROVIDER: string;
+  RECIPIENT_MAIL_ID: string;
+  LOG_LEVEL: string;
+  NODE_ENV: string;
 };
 
 const env: EnvVariableType = {
@@ -39,6 +48,14 @@ const env: EnvVariableType = {
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || "0",
   CLOUDINARY_CLOUD_NAME:
     process.env.CLOUDINARY_CLOUD_NAME || "cloudinary_user_name",
+  GMAIL_SMTP_HOST: process.env.GMAIL_SMTP_HOST || "",
+  GMAIL_SMTP_PORT: Number(process.env.GMAIL_SMTP_PORT) || 587,
+  GMAIL_SMTP_SECURE: Boolean(process.env.GMAIL_SMTP_SECURE) || false, // true for 465, false for
+  GMAIL_AUTH_USER_PROVIDER: process.env.GMAIL_AUTH_USER_PROVIDER || "",
+  GMAIL_PASSWORD: String(process.env.GMAIL_PASSWORD),
+  RECIPIENT_MAIL_ID: process.env.RECIPIENT_MAIL_ID || "",
+  LOG_LEVEL: process.env.LOG_LEVEL || "info",
+  NODE_ENV: process.env.NODE_ENV || "development",
 };
 
 export default env;
