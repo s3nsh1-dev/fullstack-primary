@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -6,9 +7,14 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
+import ContactModal from "../components/support/ContactModal";
 
 const Support = () => {
-  const handleSendEmail = () => {};
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSendEmail = () => {
+    setIsModalOpen(true);
+  };
 
   return (
     <Box
@@ -378,6 +384,7 @@ const Support = () => {
           © 2025 PlayTube Inc. All rights reserved.
         </Typography>
       </Paper>
+      <ContactModal open={isModalOpen} setOpen={setIsModalOpen} />
     </Box>
   );
 };

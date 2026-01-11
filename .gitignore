@@ -1,5 +1,7 @@
 # VS Code settings
 .vscode/
+.cursor/
+.antigravity/
 
 # Text files
 *.txt
@@ -9,5 +11,3 @@
 
 # Project Related Files
 project_related_files/
-
-server/public/temp/*

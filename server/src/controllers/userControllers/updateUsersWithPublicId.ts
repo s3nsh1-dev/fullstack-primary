@@ -3,6 +3,7 @@ import ApiResponse from "../../utils/ApiResponse";
 import { User } from "../../models/user.model";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { Document } from "mongoose";
+import { logService } from "../../services/logger.service";
 
 export const updateUsersWithPublicId = asyncHandler(async (req, res) => {
   const users = (await User.find().select(
@@ -32,7 +33,7 @@ async function applyLogicOnIndividualUser(user: IUser) {
     await user.save();
   } catch (e: unknown) {
     const err = e as Error;
-    console.error(`Failed for user: ${user.username}`, err.message);
+    logService.error(`Failed for user: ${user.username}`, err.message);
   }
 }
 

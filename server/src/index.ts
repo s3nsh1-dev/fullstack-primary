@@ -1,57 +1,51 @@
 import env from "./utils/dotenvHelper";
 import mongodbConnect from "./db/mongodb.connect";
 import { app } from "./app";
-
 const PORT = env.PORT;
+
+import mongoose from "mongoose";
+
+let server: any;
 
 export default async function serverMain() {
   try {
-    // app.use  = used when using middleware and doing something with configurations
-    // app.use(cors());
-    // app.use(express.json());
-
-    /*
-    //DB connection
     await mongodbConnect();
-    // Learned something new
-    app.on("error", () => {
-      throw new Error("ERROR WHILE CONNECTING DATABASE");
-    });
-
-    //Routes
-    app.get("/", (req, res) => {
-      res.send("Hello from TypeScript Server!");
-    });
-
-    // Start server
-    const server = app.listen(PORT, () =>
-      console.info(`🚀 Server running on http://localhost:${PORT}`)
-    );
-
-    // Handle server errors
-    server.on("error", (err) => {
-      console.error("❌ SERVER ERROR:", err);
-    });
-  } catch (error) {
-    console.error("❌ STARTUP ERROR:", error);
-    process.exit(1); // Exit if server cannot start properly
-  }
-    */
-    await mongodbConnect()
-      .then(() => {
-        app.listen(PORT, () => {
-          console.info(`⚙️  SERVER LIVE ON: http://localhost:${PORT}`);
-        });
-        app.on("error", () => {
-          throw new Error("ERROR WHILE CONNECTING DATABASE");
-        });
-      })
-      .catch((error) => {
-        console.error("MONGODB CONNECTION ERROR: ", error);
-      });
+    server = app.listen(PORT, listeningMessage);
+    process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+    process.on("SIGINT", () => gracefulShutdown("SIGINT"));
   } catch (error) {
     console.error("❌  SERVER ERROR: ", error);
   }
 }
 
 serverMain();
+
+const listeningMessage = () => {
+  console.info(`⚙️  SERVER LIVE ON: http://localhost:${PORT}`);
+};
+
+const gracefulShutdown = async (signal: string) => {
+  console.info(`Received ${signal}. Starting graceful shutdown...`);
+
+  const closeServer = () =>
+    new Promise<void>((resolve) => {
+      if (server) {
+        server.close(() => {
+          console.info("HTTP server closed.");
+          resolve();
+        });
+      } else {
+        resolve();
+      }
+    });
+
+  try {
+    await closeServer();
+    await mongoose.connection.close(false);
+    console.info("MongoDB connection closed.");
+    process.exit(0);
+  } catch (error) {
+    console.error("Error closing MongoDB connection", error);
+    process.exit(1);
+  }
+};
