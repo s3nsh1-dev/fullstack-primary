@@ -30,7 +30,7 @@ const winstonInstance = winston.createLogger({
   level: logLevel,
   format: logFormat,
   defaultMeta: {
-    service: "how2nodemailer",
+    service: "playtube",
     environment: process.env.NODE_ENV || "development",
   },
   transports: [
@@ -45,7 +45,7 @@ const winstonInstance = winston.createLogger({
 if (process.env.NODE_ENV === "production") {
   winstonInstance.add(
     new winston.transports.File({
-      filename: "logs/error.log",
+      filename: "src/logs/error.log",
       level: "error",
       maxsize: 5242880, // 5MB
       maxFiles: 5,
@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === "production") {
   );
   winstonInstance.add(
     new winston.transports.File({
-      filename: "logs/info.log",
+      filename: "src/logs/info.log",
       level: "info",
       format: winston.format.combine(onlyLevel("info"), logFormat),
       maxsize: 5242880,
@@ -62,7 +62,7 @@ if (process.env.NODE_ENV === "production") {
   );
   winstonInstance.add(
     new winston.transports.File({
-      filename: "logs/warn.log",
+      filename: "src/logs/warn.log",
       level: "warn",
       format: winston.format.combine(onlyLevel("warn"), logFormat),
       maxsize: 5242880,
@@ -71,7 +71,7 @@ if (process.env.NODE_ENV === "production") {
   );
   winstonInstance.add(
     new winston.transports.File({
-      filename: "logs/debug.log",
+      filename: "src/logs/debug.log",
       level: "debug",
       format: winston.format.combine(onlyLevel("debug"), logFormat),
       maxsize: 5242880,
@@ -80,7 +80,7 @@ if (process.env.NODE_ENV === "production") {
   );
   winstonInstance.add(
     new winston.transports.File({
-      filename: "logs/http.log",
+      filename: "src/logs/http.log",
       level: "http",
       format: winston.format.combine(onlyLevel("http"), logFormat),
       maxsize: 5242880,
