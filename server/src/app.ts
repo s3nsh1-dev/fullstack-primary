@@ -18,6 +18,7 @@ import viewRouter from "./routes/view.route";
 import { contactRouter } from "./routes/contact.route";
 import { searchUserTextRouter } from "./routes/searchUserText.route";
 import { requestLogger } from "./middleware/requestLogger.middleware";
+import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
 
 const app = express();
 
@@ -64,5 +65,11 @@ app.use("/api/v1/feeds", feedRouter);
 app.use("/api/v1/views", viewRouter);
 app.use("/api/v1/search", searchUserTextRouter);
 app.use("/api/v1/contact", contactRouter);
+
+// 404 handler - must be after all routes
+app.use(notFoundHandler);
+
+// Error handling middleware - must be last
+app.use(errorHandler);
 
 export { app };

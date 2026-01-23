@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import Typography from "@mui/material/Typography";
 import useFetchUserPlaylist from "../../hooks/data-fetching/useFetchUserPlaylist";
 import CircularProgressCenter from "../ui-components/CircularProgressCenter";
@@ -8,7 +9,7 @@ import Pagination from "@mui/material/Pagination";
 import { useSearchParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 
-const ShowPlaylists = () => {
+const ShowPlaylists: FC<{ pageLimit: number }> = ({ pageLimit }) => {
   const outletContext = useOutletContext<OutletContextType | undefined>();
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,7 +18,7 @@ const ShowPlaylists = () => {
 
   const { data, isLoading, isError } = useFetchUserPlaylist({
     userId: effectiveUserId,
-    limit: LIMIT,
+    limit: pageLimit,
     page: Number(currentPage),
   });
 
@@ -56,5 +57,3 @@ export default ShowPlaylists;
 type OutletContextType = {
   userId: string;
 };
-
-const LIMIT = 5;
