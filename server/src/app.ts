@@ -21,15 +21,28 @@ import { requestLogger } from "./middleware/requestLogger.middleware";
 
 const app = express();
 
+const allowedOrigins = env.CORS_ORIGIN?.split(",");
+
+if (!allowedOrigins) {
+  throw new Error("CORS_ORIGIN is not defined");
+}
+
 // middlewares
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173", // Vite's default port
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.json({ limit: "16kb" }));
 app.use(express.static("public"));
