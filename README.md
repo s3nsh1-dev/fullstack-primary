@@ -1,6 +1,8 @@
-# VideoTube
+# PlayTube
 
-A full-stack video sharing and social media platform inspired by YouTube, built with modern web technologies. VideoTube provides users with the ability to upload, share, and interact with video content, along with social features like subscriptions, comments, likes, tweets, and playlists.
+A full-stack video sharing and social media platform inspired by YouTube and Twitter, built with modern web technologies. PlayTube provides users with the ability to upload, share, and interact with video content, along with social features like subscriptions, comments, likes, tweets, and playlists.
+<img width="1920" height="924" alt="image" src="https://github.com/user-attachments/assets/28c5c971-6bab-41bb-bb78-5394df62a97f" />
+
 
 ## 🎯 Project Overview
 
