@@ -2,13 +2,12 @@ import dotenv from "dotenv";
 import type { Secret } from "jsonwebtoken";
 import type { JwtTokenExpiryType } from "../constants/ModelTypes";
 
-// Manual runtime validation of environment variables
-
 dotenv.config();
 
 type EnvVariableType = {
   PORT: string;
   MONGODB_COMPASS_CONNECTION_STRING: string;
+  DB_NAME: string;
   CORS_ORIGIN: string;
   // crucial Type casting to work with JWT
   ACCESS_TOKEN_SECRET: Secret;
@@ -34,6 +33,7 @@ const env: EnvVariableType = {
   MONGODB_COMPASS_CONNECTION_STRING:
     process.env.MONGODB_COMPASS_CONNECTION_STRING ||
     "mongodb://connection-string-not-found",
+  DB_NAME: process.env.DB_NAME || "incorrect-db-name",
   CORS_ORIGIN: process.env.CORS_ORIGIN || "*",
   ACCESS_TOKEN_SECRET:
     process.env.ACCESS_TOKEN_SECRET || "fallback-access-token-secret",
@@ -49,7 +49,7 @@ const env: EnvVariableType = {
   CLOUDINARY_CLOUD_NAME:
     process.env.CLOUDINARY_CLOUD_NAME || "cloudinary_user_name",
   GMAIL_SMTP_HOST: process.env.GMAIL_SMTP_HOST || "",
-  GMAIL_SMTP_PORT: Number(process.env.GMAIL_SMTP_PORT) || 587,
+  GMAIL_SMTP_PORT: Number(process.env.GMAIL_SMTP_PORT) || 123,
   GMAIL_SMTP_SECURE: Boolean(process.env.GMAIL_SMTP_SECURE) || false, // true for 465, false for
   GMAIL_AUTH_USER_PROVIDER: process.env.GMAIL_AUTH_USER_PROVIDER || "",
   GMAIL_PASSWORD: String(process.env.GMAIL_PASSWORD),

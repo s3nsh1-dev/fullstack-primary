@@ -1,19 +1,11 @@
 import type { CookieOptions } from "express";
+import env from "./utils/dotenvHelper";
 
-export const DB_NAME = "videotube_database";
-
-// so that cookies are not modifiable in frontend
 export const httpOptions: CookieOptions = {
   httpOnly: true,
-  secure: false, // Set to true in production
-  sameSite: "lax",
+  secure: env.NODE_ENV === "production",
+  sameSite: env.NODE_ENV === "production" ? "none" : "lax",
   path: "/",
-  // sameSite: "none",
-  /*
-  for production
-  secure: true,
-  sameSite: "strict" as const,
-  */
 };
 
 export type UserAccessTokenPayloadType = {
