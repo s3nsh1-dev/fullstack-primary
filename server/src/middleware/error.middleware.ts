@@ -20,7 +20,9 @@ interface ErrorResponse {
 /**
  * Handle Mongoose validation errors
  */
-const handleMongooseValidationError = (error: mongoose.Error.ValidationError): ErrorResponse => {
+const handleMongooseValidationError = (
+  error: mongoose.Error.ValidationError
+): ErrorResponse => {
   const errors = Object.values(error.errors).map((err) => ({
     field: err.path,
     message: err.message,
@@ -37,7 +39,9 @@ const handleMongooseValidationError = (error: mongoose.Error.ValidationError): E
 /**
  * Handle Mongoose cast errors (invalid ObjectId, etc.)
  */
-const handleMongooseCastError = (error: mongoose.Error.CastError): ErrorResponse => {
+const handleMongooseCastError = (
+  error: mongoose.Error.CastError
+): ErrorResponse => {
   return {
     success: false,
     message: `INVALID ${error.path?.toUpperCase() || "RESOURCE"}`,
@@ -144,8 +148,8 @@ export const errorHandler = (
       logService.error("API Error", error, {
         path: req.path,
         method: req.method,
-        ip: req.ip,
-        userAgent: req.get("user-agent"),
+        // ip: req.ip,
+        // userAgent: req.get("user-agent"),
       });
     } else {
       logService.warn("API Error", {
@@ -185,7 +189,10 @@ export const errorHandler = (
     });
   }
   // Handle JWT Errors
-  else if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+  else if (
+    error.name === "JsonWebTokenError" ||
+    error.name === "TokenExpiredError"
+  ) {
     errorResponse = handleJWTError(error);
     logService.warn("JWT Error", {
       name: error.name,
@@ -222,8 +229,8 @@ export const errorHandler = (
       logService.error("Unhandled Error", error, {
         path: req.path,
         method: req.method,
-        ip: req.ip,
-        userAgent: req.get("user-agent"),
+        // ip: req.ip,
+        // userAgent: req.get("user-agent"),
         body: req.body,
         query: req.query,
         params: req.params,
@@ -270,8 +277,8 @@ export const notFoundHandler = (
   logService.warn("Route Not Found", {
     method: req.method,
     url: req.originalUrl,
-    ip: req.ip,
-    userAgent: req.get("user-agent"),
+    // ip: req.ip,
+    // userAgent: req.get("user-agent"),
   });
 
   next(error);

@@ -3,14 +3,14 @@
 A full-stack video sharing and social media platform inspired by YouTube and Twitter, built with modern web technologies. PlayTube provides users with the ability to upload, share, and interact with video content, along with social features like subscriptions, comments, likes, tweets, and playlists.
 <img width="1920" height="924" alt="image" src="https://github.com/user-attachments/assets/28c5c971-6bab-41bb-bb78-5394df62a97f" />
 
-
 ## 🎯 Project Overview
 
-VideoTube is an entertainment and interactive service platform that combines video sharing capabilities with social media features. Users can create channels, upload videos, interact with content through comments and likes, follow other creators, create playlists, and share thoughts through tweets.
+Playtube is an entertainment and interactive service platform that combines video sharing capabilities with social media features. Users can create channels, upload videos, interact with content through comments and likes, follow other creators, create playlists, and share thoughts through tweets.
 
 ## ✨ Features
 
 ### Core Features
+
 - **User Authentication & Authorization**
   - Secure JWT-based authentication with access and refresh tokens
   - User registration and login
@@ -52,6 +52,7 @@ VideoTube is an entertainment and interactive service platform that combines vid
   - Pagination for large datasets
 
 ### Additional Features
+
 - Contact/support form with email notifications
 - Dashboard with user statistics
 - Homepage with channel information
@@ -63,6 +64,7 @@ VideoTube is an entertainment and interactive service platform that combines vid
 ## 🛠️ Tech Stack
 
 ### Frontend (Client)
+
 - **Framework**: React 19.1.0
 - **Build Tool**: Vite 7.0.4
 - **UI Library**: Material-UI (MUI) 7.3.2
@@ -74,6 +76,7 @@ VideoTube is an entertainment and interactive service platform that combines vid
 - **Styling**: Emotion (CSS-in-JS), Material-UI theming
 
 ### Backend (Server)
+
 - **Runtime**: Node.js
 - **Framework**: Express.js 5.1.0
 - **Database**: MongoDB with Mongoose 8.16.5
@@ -87,6 +90,7 @@ VideoTube is an entertainment and interactive service platform that combines vid
 - **Language**: TypeScript 5.8.3
 
 ### Development Tools
+
 - **Package Manager**: npm
 - **Code Quality**: ESLint, Prettier
 - **Type Checking**: TypeScript
@@ -157,6 +161,7 @@ fullstack-primary/
 ## 🚀 Installation & Setup
 
 ### Prerequisites
+
 - Node.js (v18 or higher recommended)
 - npm or yarn
 - MongoDB database (local or cloud instance)
@@ -164,6 +169,7 @@ fullstack-primary/
 - Gmail account (for email service, optional)
 
 ### Step 1: Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd fullstack-primary
@@ -172,12 +178,14 @@ cd fullstack-primary
 ### Step 2: Install Dependencies
 
 **Install server dependencies:**
+
 ```bash
 cd server
 npm install
 ```
 
 **Install client dependencies:**
+
 ```bash
 cd ../client
 npm install
@@ -188,6 +196,7 @@ npm install
 Create a `.env` file in the `server/` directory. For a complete list of required environment variables, their descriptions, and default values, refer to `server/src/utils/dotenvHelper.ts`.
 
 **Required Environment Variables:**
+
 - `MONGODB_COMPASS_CONNECTION_STRING` - MongoDB connection string
 - `DB_NAME` - Database name
 - `CORS_ORIGIN` - Allowed CORS origins (comma-separated list)
@@ -198,6 +207,7 @@ Create a `.env` file in the `server/` directory. For a complete list of required
 - `CLOUDINARY_API_SECRET` - Cloudinary API secret
 
 **Important Notes:**
+
 - For production, use strong, randomly generated secrets
 - `CORS_ORIGIN` can be a comma-separated list of allowed origins (e.g., `http://localhost:5173,http://localhost:3000`)
 - Use `*` in `CORS_ORIGIN` to allow all origins (development only, **not recommended for production**)
@@ -206,25 +216,31 @@ Create a `.env` file in the `server/` directory. For a complete list of required
 ### Step 4: Run the Application
 
 **Start the server (from `server/` directory):**
+
 ```bash
 npm run server
 ```
+
 The server will start on `http://localhost:3001` (or your configured PORT)
 
 **Start the client (from `client/` directory):**
+
 ```bash
 npm run dev
 ```
+
 The client will start on `http://localhost:5173` (Vite default port)
 
 ## 📡 API Endpoints
 
 ### Base URL
+
 ```
 http://localhost:3001/api/v1
 ```
 
 ### Authentication Endpoints
+
 - `POST /users/register` - Register a new user (with avatar and coverImage upload)
 - `POST /users/login` - User login
 - `POST /users/logout` - User logout (requires authentication)
@@ -243,6 +259,7 @@ http://localhost:3001/api/v1
 - `PATCH /users/reactivate-user` - Reactivate account (requires authentication)
 
 ### Video Endpoints
+
 - `GET /videos` - Get all videos (paginated)
 - `GET /videos/w/restriction` - Get all videos without restrictions (requires authentication)
 - `GET /videos/:videoId` - Get video by ID
@@ -252,11 +269,13 @@ http://localhost:3001/api/v1
 - `PATCH /videos/toggle/publish/:videoId` - Toggle video publish status (requires authentication)
 
 ### Subscription Endpoints
+
 - `POST /subscriptions/c/:channelId` - Toggle subscription to a channel (requires authentication)
 - `GET /subscriptions/c/:channelId` - Get subscriber count for a channel
 - `GET /subscriptions/u/:subscriberId` - Get subscribed channels for a user
 
 ### Comment Endpoints
+
 - `POST /comments/v/:video_ID` - Add comment on a video (requires authentication)
 - `POST /comments/t/:tweet_ID` - Add comment on a tweet (requires authentication)
 - `POST /comments/c/:comment_ID` - Add nested comment on a comment (requires authentication)
@@ -267,6 +286,7 @@ http://localhost:3001/api/v1
 - `DELETE /comments/modify/:comment_ID` - Delete a comment (requires authentication)
 
 ### Like Endpoints (All require authentication)
+
 - `POST /likes/toggle/v/:videoId` - Toggle like on a video
 - `POST /likes/toggle/t/:tweetId` - Toggle like on a tweet
 - `POST /likes/toggle/c/:commentId` - Toggle like on a comment
@@ -279,6 +299,7 @@ http://localhost:3001/api/v1
 - `GET /likes/content/:userId` - Get all liked content for a user
 
 ### Tweet Endpoints
+
 - `POST /tweets` - Create a new tweet (requires authentication)
 - `GET /tweets/user/:userId` - Get tweets by user
 - `GET /tweets/:tweetId` - Get a single tweet
@@ -286,6 +307,7 @@ http://localhost:3001/api/v1
 - `DELETE /tweets/:tweetId` - Delete a tweet (requires authentication)
 
 ### Playlist Endpoints
+
 - `POST /playlists` - Create a new playlist (requires authentication)
 - `GET /playlists/user/:userId` - Get user playlists
 - `GET /playlists/:playlistId` - Get playlist by ID
@@ -295,31 +317,38 @@ http://localhost:3001/api/v1
 - `PATCH /playlists/remove/:videoId/:playlistId` - Remove video from playlist (requires authentication)
 
 ### View & Watch History Endpoints
+
 - `POST /views/:videoId` - Increment video view count (authentication optional)
 - `POST /users/history/:videoId` - Add video to watch history
 - `GET /users/history` - Get user watch history (requires authentication)
 
 ### Feed & Homepage Endpoints
+
 - `GET /feeds` - Get feed of subscribed channels
 - `GET /homepage/:username` - Get homepage data for a user
 
 ### Search Endpoints
+
 - `GET /search/q/:searchText` - Search users and content
 
 ### Dashboard Endpoints (All require authentication)
+
 - `GET /dashboard/stats` - Get channel statistics
 - `GET /dashboard/videos` - Get channel videos
 
 ### Contact Endpoints
+
 - `POST /contact` - Send contact/support message
 
 ### Health Check (All require authentication)
+
 - `GET /health` - Health check endpoint
 - `GET /health/user` - Check authenticated user details
 
 ## 🏗️ Architecture
 
 ### Backend Architecture
+
 - **MVC Pattern**: Controllers handle requests, Models define data structure, Routes define endpoints
 - **Middleware Chain**: Authentication, file upload, logging, error handling
 - **Service Layer**: Business logic separated into services (logger, mail)
@@ -336,6 +365,7 @@ http://localhost:3001/api/v1
 - **Response Standardization**: Consistent API responses using ApiResponse class
 
 ### Frontend Architecture
+
 - **Component-Based**: Modular React components with clear separation of concerns
 - **Context API**: Global state management for auth, theme, and search
 - **Custom Hooks**: Reusable logic for data fetching and CRUD operations
@@ -344,6 +374,7 @@ http://localhost:3001/api/v1
 - **Material-UI**: Consistent design system and theming
 
 ### Database Schema
+
 - **User Model**: Authentication, profile, preferences, watch history
 - **Video Model**: Video metadata, owner reference, publish status
 - **Comment Model**: Comments on videos, tweets, and nested comments
@@ -354,6 +385,7 @@ http://localhost:3001/api/v1
 - **View Model**: Video view tracking
 
 ### Security Features
+
 - JWT-based authentication with access and refresh tokens
 - Password hashing with bcrypt (10 rounds)
 - HTTP-only cookies for token storage
@@ -364,6 +396,7 @@ http://localhost:3001/api/v1
 - Production-grade error handling (prevents information leakage)
 
 ### Error Handling
+
 The application implements a comprehensive error handling system:
 
 - **Error Middleware** (`error.middleware.ts`): Centralized error handling that processes all errors
@@ -378,6 +411,7 @@ The application implements a comprehensive error handling system:
   - **Consistent Responses**: All errors follow the same response format as successful responses
 
 **Error Response Format:**
+
 ```json
 {
   "success": false,
@@ -393,6 +427,7 @@ The application implements a comprehensive error handling system:
 ### Available Scripts
 
 **Server:**
+
 ```bash
 npm run server    # Start development server with hot reload
 npm run build     # Build TypeScript to JavaScript
@@ -400,6 +435,7 @@ npm start         # Start production server
 ```
 
 **Client:**
+
 ```bash
 npm run dev       # Start development server
 npm run build     # Build for production
@@ -408,12 +444,14 @@ npm run lint      # Run ESLint
 ```
 
 ### Code Style
+
 - TypeScript for type safety
 - ESLint for code linting
 - Prettier for code formatting
 - Consistent naming conventions (camelCase for variables, PascalCase for components)
 
 ### Best Practices
+
 - Use async/await for asynchronous operations
 - Implement proper error handling
 - Validate input data
@@ -427,26 +465,31 @@ npm run lint      # Run ESLint
 ### Common Issues
 
 **MongoDB Connection Error:**
+
 - Ensure MongoDB is running
 - Verify connection string in `.env`
 - Check database name is correct
 
 **CORS Errors:**
+
 - Verify `CORS_ORIGIN` includes your client URL
 - Check that credentials are enabled in client requests
 - Ensure server allows the origin
 
 **Authentication Issues:**
+
 - Verify JWT secrets are set correctly
 - Check token expiry times
 - Ensure cookies are being sent with requests
 
 **File Upload Issues:**
+
 - Verify Cloudinary credentials
 - Check file size limits
 - Ensure Multer is configured correctly
 
 **Email Service Issues:**
+
 - For Gmail, use app-specific passwords
 - Verify SMTP settings
 - Check firewall/network restrictions
