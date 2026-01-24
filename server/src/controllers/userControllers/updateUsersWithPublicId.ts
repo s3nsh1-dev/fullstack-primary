@@ -8,7 +8,7 @@ import { logService } from "../../services/logger.service";
 export const updateUsersWithPublicId = asyncHandler(async (req, res) => {
   const users = (await User.find().select(
     "username avatar coverImage updatedAt CoverImagePublicId avatarPublicId"
-  )) as IUser[];
+  )) as unknown as IUser[];
   if (!users || users.length === 0) throw new ApiError(404, "NO USER FOUND");
 
   await Promise.all(users.map((user) => applyLogicOnIndividualUser(user)));
