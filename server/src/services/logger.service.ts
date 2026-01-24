@@ -1,5 +1,7 @@
 import winston from "winston";
 import env from "../utils/dotenvHelper";
+import path from "path";
+import fs from "fs";
 
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
@@ -24,28 +26,30 @@ const onlyLevel = (levelName: string) =>
   winston.format((info) => (info.level === levelName ? info : false))();
 
 const logLevel =
-  env.LOG_LEVEL || (process.env.NODE_ENV === "production" ? "info" : "debug");
+  process.env.LOG_LEVEL || (env.NODE_ENV === "production" ? "http" : "debug");
 
 const winstonInstance = winston.createLogger({
   level: logLevel,
   format: logFormat,
-  defaultMeta: {
-    service: "playtube",
-    environment: process.env.NODE_ENV || "development",
-  },
   transports: [
     new winston.transports.Console({
-      format:
-        process.env.NODE_ENV === "production" ? logFormat : terminalFormat,
+      format: env.NODE_ENV === "production" ? logFormat : terminalFormat,
     }),
   ],
   exitOnError: false,
 });
 
-if (process.env.NODE_ENV === "production") {
+if (env.NODE_ENV === "production") {
+  const logDir = path.join(process.cwd(), "logs");
+
+  // Ensure log directory exists
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+  }
+
   winstonInstance.add(
     new winston.transports.File({
-      filename: "src/logs/error.log",
+      filename: path.join(logDir, "error.log"),
       level: "error",
       maxsize: 5242880, // 5MB
       maxFiles: 5,
@@ -53,7 +57,7 @@ if (process.env.NODE_ENV === "production") {
   );
   winstonInstance.add(
     new winston.transports.File({
-      filename: "src/logs/info.log",
+      filename: path.join(logDir, "info.log"),
       level: "info",
       format: winston.format.combine(onlyLevel("info"), logFormat),
       maxsize: 5242880,
@@ -62,7 +66,7 @@ if (process.env.NODE_ENV === "production") {
   );
   winstonInstance.add(
     new winston.transports.File({
-      filename: "src/logs/warn.log",
+      filename: path.join(logDir, "warn.log"),
       level: "warn",
       format: winston.format.combine(onlyLevel("warn"), logFormat),
       maxsize: 5242880,
@@ -71,7 +75,7 @@ if (process.env.NODE_ENV === "production") {
   );
   winstonInstance.add(
     new winston.transports.File({
-      filename: "src/logs/debug.log",
+      filename: path.join(logDir, "debug.log"),
       level: "debug",
       format: winston.format.combine(onlyLevel("debug"), logFormat),
       maxsize: 5242880,
@@ -80,7 +84,7 @@ if (process.env.NODE_ENV === "production") {
   );
   winstonInstance.add(
     new winston.transports.File({
-      filename: "src/logs/http.log",
+      filename: path.join(logDir, "http.log"),
       level: "http",
       format: winston.format.combine(onlyLevel("http"), logFormat),
       maxsize: 5242880,
@@ -135,8 +139,8 @@ class WinstonLogger {
       ...metadata,
       method: req.method,
       url: req.url,
-      ip: req.ip,
-      userAgent: req.headers?.["user-agent"],
+      // ip: req.ip,
+      // userAgent: req.headers?.["user-agent"],
     };
 
     this.http(message, requestMetadata);

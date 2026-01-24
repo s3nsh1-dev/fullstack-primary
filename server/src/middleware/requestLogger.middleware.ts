@@ -8,13 +8,18 @@ export function requestLogger(
 ): void {
   const startTime = Date.now();
 
-  // Log request start
-  logService.http("Incoming request", {
+  const logData: any = {
     method: req.method,
-    url: req.url,
-    ip: req.ip || req.socket.remoteAddress,
-    userAgent: req.get("user-agent"),
-  });
+    url: req.originalUrl,
+    // ip: req.ip || req.socket.remoteAddress,
+    // userAgent: req.get("user-agent"),
+  };
+
+  if (["POST", "PUT", "PATCH"].includes(req.method)) {
+    logData.body = req.body;
+  }
+
+  logService.http("Incoming request", logData);
 
   // Override res.end to log response
   const originalEnd = res.end.bind(res);
@@ -24,10 +29,10 @@ export function requestLogger(
     // Log response
     logService.http("Request completed", {
       method: req.method,
-      url: req.url,
+      url: req.originalUrl,
       statusCode: res.statusCode,
-      duration: `${duration}ms`,
-      ip: req.ip || req.socket.remoteAddress,
+      // duration: `${duration}ms`,
+      // ip: req.ip || req.socket.remoteAddress,
     });
 
     // Call original end (type assertion needed due to Express overloads)
