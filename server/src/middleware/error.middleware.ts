@@ -23,7 +23,7 @@ interface ErrorResponse {
 const handleMongooseValidationError = (
   error: mongoose.Error.ValidationError
 ): ErrorResponse => {
-  const errors = Object.values(error.errors).map((err) => ({
+  const errors = Object.values(error.errors).map((err: any) => ({
     field: err.path,
     message: err.message,
   }));
@@ -174,7 +174,7 @@ export const errorHandler = (
   else if (error instanceof mongoose.Error.CastError) {
     errorResponse = handleMongooseCastError(error);
     logService.warn("Mongoose Cast Error", {
-      message: error.message,
+      message: (error as any).message,
       path: req.path,
       method: req.method,
     });

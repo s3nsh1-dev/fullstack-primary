@@ -2,7 +2,6 @@ import ApiError from "../../utils/ApiError";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
 import ApiResponse from "../../utils/ApiResponse";
-import { ParsedUrlQuery } from "querystring";
 
 export const usernameAvailability = asyncHandler(async (req, res) => {
   const { inp } = req.query as { inp: string };
@@ -22,5 +21,3 @@ export const usernameAvailability = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, { available: true }, "USERNAME AVAILABLE"));
 });
-
-type JSONBodyType = { inp: ParsedUrlQuery };
