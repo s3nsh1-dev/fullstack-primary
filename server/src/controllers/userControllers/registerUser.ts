@@ -54,7 +54,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     coverImage: checkCoverImageCloudinaryUpload?.url,
     email,
     password,
-    username: username?.toLowerCase(),
+    username,
   });
   const createdUser = await User.findById(userEntry?._id).select(
     "-password -refreshToken"
