@@ -14,16 +14,18 @@ class NodemailerClass {
         user: env.GMAIL_AUTH_USER_PROVIDER,
         pass: env.GMAIL_PASSWORD,
       },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
+      connectionTimeout: 30000,
+      greetingTimeout: 30000,
+      socketTimeout: 30000,
+      // Force IPv4 as some cloud providers (Render) hang on IPv6
+      family: 4,
       tls: {
         rejectUnauthorized: false,
         checkServerIdentity: () => undefined,
       },
-      logger: env.NODE_ENV === "development",
-      debug: env.NODE_ENV === "development",
-    });
+      logger: true,
+      debug: true,
+    } as any);
   }
   verifyMailConnection = async () => {
     const value = {
