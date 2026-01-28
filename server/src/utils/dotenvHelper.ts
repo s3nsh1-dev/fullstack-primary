@@ -50,7 +50,7 @@ const env: EnvVariableType = {
     process.env.CLOUDINARY_CLOUD_NAME || "cloudinary_user_name",
   GMAIL_SMTP_HOST: process.env.GMAIL_SMTP_HOST || "",
   GMAIL_SMTP_PORT: Number(process.env.GMAIL_SMTP_PORT) || 123,
-  GMAIL_SMTP_SECURE: Boolean(process.env.GMAIL_SMTP_SECURE) || false, // true for 465, false for
+  GMAIL_SMTP_SECURE: process.env.GMAIL_SMTP_SECURE === "true",
   GMAIL_AUTH_USER_PROVIDER: process.env.GMAIL_AUTH_USER_PROVIDER || "",
   GMAIL_PASSWORD: String(process.env.GMAIL_PASSWORD),
   RECIPIENT_MAIL_ID: process.env.RECIPIENT_MAIL_ID || "",
