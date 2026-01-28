@@ -34,6 +34,7 @@ const submitContactForm = asyncHandler(async (req, res) => {
       stack: error instanceof Error ? error.stack : undefined,
       email: req.body.email,
     });
+    throw new ApiError(500, "CAN NOT CONNECT TO MAIL SERVER");
   }
 });
 
