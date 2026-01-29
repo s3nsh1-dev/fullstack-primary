@@ -19,18 +19,19 @@ const HomeUserDetails: React.FC<HomeUserDetailsProps> = ({ data }) => {
   const [subCount, setSubCount] = React.useState(data?.totalSubscribers);
   const handleSubscribe = () => {
     if (user?.user) {
+      const newSubbedState = !subbed;
+      setSubbed(newSubbedState);
+      setSubCount((prev) => (newSubbedState ? prev + 1 : prev - 1));
+
       subMutate.mutate(data.user?._id, {
-        onSuccess: (response) => {
-          if ("channel" in response) {
-            setSubbed(true);
-            setSubCount((prev) => prev + 1);
-          } else {
-            setSubbed(false);
-            setSubCount((prev) => prev - 1);
-          }
+        onSuccess: () => {
           queryClient.invalidateQueries({
             queryKey: ["userSubscribers", data.user?._id],
           });
+        },
+        onError: () => {
+          setSubbed(!newSubbedState);
+          setSubCount((prev) => (!newSubbedState ? prev + 1 : prev - 1));
         },
       });
     } else {

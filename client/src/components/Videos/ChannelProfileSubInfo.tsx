@@ -18,15 +18,15 @@ const ChannelProfileSubInfo: React.FC<ChannelProfileSubInfoProps> = ({
   const subscriptionMutate = useToggleSubscription();
   const toggleSubbed = () => {
     if (!user) return alert("Please Login to Subscribe to this channel");
+
+    const newSubbedState = !subbed;
+    setSubbed(newSubbedState);
+    setSubCount((prev) => (newSubbedState ? prev + 1 : prev - 1));
+
     subscriptionMutate.mutate(channelInfo._id, {
-      onSuccess: (response) => {
-        if ("channel" in response) {
-          setSubbed(true);
-          setSubCount((prev) => prev + 1);
-        } else {
-          setSubbed(false);
-          setSubCount((prev) => prev - 1);
-        }
+      onError: () => {
+        setSubbed(!newSubbedState);
+        setSubCount((prev) => (!newSubbedState ? prev + 1 : prev - 1));
       },
     });
   };
