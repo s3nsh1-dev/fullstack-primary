@@ -2,7 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { validationResult } from "express-validator";
 import { logService } from "../services/logger.service";
 import ApiError from "../utils/ApiError";
-import { ContactFormData, mailService } from "../services/mail.service";
+import { ContactFormData, mailService } from "../services/mailHttp.service";
 import ApiResponse from "../utils/ApiResponse";
 
 const submitContactForm = asyncHandler(async (req, res) => {

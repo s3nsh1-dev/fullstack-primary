@@ -24,6 +24,10 @@ type EnvVariableType = {
   GMAIL_PASSWORD: string;
   GMAIL_AUTH_USER_PROVIDER: string;
   RECIPIENT_MAIL_ID: string;
+  // configuration for HTTP email provider
+  EMAIL_PROVIDER_API_KEY: string;
+  EMAIL_PROVIDER_API_URL: string;
+  EMAIL_FROM_ADDRESS: string;
   LOG_LEVEL: string;
   NODE_ENV: string;
 };
@@ -54,6 +58,10 @@ const env: EnvVariableType = {
   GMAIL_AUTH_USER_PROVIDER: process.env.GMAIL_AUTH_USER_PROVIDER || "",
   GMAIL_PASSWORD: String(process.env.GMAIL_PASSWORD),
   RECIPIENT_MAIL_ID: process.env.RECIPIENT_MAIL_ID || "",
+  EMAIL_PROVIDER_API_KEY: process.env.EMAIL_PROVIDER_API_KEY || "",
+  EMAIL_PROVIDER_API_URL:
+    process.env.EMAIL_PROVIDER_API_URL || "https://api.resend.com/emails",
+  EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS || "",
   LOG_LEVEL: process.env.LOG_LEVEL || "info",
   NODE_ENV: process.env.NODE_ENV || "development",
 };
