@@ -1,6 +1,8 @@
 import env from "../utils/dotenvHelper";
 import { logService } from "./logger.service";
 
+// this version bypasses the installation of resend and uses the HTTP API directly
+
 class HttpMailService {
   // Minimal "verify" that checks configuration; HTTP providers often don't expose a cheap verify endpoint.
   verifyMailConnection = async () => {

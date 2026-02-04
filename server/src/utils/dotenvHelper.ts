@@ -9,6 +9,7 @@ type EnvVariableType = {
   MONGODB_COMPASS_CONNECTION_STRING: string;
   DB_NAME: string;
   CORS_ORIGIN: string;
+  NODE_ENV: string;
   // crucial Type casting to work with JWT
   ACCESS_TOKEN_SECRET: Secret;
   REFRESH_TOKEN_SECRET: Secret;
@@ -24,15 +25,15 @@ type EnvVariableType = {
   GMAIL_PASSWORD: string;
   GMAIL_AUTH_USER_PROVIDER: string;
   RECIPIENT_MAIL_ID: string;
+  LOG_LEVEL: string;
   // configuration for HTTP email provider
   EMAIL_PROVIDER_API_KEY: string;
   EMAIL_PROVIDER_API_URL: string;
   EMAIL_FROM_ADDRESS: string;
-  LOG_LEVEL: string;
-  NODE_ENV: string;
 };
 
 const env: EnvVariableType = {
+  NODE_ENV: process.env.NODE_ENV || "development",
   PORT: process.env.PORT || "3001",
   MONGODB_COMPASS_CONNECTION_STRING:
     process.env.MONGODB_COMPASS_CONNECTION_STRING ||
@@ -52,18 +53,19 @@ const env: EnvVariableType = {
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || "0",
   CLOUDINARY_CLOUD_NAME:
     process.env.CLOUDINARY_CLOUD_NAME || "cloudinary_user_name",
+  // configuration for nodemailer and winston
   GMAIL_SMTP_HOST: process.env.GMAIL_SMTP_HOST || "",
   GMAIL_SMTP_PORT: Number(process.env.GMAIL_SMTP_PORT) || 123,
   GMAIL_SMTP_SECURE: process.env.GMAIL_SMTP_SECURE === "true",
   GMAIL_AUTH_USER_PROVIDER: process.env.GMAIL_AUTH_USER_PROVIDER || "",
   GMAIL_PASSWORD: String(process.env.GMAIL_PASSWORD),
   RECIPIENT_MAIL_ID: process.env.RECIPIENT_MAIL_ID || "",
+  LOG_LEVEL: process.env.LOG_LEVEL || "info",
+  // configuration for HTTP email provider
   EMAIL_PROVIDER_API_KEY: process.env.EMAIL_PROVIDER_API_KEY || "",
   EMAIL_PROVIDER_API_URL:
     process.env.EMAIL_PROVIDER_API_URL || "https://api.resend.com/emails",
   EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS || "",
-  LOG_LEVEL: process.env.LOG_LEVEL || "info",
-  NODE_ENV: process.env.NODE_ENV || "development",
 };
 
 export default env;
