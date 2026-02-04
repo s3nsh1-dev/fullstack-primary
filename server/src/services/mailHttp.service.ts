@@ -1,5 +1,6 @@
 import env from "../utils/dotenvHelper";
 import { logService } from "./logger.service";
+import ApiError from "../utils/ApiError";
 
 // this version bypasses the installation of resend and uses the HTTP API directly
 
@@ -14,7 +15,8 @@ class HttpMailService {
 
     if (!env.EMAIL_PROVIDER_API_KEY || !env.EMAIL_FROM_ADDRESS) {
       logService.error("Email provider configuration incomplete", value);
-      throw new Error(
+      throw new ApiError(
+        400,
         "Email provider configuration incomplete. Please set EMAIL_PROVIDER_API_KEY and EMAIL_FROM_ADDRESS."
       );
     }
@@ -22,43 +24,24 @@ class HttpMailService {
     logService.info("Email provider configuration looks valid", value);
   };
 
+  // in simple words, we are makign a POST request other than that everything is just of logger info
   async sendContactFormEmail(data: ContactFormData): Promise<void> {
-    const subject = `Contact Form Submission from ${data.name}`;
-    const text = `
-New contact form submission:
-
-Name: ${data.name}
-Email: ${data.email}
-
-Message:
-${data.message}
-
----
-You can reply directly to this email to respond to ${data.name}.
-    `.trim();
-
-    const payload = {
-      from: env.EMAIL_FROM_ADDRESS,
-      to: [env.RECIPIENT_MAIL_ID],
-      subject,
-      text,
-      reply_to: data.email,
-    };
-
     try {
       if (!env.EMAIL_PROVIDER_API_KEY || !env.EMAIL_FROM_ADDRESS) {
-        throw new Error(
+        throw new ApiError(
+          400,
           "Email provider not configured. Missing EMAIL_PROVIDER_API_KEY or EMAIL_FROM_ADDRESS."
         );
       }
 
+      // resend package is the lite HTTP API wrapper, here we are sending the API directly
       const response = await fetch(env.EMAIL_PROVIDER_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${env.EMAIL_PROVIDER_API_KEY}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formPayload(data)),
       });
 
       if (!response.ok) {
@@ -68,7 +51,8 @@ You can reply directly to this email to respond to ${data.name}.
           statusText: response.statusText,
           body: errorBody,
         });
-        throw new Error(
+        throw new ApiError(
+          500,
           `Email provider error: ${response.status} ${response.statusText}`
         );
       }
@@ -77,18 +61,13 @@ You can reply directly to this email to respond to ${data.name}.
 
       logService.info("Email sent successfully", {
         providerResponse: info,
-        to: env.RECIPIENT_MAIL_ID,
-        subject,
-        from: env.EMAIL_FROM_ADDRESS,
         replyTo: data.email,
       });
     } catch (error) {
       logService.error("Failed to send email", error, {
-        to: env.RECIPIENT_MAIL_ID,
-        subject,
-        from: data.email,
+        replyTo: data.email,
       });
-      throw new Error("Failed to send email. Please try again later.");
+      throw new ApiError(500, "Failed to send email. Please try again later.");
     }
   }
 
@@ -98,6 +77,7 @@ You can reply directly to this email to respond to ${data.name}.
   }
 }
 
+// singleton instance
 const mailService = new HttpMailService();
 export { mailService };
 
@@ -106,3 +86,27 @@ export interface ContactFormData {
   email: string;
   message: string;
 }
+
+const formPayload = ({ name, email, message }: ContactFormData) => {
+  const subject = `Contact Form Submission from ${name}`;
+  const text = `
+New contact form submission:
+
+Name: ${name}
+Email: ${email}
+
+Message:
+${message}
+
+---
+You can reply directly to this email to respond to ${name}.
+    `.trim();
+
+  return {
+    from: env.EMAIL_FROM_ADDRESS,
+    to: [env.RECIPIENT_MAIL_ID],
+    subject,
+    text,
+    reply_to: email,
+  };
+};
