@@ -9,6 +9,7 @@ import {
   refreshTokenCookieOptions,
 } from "../../constants";
 import { generateAccessAndRefreshTokens } from "./generateAccessAndRefreshTokens";
+import { compareRefreshToken } from "../../utils/refreshTokenSecurity";
 
 export const refreshAccessToken = asyncHandler(async (req, res) => {
   try {
@@ -33,7 +34,12 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     } else {
       throw new ApiError(401, "INVALID REFRESH TOKEN");
     }
-    if (incomingRefreshToken !== user?.refreshToken) {
+    const isRefreshTokenValid = await compareRefreshToken(
+      incomingRefreshToken,
+      user?.refreshToken
+    );
+
+    if (!isRefreshTokenValid) {
       throw new ApiError(401, "REFRESH TOKEN IS EXPIRED OR USED");
     }
     const { newAccessToken, newRefreshToken } =

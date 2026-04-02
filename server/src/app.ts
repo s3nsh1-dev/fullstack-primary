@@ -23,8 +23,8 @@ import ApiError from "./utils/ApiError";
 
 const app = express();
 
-const allowedOrigins = env.CORS_ORIGIN?.split(",");
-if (!allowedOrigins || allowedOrigins.length < 1) {
+const allowedOrigins = env.CORS_ORIGIN?.split(",").filter((cors) => cors);
+if (allowedOrigins.length < 1) {
   throw new ApiError(400, "CORS_ORIGIN is not defined");
 }
 
