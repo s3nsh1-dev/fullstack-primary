@@ -23,7 +23,9 @@ import ApiError from "./utils/ApiError";
 
 const app = express();
 
-const allowedOrigins = env.CORS_ORIGIN?.split(",").filter((cors) => cors);
+const allowedOrigins = (env.CORS_ORIGIN ? env.CORS_ORIGIN.split(",") : [])
+  .map((cors) => cors.trim())
+  .filter(Boolean);
 if (allowedOrigins.length < 1) {
   throw new ApiError(400, "CORS_ORIGIN is not defined");
 }
@@ -35,11 +37,8 @@ app.use(
       origin: string | undefined,
       callback: (err: Error | null, allow?: boolean) => void
     ) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
+      if (!origin) return callback(null, true);
+      return callback(null, allowedOrigins.includes(origin));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],

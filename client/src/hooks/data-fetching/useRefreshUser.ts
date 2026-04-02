@@ -8,7 +8,7 @@ export const useRefreshUser = () => {
     queryFn: async () => {
       const response = await fetch(`${URL}/users/refresh-token`, {
         credentials: "include",
-        method: "GET",
+        method: "POST",
       });
       if (!response.ok) throw new Error("Failed to refresh user");
       const data: UserLoginResponseType = await response.json();
