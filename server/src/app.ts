@@ -19,13 +19,13 @@ import { contactRouter } from "./routes/contact.route";
 import { searchUserTextRouter } from "./routes/searchUserText.route";
 import { requestLogger } from "./middleware/requestLogger.middleware";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
+import ApiError from "./utils/ApiError";
 
 const app = express();
 
 const allowedOrigins = env.CORS_ORIGIN?.split(",");
-
-if (!allowedOrigins) {
-  throw new Error("CORS_ORIGIN is not defined");
+if (!allowedOrigins || allowedOrigins.length < 1) {
+  throw new ApiError(400, "CORS_ORIGIN is not defined");
 }
 
 // middlewares
@@ -46,7 +46,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.json({ limit: "16kb" }));
 app.use(express.static("public"));
