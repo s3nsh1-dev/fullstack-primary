@@ -43,11 +43,11 @@ const env: EnvVariableType = {
   ACCESS_TOKEN_SECRET:
     process.env.ACCESS_TOKEN_SECRET || "fallback-access-token-secret",
   ACCESS_TOKEN_EXPIRY: (process.env.ACCESS_TOKEN_EXPIRY ||
-    `1d`) as JwtTokenExpiryType,
+    `15m`) as JwtTokenExpiryType,
   REFRESH_TOKEN_SECRET:
     process.env.REFRESH_TOKEN_SECRET || "fallback-refresh-token-secret",
   REFRESH_TOKEN_EXPIRY: (process.env.REFRESH_TOKEN_EXPIRY ||
-    "10d") as JwtTokenExpiryType,
+    "7d") as JwtTokenExpiryType,
   CLOUDINARY_API_SECRET:
     process.env.CLOUDINARY_API_SECRET || "CLOUDINARY_API_SECRET_NOT_FOUND",
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || "0",

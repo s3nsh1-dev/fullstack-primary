@@ -4,7 +4,10 @@ import jwt from "jsonwebtoken";
 import env from "../../utils/dotenvHelper";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
-import { httpOptions } from "../../constants";
+import {
+  accessTokenCookieOptions,
+  refreshTokenCookieOptions,
+} from "../../constants";
 import { generateAccessAndRefreshTokens } from "./generateAccessAndRefreshTokens";
 
 export const refreshAccessToken = asyncHandler(async (req, res) => {
@@ -36,17 +39,10 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     const { newAccessToken, newRefreshToken } =
       await generateAccessAndRefreshTokens(String(user?._id));
 
-    // intentionally not sharing token explicitly as JSON body
-    const oneDay = 24 * 60 * 60 * 1000;
-    const tenDays = 10 * 24 * 60 * 60 * 1000;
-
     return res
       .status(200)
-      .cookie("accessToken", newAccessToken, { ...httpOptions, maxAge: oneDay })
-      .cookie("refreshToken", newRefreshToken, {
-        ...httpOptions,
-        maxAge: tenDays,
-      })
+      .cookie("accessToken", newAccessToken, accessTokenCookieOptions)
+      .cookie("refreshToken", newRefreshToken, refreshTokenCookieOptions)
       .json(new ApiResponse(200, { user }, "TOKENS CREDENTIAL REFRESHED"));
   } catch (error: unknown) {
     // unknown + narrowing → best practice.

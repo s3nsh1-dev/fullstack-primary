@@ -3,7 +3,10 @@ import ApiResponse from "../../utils/ApiResponse";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
 import { UserStaleType } from "../../constants/ModelTypes";
-import { httpOptions } from "../../constants";
+import {
+  accessTokenCookieOptions,
+  refreshTokenCookieOptions,
+} from "../../constants";
 import { generateAccessAndRefreshTokens } from "./generateAccessAndRefreshTokens";
 
 export const loginUser = asyncHandler(async (req, res) => {
@@ -50,16 +53,10 @@ export const loginUser = asyncHandler(async (req, res) => {
   delete loggedInUser.password;
   delete loggedInUser.refreshToken;
 
-  const oneDay = 24 * 60 * 60 * 1000;
-  const tenDays = 10 * 24 * 60 * 60 * 1000;
-
   return res
     .status(200)
-    .cookie("accessToken", newAccessToken, { ...httpOptions, maxAge: oneDay })
-    .cookie("refreshToken", newRefreshToken, {
-      ...httpOptions,
-      maxAge: tenDays,
-    })
+    .cookie("accessToken", newAccessToken, accessTokenCookieOptions)
+    .cookie("refreshToken", newRefreshToken, refreshTokenCookieOptions)
     .json(
       new ApiResponse(
         200,
