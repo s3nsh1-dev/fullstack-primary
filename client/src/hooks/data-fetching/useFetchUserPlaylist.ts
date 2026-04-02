@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useFetchUserPlaylist = ({ userId, limit, page }: ParamsType) => {
   return useQuery({
@@ -22,7 +23,7 @@ const useFetchUserPlaylist = ({ userId, limit, page }: ParamsType) => {
 
 export default useFetchUserPlaylist;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 interface VideoOwner {
   _id: string;

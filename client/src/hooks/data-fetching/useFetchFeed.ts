@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { env } from "../../utilities/envHelper";
 
 const useFetchFeed = (limit: number) => {
   return useInfiniteQuery({
@@ -22,7 +23,7 @@ const useFetchFeed = (limit: number) => {
 
 export default useFetchFeed;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 export interface ContentOwner {
   _id: string;
   username: string;

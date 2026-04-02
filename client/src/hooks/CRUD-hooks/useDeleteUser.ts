@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { env } from "../../utilities/envHelper";
 
 const useDeleteUser = () => {
   return useMutation({
@@ -19,4 +20,4 @@ const useDeleteUser = () => {
 
 export default useDeleteUser;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;

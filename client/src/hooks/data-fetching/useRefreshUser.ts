@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { UserLoginResponseType } from "../../constants/responseTypes";
+import { env } from "../../utilities/envHelper";
 
 export const useRefreshUser = () => {
   return useQuery({
@@ -19,4 +20,4 @@ export const useRefreshUser = () => {
   });
 };
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;

@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useUpdateCoverImage = () => {
   return useMutation({
@@ -18,4 +19,4 @@ const useUpdateCoverImage = () => {
 
 export default useUpdateCoverImage;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;

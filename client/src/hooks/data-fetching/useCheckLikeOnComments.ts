@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useCheckLikeOnComments = (commentId: string) => {
   return useQuery({
     queryKey: ["checkLikeOnComment", commentId],
     queryFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/likes/check-comment/${commentId}`,
+        `${env.VITE_SERVER_URL}/likes/check-comment/${commentId}`,
         {
           method: "GET",
           credentials: "include",

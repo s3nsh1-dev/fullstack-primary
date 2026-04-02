@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useDeleteVideo = () => {
   return useMutation({
@@ -17,7 +18,7 @@ const useDeleteVideo = () => {
 
 export default useDeleteVideo;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 interface DeleteVideoResponse {
   statusCode: number;

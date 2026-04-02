@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useToggleSubscription = () => {
   return useMutation({
@@ -39,4 +40,4 @@ type ApiResponse = {
   message: string;
   success: boolean;
 };
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;

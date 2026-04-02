@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { env } from "../../utilities/envHelper";
 
 const useFetchVideosWithoutRestriction = ({
   page,
@@ -32,7 +33,7 @@ const useFetchVideosWithoutRestriction = ({
 };
 export default useFetchVideosWithoutRestriction;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 interface VideoDetail {
   _id: string;
