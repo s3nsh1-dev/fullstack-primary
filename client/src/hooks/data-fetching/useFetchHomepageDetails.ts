@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useFetchHomepageDetails = ({
   username,
@@ -12,7 +13,7 @@ const useFetchHomepageDetails = ({
     queryFn: async () => {
       const response = await fetch(
         `${
-          import.meta.env.VITE_SERVER_URL
+          env.VITE_SERVER_URL
         }/homepage/${username}?userId=${userId}`,
         {
           method: "GET",

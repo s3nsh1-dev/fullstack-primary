@@ -1,7 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import type { RegistrationFormType } from "../../constants/dataTypes";
 
-const URL = import.meta.env.VITE_SERVER_URL;
+import { env } from "../../utilities/envHelper";
+
+const URL = env.VITE_SERVER_URL;
 
 const useUserRegister = () => {
   return useMutation({

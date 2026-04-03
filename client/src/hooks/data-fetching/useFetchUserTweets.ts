@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { env } from "../../utilities/envHelper";
 
 const useFetchUserTweets = ({ userId, page, limit }: ParamTypes) => {
   return useQuery({
@@ -58,4 +59,4 @@ type ParamTypes = {
   limit: number;
 };
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;

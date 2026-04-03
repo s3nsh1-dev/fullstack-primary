@@ -244,7 +244,7 @@ http://localhost:3001/api/v1
 - `POST /users/register` - Register a new user (with avatar and coverImage upload)
 - `POST /users/login` - User login
 - `POST /users/logout` - User logout (requires authentication)
-- `GET /users/refresh-token` - Refresh access token
+- `POST /users/refresh-token` - Refresh access token
 - `GET /users/current-user` - Get current authenticated user (requires authentication)
 - `POST /users/change-password` - Change user password (requires authentication)
 - `PATCH /users/update-account` - Update account details (requires authentication)

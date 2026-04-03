@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useUpdateVideo = () => {
   return useMutation({
@@ -24,7 +25,7 @@ const useUpdateVideo = () => {
 
 export default useUpdateVideo;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 interface UpdateVideoResponse {
   statusCode: number;

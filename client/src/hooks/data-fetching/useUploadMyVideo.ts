@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useUploadMyVideo = () => {
   return useMutation({
@@ -42,4 +43,4 @@ interface VideoFormData {
   // visibility and tags removed — backend does not use them
 }
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;

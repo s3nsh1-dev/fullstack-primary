@@ -1,6 +1,7 @@
 import ApiError from "../../utils/ApiError";
 import { User } from "../../models/user.model";
 import { Types } from "mongoose";
+import { hashRefreshToken } from "../../utils/refreshTokenSecurity";
 
 export const generateAccessAndRefreshTokens = async (
   userId: string | Types.ObjectId
@@ -12,9 +13,10 @@ export const generateAccessAndRefreshTokens = async (
     }
     const newAccessToken = await user.generateAccessToken();
     const newRefreshToken = await user.generateRefreshToken();
+    const hashedRefreshToken = await hashRefreshToken(newRefreshToken);
 
     // Mongoose marks the refreshToken field as "modified" after change.
-    user.refreshToken = newRefreshToken;
+    user.refreshToken = hashedRefreshToken;
 
     await user.save({ validateBeforeSave: false });
 

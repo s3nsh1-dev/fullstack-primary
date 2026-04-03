@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useCreatePlaylist = () => {
   const queryClient = useQueryClient();
@@ -53,7 +54,7 @@ interface CreatePlaylistResponseData {
   playlist: Playlist;
 }
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 type BodyResponseType = {
   name: string;

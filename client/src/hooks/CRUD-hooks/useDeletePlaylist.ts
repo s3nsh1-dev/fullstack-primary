@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { env } from "../../utilities/envHelper";
 
 const useDeletePlaylist = () => {
   const queryClient = useQueryClient();
@@ -27,7 +28,7 @@ const callApi = async ({ playlistId }: DeletePlaylistParams) => {
   return data;
 };
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 interface DeletePlaylistResponse {
   statusCode: number;

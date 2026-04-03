@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useFetchUserChannelProfile = ({
   username,
@@ -52,4 +53,4 @@ export interface UserChannelResponse {
   success: boolean;
 }
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;

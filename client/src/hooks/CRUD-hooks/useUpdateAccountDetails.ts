@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { env } from "../../utilities/envHelper";
 
 const useUpdateAccountDetails = () => {
   return useMutation({
@@ -21,7 +22,7 @@ const updateAccountDetails = async (newValue: newAccountDetails) => {
   return data;
 };
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 interface ApiResponse {
   statusCode: number;

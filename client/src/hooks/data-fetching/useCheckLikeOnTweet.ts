@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
+
 const useCheckLikeOnTweet = (tweetId: string) => {
   return useQuery({
     queryKey: ["checkLikeOnTweet", tweetId],
     queryFn: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/likes/check-tweet/${tweetId}`,
+        `${env.VITE_SERVER_URL}/likes/check-tweet/${tweetId}`,
         {
           method: "GET",
           credentials: "include",

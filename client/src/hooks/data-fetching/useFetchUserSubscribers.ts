@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { env } from "../../utilities/envHelper";
 
 const useFetchUserSubscribers = ({ userId, page, limit }: HookParams) => {
   return useQuery({
@@ -7,7 +8,7 @@ const useFetchUserSubscribers = ({ userId, page, limit }: HookParams) => {
     queryFn: async () => {
       const { data } = await axios<SubscriberApiResponse>({
         url: `${
-          import.meta.env.VITE_SERVER_URL
+          env.VITE_SERVER_URL
         }/subscriptions/c/${userId}?page=${page}&limit=${limit}`,
         method: "get",
         withCredentials: true,

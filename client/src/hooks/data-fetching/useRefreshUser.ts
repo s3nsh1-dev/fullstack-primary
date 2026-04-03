@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { UserLoginResponseType } from "../../constants/responseTypes";
+import { env } from "../../utilities/envHelper";
 
 export const useRefreshUser = () => {
   return useQuery({
@@ -7,7 +8,7 @@ export const useRefreshUser = () => {
     queryFn: async () => {
       const response = await fetch(`${URL}/users/refresh-token`, {
         credentials: "include",
-        method: "GET",
+        method: "POST",
       });
       if (!response.ok) throw new Error("Failed to refresh user");
       const data: UserLoginResponseType = await response.json();
@@ -19,4 +20,4 @@ export const useRefreshUser = () => {
   });
 };
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;

@@ -4,16 +4,20 @@ import jwt from "jsonwebtoken";
 import env from "../../utils/dotenvHelper";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
-import { httpOptions } from "../../constants";
+import {
+  accessTokenCookieOptions,
+  httpOptions,
+  refreshTokenCookieOptions,
+} from "../../constants";
 import { generateAccessAndRefreshTokens } from "./generateAccessAndRefreshTokens";
+import { compareRefreshToken } from "../../utils/refreshTokenSecurity";
 
 export const refreshAccessToken = asyncHandler(async (req, res) => {
   try {
-    const incomingRefreshToken =
-      req.cookies?.refreshToken || req.body?.refreshToken;
+    const incomingRefreshToken = req.cookies?.refreshToken;
 
     if (!incomingRefreshToken) {
-      throw new ApiError(401, "No Refresh Token founds");
+      throw new ApiError(401, "NO REFRESH TOKEN FOUND");
     }
     const decodedRefreshToken = jwt.verify(
       incomingRefreshToken,
@@ -30,26 +34,43 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     } else {
       throw new ApiError(401, "INVALID REFRESH TOKEN");
     }
-    if (incomingRefreshToken !== user?.refreshToken) {
+
+    if (!user) {
+      throw new ApiError(401, "INVALID REFRESH TOKEN");
+    }
+
+    if (user.isSuspended) {
+      throw new ApiError(403, "USER ACCOUNT IS SUSPENDED");
+    }
+
+    if (user.isDeactivated) {
+      throw new ApiError(403, "USER ACCOUNT IS DEACTIVATED");
+    }
+
+    const isRefreshTokenValid = await compareRefreshToken(
+      incomingRefreshToken,
+      user.refreshToken
+    );
+
+    if (!isRefreshTokenValid) {
+      await User.findByIdAndUpdate(user._id, { $unset: { refreshToken: 1 } });
       throw new ApiError(401, "REFRESH TOKEN IS EXPIRED OR USED");
     }
     const { newAccessToken, newRefreshToken } =
-      await generateAccessAndRefreshTokens(String(user?._id));
-
-    // intentionally not sharing token explicitly as JSON body
-    const oneDay = 24 * 60 * 60 * 1000;
-    const tenDays = 10 * 24 * 60 * 60 * 1000;
+      await generateAccessAndRefreshTokens(String(user._id));
 
     return res
       .status(200)
-      .cookie("accessToken", newAccessToken, { ...httpOptions, maxAge: oneDay })
-      .cookie("refreshToken", newRefreshToken, {
-        ...httpOptions,
-        maxAge: tenDays,
-      })
+      .cookie("accessToken", newAccessToken, accessTokenCookieOptions)
+      .cookie("refreshToken", newRefreshToken, refreshTokenCookieOptions)
       .json(new ApiResponse(200, { user }, "TOKENS CREDENTIAL REFRESHED"));
   } catch (error: unknown) {
-    // unknown + narrowing → best practice.
+    res.clearCookie("accessToken", httpOptions);
+    res.clearCookie("refreshToken", httpOptions);
+
+    if (error instanceof ApiError) {
+      throw error;
+    }
 
     if (error instanceof Error) {
       throw new ApiError(401, error.message);

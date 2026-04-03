@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import type { TweetType } from "./useFetchUserTweets";
+import { env } from "../../utilities/envHelper";
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 const useFetchSingleTweet = ({ tweetId, userId }: ParamTypes) => {
   return useQuery({

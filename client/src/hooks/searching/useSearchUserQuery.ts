@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useSearchUserQuery = (searchText: string) => {
   return useQuery({
@@ -23,7 +24,7 @@ const useSearchUserQuery = (searchText: string) => {
 
 export default useSearchUserQuery;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 // src/types/search.types.ts
 

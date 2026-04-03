@@ -19,13 +19,15 @@ import { contactRouter } from "./routes/contact.route";
 import { searchUserTextRouter } from "./routes/searchUserText.route";
 import { requestLogger } from "./middleware/requestLogger.middleware";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
+import ApiError from "./utils/ApiError";
 
 const app = express();
 
-const allowedOrigins = env.CORS_ORIGIN?.split(",");
-
-if (!allowedOrigins) {
-  throw new Error("CORS_ORIGIN is not defined");
+const allowedOrigins = (env.CORS_ORIGIN ? env.CORS_ORIGIN.split(",") : [])
+  .map((cors) => cors.trim())
+  .filter(Boolean);
+if (allowedOrigins.length < 1) {
+  throw new ApiError(400, "CORS_ORIGIN is not defined");
 }
 
 // middlewares
@@ -35,18 +37,14 @@ app.use(
       origin: string | undefined,
       callback: (err: Error | null, allow?: boolean) => void
     ) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
+      if (!origin) return callback(null, true);
+      return callback(null, allowedOrigins.includes(origin));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.json({ limit: "16kb" }));
 app.use(express.static("public"));

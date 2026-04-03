@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { env } from "../../utilities/envHelper";
 
 const useDeleteVideoFromPlaylist = () => {
   const queryClient = useQueryClient();
@@ -18,7 +19,7 @@ const useDeleteVideoFromPlaylist = () => {
 
 export default useDeleteVideoFromPlaylist;
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 const callApi = async ({ playlistId, videoId }: ResponseParamsType) => {
   const { data } = await axios<ModifyPlaylistVideosResponse>({

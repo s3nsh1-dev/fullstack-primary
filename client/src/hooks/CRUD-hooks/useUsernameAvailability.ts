@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import axios, { type AxiosResponse } from "axios";
+import { env } from "../../utilities/envHelper";
 
 const useUsernameAvailability = (input: string) => {
   const [debounced, setDebounced] = useState(input);
@@ -32,7 +33,7 @@ const fetchAvailability = async (debounced: string, signal: AbortSignal) => {
   return response.data.data.available;
 };
 
-const URL = import.meta.env.VITE_SERVER_URL;
+const URL = env.VITE_SERVER_URL;
 
 type UsernameAvailabilityResponse = {
   statusCode: number;
