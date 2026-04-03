@@ -8,8 +8,11 @@ import App from "./App.tsx";
 import "./index.css";
 import SearchContextProvider from "./contexts/SearchContextProvider.tsx";
 import ErrorBoundary from "./components/ui-components/ErrorBoundary.tsx";
+import { installCsrfFetch } from "./utilities/csrfFetch.ts";
 
 const queryClient = new QueryClient();
+
+installCsrfFetch();
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>

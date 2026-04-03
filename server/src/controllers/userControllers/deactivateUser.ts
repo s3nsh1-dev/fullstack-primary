@@ -2,7 +2,7 @@ import ApiError from "../../utils/ApiError";
 import ApiResponse from "../../utils/ApiResponse";
 import { User } from "../../models/user.model";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { httpOptions as options } from "../../constants";
+import { csrfCookieName, csrfTokenCookieOptions, httpOptions as options } from "../../constants";
 
 const deactivateUser = asyncHandler(async (req, res) => {
   if (!req?.user || !req?.user?._id) {
@@ -26,6 +26,7 @@ const deactivateUser = asyncHandler(async (req, res) => {
       // .cookie("refreshToken", "", { ...options, maxAge: 0 })
       .clearCookie("accessToken", options)
       .clearCookie("refreshToken", options)
+      .clearCookie(csrfCookieName, csrfTokenCookieOptions)
       .json(new ApiResponse(200, { deactivated: true }, "USER DEACTIVATED"))
   );
 });

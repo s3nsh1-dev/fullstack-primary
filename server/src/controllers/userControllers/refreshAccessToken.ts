@@ -6,11 +6,14 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
 import {
   accessTokenCookieOptions,
+  csrfCookieName,
+  csrfTokenCookieOptions,
   httpOptions,
   refreshTokenCookieOptions,
 } from "../../constants";
 import { generateAccessAndRefreshTokens } from "./generateAccessAndRefreshTokens";
 import { compareRefreshToken } from "../../utils/refreshTokenSecurity";
+import { generateCsrfToken } from "../../middleware/csrf.middleware";
 
 export const refreshAccessToken = asyncHandler(async (req, res) => {
   try {
@@ -58,15 +61,18 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     }
     const { newAccessToken, newRefreshToken } =
       await generateAccessAndRefreshTokens(String(user._id));
+    const csrfToken = generateCsrfToken();
 
     return res
       .status(200)
       .cookie("accessToken", newAccessToken, accessTokenCookieOptions)
       .cookie("refreshToken", newRefreshToken, refreshTokenCookieOptions)
+      .cookie(csrfCookieName, csrfToken, csrfTokenCookieOptions)
       .json(new ApiResponse(200, { user }, "TOKENS CREDENTIAL REFRESHED"));
   } catch (error: unknown) {
     res.clearCookie("accessToken", httpOptions);
     res.clearCookie("refreshToken", httpOptions);
+    res.clearCookie(csrfCookieName, csrfTokenCookieOptions);
 
     if (error instanceof ApiError) {
       throw error;

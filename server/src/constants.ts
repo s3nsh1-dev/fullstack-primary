@@ -3,6 +3,13 @@ import env from "./utils/dotenvHelper";
 
 export const accessTokenMaxAgeMs = 15 * 60 * 1000;
 export const refreshTokenMaxAgeMs = 7 * 24 * 60 * 60 * 1000;
+export const csrfCookieName = "csrfToken";
+export const csrfHeaderName = "X-CSRF-Token";
+export const allowedOrigins = (
+  env.CORS_ORIGIN ? env.CORS_ORIGIN.split(",") : []
+)
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 export const httpOptions: CookieOptions = {
   httpOnly: true,
@@ -18,6 +25,12 @@ export const accessTokenCookieOptions: CookieOptions = {
 
 export const refreshTokenCookieOptions: CookieOptions = {
   ...httpOptions,
+  maxAge: refreshTokenMaxAgeMs,
+};
+
+export const csrfTokenCookieOptions: CookieOptions = {
+  ...httpOptions,
+  httpOnly: false,
   maxAge: refreshTokenMaxAgeMs,
 };
 

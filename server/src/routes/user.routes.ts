@@ -24,6 +24,7 @@ import {
 } from "../controllers/watchHistory.controller";
 import { multerUpload } from "../middleware/multer.middleware";
 import verifyJWT from "../middleware/auth.middleware";
+import { verifyCsrf } from "../middleware/csrf.middleware";
 
 const userRouter = Router();
 
@@ -38,7 +39,7 @@ userRouter.route("/login").post(loginUser);
 userRouter.route("/profile/:userId").get(fetchUserById);
 //secured routes
 userRouter.route("/logout").post(verifyJWT, logoutUser);
-userRouter.route("/refresh-token").post(refreshAccessToken);
+userRouter.route("/refresh-token").post(verifyCsrf, refreshAccessToken);
 userRouter.route("/change-password").post(verifyJWT, changeCurrentPassword);
 userRouter.route("/current-user").get(verifyJWT, getCurrentUser);
 userRouter.route("/update-account").patch(verifyJWT, updateAccountDetails);

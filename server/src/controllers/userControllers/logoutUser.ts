@@ -2,7 +2,7 @@ import ApiError from "../../utils/ApiError";
 import ApiResponse from "../../utils/ApiResponse";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { User } from "../../models/user.model";
-import { httpOptions as options } from "../../constants";
+import { csrfCookieName, csrfTokenCookieOptions, httpOptions as options } from "../../constants";
 
 export const logoutUser = asyncHandler(async (req, res) => {
   // get the user from middleware and delete the refreshToken
@@ -22,6 +22,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
       // .cookie("refreshToken", "", { ...options, maxAge: 0 })
       .clearCookie("accessToken", options)
       .clearCookie("refreshToken", options)
+      .clearCookie(csrfCookieName, csrfTokenCookieOptions)
       .json(new ApiResponse(200, { loggedIn: false }, "User logged Out"))
   );
 });

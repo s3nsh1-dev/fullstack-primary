@@ -5,9 +5,12 @@ import { User } from "../../models/user.model";
 import { UserStaleType } from "../../constants/ModelTypes";
 import {
   accessTokenCookieOptions,
+  csrfCookieName,
+  csrfTokenCookieOptions,
   refreshTokenCookieOptions,
 } from "../../constants";
 import { generateAccessAndRefreshTokens } from "./generateAccessAndRefreshTokens";
+import { generateCsrfToken } from "../../middleware/csrf.middleware";
 
 export const loginUser = asyncHandler(async (req, res) => {
   // req body -> data
@@ -47,6 +50,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   const matchedUserId: string = String(matchedUser._id);
   const { newAccessToken, newRefreshToken } =
     await generateAccessAndRefreshTokens(matchedUserId);
+  const csrfToken = generateCsrfToken();
 
   const loggedInUser: UserStaleType = matchedUser.toObject();
   // removing password and refreshToken field from the User data
@@ -57,6 +61,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     .status(200)
     .cookie("accessToken", newAccessToken, accessTokenCookieOptions)
     .cookie("refreshToken", newRefreshToken, refreshTokenCookieOptions)
+    .cookie(csrfCookieName, csrfToken, csrfTokenCookieOptions)
     .json(
       new ApiResponse(
         200,
