@@ -40,10 +40,10 @@ const Playlist = () => {
     setSearchParams(newParams);
   };
 
+  if (!user && !loading) return <NotLoggedIn />;
+
   if (!data || data?.length === 0)
     return <Typography color="textSecondary">No Playlists</Typography>;
-
-  if (!user && !loading) return <NotLoggedIn />;
 
   return (
     <>
